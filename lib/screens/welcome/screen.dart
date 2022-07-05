@@ -39,7 +39,7 @@ class WelcomeScreen extends StatelessWidget {
                 decoration:  BoxDecoration(
                   color: Theme.of(context).primaryColor,
 
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(33),
                         topRight: Radius.circular(33)
                     )
