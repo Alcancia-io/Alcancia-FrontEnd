@@ -26,11 +26,14 @@ class WelcomeScreen extends StatelessWidget {
               SvgPicture.asset(isDarkMode
                   ? "assets/images/icon_alcancia_dark.svg"
                   : "assets/images/icon_alcancia_light.svg",
-                  width: 96),
+                  height: size.height/12),
               Transform(
                 transform: Matrix4.translationValues(0, 30, 0),
-                child: const Image(
-                    image: AssetImage("assets/images/welcome_image.png")),
+                child:  Image(
+                    image: AssetImage(
+                        "assets/images/welcome_image.png"
+                    ),
+                  width: size.width),
               ),
               Expanded(
                   child: Container(

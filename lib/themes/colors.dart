@@ -10,6 +10,7 @@ const Color alcanciaCardLight = Color(0xFFFFFFFF);
 const Color alcanciaFieldDark = Color(0xFF0F2346);
 const Color alcanciaFieldLight = Color(0xFFF5F5F5);
 const CupertinoDynamicColor alcanciaWhiteBlack = CupertinoDynamicColor.withBrightness(color: CupertinoColors.white, darkColor: CupertinoColors.black);
+
 const alcanciaWelcomeGradient = [
   Color(0xffffffff),
   Color(0xff4E76E5)
@@ -22,14 +23,7 @@ const alcanciaWelcomeGradientDark = [
   Color(0xff395AB0),
   Color(0xff4E76E5)
 ];
-// const alcanciaWelcomeGradientLight = [
-//   Color(0xff8b8e94),
-//   Color(0xffbac0cb),
-//   Color(0xff7284b9),
-//   // Color(0xff4368C9),
-//   Color(0xff395AB0),
-//   Color(0xff4E76E5)
-// ];
+
 getPattern(bool isDark) {
   if (isDark) {
     return alcanciaWelcomeGradientDark;
