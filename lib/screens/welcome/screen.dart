@@ -15,6 +15,7 @@ class WelcomeScreen extends StatelessWidget {
     var isDarkMode = Theme.of(context).brightness == Brightness.dark;
     var pattern = getPattern(isDarkMode);
 
+
     return Query
       options: QueryOptions(document: gql(meQuery)),
       builder: (QueryResult<Object?> result,
