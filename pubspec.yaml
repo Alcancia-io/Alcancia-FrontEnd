@@ -63,6 +63,13 @@ flutter:
     - assets/images/welcome_image.png
     - assets/images/icon_alcancia_light.svg
     - assets/images/icon_alcancia_dark.svg
+  fonts:
+    - family: Gotham
+      fonts:
+        - asset: assets/fonts/Gotham-Bold.otf
+          weight: 700
+        - asset: assets/fonts/Gotham-Book.otf
+          weight: 400
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
