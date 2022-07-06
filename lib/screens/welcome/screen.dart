@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:alcancia/graphql/queries.dart';
 
+
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
 
@@ -13,7 +14,8 @@ class WelcomeScreen extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     var isDarkMode = Theme.of(context).brightness == Brightness.dark;
     var pattern = getPattern(isDarkMode);
-    return Query(
+
+    return Query
       options: QueryOptions(document: gql(meQuery)),
       builder: (QueryResult<Object?> result,
           {VoidCallback? refetch, FetchMore? fetchMore}) {
@@ -43,11 +45,13 @@ class WelcomeScreen extends StatelessWidget {
                           : "assets/images/icon_alcancia_light.svg",
                       height: size.height / 12),
                   Transform(
-                    transform: Matrix4.translationValues(0, 30, 0),
+                    transform: Matrix4.translationValues(0, 25, 0),
                     child: Image(
+                        fit: BoxFit.fitWidth
                         image:
                             const AssetImage("assets/images/welcome_image.png"),
-                        width: size.width),
+                        width: size.width,
+                    height: size.height*0.4),
                   ),
                   Expanded(
                       child: Container(
@@ -61,6 +65,7 @@ class WelcomeScreen extends StatelessWidget {
                         child: Padding(
                       padding: const EdgeInsets.all(32.0),
                       child: Column(
+
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -82,6 +87,7 @@ class WelcomeScreen extends StatelessWidget {
                             child: const Text("Registrate"),
                             onPressed: () {},
                           ),
+
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -89,6 +95,7 @@ class WelcomeScreen extends StatelessWidget {
                               const Text(
                                 "¿Ya tienes cuenta?",
                                 textAlign: TextAlign.center,
+
                               ),
                               CupertinoButton(
                                   child: const Text(

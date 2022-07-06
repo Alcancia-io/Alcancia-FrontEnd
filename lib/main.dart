@@ -37,7 +37,9 @@ class MyApp extends StatelessWidget {
       darkTheme: AlcanciaTheme.darkTheme,
 
       themeMode: ThemeMode.system,
+
       home: GraphQLProvider(client: client, child: const WelcomeScreen()),
+
     );
   }
 }
