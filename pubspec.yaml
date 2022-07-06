@@ -63,15 +63,17 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/welcome_image.png
-    - assets/images/icon_alcancia_light.svg
-    - assets/images/icon_alcancia_dark.svg
+    - lib/src/resources/images/welcome_image.png
+    - lib/src/resources/images/icon_alcancia_light.svg
+    - lib/src/resources/images/icon_alcancia_dark.svg
+    - lib/src/resources/images/icon_alcancia_light_no_letters.svg
+    - lib/src/resources/images/icon_alcancia_dark_no_letters.svg
   fonts:
     - family: Gotham
       fonts:
-        - asset: assets/fonts/Gotham-Bold.otf
+        - asset: lib/src/resources/fonts/Gotham-Bold.otf
           weight: 700
-        - asset: assets/fonts/Gotham-Book.otf
+        - asset: lib/src/resources/fonts/Gotham-Book.otf
           weight: 400
 
   # An image asset can refer to one or more resolution-specific "variants", see
