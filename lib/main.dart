@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(brightness: Brightness.light, scaffoldBackgroundColor: alcanciaBgLight, primaryColor: alcanciaBgLight,cardColor: alcanciaBgLight, backgroundColor: alcanciaBgLight),
       darkTheme: ThemeData(brightness: Brightness.dark, scaffoldBackgroundColor: alcanciaBgDark, primaryColor: alcanciaBgDark, cardColor: alcanciaBgDark,backgroundColor: alcanciaBgDark),
       themeMode: ThemeMode.system,
-      home: WelcomeScreen(),
+      home: const WelcomeScreen(),
     );
   }
 }

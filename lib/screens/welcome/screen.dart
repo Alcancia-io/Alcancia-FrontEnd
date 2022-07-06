@@ -3,6 +3,7 @@ import 'package:alcancia/themes/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
 
@@ -23,58 +24,59 @@ class WelcomeScreen extends StatelessWidget {
           bottom: false,
           child: Column(
             children: [
-              SvgPicture.asset(isDarkMode
-                  ? "assets/images/icon_alcancia_dark.svg"
-                  : "assets/images/icon_alcancia_light.svg",
-                  height: size.height/12),
+              SvgPicture.asset(
+
+                  isDarkMode
+                      ? "assets/images/icon_alcancia_dark.svg"
+                      : "assets/images/icon_alcancia_light.svg",
+                  height: size.height / 10,
+                fit: BoxFit.fill,
+              ),
               Transform(
-                transform: Matrix4.translationValues(0, 30, 0),
-                child:  Image(
-                    image: AssetImage(
-                        "assets/images/welcome_image.png"
-                    ),
-                  width: size.width),
+                // padding: EdgeInsets.only(top: 10),/
+                transform: Matrix4.translationValues(0, 25, 0),
+                child: Image(
+                  fit: BoxFit.fitWidth,
+                    image: AssetImage("assets/images/welcome_image.png"),
+                    width: size.width,
+                    height: size.height*0.4),
               ),
               Expanded(
                   child: Container(
                 width: size.width,
-
-                decoration:  BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-
+                decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
                     borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(33),
-                        topRight: Radius.circular(33)
-                    )
-
-
-                ),
+                        topRight: Radius.circular(33))),
                 child: Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(32.0),
-                      child: Column(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        "Descubre una nueva forma de ahorrar",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 35),
-                      ),
+
+                        const Text(
+                          "Descubre una nueva forma de ahorrar",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,fontSize: 35),
+
+                          // minFontSize: 35,
+                        ),
+
                       const Padding(
                         padding: EdgeInsets.only(top: 16.0),
                         child: Text(
                           "Construye tu portafolio de ahorro basado en crypto",
                           style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16),
+                              fontWeight: FontWeight.w400, fontSize: 16),
                         ),
                       ),
                       const Spacer(),
                       CupertinoButton.filled(
-                          child: const Text("Registrate"),
-                          onPressed: () {},
+                        child: const Text("Registrate"),
+                        onPressed: () {},
                       ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -89,8 +91,7 @@ class WelcomeScreen extends StatelessWidget {
                                 "Inicia sesión",
                                 style: TextStyle(
                                     decoration: TextDecoration.underline,
-                                    fontWeight: FontWeight.bold
-                                    ),
+                                    fontWeight: FontWeight.bold),
                               ),
                               onPressed: () {}),
                         ],
