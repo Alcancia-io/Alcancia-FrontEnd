@@ -1,5 +1,6 @@
 import 'package:alcancia/screens/welcome/screen.dart';
 import 'package:alcancia/themes/colors.dart';
+import 'package:alcancia/themes/app_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -31,18 +32,10 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       title: 'Alcancía',
-      theme: ThemeData(
-          brightness: Brightness.light,
-          scaffoldBackgroundColor: alcanciaBgLight,
-          primaryColor: alcanciaBgLight,
-          cardColor: alcanciaBgLight,
-          backgroundColor: alcanciaBgLight),
-      darkTheme: ThemeData(
-          brightness: Brightness.dark,
-          scaffoldBackgroundColor: alcanciaBgDark,
-          primaryColor: alcanciaBgDark,
-          cardColor: alcanciaBgDark,
-          backgroundColor: alcanciaBgDark),
+
+      theme: AlcanciaTheme.lightTheme,
+      darkTheme: AlcanciaTheme.darkTheme,
+
       themeMode: ThemeMode.system,
       home: GraphQLProvider(client: client, child: const WelcomeScreen()),
     );
