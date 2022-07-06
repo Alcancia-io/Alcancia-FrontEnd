@@ -1,26 +1,27 @@
-import 'package:alcancia/screens/welcome/screen.dart';
-import 'package:alcancia/themes/colors.dart';
-import 'package:alcancia/themes/app_theme.dart';
+import 'package:alcancia/src/resources/app_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:alcancia/src/shared/provider/router_provider.dart';
 
 void main() async {
   await initHiveForFlutter();
 
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
     const uri = "http://localhost:3000/graphql";
 
     final HttpLink httpLink = HttpLink(uri,
-        defaultHeaders: <String, String>{'Authorization': 'Bearer'});
+        defaultHeaders: <String, String>{'Authorization': 'Bearer '});
 
     ValueNotifier<GraphQLClient> client = ValueNotifier(
       GraphQLClient(
@@ -30,14 +31,17 @@ class MyApp extends StatelessWidget {
       ),
     );
 
-    return MaterialApp(
-      title: 'Alcancía',
-
-      theme: AlcanciaTheme.lightTheme,
-      darkTheme: AlcanciaTheme.darkTheme,
-
-      themeMode: ThemeMode.system,
-      home: GraphQLProvider(client: client, child: const WelcomeScreen()),
+    return GraphQLProvider(
+      client: client,
+      child: MaterialApp.router(
+        routerDelegate: router.routerDelegate,
+        title: 'Alcancía',
+        theme: AlcanciaTheme.lightTheme,
+        darkTheme: AlcanciaTheme.darkTheme,
+        themeMode: ThemeMode.system,
+        routeInformationParser: router.routeInformationParser,
+        routeInformationProvider: router.routeInformationProvider,
+      ),
     );
   }
 }

@@ -13,7 +13,8 @@ class AlcanciaTheme {
       fontFamily: 'Gotham',
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
-          textStyle: MaterialStateProperty.all(const TextStyle(fontFamily: 'Gotham')),
+          textStyle:
+              MaterialStateProperty.all(const TextStyle(fontFamily: 'Gotham')),
         ),
       ),
       cupertinoOverrideTheme: const NoDefaultCupertinoThemeData(
@@ -34,7 +35,8 @@ class AlcanciaTheme {
       fontFamily: "Gotham",
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
-          textStyle: MaterialStateProperty.all(const TextStyle(fontFamily: 'Gotham')),
+          textStyle:
+              MaterialStateProperty.all(const TextStyle(fontFamily: 'Gotham')),
         ),
       ),
       cupertinoOverrideTheme: const NoDefaultCupertinoThemeData(

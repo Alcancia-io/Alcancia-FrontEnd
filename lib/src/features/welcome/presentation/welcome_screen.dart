@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
-import 'package:alcancia/themes/colors.dart';
+import 'package:alcancia/src/resources/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:alcancia/graphql/queries.dart';
+import 'package:alcancia/src/shared/graphql/queries.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -24,7 +25,6 @@ class WelcomeScreen extends StatelessWidget {
           return const Text('Loading...');
         }
         print(result.data);
-
         return Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -97,7 +97,8 @@ class WelcomeScreen extends StatelessWidget {
                                         decoration: TextDecoration.underline,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  onPressed: () {}),
+                                  onPressed: () =>
+                                      GoRouter.of(context).go("/login")),
                             ],
                           )
                         ],
