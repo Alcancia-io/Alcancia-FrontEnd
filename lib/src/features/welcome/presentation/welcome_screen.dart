@@ -96,7 +96,7 @@ class WelcomeScreen extends StatelessWidget {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   onPressed: () =>
-                                      GoRouter.of(context).go("/fade")),
+                                      GoRouter.of(context).go("/login")),
                             ],
                           )
                         ],
