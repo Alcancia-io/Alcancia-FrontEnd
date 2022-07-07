@@ -18,6 +18,9 @@ class AlcanciaTheme {
         ),
       ),
       cupertinoOverrideTheme: const NoDefaultCupertinoThemeData(
+        // primaryColor: alcanciaBgLight,
+        scaffoldBackgroundColor: alcanciaBgLight,
+        brightness: Brightness.light,
         textTheme: CupertinoTextThemeData(
           textStyle: TextStyle(fontFamily: 'Gotham'),
         ),
@@ -40,6 +43,9 @@ class AlcanciaTheme {
         ),
       ),
       cupertinoOverrideTheme: const NoDefaultCupertinoThemeData(
+        // primaryColor: alcanciaBgDark,
+        scaffoldBackgroundColor: alcanciaBgDark,
+        brightness: Brightness.dark,
         textTheme: CupertinoTextThemeData(
           textStyle: TextStyle(fontFamily: 'Gotham'),
         ),

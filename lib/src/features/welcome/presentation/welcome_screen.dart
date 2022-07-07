@@ -1,3 +1,4 @@
+import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:flutter/material.dart';
@@ -18,9 +19,9 @@ class WelcomeScreen extends StatelessWidget {
       options: QueryOptions(document: gql(meQuery)),
       builder: (QueryResult<Object?> result,
           {VoidCallback? refetch, FetchMore? fetchMore}) {
-        if (result.hasException) {
-          return Text(result.exception.toString());
-        }
+        //if (result.hasException) {
+        //  return Text(result.exception.toString());
+        //}
         if (result.isLoading) {
           return const Text('Loading...');
         }
@@ -39,14 +40,14 @@ class WelcomeScreen extends StatelessWidget {
                 children: [
                   SvgPicture.asset(
                       isDarkMode
-                          ? "assets/images/icon_alcancia_dark.svg"
-                          : "assets/images/icon_alcancia_light.svg",
+                          ? "lib/src/resources/images/icon_alcancia_dark.svg"
+                          : "lib/src/resources/images/icon_alcancia_light.svg",
                       height: size.height / 12),
                   Transform(
                     transform: Matrix4.translationValues(0, 30, 0),
                     child: Image(
-                        image:
-                            const AssetImage("assets/images/welcome_image.png"),
+                        image: const AssetImage(
+                            "lib/src/resources/images/welcome_image.png"),
                         width: size.width),
                   ),
                   Expanded(
@@ -78,10 +79,7 @@ class WelcomeScreen extends StatelessWidget {
                             ),
                           ),
                           const Spacer(),
-                          CupertinoButton.filled(
-                            child: const Text("Registrate"),
-                            onPressed: () {},
-                          ),
+                          AlcanciaButton(() {}, "Registrate"),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -98,7 +96,7 @@ class WelcomeScreen extends StatelessWidget {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   onPressed: () =>
-                                      GoRouter.of(context).go("/login")),
+                                      GoRouter.of(context).go("/fade")),
                             ],
                           )
                         ],
