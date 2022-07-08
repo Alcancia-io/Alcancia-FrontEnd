@@ -1,10 +1,13 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:alcancia/src/shared/components/alcancia_text_field.dart';
+import 'package:alcancia/src/shared/extensions/string_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final rememberEmailProvider = StateProvider.autoDispose<bool>((ref) => false);
 
@@ -18,6 +21,7 @@ class LoginScreen extends ConsumerWidget {
     final size = MediaQuery.of(context).size;
     var isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final rememberMe = ref.watch(rememberEmailProvider);
+    final appLocalization = AppLocalizations.of(context)!;
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -50,11 +54,21 @@ class LoginScreen extends ConsumerWidget {
                         ],
                       ),
                       Form(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         child: Column(children: [
                           LabeledTextFormField(
-                              controller: TextEditingController(),
-                              labelText: "Correo electrónico",
-                              inputType: TextInputType.emailAddress),
+                            controller: TextEditingController(),
+                            labelText: appLocalization.email,
+                            inputType: TextInputType.emailAddress,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return appLocalization.errorRequiredField;
+
+                              } else {
+                                return value.isValidEmail() ? null : appLocalization.errorEmailFormat;
+                              }
+                            },
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -72,32 +86,43 @@ class LoginScreen extends ConsumerWidget {
                                     }),
                               ),
                               const Padding(
-                                padding: EdgeInsets.only(
-                                    left: 8.0),
+                                padding: EdgeInsets.only(left: 8.0),
                                 child: Text("Recordar usuario"),
                               ),
                             ],
                           ),
                           LabeledTextFormField(
                             controller: TextEditingController(),
-                            labelText: "Contraseña",
+                            labelText: appLocalization.password,
                             obscure: true,
                             suffixIcon: const Icon(true
                                 ? Icons.remove_red_eye
                                 : Icons.remove_red_eye_outlined),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return appLocalization.errorRequiredField;
+                              }
+                            },
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              //TODO: Question mark icon
-                              //Icon(Icons.question_mark, size: 16,),
                               CupertinoButton(
-                                  child: Text("Olvidé mi contraseña"),
+                                  child: Row(
+                                    children: const [
+                                      Padding(
+                                        padding: EdgeInsets.only(right: 4.0),
+                                        child: Icon(
+                                            CupertinoIcons.question_circle),
+                                      ),
+                                      Text("Olvidé mi contraseña"),
+                                    ],
+                                  ),
                                   onPressed: () {
                                     // TODO: Forgot Password navigation
-                                  })
+                                  }),
                             ],
-                          ),
+                          )
                         ]),
                       ),
                       Column(

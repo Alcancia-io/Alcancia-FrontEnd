@@ -8,13 +8,14 @@ class LabeledTextFormField extends StatelessWidget {
       this.suffixIcon,
       this.obscure = false,
       this.autofillHints,
-      this.inputType})
+      this.inputType,  this.validator,})
       : super(key: key);
 
   final TextEditingController controller;
   final String labelText;
   final bool obscure;
   final Icon? suffixIcon;
+  final String? Function(String?)? validator;
   final TextInputType? inputType;
   final Iterable<String>? autofillHints;
 
@@ -32,6 +33,7 @@ class LabeledTextFormField extends StatelessWidget {
           decoration: InputDecoration(
             suffixIcon: suffixIcon,
           ),
+          validator: validator,
         ),
       ],
     );
