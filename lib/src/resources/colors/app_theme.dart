@@ -17,8 +17,19 @@ class AlcanciaTheme {
               MaterialStateProperty.all(const TextStyle(fontFamily: 'Gotham')),
         ),
       ),
+      inputDecorationTheme: InputDecorationTheme(
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(7),
+            borderSide: BorderSide.none),
+        filled: true,
+        fillColor: alcanciaFieldLight,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
+      ),
+      unselectedWidgetColor: alcanciaLightBlue,
+      checkboxTheme: CheckboxThemeData(
+          fillColor: MaterialStateProperty.all(alcanciaLightBlue),
+          checkColor: MaterialStateProperty.all(Colors.white)),
       cupertinoOverrideTheme: const NoDefaultCupertinoThemeData(
-        // primaryColor: alcanciaBgLight,
         scaffoldBackgroundColor: alcanciaBgLight,
         brightness: Brightness.light,
         textTheme: CupertinoTextThemeData(
@@ -42,8 +53,20 @@ class AlcanciaTheme {
               MaterialStateProperty.all(const TextStyle(fontFamily: 'Gotham')),
         ),
       ),
+      inputDecorationTheme: InputDecorationTheme(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(7),
+          borderSide: BorderSide.none,
+        ),
+        filled: true,
+        fillColor: alcanciaFieldDark,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
+      ),
+      unselectedWidgetColor: alcanciaLightBlue,
+      checkboxTheme: CheckboxThemeData(
+          fillColor: MaterialStateProperty.all(alcanciaLightBlue),
+          checkColor: MaterialStateProperty.all(Colors.white)),
       cupertinoOverrideTheme: const NoDefaultCupertinoThemeData(
-        // primaryColor: alcanciaBgDark,
         scaffoldBackgroundColor: alcanciaBgDark,
         brightness: Brightness.dark,
         textTheme: CupertinoTextThemeData(
