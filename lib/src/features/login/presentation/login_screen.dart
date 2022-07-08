@@ -1,4 +1,3 @@
-import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:alcancia/src/shared/components/alcancia_text_field.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
@@ -6,8 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:alcancia/src/features/login/data/login_mutation.dart';
 
 final rememberEmailProvider = StateProvider.autoDispose<bool>((ref) => false);
 
@@ -15,6 +15,9 @@ class LoginScreen extends ConsumerWidget {
   LoginScreen({Key? key}) : super(key: key);
 
   final obscurePassword = StateProvider.autoDispose<bool>((ref) => true);
+  final loginUserInput = {"email": "A01209400@itesm.mx", "password": ""};
+
+  final emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -57,18 +60,21 @@ class LoginScreen extends ConsumerWidget {
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         child: Column(children: [
                           LabeledTextFormField(
-                            controller: TextEditingController(),
+                            controller: emailController,
                             labelText: appLocalization.email,
                             inputType: TextInputType.emailAddress,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return appLocalization.errorRequiredField;
-
                               } else {
-                                return value.isValidEmail() ? null : appLocalization.errorEmailFormat;
+                                return value.isValidEmail()
+                                    ? null
+                                    : appLocalization.errorEmailFormat;
                               }
                             },
                           ),
+                          Text("this is the controller"),
+                          Text(emailController.text),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -131,12 +137,34 @@ class LoginScreen extends ConsumerWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: AlcanciaButton(() {}, "Iniciar sesión"),
+                            child: Mutation(
+                              options: MutationOptions(
+                                document: gql(loginMutation),
+                                onCompleted: (dynamic resultData) {
+                                  print("hola");
+                                  print(resultData['login']['access_token']);
+                                },
+                              ),
+                              builder: (
+                                MultiSourceResult<Object?> Function(
+                                        Map<String, dynamic>,
+                                        {Object? optimisticResult})
+                                    runMutation,
+                                QueryResult<Object?>? result,
+                              ) {
+                                return AlcanciaButton(
+                                  () => runMutation(
+                                    {"loginUserInput": loginUserInput},
+                                  ),
+                                  "Iniciar sesión",
+                                );
+                              },
+                            ),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text("No tengo cuenta."),
+                              const Text("No tengo cuenta."),
                               CupertinoButton(
                                   child: const Text(
                                     "Registrarme",
