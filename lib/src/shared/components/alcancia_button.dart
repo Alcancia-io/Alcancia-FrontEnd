@@ -13,7 +13,7 @@ class AlcanciaButton extends StatelessWidget {
   ) {
     var size = MediaQuery.of(context).size;
     return Container(
-      height: size.height * 0.06,
+      height: size.height * 0.07,
       child: CupertinoButton(
         onPressed: onPressed,
         color: alcanciaLightBlue,
