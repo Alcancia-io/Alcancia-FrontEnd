@@ -14,23 +14,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     GoRoute(
       name: "login",
       path: "/login",
-      builder: (context, state) => const LoginScreen(),
-    ),
-    GoRoute(
-      path: '/fade',
-      pageBuilder: (context, state) => CustomTransitionPage<void>(
-        key: state.pageKey,
-        child: const LoginScreen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-            SlideTransition(
-                position: animation.drive(
-                  Tween<Offset>(
-                    begin: const Offset(0.25, 0.25),
-                    end: Offset.zero,
-                  ).chain(CurveTween(curve: Curves.easeIn)),
-                ),
-                child: child),
-      ),
+      builder: (context, state) => LoginScreen(),
     ),
   ]);
 });

@@ -25,7 +25,7 @@ class WelcomeScreen extends StatelessWidget {
         if (result.isLoading) {
           return const Text('Loading...');
         }
-        print(result.data);
+        //print(result.data);
         return Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -96,7 +96,7 @@ class WelcomeScreen extends StatelessWidget {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   onPressed: () =>
-                                      GoRouter.of(context).go("/login")),
+                                      context.push("/login")),
                             ],
                           )
                         ],
