@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:alcancia/src/features/login/data/login_mutation.dart';
 
@@ -15,9 +16,17 @@ class LoginScreen extends ConsumerWidget {
   LoginScreen({Key? key}) : super(key: key);
 
   final obscurePassword = StateProvider.autoDispose<bool>((ref) => true);
-  final loginUserInput = {"email": "A01209400@itesm.mx", "password": ""};
 
   final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  var loginUserInput;
+
+  setLoginInputFields() {
+    loginUserInput = {
+      "email": emailController.text,
+      "password": passwordController.text
+    };
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -73,8 +82,6 @@ class LoginScreen extends ConsumerWidget {
                               }
                             },
                           ),
-                          Text("this is the controller"),
-                          Text(emailController.text),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -98,7 +105,7 @@ class LoginScreen extends ConsumerWidget {
                             ],
                           ),
                           LabeledTextFormField(
-                            controller: TextEditingController(),
+                            controller: passwordController,
                             labelText: appLocalization.password,
                             obscure: true,
                             suffixIcon: const Icon(true
@@ -141,7 +148,6 @@ class LoginScreen extends ConsumerWidget {
                               options: MutationOptions(
                                 document: gql(loginMutation),
                                 onCompleted: (dynamic resultData) {
-                                  print("hola");
                                   print(resultData['login']['access_token']);
                                 },
                               ),
@@ -153,9 +159,13 @@ class LoginScreen extends ConsumerWidget {
                                 QueryResult<Object?>? result,
                               ) {
                                 return AlcanciaButton(
-                                  () => runMutation(
-                                    {"loginUserInput": loginUserInput},
-                                  ),
+                                  () => {
+                                    setLoginInputFields(),
+                                    runMutation(
+                                      {"loginUserInput": loginUserInput},
+                                    ),
+                                    context.push("/dashboard")
+                                  },
                                   "Iniciar sesión",
                                 );
                               },
