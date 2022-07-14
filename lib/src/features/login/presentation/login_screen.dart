@@ -1,3 +1,5 @@
+import 'package:alcancia/src/features/login/data/storage_item.dart';
+import 'package:alcancia/src/features/login/domain/login_service.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:alcancia/src/shared/components/alcancia_text_field.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
@@ -14,12 +16,18 @@ final rememberEmailProvider = StateProvider.autoDispose<bool>((ref) => false);
 
 class LoginScreen extends ConsumerWidget {
   LoginScreen({Key? key}) : super(key: key);
+  final StorageService _storageService = StorageService();
 
   final obscurePassword = StateProvider.autoDispose<bool>((ref) => true);
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   var loginUserInput;
+
+  saveToken() async {
+    final StorageItem storageItem = StorageItem("token", "123");
+    _storageService.writeSecureData(storageItem);
+  }
 
   setLoginInputFields() {
     loginUserInput = {
@@ -148,7 +156,12 @@ class LoginScreen extends ConsumerWidget {
                               options: MutationOptions(
                                 document: gql(loginMutation),
                                 onCompleted: (dynamic resultData) {
-                                  print(resultData['login']['access_token']);
+                                  if (resultData != null) {
+                                    // TODO: uncomment this
+                                    // context.go("/dashboard");
+                                    context.push("/dashboard");
+                                    saveToken();
+                                  }
                                 },
                               ),
                               builder: (
@@ -158,13 +171,26 @@ class LoginScreen extends ConsumerWidget {
                                     runMutation,
                                 QueryResult<Object?>? result,
                               ) {
+                                if (result != null) {
+                                  if (result.isLoading) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                  if (result.hasException) {
+                                    return Text(
+                                      result.exception.toString(),
+                                      style: const TextStyle(
+                                          color: Colors.red, fontSize: 12),
+                                    );
+                                  }
+                                }
                                 return AlcanciaButton(
                                   () => {
                                     setLoginInputFields(),
                                     runMutation(
                                       {"loginUserInput": loginUserInput},
                                     ),
-                                    context.push("/dashboard")
                                   },
                                   "Iniciar sesión",
                                 );

@@ -19,7 +19,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     GoRoute(
       name: "dashboard",
       path: "/dashboard",
-      builder: (context, state) => const DashboardScreen(),
+      builder: (context, state) => DashboardScreen(),
     ),
   ]);
 });
