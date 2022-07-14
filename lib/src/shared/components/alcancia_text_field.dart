@@ -14,7 +14,7 @@ class LabeledTextFormField extends StatelessWidget {
   final TextEditingController controller;
   final String labelText;
   final bool obscure;
-  final Icon? suffixIcon;
+  final Widget? suffixIcon;
   final String? Function(String?)? validator;
   final TextInputType? inputType;
   final Iterable<String>? autofillHints;

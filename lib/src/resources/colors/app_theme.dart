@@ -21,6 +21,10 @@ class AlcanciaTheme {
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(7),
             borderSide: BorderSide.none),
+        errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(7),
+            borderSide: const BorderSide(color: Colors.red),
+        ),
         filled: true,
         fillColor: alcanciaFieldLight,
         floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -57,6 +61,10 @@ class AlcanciaTheme {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7),
           borderSide: BorderSide.none,
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(7),
+          borderSide: const BorderSide(color: Colors.red),
         ),
         filled: true,
         fillColor: alcanciaFieldDark,

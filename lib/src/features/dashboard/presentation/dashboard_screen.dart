@@ -9,10 +9,10 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     readToken() async {
-      await _storageService.readSecureData("token");
+      return await _storageService.readSecureData("token");
     }
 
-    print(readToken());
+    readToken().then((value) => print(value));
 
     return const Scaffold(
         body: SafeArea(
