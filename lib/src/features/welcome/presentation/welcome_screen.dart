@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:alcancia/src/shared/graphql/queries.dart';
 
+
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
 
@@ -15,7 +16,9 @@ class WelcomeScreen extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     var isDarkMode = Theme.of(context).brightness == Brightness.dark;
     var pattern = getPattern(isDarkMode);
-    return Query(
+
+
+    return Query
       options: QueryOptions(document: gql(meQuery)),
       builder: (QueryResult<Object?> result,
           {VoidCallback? refetch, FetchMore? fetchMore}) {
@@ -44,7 +47,7 @@ class WelcomeScreen extends StatelessWidget {
                           : "lib/src/resources/images/icon_alcancia_light.svg",
                       height: size.height / 12),
                   Transform(
-                    transform: Matrix4.translationValues(0, 30, 0),
+                    transform: Matrix4.translationValues(0, 25, 0),
                     child: Image(
                         image: const AssetImage(
                             "lib/src/resources/images/welcome_image.png"),
@@ -62,6 +65,7 @@ class WelcomeScreen extends StatelessWidget {
                         child: Padding(
                       padding: const EdgeInsets.all(32.0),
                       child: Column(
+
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -87,6 +91,7 @@ class WelcomeScreen extends StatelessWidget {
                               const Text(
                                 "¿Ya tienes cuenta?",
                                 textAlign: TextAlign.center,
+
                               ),
                               CupertinoButton(
                                   child: const Text(
