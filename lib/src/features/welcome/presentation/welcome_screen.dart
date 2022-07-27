@@ -18,7 +18,7 @@ class WelcomeScreen extends StatelessWidget {
     var pattern = getPattern(isDarkMode);
 
 
-    return Query
+    return Query(
       options: QueryOptions(document: gql(meQuery)),
       builder: (QueryResult<Object?> result,
           {VoidCallback? refetch, FetchMore? fetchMore}) {

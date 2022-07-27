@@ -147,7 +147,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_hooks:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_hooks
       url: "https://pub.dartlang.org"
@@ -371,7 +371,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.0"
-
   modal_bottom_sheet:
     dependency: "direct main"
     description:
@@ -379,7 +378,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
-
   nm:
     dependency: transitive
     description:
@@ -394,7 +392,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.0+1"
-
   path:
     dependency: transitive
     description:
@@ -472,15 +469,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.0"
-
-  responsive_framework:
-    dependency: "direct main"
-    description:
-      name: responsive_framework
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.0"
-
   platform:
     dependency: transitive
     description:
@@ -502,6 +490,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.4"
+  responsive_framework:
+    dependency: "direct main"
+    description:
+      name: responsive_framework
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
   riverpod:
     dependency: transitive
     description:
@@ -516,7 +511,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.27.4"
-
   sky_engine:
     dependency: transitive
     description: flutter
