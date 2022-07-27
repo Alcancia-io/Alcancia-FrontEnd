@@ -1,0 +1,7 @@
+{
+  "helloWorld": "¡Hola Mundo!",
+  "email": "Correo electrónico",
+  "password": "Contraseña",
+  "errorRequiredField": "Este campo es obligatorio",
+  "errorEmailFormat": "¿Estas seguro?, verifica tu correo"
+}

@@ -29,12 +29,25 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.17.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   flutter_svg: ^1.1.1+1
+
+  modal_bottom_sheet: ^2.1.0
+  auto_size_text: ^3.0.0
+  responsive_framework: ^0.2.0
+
+  graphql_flutter: ^5.1.0
+  go_router: ^4.1.0
+  flutter_riverpod: ^2.0.0-dev.9
+  flutter_secure_storage: ^5.0.2
+
+
 
 dev_dependencies:
   flutter_test:
@@ -52,7 +65,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  generate: true
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -60,9 +73,18 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/welcome_image.png
-    - assets/images/icon_alcancia_light.svg
-    - assets/images/icon_alcancia_dark.svg
+    - lib/src/resources/images/welcome_image.png
+    - lib/src/resources/images/icon_alcancia_light.svg
+    - lib/src/resources/images/icon_alcancia_dark.svg
+    - lib/src/resources/images/icon_alcancia_light_no_letters.svg
+    - lib/src/resources/images/icon_alcancia_dark_no_letters.svg
+  fonts:
+    - family: Gotham
+      fonts:
+        - asset: lib/src/resources/fonts/Gotham-Bold.otf
+          weight: 700
+        - asset: lib/src/resources/fonts/Gotham-Book.otf
+          weight: 400
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

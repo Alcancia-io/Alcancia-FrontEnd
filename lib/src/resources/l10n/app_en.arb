@@ -1,0 +1,10 @@
+{
+  "helloWorld": "Hello World!",
+  "@helloWorld": {
+    "description": "The conventional newborn programmer greeting"
+  },
+  "email": "Email",
+  "password": "Password",
+  "errorRequiredField": "This field is mandatory",
+  "errorEmailFormat": "Are you sure?, verify your email"
+}

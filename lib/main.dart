@@ -1,24 +1,59 @@
-import 'package:alcancia/screens/welcome/screen.dart';
-import 'package:alcancia/themes/colors.dart';
+import 'package:alcancia/src/resources/colors/app_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:alcancia/src/shared/provider/router_provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  await initHiveForFlutter();
+
+  runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return  MaterialApp(
-      title: 'Alcancía',
-      theme: ThemeData(brightness: Brightness.light, scaffoldBackgroundColor: alcanciaBgLight, primaryColor: alcanciaBgLight,cardColor: alcanciaBgLight, backgroundColor: alcanciaBgLight),
-      darkTheme: ThemeData(brightness: Brightness.dark, scaffoldBackgroundColor: alcanciaBgDark, primaryColor: alcanciaBgDark, cardColor: alcanciaBgDark,backgroundColor: alcanciaBgDark),
-      themeMode: ThemeMode.system,
-      home: WelcomeScreen(),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
+    const uri = "http://localhost:3000/graphql";
+
+    final HttpLink httpLink = HttpLink(uri,
+        defaultHeaders: <String, String>{'Authorization': 'Bearer '});
+
+    ValueNotifier<GraphQLClient> client = ValueNotifier(
+      GraphQLClient(
+        link: httpLink,
+        // The default store is the InMemoryStore, which does NOT persist to disk
+        cache: GraphQLCache(store: HiveStore()),
+      ),
+    );
+
+    return GraphQLProvider(
+      client: client,
+      child: MaterialApp.router(
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          AppLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en', ''), // English, no country code
+          Locale('es', ''), // Spanish, no country code
+        ],
+        routerDelegate: router.routerDelegate,
+        title: 'Alcancía',
+        theme: AlcanciaTheme.lightTheme,
+        darkTheme: AlcanciaTheme.darkTheme,
+        themeMode: ThemeMode.system,
+        routeInformationParser: router.routeInformationParser,
+        routeInformationProvider: router.routeInformationProvider,
+      ),
     );
   }
 }
@@ -33,44 +68,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(middle: Text('Sample'),),
+      navigationBar: const CupertinoNavigationBar(
+        middle: Text('Sample'),
+      ),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
+          children: const <Widget>[
+            Text(
               'You have pushed the button this many times:',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            CupertinoButton.filled(onPressed: _incrementCounter, child: const Text("Add"))
           ],
         ),
       ),
-
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
