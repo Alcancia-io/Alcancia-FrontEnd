@@ -12,7 +12,7 @@ class AlcanciaButton extends StatelessWidget {
     BuildContext context,
   ) {
     var size = MediaQuery.of(context).size;
-    return Container(
+    return SizedBox(
       height: size.height * 0.07,
       child: CupertinoButton(
         onPressed: onPressed,

@@ -1,12 +1,12 @@
 import 'package:alcancia/src/features/login/data/storage_item.dart';
 import 'package:alcancia/src/features/login/domain/login_service.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
+import 'package:alcancia/src/shared/components/alcancia_logo.dart';
 import 'package:alcancia/src/shared/components/alcancia_text_field.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -25,7 +25,7 @@ class LoginScreen extends ConsumerWidget {
   final passwordController = TextEditingController();
   var loginUserInput;
 
-  saveToken(String token) async {
+  saveToken(String token) {
     final StorageItem storageItem = StorageItem("token", token);
     _storageService.writeSecureData(storageItem);
   }
@@ -40,7 +40,6 @@ class LoginScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
-    var isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final rememberMe = ref.watch(rememberEmailProvider);
     final appLocalization = AppLocalizations.of(context)!;
     final obscurePassword = ref.watch(obscurePasswordProvider);
@@ -58,107 +57,106 @@ class LoginScreen extends ConsumerWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: SvgPicture.asset(
-                      isDarkMode
-                          ? "lib/src/resources/images/icon_alcancia_dark_no_letters.svg"
-                          : "lib/src/resources/images/icon_alcancia_light_no_letters.svg",
-                      height: size.height / 8,
-                    ),
+                    child: AlcanciaLogo(height: size.height / 8,),
                   ),
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              '¡Hola!\nBienvenido',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 35),
-                            ),
-                          ],
+                        const Text(
+                          '¡Hola!\nBienvenido',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 35),
                         ),
                         Form(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           child: Column(children: [
-                            LabeledTextFormField(
-                              controller: emailController,
-                              labelText: appLocalization.email,
-                              inputType: TextInputType.emailAddress,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return appLocalization.errorRequiredField;
-                                } else {
-                                  return value.isValidEmail()
-                                      ? null
-                                      : appLocalization.errorEmailFormat;
-                                }
-                              },
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                            Column(
                               children: [
-                                SizedBox(
-                                  width: 25,
-                                  child: Checkbox(
-                                      value: rememberMe,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                      onChanged: (value) {
-                                        ref
-                                            .read(rememberEmailProvider.notifier)
-                                            .state = value!;
-                                      }),
+                                LabeledTextFormField(
+                                  controller: emailController,
+                                  labelText: appLocalization.email,
+                                  inputType: TextInputType.emailAddress,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return appLocalization.errorRequiredField;
+                                    } else {
+                                      return value.isValidEmail()
+                                          ? null
+                                          : appLocalization.errorEmailFormat;
+                                    }
+                                  },
                                 ),
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 8.0),
-                                  child: Text("Recordar usuario"),
-                                ),
-                              ],
-                            ),
-                            LabeledTextFormField(
-                              controller: passwordController,
-                              labelText: appLocalization.password,
-                              obscure: obscurePassword,
-                              suffixIcon: GestureDetector(
-                                onTap: () {
-                                  ref
-                                      .read(obscurePasswordProvider.notifier)
-                                      .state = !obscurePassword;
-                                },
-                                child: Icon(obscurePassword
-                                    ? CupertinoIcons.eye
-                                    : CupertinoIcons.eye_fill),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return appLocalization.errorRequiredField;
-                                }
-                              },
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                CupertinoButton(
-                                    child: Row(
-                                      children: const [
-                                        Padding(
-                                          padding: EdgeInsets.only(right: 4.0),
-                                          child: Icon(
-                                              CupertinoIcons.question_circle),
-                                        ),
-                                        Text("Olvidé mi contraseña"),
-                                      ],
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: 25,
+                                      child: Checkbox(
+                                          value: rememberMe,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(4),
+                                          ),
+                                          onChanged: (value) {
+                                            ref
+                                                .read(rememberEmailProvider.notifier)
+                                                .state = value!;
+                                          }),
                                     ),
-                                    onPressed: () {
-                                      // TODO: Forgot Password navigation
-                                    }),
+                                    const Padding(
+                                      padding: EdgeInsets.only(left: 8.0),
+                                      child: Text("Recordar usuario"),
+                                    ),
+                                  ],
+                                ),
                               ],
-                            )
-                          ]),
+                            ),
+                            Column(
+                              children: [
+                                LabeledTextFormField(
+                                  controller: passwordController,
+                                  labelText: appLocalization.password,
+                                  obscure: obscurePassword,
+                                  suffixIcon: GestureDetector(
+                                    onTap: () {
+                                      ref
+                                          .read(obscurePasswordProvider.notifier)
+                                          .state = !obscurePassword;
+                                    },
+                                    child: Icon(obscurePassword
+                                        ? CupertinoIcons.eye
+                                        : CupertinoIcons.eye_fill),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return appLocalization.errorRequiredField;
+                                    }
+                                  },
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    CupertinoButton(
+                                        child: Row(
+                                          children: const [
+                                            Padding(
+                                              padding: EdgeInsets.only(right: 4.0),
+                                              child: Icon(
+                                                  CupertinoIcons.question_circle),
+                                            ),
+                                            Text("Olvidé mi contraseña"),
+                                          ],
+                                        ),
+                                        onPressed: () {
+                                          // TODO: Forgot Password navigation
+                                        }),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                          ),
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.center,

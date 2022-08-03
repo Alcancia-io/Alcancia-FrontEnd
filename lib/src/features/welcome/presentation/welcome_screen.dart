@@ -1,8 +1,8 @@
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
+import 'package:alcancia/src/shared/components/alcancia_logo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:alcancia/src/shared/graphql/queries.dart';
@@ -13,8 +13,7 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    var isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    var pattern = getPattern(isDarkMode);
+    var pattern = getPattern(context);
     return Query(
       options: QueryOptions(document: gql(meQuery)),
       builder: (QueryResult<Object?> result,
@@ -36,74 +35,77 @@ class WelcomeScreen extends StatelessWidget {
             backgroundColor: Colors.transparent,
             body: SafeArea(
               bottom: false,
-              child: Column(
-                children: [
-                  SvgPicture.asset(
-                      isDarkMode
-                          ? "lib/src/resources/images/icon_alcancia_dark.svg"
-                          : "lib/src/resources/images/icon_alcancia_light.svg",
-                      height: size.height / 12),
-                  Transform(
-                    transform: Matrix4.translationValues(0, 30, 0),
-                    child: Image(
-                        image: const AssetImage(
-                            "lib/src/resources/images/welcome_image.png"),
-                        width: size.width),
-                  ),
-                  Expanded(
-                      child: Container(
-                    width: size.width,
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(33),
-                            topRight: Radius.circular(33))),
-                    child: Center(
-                        child: Padding(
-                      padding: const EdgeInsets.all(32.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            "Descubre una nueva forma de ahorrar",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 35),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.only(top: 16.0),
-                            child: Text(
-                              "Construye tu portafolio de ahorro basado en crypto",
+              child: SingleChildScrollView(
+                physics: ClampingScrollPhysics(),
+                child: Column(
+                  children: [
+                    AlcanciaLogo(height: size.height / 12),
+                    Transform(
+                      transform: Matrix4.translationValues(0, 30, 0),
+                      child: Image(
+                          image: const AssetImage(
+                              "lib/src/resources/images/welcome_image.png"),
+                          width: size.width),
+                    ),
+                    Container(
+                      width: size.width,
+                      height: size.height * 0.5,
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(33),
+                              topRight: Radius.circular(33))),
+                      child: Center(
+                          child: Padding(
+                        padding: const EdgeInsets.all(32.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Descubre una nueva forma de ahorrar",
                               style: TextStyle(
-                                  fontWeight: FontWeight.w400, fontSize: 16),
+                                  fontWeight: FontWeight.bold, fontSize: 35),
                             ),
-                          ),
-                          const Spacer(),
-                          AlcanciaButton(() {}, "Registrate"),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                "¿Ya tienes cuenta?",
-                                textAlign: TextAlign.center,
+                            const Padding(
+                              padding: EdgeInsets.only(top: 16.0),
+                              child: Text(
+                                "Construye tu portafolio de ahorro basado en crypto",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400, fontSize: 16),
                               ),
-                              CupertinoButton(
-                                  child: const Text(
-                                    "Inicia sesión",
-                                    style: TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        fontWeight: FontWeight.bold),
+                            ),
+                            const Spacer(),
+                            AlcanciaButton(() {
+                              context.go('/registration');
+                            }, "Registrate"),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    "¿Ya tienes cuenta?",
+                                    textAlign: TextAlign.center,
                                   ),
-                                  onPressed: () =>
-                                      context.push("/login")),
-                            ],
-                          )
-                        ],
-                      ),
-                    )),
-                  ))
-                ],
+                                  CupertinoButton(
+                                      child: const Text(
+                                        "Inicia sesión",
+                                        style: TextStyle(
+                                            decoration: TextDecoration.underline,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      onPressed: () => context.push("/login")),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      )),
+                    )
+                  ],
+                ),
               ),
             ),
           ),
