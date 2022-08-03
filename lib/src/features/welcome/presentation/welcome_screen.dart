@@ -77,7 +77,7 @@ class WelcomeScreen extends StatelessWidget {
                             ),
                             const Spacer(),
                             AlcanciaButton(() {
-                              context.go('/registration');
+                              context.push('/registration');
                             }, "Registrate"),
                             Padding(
                               padding: const EdgeInsets.only(top: 16.0),

@@ -239,6 +239,7 @@ class LoginScreen extends ConsumerWidget {
                                     ),
                                     onPressed: () {
                                       //TODO: Register navigation
+                                      context.push("/registration");
                                     }),
                               ],
                             ),
