@@ -1,3 +1,4 @@
+import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:alcancia/src/resources/colors/app_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,8 +23,10 @@ class MyApp extends ConsumerWidget {
     final router = ref.watch(routerProvider);
     const uri = "http://localhost:8000/graphql";
 
-    final HttpLink httpLink = HttpLink(uri,
-        defaultHeaders: <String, String>{'Authorization': 'Bearer '});
+    final HttpLink httpLink = HttpLink(
+      uri,
+      defaultHeaders: <String, String>{'Authorization': 'Bearer '},
+    );
 
     ValueNotifier<GraphQLClient> client = ValueNotifier(
       GraphQLClient(
