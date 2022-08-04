@@ -25,9 +25,9 @@ class LoginScreen extends ConsumerWidget {
   final passwordController = TextEditingController();
   var loginUserInput;
 
-  saveToken(String token) {
+  saveToken(String token) async {
     final StorageItem storageItem = StorageItem("token", token);
-    _storageService.writeSecureData(storageItem);
+    await _storageService.writeSecureData(storageItem);
   }
 
   setLoginInputFields() {
@@ -171,10 +171,10 @@ class LoginScreen extends ConsumerWidget {
                                     if (resultData != null) {
                                       // TODO: uncomment this
                                       // context.go("/dashboard");
-                                      context.push("/dashboard");
                                       final token =
                                           resultData["login"]["access_token"];
                                       saveToken(token);
+                                      context.push("/dashboard");
                                     }
                                   },
                                 ),
@@ -195,14 +195,14 @@ class LoginScreen extends ConsumerWidget {
                                       return Column(
                                         children: [
                                           AlcanciaButton(
-                                            () => {
-                                              setLoginInputFields(),
+                                            () {
+                                              setLoginInputFields();
                                               runMutation(
                                                 {
                                                   "loginUserInput":
                                                       loginUserInput
                                                 },
-                                              ),
+                                              );
                                             },
                                             "Iniciar sesión",
                                           ),
@@ -221,11 +221,11 @@ class LoginScreen extends ConsumerWidget {
                                     }
                                   }
                                   return AlcanciaButton(
-                                    () => {
-                                      setLoginInputFields(),
+                                    () {
+                                      setLoginInputFields();
                                       runMutation(
                                         {"loginUserInput": loginUserInput},
-                                      ),
+                                      );
                                     },
                                     "Iniciar sesión",
                                   );

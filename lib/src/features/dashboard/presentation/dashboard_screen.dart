@@ -21,6 +21,8 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      top: false,
+      bottom: false,
       child: Scaffold(
         body: FutureBuilder(
           future: _storageService.readSecureData("token"),
@@ -38,7 +40,7 @@ class DashboardScreen extends StatelessWidget {
 
               final ValueNotifier<GraphQLClient> anotherClient = ValueNotifier(
                 GraphQLClient(
-                  cache: GraphQLCache(store: HiveStore()),
+                  cache: GraphQLCache(),
                   link: httpLink,
                 ),
               );
@@ -58,6 +60,7 @@ class DashboardScreen extends StatelessWidget {
                   builder: (QueryResult result,
                       {VoidCallback? refetch, FetchMore? fetchMore}) {
                     if (result.hasException) {
+                      print(result.exception?.graphqlErrors.first);
                       return Text("error");
                     }
 
@@ -68,7 +71,7 @@ class DashboardScreen extends StatelessWidget {
                     var response = result.data?['getUserTransactions'];
 
                     return Container(
-                      padding: EdgeInsets.all(24),
+                      padding: EdgeInsets.only(left: 24, right: 24, bottom: 24, top: 54),
                       child: Column(
                         children: [
                           Navbar(),

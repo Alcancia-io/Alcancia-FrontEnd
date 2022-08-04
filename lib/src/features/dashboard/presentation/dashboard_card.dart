@@ -24,7 +24,7 @@ class MyWidget extends StatelessWidget {
 
           final ValueNotifier<GraphQLClient> anotherClient = ValueNotifier(
             GraphQLClient(
-              cache: GraphQLCache(store: HiveStore()),
+              cache: GraphQLCache(),
               link: httpLink,
             ),
           );
@@ -45,6 +45,7 @@ class MyWidget extends StatelessWidget {
                   return Text("is loading...");
                 }
                 var balance = result.data?['me']['balance'];
+                print(result.data);
 
                 return Container(
                   padding: const EdgeInsets.all(16.0),
@@ -136,7 +137,7 @@ class MyWidget extends StatelessWidget {
                                 padding:
                                     const EdgeInsets.only(top: 16, bottom: 8),
                                 child: Text(
-                                  "\$${userProfit} USDC",
+                                  "\$ ${userProfit} USDC",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 35,
