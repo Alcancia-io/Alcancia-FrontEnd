@@ -7,3 +7,9 @@ const String meQuery = """
     }
   }
 """;
+
+const String userProfit = """
+  query{
+    getUserProfit
+  }
+""";

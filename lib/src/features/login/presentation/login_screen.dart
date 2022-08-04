@@ -1,5 +1,5 @@
-import 'package:alcancia/src/features/login/data/storage_item.dart';
-import 'package:alcancia/src/features/login/domain/login_service.dart';
+import 'package:alcancia/src/shared/models/storage_item.dart';
+import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:alcancia/src/shared/components/alcancia_text_field.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
@@ -109,7 +109,8 @@ class LoginScreen extends ConsumerWidget {
                                       ),
                                       onChanged: (value) {
                                         ref
-                                            .read(rememberEmailProvider.notifier)
+                                            .read(
+                                                rememberEmailProvider.notifier)
                                             .state = value!;
                                       }),
                                 ),
@@ -174,7 +175,8 @@ class LoginScreen extends ConsumerWidget {
                                       // TODO: uncomment this
                                       // context.go("/dashboard");
                                       context.push("/dashboard");
-                                      final token = resultData["login"]["access_token"];
+                                      final token =
+                                          resultData["login"]["access_token"];
                                       saveToken(token);
                                     }
                                   },
@@ -196,10 +198,13 @@ class LoginScreen extends ConsumerWidget {
                                       return Column(
                                         children: [
                                           AlcanciaButton(
-                                                () => {
+                                            () => {
                                               setLoginInputFields(),
                                               runMutation(
-                                                {"loginUserInput": loginUserInput},
+                                                {
+                                                  "loginUserInput":
+                                                      loginUserInput
+                                                },
                                               ),
                                             },
                                             "Iniciar sesión",
@@ -207,9 +212,11 @@ class LoginScreen extends ConsumerWidget {
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Text(
-                                              result.exception!.graphqlErrors.first.message,
+                                              result.exception!.graphqlErrors
+                                                  .first.message,
                                               style: const TextStyle(
-                                                  color: Colors.red, fontSize: 12),
+                                                  color: Colors.red,
+                                                  fontSize: 12),
                                             ),
                                           ),
                                         ],

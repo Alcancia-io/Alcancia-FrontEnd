@@ -1,6 +1,7 @@
+import 'package:alcancia/src/shared/models/storage_item.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import '../data/storage_item.dart';
+import '../models/storage_item.dart';
 
 class StorageService {
   final _secureStorage = const FlutterSecureStorage();
