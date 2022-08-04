@@ -73,16 +73,16 @@ class MyWidget extends StatelessWidget {
                                   isDense: true,
                                   selectedItemBuilder: (context) {
                                     return [
-                                      const Padding(
+                                       Padding(
                                         padding: EdgeInsets.all(4.0),
-                                        child: Text("Balance"),
+                                        child: Text("Balance", style: Theme.of(context).textTheme.bodyText1,),
                                       )
                                     ];
                                   },
                                   dropdownColor: const Color(0xff1F318C),
-                                  items: const [
+                                  items:  [
                                     DropdownMenuItem(
-                                      child: Text("Balance"),
+                                      child: Text("Balance", style: Theme.of(context).textTheme.bodyText1,),
                                     ),
                                   ],
                                   onChanged: (value) {},
@@ -154,7 +154,7 @@ class MyWidget extends StatelessWidget {
                                         primary: const Color(0xff3554C4),
                                       ),
                                       onPressed: () {},
-                                      child: const Text("Retirar"),
+                                      child: Text("Retirar", style: Theme.of(context).textTheme.bodyText1,),
                                     ),
                                   ),
                                   SizedBox(
@@ -164,7 +164,7 @@ class MyWidget extends StatelessWidget {
                                         primary: const Color(0xff3554C4),
                                       ),
                                       onPressed: () {},
-                                      child: const Text("Depositar"),
+                                      child: Text("Depositar", style: Theme.of(context).textTheme.bodyText1,),
                                     ),
                                   )
                                 ],

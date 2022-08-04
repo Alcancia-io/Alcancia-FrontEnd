@@ -28,9 +28,31 @@ class RegistrationScreen extends ConsumerWidget {
   final obscureConfirmPasswordProvider =
       StateProvider.autoDispose<bool>((ref) => true);
 
-  final selectedDateProvider = StateProvider.autoDispose<DateTime>((ref) => DateTime.now());
-  final selectedCountryProvider = StateProvider.autoDispose<Country>((ref) => countries[0]);
-  final selectedGenderProvider = StateProvider.autoDispose<Gender?>((ref) => null);
+  final selectedDateProvider =
+      StateProvider.autoDispose<DateTime>((ref) => DateTime.now());
+  final selectedCountryProvider =
+      StateProvider.autoDispose<Country>((ref) => countries[0]);
+  final selectedGenderProvider =
+      StateProvider.autoDispose<Gender?>((ref) => null);
+
+  var signupInput;
+
+  bool checkPassword() {
+    if (passwordController.text != confirmPasswordController.text) return false;
+    return true;
+  }
+
+  setRegistrationInput(Country selectedCountry, Gender? selectedGender, DateTime selectedDate) {
+    signupInput = {
+      "name": nameController.text,
+      "surname": lastNameController.text,
+      "email": emailController.text,
+      "phoneNumber": "${selectedCountry.dialCode}${phoneController.text}",
+      "gender": selectedGender.string,
+      "password": confirmPasswordController.text,
+      "dob": DateFormat('dd/MM/yyyy').format(selectedDate)
+    };
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,17 +64,6 @@ class RegistrationScreen extends ConsumerWidget {
     final selectedGender = ref.watch(selectedGenderProvider);
     final selectedDate = ref.watch(selectedDateProvider);
 
-    final signUpInput = {
-      "name": nameController.text,
-      "surname": lastNameController.text,
-      "email": emailController.text,
-      "phoneNumber": "${selectedCountry.dialCode}${phoneController.text}",
-      "gender": selectedGender.string,
-      "password": passwordController.text,
-      "dob": DateFormat('dd/MM/yyyy').format(selectedDate)
-    };
-
-    print(signUpInput);
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -61,7 +72,8 @@ class RegistrationScreen extends ConsumerWidget {
           child: Form(
             autovalidateMode: AutovalidateMode.onUserInteraction,
             child: ListView(
-              padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
+              padding:
+                  const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
               children: [
                 Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -74,9 +86,11 @@ class RegistrationScreen extends ConsumerWidget {
                   children: const [
                     Text(
                       "¡Hola!",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
                     ),
-                    Text("Completa la siguiente información para crear tu cuenta",
+                    Text(
+                        "Completa la siguiente información para crear tu cuenta",
                         style: TextStyle(fontSize: 15)),
                   ],
                 ),
@@ -84,12 +98,30 @@ class RegistrationScreen extends ConsumerWidget {
                   height: 15,
                 ),
                 LabeledTextFormField(
-                    controller: nameController, labelText: "Nombre(s)", inputType: TextInputType.name,),
+                  controller: nameController,
+                  labelText: "Nombre(s)",
+                  inputType: TextInputType.name,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return appLocalization.errorRequiredField;
+                    }
+                    return null;
+                  },
+                ),
                 const SizedBox(
                   height: 15,
                 ),
                 LabeledTextFormField(
-                    controller: lastNameController, labelText: "Apellido(s)", inputType: TextInputType.name,),
+                  controller: lastNameController,
+                  labelText: "Apellido(s)",
+                  inputType: TextInputType.name,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return appLocalization.errorRequiredField;
+                    }
+                    return null;
+                  },
+                ),
                 const SizedBox(
                   height: 15,
                 ),
@@ -101,7 +133,9 @@ class RegistrationScreen extends ConsumerWidget {
                       children: [
                         Expanded(
                           flex: 1,
-                          child: CountryPicker(selectedCountryProvider: selectedCountryProvider,),
+                          child: CountryPicker(
+                            selectedCountryProvider: selectedCountryProvider,
+                          ),
                         ),
                         Expanded(
                           flex: 2,
@@ -129,32 +163,52 @@ class RegistrationScreen extends ConsumerWidget {
                 const SizedBox(
                   height: 15,
                 ),
-                AlcanciaDatePicker(dateProvider: selectedDateProvider, maximumDate: DateTime.now().add(const Duration(days: 1)), validator: (selectedDate) {
-                  if (selectedDate != null) {
-                    DateTime adultDate = DateTime(
-                      selectedDate.year + 18,
-                      selectedDate.month,
-                      selectedDate.day,
-                    );
+                AlcanciaDatePicker(
+                  dateProvider: selectedDateProvider,
+                  maximumDate: DateTime.now().add(const Duration(days: 1)),
+                  validator: (selectedDate) {
+                    if (selectedDate != null) {
+                      DateTime adultDate = DateTime(
+                        selectedDate.year + 18,
+                        selectedDate.month,
+                        selectedDate.day,
+                      );
 
-                    if (adultDate.isBefore(DateTime.now())) {
-                      return null;
+                      if (adultDate.isBefore(DateTime.now())) {
+                        return null;
+                      }
+                      return "INVALID AGE ERROR";
                     }
-                    return "INVALID AGE ERROR";
-                  }
-                  return null;
-                },),
+                    return null;
+                  },
+                ),
                 const SizedBox(
                   height: 15,
                 ),
-                GenderPicker(selectedGenderProvider: selectedGenderProvider, validator: (Gender? selectedGender) {
-                  if (selectedGender == null) return "Selecciona un género";
-                  return null;
-                },),
+                GenderPicker(
+                  selectedGenderProvider: selectedGenderProvider,
+                  validator: (Gender? gender) {
+                    if (selectedGender == null) return "Selecciona un género";
+                    return null;
+                  },
+                ),
                 const SizedBox(
                   height: 15,
                 ),
-                LabeledTextFormField(controller: emailController, labelText: "Correo electrónico", inputType: TextInputType.emailAddress,),
+                LabeledTextFormField(
+                  controller: emailController,
+                  labelText: "Correo electrónico",
+                  inputType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return appLocalization.errorRequiredField;
+                    } else {
+                      return value.isValidEmail()
+                          ? null
+                          : appLocalization.errorEmailFormat;
+                    }
+                  },
+                ),
                 const SizedBox(
                   height: 15,
                 ),
@@ -219,12 +273,11 @@ class RegistrationScreen extends ConsumerWidget {
                     },
                   ),
                   builder: (
-                      MultiSourceResult<Object?> Function(
-                          Map<String, dynamic>,
-                          {Object? optimisticResult})
-                      runMutation,
-                      QueryResult<Object?>? result,
-                      ) {
+                    MultiSourceResult<Object?> Function(Map<String, dynamic>,
+                            {Object? optimisticResult})
+                        runMutation,
+                    QueryResult<Object?>? result,
+                  ) {
                     print(result);
                     if (result != null) {
                       if (result.isLoading) {
@@ -236,12 +289,12 @@ class RegistrationScreen extends ConsumerWidget {
                         return Column(
                           children: [
                             AlcanciaButton(
-                                  () => {
-
-                                runMutation(
-                                  {"signupUserInput": signUpInput
-                                  },
-                                ),
+                              () {
+                                setRegistrationInput(selectedCountry, selectedGender, selectedDate);
+                                if (checkPassword())
+                                  runMutation(
+                                    {"signupUserInput": signupInput},
+                                  );
                               },
                               "Siguiente",
                             ),
@@ -258,11 +311,12 @@ class RegistrationScreen extends ConsumerWidget {
                       }
                     }
                     return AlcanciaButton(
-                          () => {
-                            runMutation(
-                              {"signupUserInput": signUpInput
-                              },
-                            ),
+                      ()  {
+                        setRegistrationInput(selectedCountry, selectedGender, selectedDate);
+                        if (checkPassword())
+                          runMutation(
+                            {"signupUserInput": signupInput},
+                          );
                       },
                       "Siguiente",
                     );
@@ -276,5 +330,3 @@ class RegistrationScreen extends ConsumerWidget {
     );
   }
 }
-
-

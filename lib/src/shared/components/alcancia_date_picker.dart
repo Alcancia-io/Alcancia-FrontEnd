@@ -36,11 +36,10 @@ class AlcanciaDatePicker extends ConsumerWidget {
                 child: Row(
                   children: [
                     Text(
-                      DateFormat.yMMMMd(Localizations.localeOf(context).toString()).format(date),
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          ?.copyWith(
+                      DateFormat.yMMMMd(
+                              Localizations.localeOf(context).toString())
+                          .format(date),
+                      style: Theme.of(context).textTheme.bodyText1?.copyWith(
                           color: Theme.of(context)
                               .textTheme
                               .subtitle2
@@ -56,26 +55,36 @@ class AlcanciaDatePicker extends ConsumerWidget {
                 ),
                 onPressed: () {
                   // Show custom pop-up menu
-                  showCupertinoModalPopup(context: context, builder: (cxt) {
-                    return Container(
-                      height: MediaQuery.of(context).size.height * 0.3,
-                      color: CupertinoColors.systemBackground.resolveFrom(context),
-                      child: SafeArea(child:
-                      CupertinoDatePicker(
-                        initialDateTime: date,
-                        maximumDate: maximumDate,
-                        mode: CupertinoDatePickerMode.date,
-                        onDateTimeChanged: (DateTime newDate) {
-                          ref.read(dateProvider.notifier).state = newDate;
-                          state.didChange(newDate);
-                        },
-                      )),
-                    );
-                  });
+                  showCupertinoModalPopup(
+                      context: context,
+                      builder: (cxt) {
+                        return Container(
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          color: CupertinoColors.systemBackground
+                              .resolveFrom(context),
+                          child: SafeArea(
+                              child: CupertinoDatePicker(
+                            initialDateTime: date,
+                            maximumDate: maximumDate,
+                            mode: CupertinoDatePickerMode.date,
+                            onDateTimeChanged: (DateTime newDate) {
+                              ref.read(dateProvider.notifier).state = newDate;
+                              state.didChange(newDate);
+                            },
+                          )),
+                        );
+                      });
                 },
               ),
             ),
-            if (state.hasError) Text(state.errorText!),
+            if (state.hasError)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  state.errorText!,
+                  style: TextStyle(color: Colors.red, fontSize: 10),
+                ),
+              ),
           ],
         );
       },
