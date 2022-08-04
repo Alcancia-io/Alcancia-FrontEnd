@@ -1,10 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class User {
-  final String name;
+  final String userId;
   final String email;
+  final String name;
+  final String surname;
+  final String gender;
+  final String phoneNumber;
+  final DateTime dob;
 
-  const User({required this.name, required this.email});
+
+  const User({required this.userId, required this.surname, required this.gender, required this.phoneNumber, required this.dob, required this.name, required this.email});
 }
 
 class UserState extends StateNotifier<User?> {
@@ -12,9 +18,14 @@ class UserState extends StateNotifier<User?> {
 
   Future<void> login(String email, String password) async {
     // This mocks some sort of request / response
-    state = const User(
+    state = User(
+      userId: "",
       name: "My Name",
+      surname: "My Surname",
       email: "My Email",
+      gender: "Gender",
+      phoneNumber: "",
+      dob: DateTime.now(),
     );
   }
 

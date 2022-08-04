@@ -1,3 +1,4 @@
+import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,9 +48,9 @@ class AlcanciaDatePicker extends ConsumerWidget {
                               ?.withOpacity(0.6)),
                     ),
                     const Spacer(),
-                    Icon(
+                    const Icon(
                       Icons.calendar_today,
-                      color: Theme.of(context).iconTheme.color,
+                      color: alcanciaMidBlue,
                     ),
                   ],
                 ),

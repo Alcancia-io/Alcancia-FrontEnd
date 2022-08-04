@@ -140,7 +140,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_hooks:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_hooks
       url: "https://pub.dartlang.org"
