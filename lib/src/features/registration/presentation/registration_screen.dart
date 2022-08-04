@@ -147,7 +147,10 @@ class RegistrationScreen extends ConsumerWidget {
                 const SizedBox(
                   height: 15,
                 ),
-                GenderPicker(selectedGenderProvider: selectedGenderProvider),
+                GenderPicker(selectedGenderProvider: selectedGenderProvider, validator: (Gender? selectedGender) {
+                  if (selectedGender == null) return "Selecciona un género";
+                  return null;
+                },),
                 const SizedBox(
                   height: 15,
                 ),
@@ -211,7 +214,7 @@ class RegistrationScreen extends ConsumerWidget {
                     document: gql(signupMutation),
                     onCompleted: (resultData) {
                       if (resultData != null) {
-                        context.push("/dashboard");
+                        context.go("/login");
                       }
                     },
                   ),
@@ -234,6 +237,7 @@ class RegistrationScreen extends ConsumerWidget {
                           children: [
                             AlcanciaButton(
                                   () => {
+
                                 runMutation(
                                   {"signupUserInput": signUpInput
                                   },
