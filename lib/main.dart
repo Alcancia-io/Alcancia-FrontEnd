@@ -21,7 +21,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
-    const uri = "http://localhost:8000/graphql";
+    const uri = "http://localhost:3000/graphql";
 
     final HttpLink httpLink = HttpLink(
       uri,
