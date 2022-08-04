@@ -76,6 +76,7 @@ class DashboardScreen extends StatelessWidget {
                             padding: EdgeInsets.only(bottom: 16),
                             child: MyWidget(),
                           ),
+                          if (response['totalItems'] == 0) Text("No hay transacciones", style: Theme.of(context).textTheme.titleLarge,),
                           for (var txn in response['items'])
                             Padding(
                               padding: const EdgeInsets.only(bottom: 24),
