@@ -34,6 +34,7 @@ class LabeledTextFormField extends StatelessWidget {
             suffixIcon: suffixIcon,
           ),
           validator: validator,
+          style: Theme.of(context).textTheme.bodyText1,
         ),
       ],
     );

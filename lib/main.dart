@@ -32,7 +32,7 @@ class MyApp extends ConsumerWidget {
       GraphQLClient(
         link: httpLink,
         // The default store is the InMemoryStore, which does NOT persist to disk
-        cache: GraphQLCache(store: HiveStore()),
+        cache: GraphQLCache(),
       ),
     );
 

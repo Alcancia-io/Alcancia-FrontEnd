@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 const Color alcanciaDarkBlue = Color(0xFF1F318C);
 const Color alcanciaMidBlue = Color(0xFF3554C4);
@@ -24,7 +25,8 @@ const alcanciaWelcomeGradientDark = [
   Color(0xff4E76E5)
 ];
 
-getPattern(bool isDark) {
+getPattern(BuildContext context) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
   if (isDark) {
     return alcanciaWelcomeGradientDark;
   } else {

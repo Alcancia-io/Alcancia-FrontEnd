@@ -24,7 +24,7 @@ class MyWidget extends StatelessWidget {
 
           final ValueNotifier<GraphQLClient> anotherClient = ValueNotifier(
             GraphQLClient(
-              cache: GraphQLCache(store: HiveStore()),
+              cache: GraphQLCache(),
               link: httpLink,
             ),
           );
@@ -45,6 +45,7 @@ class MyWidget extends StatelessWidget {
                   return Text("is loading...");
                 }
                 var balance = result.data?['me']['balance'];
+                print(result.data);
 
                 return Container(
                   padding: const EdgeInsets.all(16.0),
@@ -73,16 +74,16 @@ class MyWidget extends StatelessWidget {
                                   isDense: true,
                                   selectedItemBuilder: (context) {
                                     return [
-                                      const Padding(
+                                       Padding(
                                         padding: EdgeInsets.all(4.0),
-                                        child: Text("Balance"),
+                                        child: Text("Balance", style: Theme.of(context).textTheme.bodyText1,),
                                       )
                                     ];
                                   },
                                   dropdownColor: const Color(0xff1F318C),
-                                  items: const [
+                                  items:  [
                                     DropdownMenuItem(
-                                      child: Text("Balance"),
+                                      child: Text("Balance", style: Theme.of(context).textTheme.bodyText1,),
                                     ),
                                   ],
                                   onChanged: (value) {},
@@ -136,7 +137,7 @@ class MyWidget extends StatelessWidget {
                                 padding:
                                     const EdgeInsets.only(top: 16, bottom: 8),
                                 child: Text(
-                                  "\$${userProfit} USDC",
+                                  "\$ ${userProfit} USDC",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 35,
@@ -154,7 +155,7 @@ class MyWidget extends StatelessWidget {
                                         primary: const Color(0xff3554C4),
                                       ),
                                       onPressed: () {},
-                                      child: const Text("Retirar"),
+                                      child: Text("Retirar", style: Theme.of(context).textTheme.bodyText1,),
                                     ),
                                   ),
                                   SizedBox(
@@ -164,7 +165,7 @@ class MyWidget extends StatelessWidget {
                                         primary: const Color(0xff3554C4),
                                       ),
                                       onPressed: () {},
-                                      child: const Text("Depositar"),
+                                      child: Text("Depositar", style: Theme.of(context).textTheme.bodyText1,),
                                     ),
                                   )
                                 ],
