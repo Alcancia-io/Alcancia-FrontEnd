@@ -74,16 +74,26 @@ class MyWidget extends StatelessWidget {
                                   isDense: true,
                                   selectedItemBuilder: (context) {
                                     return [
-                                       Padding(
+                                      Padding(
                                         padding: EdgeInsets.all(4.0),
-                                        child: Text("Balance", style: Theme.of(context).textTheme.bodyText1,),
+                                        child: Text(
+                                          "Balance",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1,
+                                        ),
                                       )
                                     ];
                                   },
                                   dropdownColor: const Color(0xff1F318C),
-                                  items:  [
+                                  items: [
                                     DropdownMenuItem(
-                                      child: Text("Balance", style: Theme.of(context).textTheme.bodyText1,),
+                                      child: Text(
+                                        "Balance",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
+                                      ),
                                     ),
                                   ],
                                   onChanged: (value) {},
@@ -152,10 +162,15 @@ class MyWidget extends StatelessWidget {
                                     width: 116,
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                        primary: const Color(0xff3554C4),
+                                        primary: const Color(0x4E76E5),
                                       ),
                                       onPressed: () {},
-                                      child: Text("Retirar", style: Theme.of(context).textTheme.bodyText1,),
+                                      child: Text(
+                                        "Retirar",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
+                                      ),
                                     ),
                                   ),
                                   SizedBox(
@@ -165,7 +180,12 @@ class MyWidget extends StatelessWidget {
                                         primary: const Color(0xff3554C4),
                                       ),
                                       onPressed: () {},
-                                      child: Text("Depositar", style: Theme.of(context).textTheme.bodyText1,),
+                                      child: Text(
+                                        "Depositar",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
+                                      ),
                                     ),
                                   )
                                 ],

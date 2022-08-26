@@ -4,13 +4,15 @@ import 'package:alcancia/src/features/welcome/presentation/welcome_screen.dart';
 import 'package:alcancia/src/features/registration/presentation/registration_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:alcancia/src/features/transaction-detail/presentation/transaction_detail.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(routes: [
     GoRoute(
       name: "welcome",
       path: "/",
-      builder: (context, state) => const WelcomeScreen(),
+      // builder: (context, state) => const WelcomeScreen(),
+      builder: (context, state) => const TransactionDetail(),
     ),
     GoRoute(
       name: "login",
