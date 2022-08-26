@@ -14,7 +14,7 @@ class Navbar extends StatelessWidget {
         future: _storageService.readSecureData("token"),
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            const uri = "http://localhost:3000/graphql";
+            const uri = "http://localhost:8000/graphql";
             var token = snapshot.data;
             print(token);
 
