@@ -37,9 +37,32 @@ class RegistrationScreen extends ConsumerWidget {
 
   var signupInput;
 
-  bool checkPassword() {
-    if (passwordController.text != confirmPasswordController.text) return false;
-    return true;
+  bool validDate(DateTime date) {
+    DateTime adultDate = DateTime(
+      date.year + 18,
+      date.month,
+      date.day,
+    );
+
+    if (adultDate.isBefore(DateTime.now())) {
+      return true;
+    }
+    return false;
+  }
+
+  bool passwordsMatch() {
+    if (passwordController.text.isNotEmpty && passwordController.text == confirmPasswordController.text && passwordController.text.isValidPassword()) {
+      return true;
+    }
+    return false;
+  }
+
+  bool isValid(Country country, Gender? gender, DateTime date) {
+    final name = nameController.text;
+    final lastName = lastNameController.text;
+    final phone = phoneController.text;
+    final email = emailController.text;
+    return (name.isNotEmpty && lastName.isNotEmpty && phone.isNotEmpty && email.isValidEmail() && passwordsMatch() && gender != null && validDate(date));
   }
 
   setRegistrationInput(Country selectedCountry, Gender? selectedGender, DateTime selectedDate) {
@@ -177,7 +200,7 @@ class RegistrationScreen extends ConsumerWidget {
                       if (adultDate.isBefore(DateTime.now())) {
                         return null;
                       }
-                      return "INVALID AGE ERROR";
+                      return "Necesitas ser mayor de 18 años de edad";
                     }
                     return null;
                   },
@@ -232,7 +255,7 @@ class RegistrationScreen extends ConsumerWidget {
                       return value.isValidPassword()
                           ? null
                           : appLocalization
-                              .errorRequiredField; // TODO: Password validation text
+                              .errorInvalidPassword; // TODO: Password validation text
                     }
                   },
                 ),
@@ -256,7 +279,7 @@ class RegistrationScreen extends ConsumerWidget {
                     if (value == null || value.isEmpty) {
                       return appLocalization.errorRequiredField;
                     } else if (value != passwordController.text) {
-                      return "Passwords do not match"; // TODO: Confirm password validation text
+                      return appLocalization.errorPasswordMatch; // TODO: Confirm password validation text
                     }
                   },
                 ),
@@ -291,10 +314,11 @@ class RegistrationScreen extends ConsumerWidget {
                             AlcanciaButton(
                               () {
                                 setRegistrationInput(selectedCountry, selectedGender, selectedDate);
-                                if (checkPassword())
+                                if (isValid(selectedCountry, selectedGender, selectedDate)) {
                                   runMutation(
                                     {"signupUserInput": signupInput},
                                   );
+                                }
                               },
                               "Siguiente",
                             ),
@@ -312,11 +336,13 @@ class RegistrationScreen extends ConsumerWidget {
                     }
                     return AlcanciaButton(
                       ()  {
+
                         setRegistrationInput(selectedCountry, selectedGender, selectedDate);
-                        if (checkPassword())
+                        if (isValid(selectedCountry, selectedGender, selectedDate)) {
                           runMutation(
                             {"signupUserInput": signupInput},
                           );
+                        }
                       },
                       "Siguiente",
                     );
