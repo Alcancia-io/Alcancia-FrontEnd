@@ -7,8 +7,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-class MyWidget extends StatelessWidget {
-  MyWidget({Key? key}) : super(key: key);
+class DashboardCard extends StatelessWidget {
+  DashboardCard({Key? key}) : super(key: key);
   final StorageService _storageService = StorageService();
 
   @override
