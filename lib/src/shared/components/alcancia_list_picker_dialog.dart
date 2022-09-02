@@ -3,12 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'alcancia_button.dart';
 
 class AlcanciaListPickerDialog extends StatelessWidget {
-  const AlcanciaListPickerDialog(
-      {Key? key,
-        required this.list,
-        required this.itemBuilder,
-      })
-      : super(key: key);
+  const AlcanciaListPickerDialog({
+    Key? key,
+    required this.list,
+    required this.itemBuilder,
+  }) : super(key: key);
 
   final List<dynamic> list;
   final Widget Function(BuildContext, int) itemBuilder;
@@ -46,9 +45,12 @@ class AlcanciaListPickerDialog extends StatelessWidget {
                   itemCount: list.length,
                 ),
               ),
-              AlcanciaButton(() {
-                Navigator.pop(context);
-              }, "Aceptar")
+              AlcanciaButton(
+                buttonText: "Aceptar",
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
             ],
           ),
         ),
@@ -58,7 +60,13 @@ class AlcanciaListPickerDialog extends StatelessWidget {
 }
 
 class AlcanciaListTile extends ConsumerWidget {
-  const AlcanciaListTile({Key? key, required this.title, required this.value, required this.groupValueProvider, required this.onChanged}) : super(key: key);
+  const AlcanciaListTile(
+      {Key? key,
+      required this.title,
+      required this.value,
+      required this.groupValueProvider,
+      required this.onChanged})
+      : super(key: key);
 
   final String title;
   final dynamic value;
