@@ -1,3 +1,4 @@
+import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/graphql/queries.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter/material.dart';
@@ -74,9 +75,7 @@ class Navbar extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SvgPicture.asset(
-                          "lib/src/resources/images/icon_alcancia_dark_no_letters.svg",
-                          width: 38,
+                        AlcanciaLogo(
                           height: 38,
                         ),
                       ],

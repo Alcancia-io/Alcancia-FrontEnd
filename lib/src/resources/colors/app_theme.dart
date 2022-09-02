@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'colors.dart';
 
 class AlcanciaTheme {
-
   static const TextTheme _textTheme = TextTheme(
       headline1: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
       headline2: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
@@ -12,8 +11,7 @@ class AlcanciaTheme {
       bodyText1: TextStyle(fontWeight: FontWeight.w400, fontSize: 15),
       bodyText2: TextStyle(fontWeight: FontWeight.w400, fontSize: 13),
       caption: TextStyle(fontWeight: FontWeight.w400, fontSize: 10),
-      button: TextStyle(fontWeight: FontWeight.w400, fontSize: 18)
-  );
+      button: TextStyle(fontWeight: FontWeight.w400, fontSize: 18));
 
   static ThemeData get lightTheme {
     return ThemeData(
@@ -31,9 +29,7 @@ class AlcanciaTheme {
               MaterialStateProperty.all(const TextStyle(fontFamily: 'Gotham')),
         ),
       ),
-      iconTheme: const IconThemeData(
-          color: Colors.black
-      ),
+      iconTheme: const IconThemeData(color: Colors.black),
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(7),
@@ -77,7 +73,7 @@ class AlcanciaTheme {
         ),
       ),
       iconTheme: const IconThemeData(
-          color: Colors.white,
+        color: Colors.white,
       ),
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(

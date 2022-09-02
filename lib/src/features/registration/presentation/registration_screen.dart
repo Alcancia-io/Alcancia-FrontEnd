@@ -42,7 +42,8 @@ class RegistrationScreen extends ConsumerWidget {
     return true;
   }
 
-  setRegistrationInput(Country selectedCountry, Gender? selectedGender, DateTime selectedDate) {
+  setRegistrationInput(
+      Country selectedCountry, Gender? selectedGender, DateTime selectedDate) {
     signupInput = {
       "name": nameController.text,
       "surname": lastNameController.text,
@@ -289,14 +290,15 @@ class RegistrationScreen extends ConsumerWidget {
                         return Column(
                           children: [
                             AlcanciaButton(
-                              () {
-                                setRegistrationInput(selectedCountry, selectedGender, selectedDate);
+                              buttonText: "Siguiente",
+                              onPressed: () {
+                                setRegistrationInput(selectedCountry,
+                                    selectedGender, selectedDate);
                                 if (checkPassword())
                                   runMutation(
                                     {"signupUserInput": signupInput},
                                   );
                               },
-                              "Siguiente",
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -311,14 +313,15 @@ class RegistrationScreen extends ConsumerWidget {
                       }
                     }
                     return AlcanciaButton(
-                      ()  {
-                        setRegistrationInput(selectedCountry, selectedGender, selectedDate);
+                      buttonText: "Siguiente",
+                      onPressed: () {
+                        setRegistrationInput(
+                            selectedCountry, selectedGender, selectedDate);
                         if (checkPassword())
                           runMutation(
                             {"signupUserInput": signupInput},
                           );
                       },
-                      "Siguiente",
                     );
                   },
                 ),
