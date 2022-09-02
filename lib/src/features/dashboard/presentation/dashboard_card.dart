@@ -56,7 +56,7 @@ class MyWidget extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: ctx.brightness == Brightness.dark
                         ? Color.fromRGBO(15, 35, 70, 0.47)
-                        : Color.fromRGBO(245, 245, 245, 0.48),
+                        : Color.fromRGBO(245, 245, 245, 1),
                     borderRadius: BorderRadius.all(
                       Radius.circular(8),
                     ),
@@ -76,7 +76,7 @@ class MyWidget extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: ctx.brightness == Brightness.dark
                                   ? Color(0xFF1F318C)
-                                  : Color(0xFFF5F5F5),
+                                  : Color.fromARGB(255, 217, 217, 217),
                               borderRadius: BorderRadius.all(
                                 Radius.circular(8),
                               ),
@@ -149,16 +149,14 @@ class MyWidget extends StatelessWidget {
                                     onPressed: () {},
                                     width: 116,
                                     height: 38,
-                                    color:
-                                        const Color.fromRGBO(53, 84, 196, 0.48),
+                                    color: alcanciaMidBlue,
                                   ),
                                   AlcanciaButton(
                                     buttonText: "Retirar",
                                     onPressed: () {},
                                     width: 116,
                                     height: 38,
-                                    color:
-                                        const Color.fromRGBO(53, 84, 196, 0.48),
+                                    color: alcanciaMidBlue,
                                   )
                                 ],
                               ),
