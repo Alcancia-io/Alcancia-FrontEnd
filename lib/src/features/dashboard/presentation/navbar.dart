@@ -6,8 +6,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-class Navbar extends StatelessWidget {
-  Navbar({Key? key}) : super(key: key);
+class AlcanciaNavbar extends StatelessWidget {
+  AlcanciaNavbar({Key? key}) : super(key: key);
   final StorageService _storageService = StorageService();
 
   @override
