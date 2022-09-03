@@ -1,6 +1,8 @@
+import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/graphql/queries.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -14,7 +16,7 @@ class Navbar extends StatelessWidget {
         future: _storageService.readSecureData("token"),
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            const uri = "http://localhost:3000/graphql";
+            var uri = dotenv.env['API_URL'] as String;
             var token = snapshot.data;
             print(token);
 
@@ -73,9 +75,7 @@ class Navbar extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SvgPicture.asset(
-                          "lib/src/resources/images/icon_alcancia_dark_no_letters.svg",
-                          width: 38,
+                        AlcanciaLogo(
                           height: 38,
                         ),
                       ],

@@ -76,9 +76,12 @@ class WelcomeScreen extends StatelessWidget {
                               ),
                             ),
                             const Spacer(),
-                            AlcanciaButton(() {
-                              context.push('/registration');
-                            }, "Registrate"),
+                            AlcanciaButton(
+                              buttonText: "Registrate",
+                              onPressed: () {
+                                context.push('/registration');
+                              },
+                            ),
                             Padding(
                               padding: const EdgeInsets.only(top: 16.0),
                               child: Row(
@@ -93,7 +96,8 @@ class WelcomeScreen extends StatelessWidget {
                                       child: const Text(
                                         "Inicia sesión",
                                         style: TextStyle(
-                                            decoration: TextDecoration.underline,
+                                            decoration:
+                                                TextDecoration.underline,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       onPressed: () => context.push("/login")),

@@ -66,7 +66,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
     return (name.isNotEmpty && lastName.isNotEmpty && phone.isNotEmpty && email.isValidEmail() && passwordsMatch() && gender != null && validDate(date));
   }
 
-  setRegistrationInput(Country selectedCountry, Gender? selectedGender, DateTime selectedDate) {
+  setRegistrationInput(
+      Country selectedCountry, Gender? selectedGender, DateTime selectedDate) {
     signupInput = {
       "name": nameController.text,
       "surname": lastNameController.text,
@@ -313,7 +314,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                         return Column(
                           children: [
                             AlcanciaButton(
-                                  () {
+                              buttonText: "Siguiente",
+                              onPressed: () {
                                 setRegistrationInput(selectedCountry, selectedGender, selectedDate);
                                 if (isValid(selectedCountry, selectedGender, selectedDate)) {
                                   runMutation(
@@ -321,7 +323,6 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                                   );
                                 }
                               },
-                              "Siguiente",
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -336,17 +337,15 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                       }
                     }
                     return AlcanciaButton(
-                          ()  {
-
+                      buttonText: "Siguiente",
+                      onPressed: () {
                         setRegistrationInput(selectedCountry, selectedGender, selectedDate);
                         if (isValid(selectedCountry, selectedGender, selectedDate)) {
-                          print(signupInput);
                           runMutation(
                             {"signupUserInput": signupInput},
                           );
                         }
                       },
-                      "Siguiente",
                     );
                   },
                 ),

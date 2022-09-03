@@ -1,8 +1,10 @@
 import 'package:alcancia/src/features/dashboard/data/transactions_query.dart';
 import 'package:alcancia/src/features/dashboard/presentation/navbar.dart';
+import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:alcancia/src/features/dashboard/presentation/dashboard_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -20,15 +22,14 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      bottom: false,
-      child: Scaffold(
-        body: FutureBuilder(
+    var ctx = Theme.of(context).textTheme;
+    return Scaffold(
+      body: SafeArea(
+        child: FutureBuilder(
           future: _storageService.readSecureData("token"),
           builder: (context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
-              const uri = "http://localhost:3000/graphql";
+              var uri = dotenv.env['API_URL'] as String;
               var token = snapshot.data;
 
               final HttpLink httpLink = HttpLink(
@@ -71,15 +72,47 @@ class DashboardScreen extends StatelessWidget {
                     var response = result.data?['getUserTransactions'];
 
                     return Container(
-                      padding: EdgeInsets.only(left: 24, right: 24, bottom: 24, top: 54),
+                      padding: EdgeInsets.only(
+                        left: 24,
+                        right: 24,
+                        bottom: 24,
+                        top: 24,
+                      ),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Navbar(),
                           Container(
                             padding: EdgeInsets.only(bottom: 16),
                             child: MyWidget(),
                           ),
-                          if (response['totalItems'] == 0) Text("No hay transacciones", style: Theme.of(context).textTheme.titleLarge,),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 22),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Actividad",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                AlcanciaButton(
+                                  buttonText: "Ver más",
+                                  onPressed: () {},
+                                  color: Color(0x00FFFFFF),
+                                  rounded: true,
+                                  height: 24,
+                                ),
+                              ],
+                            ),
+                          ),
+                          if (response['totalItems'] == 0)
+                            Text(
+                              "Sin registros aún...",
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
                           for (var txn in response['items'])
                             Padding(
                               padding: const EdgeInsets.only(bottom: 24),
