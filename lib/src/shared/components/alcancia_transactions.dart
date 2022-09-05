@@ -37,10 +37,11 @@ class AlcanciaTransactions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var txtTheme = Theme.of(context).textTheme;
     if (transactions.transactions?.length == 0) {
       return Text(
         "Sin registros aún...",
-        style: Theme.of(context).textTheme.titleLarge,
+        style: txtTheme.titleLarge,
       );
     }
     return Column(
@@ -68,7 +69,7 @@ class AlcanciaTransactions extends StatelessWidget {
                         children: [
                           Text(
                             "${item.type} ${item.sourceAsset}",
-                            style: const TextStyle(fontSize: 13),
+                            style: txtTheme.bodyText2,
                           ),
                           Text(item.createdAt),
                         ],
@@ -83,8 +84,9 @@ class AlcanciaTransactions extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text("\$${item.sourceAmount}"),
-                          Text("${item.amount} ${item.targetAsset}"),
+                          Text("\$${item.sourceAmount.toStringAsFixed(2)}"),
+                          Text(
+                              "${item.amount.toStringAsFixed(2)} ${item.targetAsset}"),
                         ],
                       ),
                     ),
