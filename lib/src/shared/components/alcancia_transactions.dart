@@ -1,7 +1,6 @@
 import 'package:alcancia/src/shared/models/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'dart:convert';
 
 class Data {
   List<Transaction>? transactions;
@@ -15,6 +14,7 @@ class Data {
                 ),
               ),
       );
+
   List<Transaction>? getTransactions() {
     return transactions;
   }
