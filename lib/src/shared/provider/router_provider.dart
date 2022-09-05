@@ -13,6 +13,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       path: "/",
       // builder: (context, state) => const WelcomeScreen(),
       builder: (context, state) => TransactionsList(),
+      // builder: (context, state) => DashboardScreen(),
     ),
     GoRoute(
       name: "login",

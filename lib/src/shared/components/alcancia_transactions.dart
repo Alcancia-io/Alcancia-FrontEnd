@@ -21,7 +21,6 @@ class Data {
 }
 
 class AlcanciaTransactions extends StatelessWidget {
-  // final List<Transaction> transactions;
   final Data transactions;
 
   const AlcanciaTransactions({
@@ -46,47 +45,57 @@ class AlcanciaTransactions extends StatelessWidget {
     }
     return Column(
       children: [
-        Column(
-          children: [
-            for (var item
-                in transactions.getTransactions() as List<Transaction>)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 24),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        for (var item in transactions.getTransactions() as List<Transaction>)
+          Container(
+            padding: const EdgeInsets.only(top: 12, bottom: 12),
+            decoration: const BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: Color(0xFF1F318C)),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
                   children: [
-                    Row(
-                      children: [
-                        SvgPicture.asset(
-                          getImageType(item.type),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 6),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "${item.type} ${item.sourceAsset}",
-                                style: TextStyle(fontSize: 13),
-                              ),
-                              Text("${item.createdAt}"),
-                            ],
-                          ),
-                        ),
-                      ],
+                    SvgPicture.asset(
+                      getImageType(item.type),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text("${item.sourceAmount}"),
-                        Text("${item.amount} ${item.targetAsset}"),
-                      ],
+                    Padding(
+                      padding: const EdgeInsets.only(left: 6),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "${item.type} ${item.sourceAsset}",
+                            style: const TextStyle(fontSize: 13),
+                          ),
+                          Text(item.createdAt),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-              ),
-          ],
-        ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 6),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text("\$${item.sourceAmount}"),
+                          Text("${item.amount} ${item.targetAsset}"),
+                        ],
+                      ),
+                    ),
+                    SvgPicture.asset(
+                      "lib/src/resources/images/white_arrow_right.svg",
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
       ],
     );
   }
