@@ -2,7 +2,7 @@ import 'package:alcancia/src/features/dashboard/data/transactions_query.dart';
 import 'package:alcancia/src/features/dashboard/presentation/dashboard_card.dart';
 import 'package:alcancia/src/features/dashboard/presentation/navbar.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
-import 'package:alcancia/src/shared/components/alcancia_transactions.dart';
+import 'package:alcancia/src/shared/components/alcancia_transactions_list.dart';
 import 'package:alcancia/src/shared/services/graphql_client_service.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -45,7 +45,9 @@ class DashboardScreen extends StatelessWidget {
 
                     Map<String, dynamic> response =
                         result.data?['getUserTransactions'];
-                    var transactionsList = Data.fromJson(response);
+                    var transactionsList = AlcanciaTransactions.fromJson(
+                      response,
+                    ).getTransactions();
 
                     return Container(
                       padding: const EdgeInsets.only(
@@ -86,6 +88,7 @@ class DashboardScreen extends StatelessWidget {
                           ),
                           AlcanciaTransactions(
                             transactions: transactionsList,
+                            height: 200,
                           ),
                         ],
                       ),

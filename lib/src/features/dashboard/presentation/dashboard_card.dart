@@ -49,7 +49,6 @@ class DashboardCard extends StatelessWidget {
                   return Text("is loading...");
                 }
                 var balance = result.data?['me']['balance'];
-                print(result.data);
 
                 return Container(
                   padding: const EdgeInsets.all(16.0),

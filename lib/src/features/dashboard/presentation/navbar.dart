@@ -3,7 +3,6 @@ import 'package:alcancia/src/shared/graphql/queries.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class AlcanciaNavbar extends StatelessWidget {
@@ -18,7 +17,6 @@ class AlcanciaNavbar extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.done) {
             var uri = dotenv.env['API_URL'] as String;
             var token = snapshot.data;
-            print(token);
 
             final HttpLink httpLink = HttpLink(
               uri,
@@ -41,7 +39,6 @@ class AlcanciaNavbar extends StatelessWidget {
                 ),
                 builder: (QueryResult result,
                     {VoidCallback? refetch, FetchMore? fetchMore}) {
-                  print(result);
                   if (result.hasException) {
                     return Text("error");
                   }
