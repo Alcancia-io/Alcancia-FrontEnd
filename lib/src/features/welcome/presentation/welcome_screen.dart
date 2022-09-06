@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:alcancia/src/shared/graphql/queries.dart';
+import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -39,7 +40,9 @@ class WelcomeScreen extends StatelessWidget {
                 physics: ClampingScrollPhysics(),
                 child: Column(
                   children: [
-                    AlcanciaLogo(height: size.height / 12),
+                    AlcanciaToolbar(state:stateToolbar.logoNoletters,height: size.height / 12),
+
+                    //AlcanciaLogo(height: size.height / 12),
                     Transform(
                       transform: Matrix4.translationValues(0, 30, 0),
                       child: Image(

@@ -4,6 +4,7 @@ import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 
 class AlcanciaNavbar extends StatelessWidget {
   AlcanciaNavbar({Key? key}) : super(key: key);
@@ -48,36 +49,7 @@ class AlcanciaNavbar extends StatelessWidget {
                   }
                   var userName = result.data?['me']['name'];
 
-                  return Container(
-                    padding: const EdgeInsets.only(bottom: 24),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Image.asset(
-                              "lib/src/resources/images/profile.png",
-                              width: 38,
-                              height: 38,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 16),
-                              child: Text(
-                                "Hola, ${userName}",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        AlcanciaLogo(
-                          height: 38,
-                        ),
-                      ],
-                    ),
-                  );
+                  return AlcanciaToolbar(state: stateToolbar.profileTitleIcon,userName: userName, height: 38,);
                 },
               ),
             );

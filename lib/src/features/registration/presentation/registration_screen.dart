@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import '../data/gender.dart';
 import 'gender_picker.dart';
 import 'country_picker.dart';
+import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 
 class RegistrationScreen extends ConsumerWidget {
   RegistrationScreen({Key? key}) : super(key: key);
@@ -78,9 +79,7 @@ class RegistrationScreen extends ConsumerWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: AlcanciaLogo(
-                    height: size.height / 20,
-                  ),
+                  child: AlcanciaToolbar(state: stateToolbar.logoLetters,height: size.height/12,)
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

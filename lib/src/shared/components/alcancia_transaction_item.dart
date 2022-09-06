@@ -18,11 +18,7 @@ class AlcanciaTransactionItem extends StatelessWidget {
     var txtTheme = Theme.of(context).textTheme;
     return Container(
       padding: const EdgeInsets.only(top: 12, bottom: 12),
-      decoration: const BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: Color(0xFF1F318C)),
-        ),
-      ),
+
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

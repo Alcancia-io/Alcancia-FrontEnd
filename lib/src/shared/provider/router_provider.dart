@@ -11,8 +11,8 @@ final routerProvider = Provider<GoRouter>((ref) {
     GoRoute(
       name: "welcome",
       path: "/",
-      builder: (context, state) => const WelcomeScreen(),
-      // builder: (context, state) => TransactionsListScreen(),
+      // builder: (context, state) => const WelcomeScreen(),
+      builder: (context, state) => TransactionsListScreen(),
       // builder: (context, state) => DashboardScreen(),
     ),
     GoRoute(

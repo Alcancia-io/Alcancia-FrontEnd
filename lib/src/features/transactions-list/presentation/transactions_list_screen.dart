@@ -1,4 +1,5 @@
 import 'package:alcancia/src/features/dashboard/data/transactions_query.dart';
+import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/components/alcancia_transactions_list.dart';
 import 'package:alcancia/src/shared/services/graphql_client_service.dart';
 import 'package:flutter/material.dart';
@@ -51,10 +52,21 @@ class TransactionsListScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(
                         left: 24,
                         right: 24,
-                        top: 24,
+                        top: 10,
                       ),
-                      child: AlcanciaTransactions(
-                        transactions: transactionsList,
+                      child: Column(
+                        children: [
+                          AlcanciaToolbar(
+                            state: stateToolbar.titleIcon,
+                            title: 'Actividad',
+                            height: 38,
+                          ),
+                          Expanded(
+                            child: AlcanciaTransactions(
+                              transactions: transactionsList
+                            ),
+                          ),
+                        ],
                       ),
                     );
                   },
