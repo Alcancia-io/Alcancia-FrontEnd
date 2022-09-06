@@ -1,10 +1,10 @@
 class Transaction {
   String transactionID;
   String createdAt;
-  double sourceAmount;
+  int sourceAmount;
   String sourceAsset;
   String targetAsset;
-  double amount;
+  int amount;
   String type;
 
   Transaction({
@@ -16,4 +16,16 @@ class Transaction {
     required this.amount,
     required this.type,
   });
+
+  factory Transaction.fromJson(Map<String, dynamic> json) {
+    return Transaction(
+      transactionID: json["transactionID"] as String,
+      createdAt: json["createdAt"] as String,
+      sourceAmount: json["sourceAmount"] as int,
+      sourceAsset: json["sourceAsset"] as String,
+      targetAsset: json["targetAsset"] as String,
+      amount: json["amount"] as int,
+      type: json["type"] as String,
+    );
+  }
 }
