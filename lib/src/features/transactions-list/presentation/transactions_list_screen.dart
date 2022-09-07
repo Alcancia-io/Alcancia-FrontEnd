@@ -1,20 +1,18 @@
 import 'package:alcancia/src/features/dashboard/data/transactions_query.dart';
-import 'package:alcancia/src/features/dashboard/presentation/dashboard_card.dart';
-import 'package:alcancia/src/features/dashboard/presentation/navbar.dart';
-import 'package:alcancia/src/shared/components/alcancia_button.dart';
+import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/components/alcancia_transactions_list.dart';
 import 'package:alcancia/src/shared/services/graphql_client_service.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-class DashboardScreen extends StatelessWidget {
-  DashboardScreen({Key? key}) : super(key: key);
+class TransactionsListScreen extends StatelessWidget {
+  TransactionsListScreen({Key? key}) : super(key: key);
 
   final GraphqlService _gqlService = GraphqlService();
   final getUserTransactionsInput = {
     "userTransactionsInput": {
       "currentPage": 0,
-      "itemsPerPage": 3,
+      "itemsPerPage": 20,
     },
   };
 
@@ -45,6 +43,7 @@ class DashboardScreen extends StatelessWidget {
 
                     Map<String, dynamic> response =
                         result.data?['getUserTransactions'];
+
                     var transactionsList = AlcanciaTransactions.fromJson(
                       response,
                     ).getTransactions();
@@ -53,42 +52,19 @@ class DashboardScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(
                         left: 24,
                         right: 24,
-                        bottom: 24,
-                        top: 0,
+                        top: 10,
                       ),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          AlcanciaNavbar(),
-                          Container(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: DashboardCard(),
+                          AlcanciaToolbar(
+                            state: stateToolbar.titleIcon,
+                            title: 'Actividad',
+                            height: 38,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 22),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "Actividad",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                AlcanciaButton(
-                                  buttonText: "Ver más",
-                                  onPressed: () {},
-                                  color: const Color(0x00FFFFFF),
-                                  rounded: true,
-                                  height: 24,
-                                ),
-                              ],
+                          Expanded(
+                            child: AlcanciaTransactions(
+                              transactions: transactionsList
                             ),
-                          ),
-                          AlcanciaTransactions(
-                            transactions: transactionsList,
-                            height: 200,
                           ),
                         ],
                       ),

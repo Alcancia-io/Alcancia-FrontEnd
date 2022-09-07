@@ -1,3 +1,4 @@
+import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/models/storage_item.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:alcancia/src/features/login/data/login_mutation.dart';
+
 
 final rememberEmailProvider = StateProvider.autoDispose<bool>((ref) => false);
 
@@ -57,7 +59,8 @@ class LoginScreen extends ConsumerWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: AlcanciaLogo(
+                    child: AlcanciaToolbar(
+                      state: stateToolbar.logoNoletters,
                       height: size.height / 8,
                     ),
                   ),
