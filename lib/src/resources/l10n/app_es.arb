@@ -3,5 +3,7 @@
   "email": "Correo electrónico",
   "password": "Contraseña",
   "errorRequiredField": "Este campo es obligatorio",
-  "errorEmailFormat": "¿Estas seguro?, verifica tu correo"
+  "errorEmailFormat": "¿Estas seguro?, verifica tu correo",
+  "errorInvalidPassword": "",
+  "errorPasswordMatch": "Las contraseñas no coinciden"
 }
