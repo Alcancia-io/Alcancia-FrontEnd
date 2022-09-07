@@ -13,7 +13,6 @@ import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:alcancia/src/features/login/data/login_mutation.dart';
 
-
 final rememberEmailProvider = StateProvider.autoDispose<bool>((ref) => false);
 
 class LoginScreen extends ConsumerWidget {
@@ -186,7 +185,7 @@ class LoginScreen extends ConsumerWidget {
                                       final token =
                                           resultData["login"]["access_token"];
                                       saveToken(token);
-                                      context.push("/dashboard");
+                                      context.go("/homescreen");
                                     }
                                   },
                                 ),
