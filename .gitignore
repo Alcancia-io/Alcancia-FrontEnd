@@ -158,3 +158,4 @@ app.*.symbols
 # Coverage
 coverage/
 
+.env
