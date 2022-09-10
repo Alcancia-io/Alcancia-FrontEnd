@@ -1,3 +1,4 @@
+import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/models/storage_item.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
@@ -57,7 +58,10 @@ class LoginScreen extends ConsumerWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: AlcanciaLogo(height: size.height / 8,),
+                    child: AlcanciaToolbar(
+                      state: stateToolbar.logoNoletters,
+                      height: size.height / 8,
+                    ),
                   ),
                   Expanded(
                     child: Column(
@@ -71,91 +75,98 @@ class LoginScreen extends ConsumerWidget {
                         ),
                         Form(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          child: Column(children: [
-                            Column(
-                              children: [
-                                LabeledTextFormField(
-                                  controller: emailController,
-                                  labelText: appLocalization.email,
-                                  inputType: TextInputType.emailAddress,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return appLocalization.errorRequiredField;
-                                    } else {
-                                      return value.isValidEmail()
-                                          ? null
-                                          : appLocalization.errorEmailFormat;
-                                    }
-                                  },
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: 25,
-                                      child: Checkbox(
-                                          value: rememberMe,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(4),
-                                          ),
-                                          onChanged: (value) {
-                                            ref
-                                                .read(rememberEmailProvider.notifier)
-                                                .state = value!;
-                                          }),
-                                    ),
-                                    const Padding(
-                                      padding: EdgeInsets.only(left: 8.0),
-                                      child: Text("Recordar usuario"),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                LabeledTextFormField(
-                                  controller: passwordController,
-                                  labelText: appLocalization.password,
-                                  obscure: obscurePassword,
-                                  suffixIcon: GestureDetector(
-                                    onTap: () {
-                                      ref
-                                          .read(obscurePasswordProvider.notifier)
-                                          .state = !obscurePassword;
+                          child: Column(
+                            children: [
+                              Column(
+                                children: [
+                                  LabeledTextFormField(
+                                    controller: emailController,
+                                    labelText: appLocalization.email,
+                                    inputType: TextInputType.emailAddress,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return appLocalization
+                                            .errorRequiredField;
+                                      } else {
+                                        return value.isValidEmail()
+                                            ? null
+                                            : appLocalization.errorEmailFormat;
+                                      }
                                     },
-                                    child: Icon(obscurePassword
-                                        ? CupertinoIcons.eye
-                                        : CupertinoIcons.eye_fill),
                                   ),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return appLocalization.errorRequiredField;
-                                    }
-                                  },
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    CupertinoButton(
-                                        child: Row(
-                                          children: const [
-                                            Padding(
-                                              padding: EdgeInsets.only(right: 4.0),
-                                              child: Icon(
-                                                  CupertinoIcons.question_circle),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width: 25,
+                                        child: Checkbox(
+                                            value: rememberMe,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
                                             ),
-                                            Text("Olvidé mi contraseña"),
-                                          ],
-                                        ),
-                                        onPressed: () {
-                                          // TODO: Forgot Password navigation
-                                        }),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
+                                            onChanged: (value) {
+                                              ref
+                                                  .read(rememberEmailProvider
+                                                      .notifier)
+                                                  .state = value!;
+                                            }),
+                                      ),
+                                      const Padding(
+                                        padding: EdgeInsets.only(left: 8.0),
+                                        child: Text("Recordar usuario"),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  LabeledTextFormField(
+                                    controller: passwordController,
+                                    labelText: appLocalization.password,
+                                    obscure: obscurePassword,
+                                    suffixIcon: GestureDetector(
+                                      onTap: () {
+                                        ref
+                                            .read(obscurePasswordProvider
+                                                .notifier)
+                                            .state = !obscurePassword;
+                                      },
+                                      child: Icon(obscurePassword
+                                          ? CupertinoIcons.eye
+                                          : CupertinoIcons.eye_fill),
+                                    ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return appLocalization
+                                            .errorRequiredField;
+                                      }
+                                    },
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      CupertinoButton(
+                                          child: Row(
+                                            children: const [
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(right: 4.0),
+                                                child: Icon(CupertinoIcons
+                                                    .question_circle),
+                                              ),
+                                              Text("Olvidé mi contraseña"),
+                                            ],
+                                          ),
+                                          onPressed: () {
+                                            // TODO: Forgot Password navigation
+                                          }),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                         Column(
@@ -174,7 +185,7 @@ class LoginScreen extends ConsumerWidget {
                                       final token =
                                           resultData["login"]["access_token"];
                                       saveToken(token);
-                                      context.push("/dashboard");
+                                      context.go("/homescreen");
                                     }
                                   },
                                 ),
@@ -195,7 +206,8 @@ class LoginScreen extends ConsumerWidget {
                                       return Column(
                                         children: [
                                           AlcanciaButton(
-                                            () {
+                                            buttonText: "Iniciar sesión",
+                                            onPressed: () {
                                               setLoginInputFields();
                                               runMutation(
                                                 {
@@ -204,7 +216,6 @@ class LoginScreen extends ConsumerWidget {
                                                 },
                                               );
                                             },
-                                            "Iniciar sesión",
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
@@ -221,13 +232,13 @@ class LoginScreen extends ConsumerWidget {
                                     }
                                   }
                                   return AlcanciaButton(
-                                    () {
+                                    buttonText: "Iniciar sesión",
+                                    onPressed: () {
                                       setLoginInputFields();
                                       runMutation(
                                         {"loginUserInput": loginUserInput},
                                       );
                                     },
-                                    "Iniciar sesión",
                                   );
                                 },
                               ),

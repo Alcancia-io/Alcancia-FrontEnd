@@ -1,20 +1,24 @@
+import 'package:alcancia/src/resources/colors/colors.dart';
+import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/graphql/queries.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-class MyWidget extends StatelessWidget {
-  MyWidget({Key? key}) : super(key: key);
+class DashboardCard extends StatelessWidget {
+  DashboardCard({Key? key}) : super(key: key);
   final StorageService _storageService = StorageService();
 
   @override
   Widget build(BuildContext context) {
+    var ctx = Theme.of(context);
     return FutureBuilder(
       future: _storageService.readSecureData("token"),
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
-          const uri = "http://localhost:3000/graphql";
+          var uri = dotenv.env['API_URL'] as String;
           var token = snapshot.data;
 
           final HttpLink httpLink = HttpLink(
@@ -45,12 +49,13 @@ class MyWidget extends StatelessWidget {
                   return Text("is loading...");
                 }
                 var balance = result.data?['me']['balance'];
-                print(result.data);
 
                 return Container(
                   padding: const EdgeInsets.all(16.0),
-                  decoration: const BoxDecoration(
-                    color: Color.fromRGBO(15, 35, 70, 0.47),
+                  decoration: BoxDecoration(
+                    color: ctx.brightness == Brightness.dark
+                        ? Color.fromRGBO(15, 35, 70, 0.47)
+                        : Color.fromRGBO(245, 245, 245, 1),
                     borderRadius: BorderRadius.all(
                       Radius.circular(8),
                     ),
@@ -62,49 +67,29 @@ class MyWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            width: 198,
-                            decoration: const BoxDecoration(
-                              color: Color(0xff3554C4),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8)),
+                            padding: const EdgeInsets.only(
+                              top: 6,
+                              bottom: 6,
+                              left: 12,
                             ),
-                            child: DropdownButtonHideUnderline(
-                              child: ButtonTheme(
-                                child: DropdownButton<String>(
-                                  isDense: true,
-                                  selectedItemBuilder: (context) {
-                                    return [
-                                      Padding(
-                                        padding: EdgeInsets.all(4.0),
-                                        child: Text(
-                                          "Balance",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1,
-                                        ),
-                                      )
-                                    ];
-                                  },
-                                  dropdownColor: const Color(0xff1F318C),
-                                  items: [
-                                    DropdownMenuItem(
-                                      child: Text(
-                                        "Balance",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                      ),
-                                    ),
-                                  ],
-                                  onChanged: (value) {},
-                                ),
+                            decoration: BoxDecoration(
+                              color: ctx.brightness == Brightness.dark
+                                  ? Color(0xFF1F318C)
+                                  : Color.fromARGB(255, 217, 217, 217),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8),
                               ),
                             ),
-                          ),
-                          SvgPicture.asset(
-                            "lib/src/resources/images/ojo.svg",
-                            width: 24,
-                          ),
+                            width: 198,
+                            height: 30,
+                            child: const Text(
+                              'Balance',
+                              style: TextStyle(
+                                // color: Colors.white,
+                                fontSize: 15,
+                              ),
+                            ),
+                          )
                         ],
                       ),
                       Container(
@@ -145,9 +130,9 @@ class MyWidget extends StatelessWidget {
                               ),
                               Container(
                                 padding:
-                                    const EdgeInsets.only(top: 16, bottom: 8),
+                                    const EdgeInsets.only(top: 8, bottom: 20),
                                 child: Text(
-                                  "\$ ${userProfit} USDC",
+                                  "\$ $userProfit USDC",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 35,
@@ -158,35 +143,19 @@ class MyWidget extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  SizedBox(
+                                  AlcanciaButton(
+                                    buttonText: "Depositar",
+                                    onPressed: () {},
                                     width: 116,
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        primary: const Color(0x4E76E5),
-                                      ),
-                                      onPressed: () {},
-                                      child: Text(
-                                        "Retirar",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                      ),
-                                    ),
+                                    height: 38,
+                                    color: alcanciaMidBlue,
                                   ),
-                                  SizedBox(
+                                  AlcanciaButton(
+                                    buttonText: "Retirar",
+                                    onPressed: () {},
                                     width: 116,
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        primary: const Color(0xff3554C4),
-                                      ),
-                                      onPressed: () {},
-                                      child: Text(
-                                        "Depositar",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                      ),
-                                    ),
+                                    height: 38,
+                                    color: alcanciaMidBlue,
                                   )
                                 ],
                               ),

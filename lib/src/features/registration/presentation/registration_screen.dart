@@ -12,37 +12,63 @@ import 'package:intl/intl.dart';
 import '../data/gender.dart';
 import 'gender_picker.dart';
 import 'country_picker.dart';
+import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 
-class RegistrationScreen extends ConsumerWidget {
-  RegistrationScreen({Key? key}) : super(key: key);
 
-  final nameController = TextEditingController();
-  final lastNameController = TextEditingController();
-  final phoneController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
+class RegistrationScreen extends ConsumerStatefulWidget {
+  const RegistrationScreen({Key? key}) : super(key: key);
 
-  final obscurePasswordProvider =
-      StateProvider.autoDispose<bool>((ref) => true);
-  final obscureConfirmPasswordProvider =
-      StateProvider.autoDispose<bool>((ref) => true);
+  @override
+  ConsumerState<RegistrationScreen> createState() => _RegistrationScreenState();
+}
 
-  final selectedDateProvider =
-      StateProvider.autoDispose<DateTime>((ref) => DateTime.now());
-  final selectedCountryProvider =
-      StateProvider.autoDispose<Country>((ref) => countries[0]);
-  final selectedGenderProvider =
-      StateProvider.autoDispose<Gender?>((ref) => null);
+class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+
+  bool obscurePassword = false;
+  bool obscureConfirmPassword = false;
+
+  final selectedDateProvider = StateProvider.autoDispose<DateTime>((ref) => DateTime.now());
+  final selectedCountryProvider = StateProvider.autoDispose<Country>((ref) => countries[0]);
+  final selectedGenderProvider = StateProvider.autoDispose<Gender?>((ref) => null);
 
   var signupInput;
 
-  bool checkPassword() {
-    if (passwordController.text != confirmPasswordController.text) return false;
-    return true;
+  bool validDate(DateTime date) {
+    DateTime adultDate = DateTime(
+      date.year + 18,
+      date.month,
+      date.day,
+    );
+
+    if (adultDate.isBefore(DateTime.now())) {
+      return true;
+    }
+    return false;
   }
 
-  setRegistrationInput(Country selectedCountry, Gender? selectedGender, DateTime selectedDate) {
+  bool passwordsMatch() {
+    if (passwordController.text.isNotEmpty && passwordController.text == confirmPasswordController.text && passwordController.text.isValidPassword()) {
+      return true;
+    }
+    return false;
+  }
+
+  bool isValid(Country country, Gender? gender, DateTime date) {
+    final name = nameController.text;
+    final lastName = lastNameController.text;
+    final phone = phoneController.text;
+    final email = emailController.text;
+    return (name.isNotEmpty && lastName.isNotEmpty && phone.isNotEmpty && email.isValidEmail() && passwordsMatch() && gender != null && validDate(date));
+  }
+
+  setRegistrationInput(
+      Country selectedCountry, Gender? selectedGender, DateTime selectedDate) {
     signupInput = {
       "name": nameController.text,
       "surname": lastNameController.text,
@@ -55,14 +81,13 @@ class RegistrationScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final obscurePassword = ref.watch(obscurePasswordProvider);
-    final obscureConfirmPassword = ref.watch(obscureConfirmPasswordProvider);
     final appLocalization = AppLocalizations.of(context)!;
+    final selectedDate = ref.watch(selectedDateProvider);
     final selectedCountry = ref.watch(selectedCountryProvider);
     final selectedGender = ref.watch(selectedGenderProvider);
-    final selectedDate = ref.watch(selectedDateProvider);
+
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -73,13 +98,11 @@ class RegistrationScreen extends ConsumerWidget {
             autovalidateMode: AutovalidateMode.onUserInteraction,
             child: ListView(
               padding:
-                  const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
+              const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
               children: [
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: AlcanciaLogo(
-                    height: size.height / 20,
-                  ),
+                  child: AlcanciaToolbar(state: stateToolbar.logoLetters,height: size.height/12,)
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,7 +110,7 @@ class RegistrationScreen extends ConsumerWidget {
                     Text(
                       "¡Hola!",
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
                     ),
                     Text(
                         "Completa la siguiente información para crear tu cuenta",
@@ -130,6 +153,7 @@ class RegistrationScreen extends ConsumerWidget {
                   children: [
                     Text("Celular"),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
                           flex: 1,
@@ -141,18 +165,16 @@ class RegistrationScreen extends ConsumerWidget {
                           flex: 2,
                           child: Padding(
                             padding: const EdgeInsets.only(left: 8.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .inputDecorationTheme
-                                    .fillColor,
-                                borderRadius: BorderRadius.circular(7),
-                              ),
-                              child: TextField(
-                                style: Theme.of(context).textTheme.bodyText1,
-                                controller: phoneController,
-                                keyboardType: TextInputType.phone,
-                              ),
+                            child: TextFormField(
+                              style: Theme.of(context).textTheme.bodyText1,
+                              controller: phoneController,
+                              keyboardType: TextInputType.phone,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return appLocalization.errorRequiredField;
+                                }
+                                return null;
+                              },
                             ),
                           ),
                         ),
@@ -177,7 +199,7 @@ class RegistrationScreen extends ConsumerWidget {
                       if (adultDate.isBefore(DateTime.now())) {
                         return null;
                       }
-                      return "INVALID AGE ERROR";
+                      return "Necesitas ser mayor de 18 años de edad";
                     }
                     return null;
                   },
@@ -218,8 +240,9 @@ class RegistrationScreen extends ConsumerWidget {
                   obscure: obscurePassword,
                   suffixIcon: GestureDetector(
                     onTap: () {
-                      ref.read(obscurePasswordProvider.notifier).state =
-                          !obscurePassword;
+                      setState(() {
+                        obscurePassword = !obscurePassword;
+                      });
                     },
                     child: Icon(obscurePassword
                         ? CupertinoIcons.eye
@@ -232,7 +255,7 @@ class RegistrationScreen extends ConsumerWidget {
                       return value.isValidPassword()
                           ? null
                           : appLocalization
-                              .errorRequiredField; // TODO: Password validation text
+                          .errorInvalidPassword; // TODO: Password validation text
                     }
                   },
                 ),
@@ -245,8 +268,9 @@ class RegistrationScreen extends ConsumerWidget {
                   obscure: obscureConfirmPassword,
                   suffixIcon: GestureDetector(
                     onTap: () {
-                      ref.read(obscureConfirmPasswordProvider.notifier).state =
-                          !obscureConfirmPassword;
+                      setState(() {
+                        obscureConfirmPassword = !obscurePassword;
+                      });
                     },
                     child: Icon(obscureConfirmPassword
                         ? CupertinoIcons.eye
@@ -256,7 +280,7 @@ class RegistrationScreen extends ConsumerWidget {
                     if (value == null || value.isEmpty) {
                       return appLocalization.errorRequiredField;
                     } else if (value != passwordController.text) {
-                      return "Passwords do not match"; // TODO: Confirm password validation text
+                      return appLocalization.errorPasswordMatch; // TODO: Confirm password validation text
                     }
                   },
                 ),
@@ -273,11 +297,11 @@ class RegistrationScreen extends ConsumerWidget {
                     },
                   ),
                   builder: (
-                    MultiSourceResult<Object?> Function(Map<String, dynamic>,
-                            {Object? optimisticResult})
-                        runMutation,
-                    QueryResult<Object?>? result,
-                  ) {
+                      MultiSourceResult<Object?> Function(Map<String, dynamic>,
+                          {Object? optimisticResult})
+                      runMutation,
+                      QueryResult<Object?>? result,
+                      ) {
                     print(result);
                     if (result != null) {
                       if (result.isLoading) {
@@ -289,14 +313,15 @@ class RegistrationScreen extends ConsumerWidget {
                         return Column(
                           children: [
                             AlcanciaButton(
-                              () {
+                              buttonText: "Siguiente",
+                              onPressed: () {
                                 setRegistrationInput(selectedCountry, selectedGender, selectedDate);
-                                if (checkPassword())
+                                if (isValid(selectedCountry, selectedGender, selectedDate)) {
                                   runMutation(
                                     {"signupUserInput": signupInput},
                                   );
+                                }
                               },
-                              "Siguiente",
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -311,14 +336,15 @@ class RegistrationScreen extends ConsumerWidget {
                       }
                     }
                     return AlcanciaButton(
-                      ()  {
+                      buttonText: "Siguiente",
+                      onPressed: () {
                         setRegistrationInput(selectedCountry, selectedGender, selectedDate);
-                        if (checkPassword())
+                        if (isValid(selectedCountry, selectedGender, selectedDate)) {
                           runMutation(
                             {"signupUserInput": signupInput},
                           );
+                        }
                       },
-                      "Siguiente",
                     );
                   },
                 ),
@@ -329,4 +355,17 @@ class RegistrationScreen extends ConsumerWidget {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    lastNameController.dispose();
+    phoneController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
 }
+
+
