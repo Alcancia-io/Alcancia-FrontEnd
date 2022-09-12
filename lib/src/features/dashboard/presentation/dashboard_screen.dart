@@ -5,6 +5,7 @@ import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:alcancia/src/shared/components/alcancia_transactions_list.dart';
 import 'package:alcancia/src/shared/services/graphql_client_service.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -78,7 +79,9 @@ class DashboardScreen extends StatelessWidget {
                                 ),
                                 AlcanciaButton(
                                   buttonText: "Ver más",
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    context.go("/homescreen/1");
+                                  },
                                   color: const Color(0x00FFFFFF),
                                   rounded: true,
                                   height: 24,
