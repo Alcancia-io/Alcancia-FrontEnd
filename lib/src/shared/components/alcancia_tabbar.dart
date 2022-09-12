@@ -2,16 +2,24 @@ import 'package:alcancia/src/features/dashboard/presentation/dashboard_screen.da
 import 'package:alcancia/src/features/transactions-list/presentation/transactions_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 class AlcanciaTabbar extends StatefulWidget {
-  const AlcanciaTabbar({Key? key}) : super(key: key);
+  late int selectedIndex;
+  AlcanciaTabbar({
+    Key? key,
+    required this.selectedIndex,
+  }) : super(key: key);
 
   @override
   State<AlcanciaTabbar> createState() => _AlcanciaTabbarState();
 }
 
 class _AlcanciaTabbarState extends State<AlcanciaTabbar> {
-  var selectedIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+  }
 
   BottomNavigationBarItem getTabItem(
     int tabIndex,
@@ -20,7 +28,7 @@ class _AlcanciaTabbarState extends State<AlcanciaTabbar> {
   ) {
     var color;
 
-    if (selectedIndex == tabIndex) {
+    if (widget.selectedIndex == tabIndex) {
       // if item selected change icon color
       color = Theme.of(context).iconTheme.color;
     } else {
@@ -42,7 +50,7 @@ class _AlcanciaTabbarState extends State<AlcanciaTabbar> {
     var ctx = Theme.of(context);
     Widget currentScreenPage = const Text("");
 
-    switch (selectedIndex) {
+    switch (widget.selectedIndex) {
       case 0:
         currentScreenPage = DashboardScreen();
         break;
@@ -54,11 +62,11 @@ class _AlcanciaTabbarState extends State<AlcanciaTabbar> {
     return Scaffold(
       bottomNavigationBar: SizedBox(
         child: BottomNavigationBar(
-          currentIndex: selectedIndex,
+          currentIndex: widget.selectedIndex,
           selectedItemColor: ctx.iconTheme.color,
           onTap: (newTabIndex) {
             setState(() {
-              selectedIndex = newTabIndex;
+              widget.selectedIndex = newTabIndex;
             });
           },
           // this will be needed when more than 3 items in the bar
