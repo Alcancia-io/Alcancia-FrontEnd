@@ -49,7 +49,11 @@ class AlcanciaNavbar extends StatelessWidget {
                   }
                   var userName = result.data?['me']['name'];
 
-                  return AlcanciaToolbar(state: stateToolbar.profileTitleIcon,userName: userName, height: 38,);
+                  return AlcanciaToolbar(
+                    state: StateToolbar.profileTitleIcon,
+                    userName: userName,
+                    logoHeight: 38,
+                  );
                 },
               ),
             );

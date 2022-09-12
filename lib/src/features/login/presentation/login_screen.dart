@@ -59,8 +59,8 @@ class LoginScreen extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: AlcanciaToolbar(
-                      state: stateToolbar.logoNoletters,
-                      height: size.height / 8,
+                      state: StateToolbar.logoNoletters,
+                      logoHeight: size.height / 8,
                     ),
                   ),
                   Expanded(

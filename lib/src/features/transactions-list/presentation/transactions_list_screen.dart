@@ -56,14 +56,14 @@ class TransactionsListScreen extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          AlcanciaToolbar(
-                            state: stateToolbar.titleIcon,
+                          const AlcanciaToolbar(
+                            state: StateToolbar.titleIcon,
                             title: 'Actividad',
-                            height: 38,
+                            logoHeight: 38,
                           ),
                           Expanded(
                             child: AlcanciaTransactions(
-                              transactions: transactionsList
+                              transactions: transactionsList,
                             ),
                           ),
                         ],
