@@ -80,7 +80,7 @@ class DashboardScreen extends StatelessWidget {
                                 AlcanciaButton(
                                   buttonText: "Ver más",
                                   onPressed: () {
-                                    context.go("/homescreen/1");
+                                    context.push("/homescreen/1");
                                   },
                                   color: const Color(0x00FFFFFF),
                                   rounded: true,

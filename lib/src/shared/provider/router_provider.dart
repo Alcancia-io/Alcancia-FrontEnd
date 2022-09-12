@@ -25,7 +25,6 @@ final routerProvider = Provider<GoRouter>((ref) {
       name: "homescreen",
       path: "/homescreen/:id",
       builder: (context, state) {
-        print(state.params['id']);
         return AlcanciaTabbar(
           selectedIndex: int.parse(state.params['id'] as String),
         );
