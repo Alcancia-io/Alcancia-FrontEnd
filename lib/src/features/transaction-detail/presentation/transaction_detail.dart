@@ -1,13 +1,19 @@
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
+import 'package:alcancia/src/shared/extensions/string_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:alcancia/src/features/transaction-detail/presentation/transaction_detail_item.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../resources/colors/colors.dart';
+import '../../../shared/models/transaction.dart';
 
 class TransactionDetail extends StatelessWidget {
-  const TransactionDetail({Key? key}) : super(key: key);
-
+  const TransactionDetail({Key? key, required this.txn}) : super(key: key);
+  final Transaction txn;
   @override
   Widget build(BuildContext context) {
+    var ctx = Theme.of(context);
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -15,9 +21,11 @@ class TransactionDetail extends StatelessWidget {
             padding: const EdgeInsets.all(24),
             child: Container(
               padding: EdgeInsets.all(18),
-              height: 512,
-              decoration: const BoxDecoration(
-                color: Color(0xFF0F2346),
+              height: 400,
+              decoration: BoxDecoration(
+                color: ctx.brightness == Brightness.dark
+                    ? alcanciaCardDark2
+                    : alcanciaCardLight2,
                 borderRadius: BorderRadius.all(
                   Radius.circular(11),
                 ),
@@ -35,51 +43,55 @@ class TransactionDetail extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const TransactionDetailItem(
+                  TransactionDetailItem(
                     leftText: 'Fecha',
-                    rightText: '01/Abr/21',
+                    rightText: '${txn.createdAt}',
                   ),
-                  const TransactionDetailItem(
+                  TransactionDetailItem(
                     leftText: 'Id transacción',
-                    rightText: '123456789',
+                    rightText: '${txn.transactionID.substring(0,txn.transactionID.indexOf('-'))}',
                   ),
-                  const TransactionDetailItem(
+                  TransactionDetailItem(
                     leftText: 'Valor depósito',
-                    rightText: '\$280.89 MXN',
+                    rightText: '\$${txn.sourceAmount}',
                   ),
-                  const TransactionDetailItem(
+                  TransactionDetailItem(
                     leftText: 'Valor USDC',
-                    rightText: '0.01 USDC',
+                    rightText: '\$${txn.amount}',
                   ),
-                  const TransactionDetailItem(
-                    leftText: 'Comisión',
-                    rightText: '\$0.00 MXN',
-                  ),
-                  const TransactionDetailItem(
+                  // TransactionDetailItem(
+                  //   leftText: 'Comisión',
+                  //   rightText: '${}',
+                  // ),
+                  TransactionDetailItem(
                     leftText: 'Tipo de TXN',
-                    rightText: 'Depósito',
+                    rightText: '${txn.type.isDepositOrWithdraw()}',
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 64, top: 18),
-                    child: Text(
-                      'Descargar Detalle de la Actividad',
-                      style: TextStyle(
-                        color: Color(0xFF4E76E5),
-                        fontSize: 15,
-                        decoration: TextDecoration.underline,
-                        decorationThickness: 4,
+                  // const Padding(
+                  //   padding: EdgeInsets.only(bottom: 64, top: 18),
+                  //   child: Text(
+                  //     'Descargar Detalle de la Actividad',
+                  //     style: TextStyle(
+                  //       color: Color(0xFF4E76E5),
+                  //       fontSize: 15,
+                  //       decoration: TextDecoration.underline,
+                  //       decorationThickness: 4,
+                  //     ),
+                  //   ),
+                  // ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: SizedBox(
+
+                      width: double.infinity,
+                      height: 64,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: const Color(0xFF4E76E5),
+                        ),
+                        onPressed: () {context.pop();},
+                        child: Text("Cerrar"),
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 64,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: const Color(0xFF4E76E5),
-                      ),
-                      onPressed: () {},
-                      child: Text("Cerrar"),
                     ),
                   )
                 ],
