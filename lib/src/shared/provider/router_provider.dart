@@ -12,9 +12,9 @@ final routerProvider = Provider<GoRouter>((ref) {
     GoRoute(
       name: "welcome",
       path: "/",
-      // builder: (context, state) => const WelcomeScreen(),
+      builder: (context, state) => const WelcomeScreen(),
       // builder: (context, state) => HomeScreen(),
-      builder: (context, state) => const AlcanciaTabbar(),
+      // builder: (context, state) => const AlcanciaTabbar(),
     ),
     GoRoute(
       name: "login",

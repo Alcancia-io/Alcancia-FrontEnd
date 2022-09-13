@@ -7,17 +7,18 @@ import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
 
 class SwapScreen extends StatefulWidget {
-  SwapScreen({Key? key}) : super(key: key);
+  const SwapScreen({Key? key}) : super(key: key);
 
   @override
   State<SwapScreen> createState() => _SwapScreenState();
 }
 
 class _SwapScreenState extends State<SwapScreen> {
-  String baseCurrency = "USD";
+  String baseCurrencyCode = "USD";
 
   String targetCurrency = "MXN";
 
@@ -26,13 +27,13 @@ class _SwapScreenState extends State<SwapScreen> {
   late String targetAmount = "";
 
   late String uri =
-      "${dotenv.env["EXCHANGE_API_URL"]}pair/$baseCurrency/$targetCurrency";
+      "${dotenv.env["EXCHANGE_API_URL"]}pair/$baseCurrencyCode/$targetCurrency";
 
-  Future<ExchangeApi> fetchCurrency(String sourceCurrencyCode) async {
+  Future<ExchangeApi> fetchCurrency(String targetCurrencyCode) async {
     var baseUrl = dotenv.env["EXCHANGE_API_URL"];
     var apiKey = dotenv.env["EXCHANGE_API_KEY"];
     var exchangeUrl =
-        "${baseUrl}${apiKey}pair/${baseCurrency}/${sourceCurrencyCode}";
+        "${baseUrl}${apiKey}pair/${baseCurrencyCode}/${targetCurrencyCode}";
     final response = await http.get(
       Uri.parse(exchangeUrl),
     );
@@ -58,26 +59,19 @@ class _SwapScreenState extends State<SwapScreen> {
           future: fetchCurrency(sourceDropdownVal),
           builder: (context, snapshot) {
             var conversionRate = snapshot.data?.conversionRate;
-            // var usdc = int.parse(sourceAmountController.text) / conversionRate;
-            // var usdc = conversionRate;
 
             if (snapshot.hasError) {
               return Text("${snapshot.error}");
             } else if (snapshot.hasData) {
-              // return Text("${snapshot.data!.conversionRate}");
               return Column(
                 children: [
-                  Row(
-                    children: const [
-                      AlcanciaToolbar(
-                        state: StateToolbar.logoNoletters,
-                        logoHeight: 40,
-                      ),
-                    ],
+                  const AlcanciaToolbar(
+                    state: StateToolbar.logoNoletters,
+                    logoHeight: 40,
                   ),
 
                   // general container, sets padding
-                  Padding(
+                  Container(
                     padding: const EdgeInsets.only(
                       left: 34,
                       right: 34,
@@ -121,41 +115,45 @@ class _SwapScreenState extends State<SwapScreen> {
                               Radius.circular(7),
                             ),
                           ),
-                          width: 300,
                           height: 200,
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 "¿Cuánto deseas convertir?",
                                 style: txtTheme.bodyText1,
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(bottom: 20),
+                                padding: const EdgeInsets.only(top: 8),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    DropdownButton<String>(
-                                      value: sourceDropdownVal,
-                                      items: sourceCurrencies
-                                          .map<DropdownMenuItem<String>>(
-                                        (String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value),
-                                          );
+                                    SizedBox(
+                                      width: 120,
+                                      child: DropdownButton<String>(
+                                        isExpanded: true,
+                                        value: sourceDropdownVal,
+                                        items: sourceCurrencies
+                                            .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                            return DropdownMenuItem<String>(
+                                              value: value,
+                                              child: Text(value),
+                                            );
+                                          },
+                                        ).toList(),
+                                        onChanged: (value) {
+                                          setState(() {
+                                            sourceDropdownVal = value!;
+                                            fetchCurrency(sourceDropdownVal);
+                                          });
                                         },
-                                      ).toList(),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          sourceDropdownVal = value!;
-                                          fetchCurrency(sourceDropdownVal);
-                                        });
-                                      },
+                                      ),
                                     ),
                                     SizedBox(
                                       height: 45,
-                                      width: 170,
+                                      width: 150,
                                       child: TextField(
                                         inputFormatters: <TextInputFormatter>[
                                           FilteringTextInputFormatter.digitsOnly
@@ -172,22 +170,34 @@ class _SwapScreenState extends State<SwapScreen> {
                                   ],
                                 ),
                               ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(bottom: 12, top: 12),
+                                child: Center(
+                                  child: SvgPicture.asset(
+                                      "lib/src/resources/images/arrow_down_purple.svg"),
+                                ),
+                              ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  DropdownButton<String>(
-                                    value: targetDropdownVal,
-                                    items: targetCurrencies
-                                        .map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      },
-                                    ).toList(),
-                                    onChanged: (value) {},
+                                  SizedBox(
+                                    width: 120,
+                                    child: DropdownButton<String>(
+                                      isExpanded: true,
+                                      value: targetDropdownVal,
+                                      items: targetCurrencies
+                                          .map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        },
+                                      ).toList(),
+                                      onChanged: (value) {},
+                                    ),
                                   ),
                                   Container(
                                     decoration: BoxDecoration(
@@ -196,7 +206,7 @@ class _SwapScreenState extends State<SwapScreen> {
                                     ),
                                     alignment: Alignment.center,
                                     height: 45,
-                                    width: 170,
+                                    width: 150,
                                     child: Text(
                                       targetAmount == ""
                                           ? ""
@@ -212,7 +222,8 @@ class _SwapScreenState extends State<SwapScreen> {
                             ],
                           ),
                         ),
-                        Padding(
+                        Container(
+                          alignment: Alignment.topLeft,
                           padding: const EdgeInsets.only(
                             top: 32,
                           ),
@@ -227,7 +238,7 @@ class _SwapScreenState extends State<SwapScreen> {
                             buttonText: "Tarjeta de Débito/Crédito",
                             onPressed: () {},
                             color: alcanciaLightBlue,
-                            width: 304,
+                            width: double.infinity,
                             height: 64,
                           ),
                         ),
@@ -237,13 +248,14 @@ class _SwapScreenState extends State<SwapScreen> {
                             buttonText: "Coinbase",
                             onPressed: () {},
                             color: alcanciaLightBlue,
-                            width: 304,
+                            width: double.infinity,
                             height: 64,
                           ),
                         ),
                         Container(
                           padding: const EdgeInsets.only(top: 20),
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: const [
                               Text("¿Tienes alguna inquietud? "),
                               AlcanciaLink(
