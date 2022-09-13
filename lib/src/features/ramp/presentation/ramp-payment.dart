@@ -27,7 +27,9 @@ class RampPayment extends StatelessWidget {
 
   void onPurchaseCreated(Purchase purchase, String token, String url) {}
 
-  void onRampFailed() {}
+  void onRampFailed() {
+    print('Failed');
+  }
 
   void onRampClosed() {}
 }
