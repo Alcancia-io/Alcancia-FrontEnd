@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:ramp_flutter/ramp_flutter.dart';
 
 class SwapScreen extends StatefulWidget {
   SwapScreen({Key? key}) : super(key: key);
@@ -220,7 +221,9 @@ class _SwapScreenState extends State<SwapScreen> {
                           padding: const EdgeInsets.only(top: 10, bottom: 12),
                           child: AlcanciaButton(
                             buttonText: "Tarjeta de Débito/Crédito",
-                            onPressed: () {},
+                            onPressed: () {
+                              _presentRamp();
+                            },
                             color: alcanciaLightBlue,
                             width: 304,
                             height: 64,
@@ -259,4 +262,19 @@ class _SwapScreenState extends State<SwapScreen> {
       ),
     );
   }
+
+  void _presentRamp() {
+    Configuration configuration = Configuration();
+    configuration.fiatCurrency = "EUR";
+    configuration.fiatValue = "15";
+    configuration.deepLinkScheme = "myawesomeapp";
+    RampFlutter.showRamp(
+        configuration, onPurchaseCreated, onRampFailed, onRampClosed);
+  }
+
+  void onPurchaseCreated(Purchase purchase, String token, String url) {}
+
+  void onRampFailed() {}
+
+  void onRampClosed() {}
 }
