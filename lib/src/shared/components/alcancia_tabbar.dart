@@ -66,6 +66,7 @@ class _AlcanciaTabbarState extends State<AlcanciaTabbar> {
           selectedItemColor: ctx.iconTheme.color,
           onTap: (newTabIndex) {
             setState(() {
+              context.go('/homescreen/$newTabIndex');
               widget.selectedIndex = newTabIndex;
             });
           },
