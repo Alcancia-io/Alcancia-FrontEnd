@@ -26,43 +26,22 @@ class _SwapScreenState extends State<SwapScreen> {
   late String targetAmount = "";
 
   late String uri =
-      "${dotenv.env["EXCHANGE_API_URL"]}${dotenv.env["EXCHANGE_API_KEY"]}/pair/$baseCurrency/$targetCurrency";
+      "${dotenv.env["EXCHANGE_API_URL"]}pair/$baseCurrency/$targetCurrency";
 
   Future<ExchangeApi> fetchCurrency(String sourceCurrencyCode) async {
-    print(sourceCurrencyCode);
-    if (sourceCurrencyCode == "MXN") {
-      return Future.delayed(
-        const Duration(seconds: 1),
-        () => const ExchangeApi(
-          baseCode: "USDC",
-          targetCode: "TXN",
-          conversionRate: 19.88,
-          result: '',
-        ),
-      );
+    var baseUrl = dotenv.env["EXCHANGE_API_URL"];
+    var apiKey = dotenv.env["EXCHANGE_API_KEY"];
+    var exchangeUrl =
+        "${baseUrl}${apiKey}pair/${baseCurrency}/${sourceCurrencyCode}";
+    final response = await http.get(
+      Uri.parse(exchangeUrl),
+    );
+    if (response.statusCode == 200) {
+      return ExchangeApi.fromJson(jsonDecode(response.body));
     } else {
-      return Future.delayed(
-        const Duration(seconds: 1),
-        () => const ExchangeApi(
-          baseCode: "USDC",
-          targetCode: "TXN",
-          conversionRate: 20.00,
-          result: '',
-        ),
-      );
+      print(response.statusCode);
+      throw Exception('Failed to load exchange api data');
     }
-    // baseUrl = dotenv.env["EXCHANGE_API_URL"]
-    // apiKey = dotenv.env["EXCHANGE_API_KEY"]
-    // exchangeUrl = "${exchangeUrl}${apiKey}/pair/${baseCurrency}/${targetCurrencyCode}"
-    // final response = await http.get(
-    //   Uri.parse(uri),
-    // );
-    // if (response.statusCode == 200) {
-    //   return ExchangeApi.fromJson(jsonDecode(response.body));
-    // } else {
-    //   print(response.statusCode);
-    //   throw Exception('Failed to load exchange api data');
-    // }
   }
 
   final List<String> sourceCurrencies = <String>["MXN", "DOP"];
