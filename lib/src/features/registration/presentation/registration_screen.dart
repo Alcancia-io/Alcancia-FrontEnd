@@ -14,7 +14,6 @@ import 'gender_picker.dart';
 import 'country_picker.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 
-
 class RegistrationScreen extends ConsumerStatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
 
@@ -33,9 +32,12 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
   bool obscurePassword = false;
   bool obscureConfirmPassword = false;
 
-  final selectedDateProvider = StateProvider.autoDispose<DateTime>((ref) => DateTime.now());
-  final selectedCountryProvider = StateProvider.autoDispose<Country>((ref) => countries[0]);
-  final selectedGenderProvider = StateProvider.autoDispose<Gender?>((ref) => null);
+  final selectedDateProvider =
+      StateProvider.autoDispose<DateTime>((ref) => DateTime.now());
+  final selectedCountryProvider =
+      StateProvider.autoDispose<Country>((ref) => countries[0]);
+  final selectedGenderProvider =
+      StateProvider.autoDispose<Gender?>((ref) => null);
 
   var signupInput;
 
@@ -53,7 +55,9 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
   }
 
   bool passwordsMatch() {
-    if (passwordController.text.isNotEmpty && passwordController.text == confirmPasswordController.text && passwordController.text.isValidPassword()) {
+    if (passwordController.text.isNotEmpty &&
+        passwordController.text == confirmPasswordController.text &&
+        passwordController.text.isValidPassword()) {
       return true;
     }
     return false;
@@ -64,7 +68,13 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
     final lastName = lastNameController.text;
     final phone = phoneController.text;
     final email = emailController.text;
-    return (name.isNotEmpty && lastName.isNotEmpty && phone.isNotEmpty && email.isValidEmail() && passwordsMatch() && gender != null && validDate(date));
+    return (name.isNotEmpty &&
+        lastName.isNotEmpty &&
+        phone.isNotEmpty &&
+        email.isValidEmail() &&
+        passwordsMatch() &&
+        gender != null &&
+        validDate(date));
   }
 
   setRegistrationInput(
@@ -88,7 +98,6 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
     final selectedCountry = ref.watch(selectedCountryProvider);
     final selectedGender = ref.watch(selectedGenderProvider);
 
-
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -98,19 +107,21 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
             autovalidateMode: AutovalidateMode.onUserInteraction,
             child: ListView(
               padding:
-              const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
+                  const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: AlcanciaToolbar(state: stateToolbar.logoLetters,height: size.height/12,)
-                ),
+                    padding: const EdgeInsets.all(16.0),
+                    child: AlcanciaToolbar(
+                      state: StateToolbar.logoLetters,
+                      logoHeight: size.height / 12,
+                    )),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const [
                     Text(
                       "¡Hola!",
                       style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
                     ),
                     Text(
                         "Completa la siguiente información para crear tu cuenta",
@@ -255,7 +266,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                       return value.isValidPassword()
                           ? null
                           : appLocalization
-                          .errorInvalidPassword; // TODO: Password validation text
+                              .errorInvalidPassword; // TODO: Password validation text
                     }
                   },
                 ),
@@ -280,7 +291,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                     if (value == null || value.isEmpty) {
                       return appLocalization.errorRequiredField;
                     } else if (value != passwordController.text) {
-                      return appLocalization.errorPasswordMatch; // TODO: Confirm password validation text
+                      return appLocalization
+                          .errorPasswordMatch; // TODO: Confirm password validation text
                     }
                   },
                 ),
@@ -297,11 +309,11 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                     },
                   ),
                   builder: (
-                      MultiSourceResult<Object?> Function(Map<String, dynamic>,
-                          {Object? optimisticResult})
-                      runMutation,
-                      QueryResult<Object?>? result,
-                      ) {
+                    MultiSourceResult<Object?> Function(Map<String, dynamic>,
+                            {Object? optimisticResult})
+                        runMutation,
+                    QueryResult<Object?>? result,
+                  ) {
                     print(result);
                     if (result != null) {
                       if (result.isLoading) {
@@ -315,8 +327,10 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                             AlcanciaButton(
                               buttonText: "Siguiente",
                               onPressed: () {
-                                setRegistrationInput(selectedCountry, selectedGender, selectedDate);
-                                if (isValid(selectedCountry, selectedGender, selectedDate)) {
+                                setRegistrationInput(selectedCountry,
+                                    selectedGender, selectedDate);
+                                if (isValid(selectedCountry, selectedGender,
+                                    selectedDate)) {
                                   runMutation(
                                     {"signupUserInput": signupInput},
                                   );
@@ -338,8 +352,10 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                     return AlcanciaButton(
                       buttonText: "Siguiente",
                       onPressed: () {
-                        setRegistrationInput(selectedCountry, selectedGender, selectedDate);
-                        if (isValid(selectedCountry, selectedGender, selectedDate)) {
+                        setRegistrationInput(
+                            selectedCountry, selectedGender, selectedDate);
+                        if (isValid(
+                            selectedCountry, selectedGender, selectedDate)) {
                           runMutation(
                             {"signupUserInput": signupInput},
                           );
@@ -367,5 +383,3 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
     super.dispose();
   }
 }
-
-
