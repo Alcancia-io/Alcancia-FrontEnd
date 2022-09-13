@@ -72,13 +72,9 @@ class _SwapScreenState extends State<SwapScreen> {
               // return Text("${snapshot.data!.conversionRate}");
               return Column(
                 children: [
-                  Row(
-                    children: const [
-                      AlcanciaToolbar(
-                        state: StateToolbar.logoNoletters,
-                        logoHeight: 40,
-                      ),
-                    ],
+                  const AlcanciaToolbar(
+                    state: StateToolbar.logoNoletters,
+                    logoHeight: 50,
                   ),
 
                   // general container, sets padding
