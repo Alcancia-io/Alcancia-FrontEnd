@@ -5,6 +5,7 @@ import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class DashboardCard extends StatelessWidget {
@@ -145,7 +146,9 @@ class DashboardCard extends StatelessWidget {
                                 children: [
                                   AlcanciaButton(
                                     buttonText: "Depositar",
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      context.push("/swap");
+                                    },
                                     width: 116,
                                     height: 38,
                                     color: alcanciaMidBlue,

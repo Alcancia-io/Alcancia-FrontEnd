@@ -28,16 +28,32 @@ class _SwapScreenState extends State<SwapScreen> {
   late String uri =
       "${dotenv.env["EXCHANGE_API_URL"]}${dotenv.env["EXCHANGE_API_KEY"]}/pair/$baseCurrency/$targetCurrency";
 
-  Future<ExchangeApi> fetchAlbum() async {
-    return Future.delayed(
-      const Duration(seconds: 1),
-      () => const ExchangeApi(
-        baseCode: "USDC",
-        targetCode: "TXN",
-        conversionRate: 19.88,
-        result: '',
-      ),
-    );
+  Future<ExchangeApi> fetchCurrency(String sourceCurrencyCode) async {
+    print(sourceCurrencyCode);
+    if (sourceCurrencyCode == "MXN") {
+      return Future.delayed(
+        const Duration(seconds: 1),
+        () => const ExchangeApi(
+          baseCode: "USDC",
+          targetCode: "TXN",
+          conversionRate: 19.88,
+          result: '',
+        ),
+      );
+    } else {
+      return Future.delayed(
+        const Duration(seconds: 1),
+        () => const ExchangeApi(
+          baseCode: "USDC",
+          targetCode: "TXN",
+          conversionRate: 20.00,
+          result: '',
+        ),
+      );
+    }
+    // baseUrl = dotenv.env["EXCHANGE_API_URL"]
+    // apiKey = dotenv.env["EXCHANGE_API_KEY"]
+    // exchangeUrl = "${exchangeUrl}${apiKey}/pair/${baseCurrency}/${targetCurrencyCode}"
     // final response = await http.get(
     //   Uri.parse(uri),
     // );
@@ -60,9 +76,9 @@ class _SwapScreenState extends State<SwapScreen> {
     return Scaffold(
       body: SafeArea(
         child: FutureBuilder<ExchangeApi>(
-          future: fetchAlbum(),
+          future: fetchCurrency(sourceDropdownVal),
           builder: (context, snapshot) {
-            var conversionRate = snapshot.data!.conversionRate;
+            var conversionRate = snapshot.data?.conversionRate;
             // var usdc = int.parse(sourceAmountController.text) / conversionRate;
             // var usdc = conversionRate;
 
@@ -154,6 +170,7 @@ class _SwapScreenState extends State<SwapScreen> {
                                       onChanged: (value) {
                                         setState(() {
                                           sourceDropdownVal = value!;
+                                          fetchCurrency(sourceDropdownVal);
                                         });
                                       },
                                     ),
@@ -202,7 +219,12 @@ class _SwapScreenState extends State<SwapScreen> {
                                     height: 45,
                                     width: 170,
                                     child: Text(
-                                      "${targetAmount == "" ? "" : (int.parse(sourceAmountController.text) / conversionRate).toStringAsFixed(4)}",
+                                      targetAmount == ""
+                                          ? ""
+                                          : (int.parse(sourceAmountController
+                                                      .text) /
+                                                  conversionRate!)
+                                              .toStringAsFixed(4),
                                       style: txtTheme.bodyText1,
                                     ),
                                   ),
