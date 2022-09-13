@@ -5,6 +5,7 @@ import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_link.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
@@ -20,9 +21,9 @@ class _SwapScreenState extends State<SwapScreen> {
 
   String targetCurrency = "MXN";
 
-  final sourceAmountController = TextEditingController(text: '10');
+  final sourceAmountController = TextEditingController();
 
-  late String targetAmount;
+  late String targetAmount = "";
 
   late String uri =
       "${dotenv.env["EXCHANGE_API_URL"]}${dotenv.env["EXCHANGE_API_KEY"]}/pair/$baseCurrency/$targetCurrency";
@@ -48,8 +49,10 @@ class _SwapScreenState extends State<SwapScreen> {
     // }
   }
 
-  final List<String> list = <String>["MXN", "DOP"];
-  late String dropdownValue = list.first;
+  final List<String> sourceCurrencies = <String>["MXN", "DOP"];
+  final List<String> targetCurrencies = <String>["USDC"];
+  late String sourceDropdownVal = sourceCurrencies.first;
+  late String targetDropdownVal = targetCurrencies.first;
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +64,7 @@ class _SwapScreenState extends State<SwapScreen> {
           builder: (context, snapshot) {
             var conversionRate = snapshot.data!.conversionRate;
             // var usdc = int.parse(sourceAmountController.text) / conversionRate;
+            // var usdc = conversionRate;
 
             if (snapshot.hasError) {
               return Text("${snapshot.error}");
@@ -115,6 +119,7 @@ class _SwapScreenState extends State<SwapScreen> {
                           ),
                         ),
                         Container(
+                          padding: const EdgeInsets.all(12),
                           decoration: const BoxDecoration(
                             color: Color(0xFF071737),
                             borderRadius: BorderRadius.all(
@@ -125,16 +130,60 @@ class _SwapScreenState extends State<SwapScreen> {
                           height: 200,
                           child: Column(
                             children: [
-                              // Text(
-                              //   "¿Cuánto deseas convertir?",
-                              //   style: txtTheme.bodyText1,
-                              // ),
-                              // Text("conversion rate $conversionRate"),
+                              Text(
+                                "¿Cuánto deseas convertir?",
+                                style: txtTheme.bodyText1,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    DropdownButton<String>(
+                                      value: sourceDropdownVal,
+                                      items: sourceCurrencies
+                                          .map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        },
+                                      ).toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          sourceDropdownVal = value!;
+                                        });
+                                      },
+                                    ),
+                                    SizedBox(
+                                      height: 45,
+                                      width: 170,
+                                      child: TextField(
+                                        inputFormatters: <TextInputFormatter>[
+                                          FilteringTextInputFormatter.digitsOnly
+                                        ],
+                                        keyboardType: TextInputType.number,
+                                        controller: sourceAmountController,
+                                        onChanged: (text) {
+                                          setState(() {
+                                            targetAmount = text;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                               Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   DropdownButton<String>(
-                                    value: dropdownValue,
-                                    items: list.map<DropdownMenuItem<String>>(
+                                    value: targetDropdownVal,
+                                    items: targetCurrencies
+                                        .map<DropdownMenuItem<String>>(
                                       (String value) {
                                         return DropdownMenuItem<String>(
                                           value: value,
@@ -142,77 +191,66 @@ class _SwapScreenState extends State<SwapScreen> {
                                         );
                                       },
                                     ).toList(),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        dropdownValue = value!;
-                                      });
-                                    },
+                                    onChanged: (value) {},
                                   ),
-                                  Text("0.00"),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: alcanciaMidBlue,
+                                    ),
+                                    alignment: Alignment.center,
+                                    height: 45,
+                                    width: 170,
+                                    child: Text(
+                                      "${targetAmount == "" ? "" : (int.parse(sourceAmountController.text) / conversionRate).toStringAsFixed(4)}",
+                                      style: txtTheme.bodyText1,
+                                    ),
+                                  ),
                                 ],
                               ),
-                              Row(
-                                children: [],
-                              ),
-                              // Text("MXN"),
-                              // TextField(
-                              //   inputFormatters: <TextInputFormatter>[
-                              //     FilteringTextInputFormatter.digitsOnly
-                              //   ],
-                              //   keyboardType: TextInputType.number,
-                              //   controller: sourceAmountController,
-                              //   onChanged: (text) {
-                              //     setState(() {
-                              //       targetAmount = text;
-                              //     });
-                              //   },
-                              // ),
-                              // Text(
-                              //   "${usdc.toStringAsFixed(5)} USDC",
-                              // )
                             ],
                           ),
                         ),
-                        // Padding(
-                        //   padding: const EdgeInsets.only(
-                        //     top: 32,
-                        //   ),
-                        //   child: Text(
-                        //     "Medio de pago:",
-                        //     style: txtTheme.bodyText1,
-                        //   ),
-                        // ),
-                        // Padding(
-                        //   padding: const EdgeInsets.only(top: 10, bottom: 12),
-                        //   child: AlcanciaButton(
-                        //     buttonText: "Tarjeta de Débito/Crédito",
-                        //     onPressed: () {},
-                        //     color: alcanciaLightBlue,
-                        //     width: 304,
-                        //     height: 64,
-                        //   ),
-                        // ),
-                        // Padding(
-                        //   padding: const EdgeInsets.only(top: 10, bottom: 12),
-                        //   child: AlcanciaButton(
-                        //     buttonText: "Coinbase",
-                        //     onPressed: () {},
-                        //     color: alcanciaLightBlue,
-                        //     width: 304,
-                        //     height: 64,
-                        //   ),
-                        // ),
-                        // Container(
-                        //   padding: const EdgeInsets.only(top: 20),
-                        //   child: Row(
-                        //     children: const [
-                        //       Text("¿Tienes alguna inquietud? "),
-                        //       AlcanciaLink(
-                        //         text: 'Haz click aquí',
-                        //       ),
-                        //     ],
-                        //   ),
-                        // )
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: 32,
+                          ),
+                          child: Text(
+                            "Medio de pago:",
+                            style: txtTheme.bodyText1,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10, bottom: 12),
+                          child: AlcanciaButton(
+                            buttonText: "Tarjeta de Débito/Crédito",
+                            onPressed: () {},
+                            color: alcanciaLightBlue,
+                            width: 304,
+                            height: 64,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10, bottom: 12),
+                          child: AlcanciaButton(
+                            buttonText: "Coinbase",
+                            onPressed: () {},
+                            color: alcanciaLightBlue,
+                            width: 304,
+                            height: 64,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Row(
+                            children: const [
+                              Text("¿Tienes alguna inquietud? "),
+                              AlcanciaLink(
+                                text: 'Haz click aquí',
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
