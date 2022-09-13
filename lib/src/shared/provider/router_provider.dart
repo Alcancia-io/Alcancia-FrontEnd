@@ -1,5 +1,6 @@
 import 'package:alcancia/src/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:alcancia/src/features/login/presentation/login_screen.dart';
+import 'package:alcancia/src/features/transactions-list/presentation/transactions_list_screen.dart';
 import 'package:alcancia/src/features/welcome/presentation/welcome_screen.dart';
 import 'package:alcancia/src/features/registration/presentation/registration_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
@@ -16,6 +17,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       // builder: (context, state) => const WelcomeScreen(),
       // builder: (context, state) => const TransactionDetail(),
       builder: (context, state) => const WelcomeScreen(),
+      // builder: (context, state) => DashboardScreen(),
       // builder: (context, state) => HomeScreen(),
     ),
     GoRoute(
@@ -25,8 +27,12 @@ final routerProvider = Provider<GoRouter>((ref) {
     ),
     GoRoute(
       name: "homescreen",
-      path: "/homescreen",
-      builder: (context, state) => const AlcanciaTabbar(),
+      path: "/homescreen/:id",
+      builder: (context, state) {
+        return AlcanciaTabbar(
+          selectedIndex: int.parse(state.params['id'] as String),
+        );
+      },
     ),
     GoRoute(
       name: "dashboard",
