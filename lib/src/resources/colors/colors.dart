@@ -10,6 +10,9 @@ const Color alcanciaCardDark = Color(0xFF071737);
 const Color alcanciaCardLight = Color(0xFFFFFFFF);
 const Color alcanciaFieldDark = Color(0xFF0F2346);
 const Color alcanciaFieldLight = Color(0xFFF5F5F5);
+const Color alcanciaCardDark2 = Color.fromRGBO(15, 35, 70, 0.47);
+const Color alcanciaCardLight2 = Color.fromRGBO(245, 245, 245, 1);
+
 const CupertinoDynamicColor alcanciaWhiteBlack = CupertinoDynamicColor.withBrightness(color: CupertinoColors.white, darkColor: CupertinoColors.black);
 
 const alcanciaWelcomeGradient = [

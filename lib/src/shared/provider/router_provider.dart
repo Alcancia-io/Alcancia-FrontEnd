@@ -4,14 +4,18 @@ import 'package:alcancia/src/features/transactions-list/presentation/transaction
 import 'package:alcancia/src/features/welcome/presentation/welcome_screen.dart';
 import 'package:alcancia/src/features/registration/presentation/registration_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
+import 'package:alcancia/src/shared/models/transaction.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:alcancia/src/features/transaction-detail/presentation/transaction_detail.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(routes: [
     GoRoute(
       name: "welcome",
       path: "/",
+      // builder: (context, state) => const WelcomeScreen(),
+      // builder: (context, state) => const TransactionDetail(),
       builder: (context, state) => const WelcomeScreen(),
       // builder: (context, state) => DashboardScreen(),
       // builder: (context, state) => HomeScreen(),
@@ -39,6 +43,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       name: "registration",
       path: "/registration",
       builder: (context, state) => const RegistrationScreen(),
+    ),
+    GoRoute(
+      name: "transaction_detail",
+      path: "/transaction_detail",
+      builder: (context, state) => TransactionDetail(txn: state.extra as Transaction),
     ),
   ]);
 });
