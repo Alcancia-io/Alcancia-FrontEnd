@@ -49,47 +49,33 @@ class TransactionDetail extends StatelessWidget {
                   ),
                   TransactionDetailItem(
                     leftText: 'Id transacción',
-                    rightText: '${txn.transactionID.substring(0,txn.transactionID.indexOf('-'))}',
+                    rightText:
+                        '${txn.transactionID.substring(0, txn.transactionID.indexOf('-'))}',
                   ),
                   TransactionDetailItem(
                     leftText: 'Valor depósito',
-                    rightText: '\$${txn.sourceAmount}',
+                    rightText: '\$${txn.sourceAmount.toStringAsFixed(2)}',
                   ),
                   TransactionDetailItem(
                     leftText: 'Valor USDC',
-                    rightText: '\$${txn.amount}',
+                    rightText: '\$${txn.amount.toStringAsFixed(2)}',
                   ),
-                  // TransactionDetailItem(
-                  //   leftText: 'Comisión',
-                  //   rightText: '${}',
-                  // ),
                   TransactionDetailItem(
                     leftText: 'Tipo de TXN',
                     rightText: '${txn.type.isDepositOrWithdraw()}',
                   ),
-                  // const Padding(
-                  //   padding: EdgeInsets.only(bottom: 64, top: 18),
-                  //   child: Text(
-                  //     'Descargar Detalle de la Actividad',
-                  //     style: TextStyle(
-                  //       color: Color(0xFF4E76E5),
-                  //       fontSize: 15,
-                  //       decoration: TextDecoration.underline,
-                  //       decorationThickness: 4,
-                  //     ),
-                  //   ),
-                  // ),
                   Padding(
                     padding: EdgeInsets.only(top: 20),
                     child: SizedBox(
-
                       width: double.infinity,
                       height: 64,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           primary: const Color(0xFF4E76E5),
                         ),
-                        onPressed: () {context.pop();},
+                        onPressed: () {
+                          context.pop();
+                        },
                         child: Text("Cerrar"),
                       ),
                     ),
@@ -103,12 +89,3 @@ class TransactionDetail extends StatelessWidget {
     );
   }
 }
-
-// text
-// fecha
-// valor de deposito
-// valor de usdt
-// comision
-// tipo de txn
-// descargar
-// button
