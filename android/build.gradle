@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.6.10'
+    ext.kotlin_version = '1.5.30'
     repositories {
         google()
         mavenCentral()
@@ -13,8 +13,11 @@ buildscript {
 
 allprojects {
     repositories {
+
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
+        maven { url 'https://button.passbase.com/__android' }
     }
 }
 
