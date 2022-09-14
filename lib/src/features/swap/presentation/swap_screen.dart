@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:alcancia/src/features/swap/data/exchange_api.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
+import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_link.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:flutter/material.dart';
@@ -107,118 +108,133 @@ class _SwapScreenState extends State<SwapScreen> {
                             style: txtTheme.bodyText1,
                           ),
                         ),
+                        // Container(
+                        //   padding: const EdgeInsets.all(12),
+                        //   decoration: const BoxDecoration(
+                        //     color: Color(0xFF071737),
+                        //     borderRadius: BorderRadius.all(
+                        //       Radius.circular(7),
+                        //     ),
+                        //   ),
+                        //   height: 200,
+                        //   child: Column(
+                        //     crossAxisAlignment: CrossAxisAlignment.start,
+                        //     children: [
+                        //       Text(
+                        //         "¿Cuánto deseas convertir?",
+                        //         style: txtTheme.bodyText1,
+                        //       ),
+                        //       Padding(
+                        //         padding: const EdgeInsets.only(top: 8),
+                        //         child: Row(
+                        //           mainAxisAlignment:
+                        //               MainAxisAlignment.spaceBetween,
+                        //           children: [
+                        //             SizedBox(
+                        //               width: 120,
+                        //               child: DropdownButton<String>(
+                        //                 isExpanded: true,
+                        //                 value: sourceDropdownVal,
+                        //                 items: sourceCurrencies
+                        //                     .map<DropdownMenuItem<String>>(
+                        //                   (String value) {
+                        //                     return DropdownMenuItem<String>(
+                        //                       value: value,
+                        //                       child: Text(value),
+                        //                     );
+                        //                   },
+                        //                 ).toList(),
+                        //                 onChanged: (value) {
+                        //                   setState(() {
+                        //                     sourceDropdownVal = value!;
+                        //                     fetchCurrency(sourceDropdownVal);
+                        //                   });
+                        //                 },
+                        //               ),
+                        //             ),
+                        //             SizedBox(
+                        //               height: 45,
+                        //               width: 150,
+                        //               child: TextField(
+                        //                 inputFormatters: <TextInputFormatter>[
+                        //                   FilteringTextInputFormatter.digitsOnly
+                        //                 ],
+                        //                 keyboardType: TextInputType.number,
+                        //                 controller: sourceAmountController,
+                        //                 onChanged: (text) {
+                        //                   setState(() {
+                        //                     targetAmount = text;
+                        //                   });
+                        //                 },
+                        //               ),
+                        //             ),
+                        //           ],
+                        //         ),
+                        //       ),
+                        //       Padding(
+                        //         padding:
+                        //             const EdgeInsets.only(bottom: 12, top: 12),
+                        //         child: Center(
+                        //           child: SvgPicture.asset(
+                        //               "lib/src/resources/images/arrow_down_purple.svg"),
+                        //         ),
+                        //       ),
+                        //       Row(
+                        //         mainAxisAlignment:
+                        //             MainAxisAlignment.spaceBetween,
+                        //         children: [
+                        //           SizedBox(
+                        //             width: 120,
+                        //             child: DropdownButton<String>(
+                        //               isExpanded: true,
+                        //               value: targetDropdownVal,
+                        //               items: targetCurrencies
+                        //                   .map<DropdownMenuItem<String>>(
+                        //                 (String value) {
+                        //                   return DropdownMenuItem<String>(
+                        //                     value: value,
+                        //                     child: Text(value),
+                        //                   );
+                        //                 },
+                        //               ).toList(),
+                        //               onChanged: (value) {},
+                        //             ),
+                        //           ),
+                        //           Container(
+                        //             decoration: BoxDecoration(
+                        //               borderRadius: BorderRadius.circular(8),
+                        //               color: alcanciaMidBlue,
+                        //             ),
+                        //             alignment: Alignment.center,
+                        //             height: 45,
+                        //             width: 150,
+                        //             child: Text(
+                        //               targetAmount == ""
+                        //                   ? ""
+                        //                   : (int.parse(sourceAmountController
+                        //                               .text) /
+                        //                           conversionRate!)
+                        //                       .toStringAsFixed(4),
+                        //               style: txtTheme.bodyText1,
+                        //             ),
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                         Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF071737),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(7),
-                            ),
-                          ),
-                          height: 200,
+                          padding: EdgeInsets.all(12),
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? alcanciaCardDark
+                              : alcanciaFieldLight,
+                          width: 400,
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "¿Cuánto deseas convertir?",
-                                style: txtTheme.bodyText1,
+                            children: const [
+                              AlcanciaDropdown(
+                                dropdownWidth: 120,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    SizedBox(
-                                      width: 120,
-                                      child: DropdownButton<String>(
-                                        isExpanded: true,
-                                        value: sourceDropdownVal,
-                                        items: sourceCurrencies
-                                            .map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                            return DropdownMenuItem<String>(
-                                              value: value,
-                                              child: Text(value),
-                                            );
-                                          },
-                                        ).toList(),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            sourceDropdownVal = value!;
-                                            fetchCurrency(sourceDropdownVal);
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 45,
-                                      width: 150,
-                                      child: TextField(
-                                        inputFormatters: <TextInputFormatter>[
-                                          FilteringTextInputFormatter.digitsOnly
-                                        ],
-                                        keyboardType: TextInputType.number,
-                                        controller: sourceAmountController,
-                                        onChanged: (text) {
-                                          setState(() {
-                                            targetAmount = text;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(bottom: 12, top: 12),
-                                child: Center(
-                                  child: SvgPicture.asset(
-                                      "lib/src/resources/images/arrow_down_purple.svg"),
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
-                                    width: 120,
-                                    child: DropdownButton<String>(
-                                      isExpanded: true,
-                                      value: targetDropdownVal,
-                                      items: targetCurrencies
-                                          .map<DropdownMenuItem<String>>(
-                                        (String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value),
-                                          );
-                                        },
-                                      ).toList(),
-                                      onChanged: (value) {},
-                                    ),
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: alcanciaMidBlue,
-                                    ),
-                                    alignment: Alignment.center,
-                                    height: 45,
-                                    width: 150,
-                                    child: Text(
-                                      targetAmount == ""
-                                          ? ""
-                                          : (int.parse(sourceAmountController
-                                                      .text) /
-                                                  conversionRate!)
-                                              .toStringAsFixed(4),
-                                      style: txtTheme.bodyText1,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              Text("field"),
                             ],
                           ),
                         ),
