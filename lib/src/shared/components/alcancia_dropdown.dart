@@ -2,8 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AlcanciaDropdown extends StatefulWidget {
-  const AlcanciaDropdown({Key? key, this.dropdownWidth}) : super(key: key);
+  const AlcanciaDropdown({
+    Key? key,
+    this.dropdownWidth,
+    this.onChanged,
+    required this.dropdownItems,
+  }) : super(key: key);
+
   final double? dropdownWidth;
+  final List<Map> dropdownItems;
+  final Function? onChanged;
 
   @override
   State<AlcanciaDropdown> createState() => _AlcanciaDropdownState();
@@ -15,8 +23,7 @@ class _AlcanciaDropdownState extends State<AlcanciaDropdown> {
     super.initState();
   }
 
-  final List<String> content = ["MXN", "DOP", "USD"];
-  late String dropdownValue = content.first;
+  late String dropdownValue = widget.dropdownItems.first['name'];
 
   @override
   Widget build(BuildContext context) {
@@ -30,39 +37,33 @@ class _AlcanciaDropdownState extends State<AlcanciaDropdown> {
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
-          icon: const Visibility(
-            visible: false,
-            child: Icon(Icons.arrow_downward),
-          ),
           isExpanded: true,
           value: dropdownValue,
-          items: content.map<DropdownMenuItem<String>>((value) {
+          onChanged: (newValue) {
+            setState(() {
+              dropdownValue = newValue!;
+            });
+            if (widget.onChanged != null) {
+              widget.onChanged!(newValue);
+            }
+          },
+          items: widget.dropdownItems.map<DropdownMenuItem<String>>((item) {
             return DropdownMenuItem(
-              value: value,
+              value: item['name'],
               child: Padding(
-                padding: EdgeInsets.all(12),
+                padding: const EdgeInsets.all(12),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    SvgPicture.asset(
-                      "lib/src/resources/images/icon_mexico_flag.svg",
-                    ),
-                    Text(value),
-                    SvgPicture.asset(
-                      "lib/src/resources/images/icon_arrow_down.svg",
-                      width: 6,
-                      height: 10,
-                    )
+                    item['icon'] == null
+                        ? const Text("")
+                        : SvgPicture.asset(item['icon']),
+                    Text(item['name']),
                   ],
                 ),
               ),
             );
           }).toList(),
-          onChanged: (String? value) {
-            setState(() {
-              dropdownValue = value!;
-            });
-          },
         ),
       ),
     );
