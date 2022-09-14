@@ -185,7 +185,7 @@ class LoginScreen extends ConsumerWidget {
                                       final token =
                                           resultData["login"]["access_token"];
                                       saveToken(token);
-                                      context.go("/homescreen");
+                                      context.go("/homescreen/0");
                                     }
                                   },
                                 ),

@@ -40,7 +40,7 @@ class AlcanciaButton extends StatelessWidget {
               color: Color(0xFF4E76E5),
             ),
           ),
-          onPressed: () {},
+          onPressed: onPressed,
         ),
       );
     }

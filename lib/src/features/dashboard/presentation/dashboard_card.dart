@@ -55,8 +55,8 @@ class DashboardCard extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
                     color: ctx.brightness == Brightness.dark
-                        ? Color.fromRGBO(15, 35, 70, 0.47)
-                        : Color.fromRGBO(245, 245, 245, 1),
+                        ? alcanciaCardDark2
+                        : alcanciaCardLight2,
                     borderRadius: BorderRadius.all(
                       Radius.circular(8),
                     ),
