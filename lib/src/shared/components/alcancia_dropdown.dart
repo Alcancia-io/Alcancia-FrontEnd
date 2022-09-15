@@ -68,12 +68,15 @@ class _AlcanciaDropdownState extends State<AlcanciaDropdown> {
                   children: [
                     item['icon'] == null
                         ? const Text("")
-                        : Image(
-                            width: 18,
-                            image: AssetImage(
-                              item['icon'],
+                        : Padding(
+                            padding: const EdgeInsets.only(right: 5),
+                            child: Image(
+                              width: 18,
+                              image: AssetImage(
+                                item['icon'],
+                              ),
+                              // width: 20,
                             ),
-                            // width: 20,
                           ),
                     Text(item['name']),
                   ],
