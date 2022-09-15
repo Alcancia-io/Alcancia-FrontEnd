@@ -6,11 +6,11 @@ class User {
   final String name;
   final String surname;
   final String gender;
-  final String phoneNumber;
+  String phoneNumber;
   final DateTime dob;
 
 
-  const User({required this.userId, required this.surname, required this.gender, required this.phoneNumber, required this.dob, required this.name, required this.email});
+  User({required this.userId, required this.surname, required this.gender, required this.phoneNumber, required this.dob, required this.name, required this.email});
 }
 
 class UserState extends StateNotifier<User?> {
@@ -27,6 +27,14 @@ class UserState extends StateNotifier<User?> {
       phoneNumber: "",
       dob: DateTime.now(),
     );
+  }
+
+  void setPhoneNumber(String phone) {
+    state?.phoneNumber = phone;
+  }
+
+  void setUser(User user) {
+    state = user;
   }
 
   Future<void> logout() async {
