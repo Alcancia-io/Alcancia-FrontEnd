@@ -6,5 +6,7 @@
   "email": "Email",
   "password": "Password",
   "errorRequiredField": "This field is mandatory",
-  "errorEmailFormat": "Are you sure?, verify your email"
+  "errorEmailFormat": "Are you sure?, verify your email",
+  "errorInvalidPassword": "",
+  "errorPasswordMatch": "Passwords do not match"
 }

@@ -16,21 +16,25 @@ import '../data/gender.dart';
 import 'gender_picker.dart';
 import 'country_picker.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
+import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 
-class RegistrationScreen extends ConsumerWidget {
-  RegistrationScreen({Key? key}) : super(key: key);
+class RegistrationScreen extends ConsumerStatefulWidget {
+  const RegistrationScreen({Key? key}) : super(key: key);
 
-  final nameController = TextEditingController();
-  final lastNameController = TextEditingController();
-  final phoneController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
+  @override
+  ConsumerState<RegistrationScreen> createState() => _RegistrationScreenState();
+}
 
-  final obscurePasswordProvider =
-      StateProvider.autoDispose<bool>((ref) => true);
-  final obscureConfirmPasswordProvider =
-      StateProvider.autoDispose<bool>((ref) => true);
+class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+
+  bool obscurePassword = false;
+  bool obscureConfirmPassword = false;
 
   final selectedDateProvider =
       StateProvider.autoDispose<DateTime>((ref) => DateTime.now());
@@ -41,9 +45,40 @@ class RegistrationScreen extends ConsumerWidget {
 
   var signupInput;
 
-  bool checkPassword() {
-    if (passwordController.text != confirmPasswordController.text) return false;
-    return true;
+  bool validDate(DateTime date) {
+    DateTime adultDate = DateTime(
+      date.year + 18,
+      date.month,
+      date.day,
+    );
+
+    if (adultDate.isBefore(DateTime.now())) {
+      return true;
+    }
+    return false;
+  }
+
+  bool passwordsMatch() {
+    if (passwordController.text.isNotEmpty &&
+        passwordController.text == confirmPasswordController.text &&
+        passwordController.text.isValidPassword()) {
+      return true;
+    }
+    return false;
+  }
+
+  bool isValid(Country country, Gender? gender, DateTime date) {
+    final name = nameController.text;
+    final lastName = lastNameController.text;
+    final phone = phoneController.text;
+    final email = emailController.text;
+    return (name.isNotEmpty &&
+        lastName.isNotEmpty &&
+        phone.isNotEmpty &&
+        email.isValidEmail() &&
+        passwordsMatch() &&
+        gender != null &&
+        validDate(date));
   }
 
   setRegistrationInput(User user) {
@@ -59,11 +94,10 @@ class RegistrationScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final obscurePassword = ref.watch(obscurePasswordProvider);
-    final obscureConfirmPassword = ref.watch(obscureConfirmPasswordProvider);
     final appLocalization = AppLocalizations.of(context)!;
+    final selectedDate = ref.watch(selectedDateProvider);
     final selectedCountry = ref.watch(selectedCountryProvider);
     final selectedGender = ref.watch(selectedGenderProvider);
     final selectedDate = ref.watch(selectedDateProvider);
@@ -82,11 +116,11 @@ class RegistrationScreen extends ConsumerWidget {
                   const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: AlcanciaLogo(
-                    height: size.height / 20,
-                  ),
-                ),
+                    padding: const EdgeInsets.all(16.0),
+                    child: AlcanciaToolbar(
+                      state: stateToolbar.logoLetters,
+                      height: size.height / 12,
+                    )),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const [
@@ -136,6 +170,7 @@ class RegistrationScreen extends ConsumerWidget {
                   children: [
                     Text("Celular"),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
                           flex: 1,
@@ -147,18 +182,16 @@ class RegistrationScreen extends ConsumerWidget {
                           flex: 2,
                           child: Padding(
                             padding: const EdgeInsets.only(left: 8.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .inputDecorationTheme
-                                    .fillColor,
-                                borderRadius: BorderRadius.circular(7),
-                              ),
-                              child: TextField(
-                                style: Theme.of(context).textTheme.bodyText1,
-                                controller: phoneController,
-                                keyboardType: TextInputType.phone,
-                              ),
+                            child: TextFormField(
+                              style: Theme.of(context).textTheme.bodyText1,
+                              controller: phoneController,
+                              keyboardType: TextInputType.phone,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return appLocalization.errorRequiredField;
+                                }
+                                return null;
+                              },
                             ),
                           ),
                         ),
@@ -183,7 +216,7 @@ class RegistrationScreen extends ConsumerWidget {
                       if (adultDate.isBefore(DateTime.now())) {
                         return null;
                       }
-                      return "INVALID AGE ERROR";
+                      return "Necesitas ser mayor de 18 años de edad";
                     }
                     return null;
                   },
@@ -224,8 +257,9 @@ class RegistrationScreen extends ConsumerWidget {
                   obscure: obscurePassword,
                   suffixIcon: GestureDetector(
                     onTap: () {
-                      ref.read(obscurePasswordProvider.notifier).state =
-                          !obscurePassword;
+                      setState(() {
+                        obscurePassword = !obscurePassword;
+                      });
                     },
                     child: Icon(obscurePassword
                         ? CupertinoIcons.eye
@@ -238,7 +272,7 @@ class RegistrationScreen extends ConsumerWidget {
                       return value.isValidPassword()
                           ? null
                           : appLocalization
-                              .errorRequiredField; // TODO: Password validation text
+                              .errorInvalidPassword; // TODO: Password validation text
                     }
                   },
                 ),
@@ -251,8 +285,9 @@ class RegistrationScreen extends ConsumerWidget {
                   obscure: obscureConfirmPassword,
                   suffixIcon: GestureDetector(
                     onTap: () {
-                      ref.read(obscureConfirmPasswordProvider.notifier).state =
-                          !obscureConfirmPassword;
+                      setState(() {
+                        obscureConfirmPassword = !obscurePassword;
+                      });
                     },
                     child: Icon(obscureConfirmPassword
                         ? CupertinoIcons.eye
@@ -262,7 +297,8 @@ class RegistrationScreen extends ConsumerWidget {
                     if (value == null || value.isEmpty) {
                       return appLocalization.errorRequiredField;
                     } else if (value != passwordController.text) {
-                      return "Passwords do not match"; // TODO: Confirm password validation text
+                      return appLocalization
+                          .errorPasswordMatch; // TODO: Confirm password validation text
                     }
                   },
                 ),
@@ -295,29 +331,30 @@ class RegistrationScreen extends ConsumerWidget {
                         return Column(
                           children: [
                             AlcanciaButton(
-                              () {
+                              buttonText: "Siguiente",
+                              onPressed: () {
                                 final user = User(
                                   userId: "",
                                   name: nameController.text,
                                   surname: lastNameController.text,
                                   email: emailController.text,
                                   gender: selectedGender.string,
-                                  phoneNumber: "+${selectedCountry.dialCode}${phoneController.text}",
+                                  phoneNumber:
+                                      "+${selectedCountry.dialCode}${phoneController.text}",
                                   dob: selectedDate,
                                 );
                                 setRegistrationInput(user);
-                                if (checkPassword()) {
-                                  runMutation(
-                                      {"signupUserInput": signupInput}
-                                  );
+                                if (isValid(selectedCountry, selectedGender,
+                                    selectedDate)) {
+                                  runMutation({"signupUserInput": signupInput});
                                   ref.read(userProvider.notifier).setUser(user);
-                                  registrationController.sendOTP(user.phoneNumber);
+                                  registrationController
+                                      .sendOTP(user.phoneNumber);
                                   timer.setPresetMinuteTime(5);
                                   timer.onExecute.add(StopWatchExecute.start);
                                   context.go("/otp");
                                 }
                               },
-                              "Siguiente",
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -332,21 +369,22 @@ class RegistrationScreen extends ConsumerWidget {
                       }
                     }
                     return AlcanciaButton(
-                      ()  {
+                      buttonText: "Siguiente",
+                      onPressed: () {
                         final user = User(
                           userId: "",
                           name: nameController.text,
                           surname: lastNameController.text,
                           email: emailController.text,
                           gender: selectedGender.string,
-                          phoneNumber: "+${selectedCountry.dialCode}${phoneController.text}",
+                          phoneNumber:
+                              "+${selectedCountry.dialCode}${phoneController.text}",
                           dob: selectedDate,
                         );
                         setRegistrationInput(user);
-                        if (checkPassword()) {
-                          runMutation(
-                            {"signupUserInput": signupInput}
-                          );
+                        if (isValid(
+                            selectedCountry, selectedGender, selectedDate)) {
+                          runMutation({"signupUserInput": signupInput});
                           ref.read(userProvider.notifier).setUser(user);
                           registrationController.sendOTP(user.phoneNumber);
                           timer.setPresetMinuteTime(5);
@@ -354,7 +392,6 @@ class RegistrationScreen extends ConsumerWidget {
                           context.go("/otp");
                         }
                       },
-                      "Siguiente",
                     );
                   },
                 ),
@@ -364,5 +401,16 @@ class RegistrationScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    lastNameController.dispose();
+    phoneController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
   }
 }

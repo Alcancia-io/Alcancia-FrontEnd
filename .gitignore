@@ -9,6 +9,7 @@
 .buildlog/
 .history
 .svn/
+.env
 
 # IntelliJ related
 *.iml
@@ -158,3 +159,4 @@ app.*.symbols
 # Coverage
 coverage/
 
+.env
