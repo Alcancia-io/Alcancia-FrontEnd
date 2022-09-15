@@ -54,7 +54,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     GoRoute(
       name: "otp",
       path: "/otp",
-      builder: (context, state) => OTPScreen(),
+      builder: (context, state) => OTPScreen(password: state.extra! as String,),
     ),
   ]);
 });

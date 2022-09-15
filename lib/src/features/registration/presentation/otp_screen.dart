@@ -11,7 +11,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class OTPScreen extends ConsumerStatefulWidget {
-  const OTPScreen({Key? key}) : super(key: key);
+  const OTPScreen({Key? key, required this.password}) : super(key: key);
+  final String password;
 
   @override
   ConsumerState<OTPScreen> createState() => _OTPScreenState();
@@ -19,6 +20,8 @@ class OTPScreen extends ConsumerStatefulWidget {
 
 class _OTPScreenState extends ConsumerState<OTPScreen> {
   final codeController = TextEditingController();
+  bool acceptTerms = false;
+  String error = "";
 
   @override
   void dispose() {
@@ -28,7 +31,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final phoneNumber = ref.watch(userProvider)?.phoneNumber;
+    final user = ref.watch(userProvider);
     final timer = ref.watch(timerProvider);
     final registrationController = ref.watch(registrationControllerProvider);
     return GestureDetector(
@@ -59,7 +62,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                       Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                            "Ingresa el código de 6 dígitos que enviamos a tu celular ${phoneNumber}"),
+                            "Ingresa el código de 6 dígitos que enviamos a tu celular ${user!.phoneNumber}"),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -71,18 +74,19 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                       StreamBuilder<int>(
                           stream: timer.rawTime,
                           initialData: 0,
-                          builder: (BuildContext context,
-                              AsyncSnapshot snapshot) {
+                          builder:
+                              (BuildContext context, AsyncSnapshot snapshot) {
                             final value = snapshot.data;
-                            final displayTime =
-                            StopWatchTimer.getDisplayTime(value,
-                                hours: false, milliSecond: false);
+                            final displayTime = StopWatchTimer.getDisplayTime(
+                                value,
+                                hours: false,
+                                milliSecond: false);
                             return Center(
                               child: Container(
                                 decoration: ShapeDecoration(
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
-                                        BorderRadius.circular(100),
+                                            BorderRadius.circular(100),
                                         side: BorderSide(
                                             color: alcanciaLightBlue))),
                                 child: Padding(
@@ -96,8 +100,8 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                       ),
                                       Text(
                                         displayTime,
-                                        style: TextStyle(
-                                            color: alcanciaLightBlue),
+                                        style:
+                                            TextStyle(color: alcanciaLightBlue),
                                       ),
                                     ],
                                   ),
@@ -127,11 +131,17 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                           SizedBox(
                             width: 25,
                             child: Checkbox(
-                                value: false,
+                                value: acceptTerms,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(4),
                                 ),
-                                onChanged: (value) {}),
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    setState(() {
+                                      acceptTerms = value;
+                                    });
+                                  }
+                                }),
                           ),
                           const Expanded(
                             child: Padding(
@@ -143,15 +153,38 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                         ],
                       ),
                       Center(
-                        child:
-                        AlcanciaButton(
-                          buttonText: "Crea tu cuenta",
-                          onPressed: () async {
-                            final validOTP = await registrationController.verifyOTP(codeController.text, phoneNumber!);
-                            if (validOTP) {
-                              context.go("/dashboard");
-                            }
-                          },
+                        child: Column(
+                          children: [
+                            AlcanciaButton(
+                              buttonText: "Crea tu cuenta",
+                              onPressed: () async {
+                                if (acceptTerms) {
+                                  final validOTP =
+                                      await registrationController.verifyOTP(
+                                          codeController.text,
+                                          user.phoneNumber);
+                                  print(validOTP);
+                                  if (validOTP) {
+                                    await registrationController.signUp(
+                                        user, widget.password);
+                                    context.go("/login");
+                                  } else {
+                                    setState(() {
+                                      error = "Código inválido";
+                                    });
+                                  }
+                                } else {
+                                  setState(() {
+                                    error = "Acepta la Política de Privacidad";
+                                  });
+                                }
+                              },
+                            ),
+                            Text(
+                              error,
+                              style: const TextStyle(color: Colors.red),
+                            ),
+                          ],
                         ),
                       ),
                     ],

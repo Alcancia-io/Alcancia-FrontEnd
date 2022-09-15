@@ -33,8 +33,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
-  bool obscurePassword = false;
-  bool obscureConfirmPassword = false;
+  bool obscurePassword = true;
+  bool obscureConfirmPassword = true;
 
   final selectedDateProvider =
       StateProvider.autoDispose<DateTime>((ref) => DateTime.now());
@@ -79,18 +79,6 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
         passwordsMatch() &&
         gender != null &&
         validDate(date));
-  }
-
-  setRegistrationInput(User user) {
-    signupInput = {
-      "name": user.name,
-      "surname": user.surname,
-      "email": user.email,
-      "phoneNumber": user.phoneNumber,
-      "gender": user.gender,
-      "password": confirmPasswordController.text,
-      "dob": DateFormat('dd/MM/yyyy').format(user.dob)
-    };
   }
 
   @override
@@ -285,7 +273,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   suffixIcon: GestureDetector(
                     onTap: () {
                       setState(() {
-                        obscureConfirmPassword = !obscurePassword;
+                        obscureConfirmPassword = !obscureConfirmPassword;
                       });
                     },
                     child: Icon(obscureConfirmPassword
@@ -304,94 +292,27 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                 const SizedBox(
                   height: 15,
                 ),
-                Mutation(
-                  options: MutationOptions(
-                    document: gql(signupMutation),
-                    onCompleted: (resultData) {
-                      if (resultData != null) {
-                        context.go("/login");
-                      }
-                    },
-                  ),
-                  builder: (
-                    MultiSourceResult<Object?> Function(Map<String, dynamic>,
-                            {Object? optimisticResult})
-                        runMutation,
-                    QueryResult<Object?>? result,
-                  ) {
-                    print(result);
-                    if (result != null) {
-                      if (result.isLoading) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                      if (result.hasException) {
-                        return Column(
-                          children: [
-                            AlcanciaButton(
-                              buttonText: "Siguiente",
-                              onPressed: () {
-                                final user = User(
-                                  userId: "",
-                                  name: nameController.text,
-                                  surname: lastNameController.text,
-                                  email: emailController.text,
-                                  gender: selectedGender.string,
-                                  phoneNumber:
-                                      "+${selectedCountry.dialCode}${phoneController.text}",
-                                  dob: selectedDate,
-                                );
-                                setRegistrationInput(user);
-                                if (isValid(selectedCountry, selectedGender,
-                                    selectedDate)) {
-                                  runMutation({"signupUserInput": signupInput});
-                                  ref.read(userProvider.notifier).setUser(user);
-                                  registrationController
-                                      .sendOTP(user.phoneNumber);
-                                  timer.setPresetMinuteTime(5);
-                                  timer.onExecute.add(StopWatchExecute.start);
-                                  context.go("/otp");
-                                }
-                              },
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                result.exception!.graphqlErrors.first.message,
-                                style: const TextStyle(
-                                    color: Colors.red, fontSize: 12),
-                              ),
-                            ),
-                          ],
-                        );
-                      }
-                    }
-                    return AlcanciaButton(
-                      buttonText: "Siguiente",
-                      onPressed: () {
-                        final user = User(
-                          userId: "",
-                          name: nameController.text,
-                          surname: lastNameController.text,
-                          email: emailController.text,
-                          gender: selectedGender.string,
-                          phoneNumber:
-                              "+${selectedCountry.dialCode}${phoneController.text}",
-                          dob: selectedDate,
-                        );
-                        setRegistrationInput(user);
-                        if (isValid(
-                            selectedCountry, selectedGender, selectedDate)) {
-                          runMutation({"signupUserInput": signupInput});
-                          ref.read(userProvider.notifier).setUser(user);
-                          registrationController.sendOTP(user.phoneNumber);
-                          timer.setPresetMinuteTime(5);
-                          timer.onExecute.add(StopWatchExecute.start);
-                          context.go("/otp");
-                        }
-                      },
+                AlcanciaButton(
+                  buttonText: "Siguiente",
+                  onPressed: () {
+                    final user = User(
+                      userId: "",
+                      name: nameController.text,
+                      surname: lastNameController.text,
+                      email: emailController.text,
+                      gender: selectedGender.string,
+                      phoneNumber:
+                      "+${selectedCountry.dialCode}${phoneController.text}",
+                      dob: selectedDate,
                     );
+                    if (isValid(
+                        selectedCountry, selectedGender, selectedDate)) {
+                      ref.read(userProvider.notifier).setUser(user);
+                      registrationController.sendOTP(user.phoneNumber);
+                      timer.setPresetMinuteTime(5);
+                      timer.onExecute.add(StopWatchExecute.start);
+                      context.go("/otp", extra: passwordController.text);
+                    }
                   },
                 ),
               ],
@@ -401,6 +322,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
       ),
     );
   }
+
+
 
   @override
   void dispose() {
