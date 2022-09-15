@@ -144,12 +144,15 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                       ),
                       Center(
                         child:
-                        AlcanciaButton(() async {
-                          final validOTP = await registrationController.verifyOTP(codeController.text, phoneNumber!);
-                          if (validOTP) {
-                            context.go("/dashboard");
-                          }
-                        }, "Crea tu cuenta"),
+                        AlcanciaButton(
+                          buttonText: "Crea tu cuenta",
+                          onPressed: () async {
+                            final validOTP = await registrationController.verifyOTP(codeController.text, phoneNumber!);
+                            if (validOTP) {
+                              context.go("/dashboard");
+                            }
+                          },
+                        ),
                       ),
                     ],
                   ),

@@ -4,7 +4,6 @@ import 'package:alcancia/src/shared/graphql/queries.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class DashboardCard extends StatelessWidget {

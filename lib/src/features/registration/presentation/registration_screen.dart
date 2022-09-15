@@ -100,7 +100,6 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
     final selectedDate = ref.watch(selectedDateProvider);
     final selectedCountry = ref.watch(selectedCountryProvider);
     final selectedGender = ref.watch(selectedGenderProvider);
-    final selectedDate = ref.watch(selectedDateProvider);
     final timer = ref.watch(timerProvider);
     final registrationController = ref.watch(registrationControllerProvider);
 

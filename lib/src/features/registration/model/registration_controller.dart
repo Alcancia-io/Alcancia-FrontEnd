@@ -41,7 +41,7 @@ class RegistrationController {
       );
 
       if (result.hasException) {
-        print(result.exception?.graphqlErrors[0]?.message);
+        print(result.exception?.graphqlErrors[0].message);
       } else if (result.data != null) {
         print(result.data);
       }
@@ -62,7 +62,7 @@ class RegistrationController {
 
       if (result.hasException) {
         print("Exception");
-        print(result.exception?.graphqlErrors[0]?.message);
+        print(result.exception?.graphqlErrors[0].message);
       } else if (result.data != null) {
         print("data");
         print(result.data);
