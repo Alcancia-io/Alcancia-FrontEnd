@@ -105,8 +105,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                 Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: AlcanciaToolbar(
-                      state: stateToolbar.logoLetters,
-                      height: size.height / 12,
+                      state: StateToolbar.logoLetters,
+                      logoHeight: size.height / 12,
                     )),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -302,7 +302,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                       email: emailController.text,
                       gender: selectedGender.string,
                       phoneNumber:
-                      "+${selectedCountry.dialCode}${phoneController.text}",
+                          "+${selectedCountry.dialCode}${phoneController.text}",
                       dob: selectedDate,
                     );
                     if (isValid(
@@ -322,8 +322,6 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
       ),
     );
   }
-
-
 
   @override
   void dispose() {

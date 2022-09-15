@@ -1,6 +1,7 @@
 import 'package:alcancia/src/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:alcancia/src/features/login/presentation/login_screen.dart';
 import 'package:alcancia/src/features/registration/presentation/otp_screen.dart';
+import 'package:alcancia/src/features/swap/presentation/swap_screen.dart';
 import 'package:alcancia/src/features/transactions-list/presentation/transactions_list_screen.dart';
 import 'package:alcancia/src/features/welcome/presentation/welcome_screen.dart';
 import 'package:alcancia/src/features/registration/presentation/registration_screen.dart';
@@ -20,6 +21,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       builder: (context, state) => const WelcomeScreen(),
       // builder: (context, state) => DashboardScreen(),
       // builder: (context, state) => HomeScreen(),
+      // builder: (context, state) => const AlcanciaTabbar(),
+      // builder: (context, state) => SwapScreen(),
     ),
     GoRoute(
       name: "login",
@@ -46,6 +49,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       builder: (context, state) => const RegistrationScreen(),
     ),
     GoRoute(
+      name: "swap",
+      path: "/swap",
+      builder: (context, state) => SwapScreen(),
+    ),
+    GoRoute(
       name: "transaction_detail",
       path: "/transaction_detail",
       builder: (context, state) =>
@@ -54,7 +62,9 @@ final routerProvider = Provider<GoRouter>((ref) {
     GoRoute(
       name: "otp",
       path: "/otp",
-      builder: (context, state) => OTPScreen(password: state.extra! as String,),
+      builder: (context, state) => OTPScreen(
+        password: state.extra! as String,
+      ),
     ),
   ]);
 });
