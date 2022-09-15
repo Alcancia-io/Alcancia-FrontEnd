@@ -23,11 +23,11 @@ class _SwapScreenState extends State<SwapScreen> {
   final sourceAmountController = TextEditingController();
   final String baseCurrencyCode = "USD";
   final List<Map> targetCurrencyCodes = [
-    {"name": "MXN", "icon": "lib/src/resources/images/icon_mexico_flag.svg"},
-    {"name": "DOP", "icon": "lib/src/resources/images/icon_mexico_flag.svg"},
+    {"name": "MXN", "icon": "lib/src/resources/images/icon_mexico_flag.png"},
+    {"name": "DOP", "icon": "lib/src/resources/images/icon_dominican_flag.png"},
   ];
   final List<Map> baseCurrencyCodes = [
-    {"name": "USDC"},
+    {"name": "USDC", "icon": "lib/src/resources/images/icon_usdc.png"},
   ];
 
   late String sourceDropdownVal = targetCurrencyCodes.first['name'];
@@ -115,7 +115,7 @@ class _SwapScreenState extends State<SwapScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     AlcanciaDropdown(
-                                        dropdownWidth: 120,
+                                        dropdownWidth: 130,
                                         dropdownItems: targetCurrencyCodes,
                                         onChanged: (newValue) {
                                           setState(() {
@@ -161,7 +161,7 @@ class _SwapScreenState extends State<SwapScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   AlcanciaDropdown(
-                                    dropdownWidth: 120,
+                                    dropdownWidth: 130,
                                     dropdownItems: baseCurrencyCodes,
                                   ),
                                   Container(
@@ -209,15 +209,22 @@ class _SwapScreenState extends State<SwapScreen> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 12),
-                          child: AlcanciaButton(
-                            buttonText: "Coinbase",
-                            onPressed: () {},
-                            color: alcanciaLightBlue,
-                            width: double.infinity,
-                            height: 64,
-                          ),
-                        ),
+                            padding: const EdgeInsets.only(top: 10, bottom: 12),
+                            child: SizedBox(
+                              height: 64,
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Color(0xFFC9E0FF),
+                                ),
+                                onPressed: () {},
+                                child: const Image(
+                                  image: AssetImage(
+                                      "lib/src/resources/images/Coinbase 2.png"),
+                                  height: 63,
+                                ),
+                              ),
+                            )),
                         Container(
                           padding: const EdgeInsets.only(top: 20),
                           child: Row(

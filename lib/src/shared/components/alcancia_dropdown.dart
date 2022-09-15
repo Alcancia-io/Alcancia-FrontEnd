@@ -57,7 +57,10 @@ class _AlcanciaDropdownState extends State<AlcanciaDropdown> {
                   children: [
                     item['icon'] == null
                         ? const Text("")
-                        : SvgPicture.asset(item['icon']),
+                        : Image(
+                            image: AssetImage(item['icon']),
+                            // width: 20,
+                          ),
                     Text(item['name']),
                   ],
                 ),
