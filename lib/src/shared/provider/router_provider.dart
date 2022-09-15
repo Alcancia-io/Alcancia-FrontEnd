@@ -1,5 +1,6 @@
 import 'package:alcancia/src/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:alcancia/src/features/login/presentation/login_screen.dart';
+import 'package:alcancia/src/features/registration/presentation/otp_screen.dart';
 import 'package:alcancia/src/features/swap/presentation/swap_screen.dart';
 import 'package:alcancia/src/features/transactions-list/presentation/transactions_list_screen.dart';
 import 'package:alcancia/src/features/welcome/presentation/welcome_screen.dart';
@@ -55,7 +56,15 @@ final routerProvider = Provider<GoRouter>((ref) {
     GoRoute(
       name: "transaction_detail",
       path: "/transaction_detail",
-      builder: (context, state) => TransactionDetail(txn: state.extra as Transaction),
+      builder: (context, state) =>
+          TransactionDetail(txn: state.extra as Transaction),
+    ),
+    GoRoute(
+      name: "otp",
+      path: "/otp",
+      builder: (context, state) => OTPScreen(
+        password: state.extra! as String,
+      ),
     ),
   ]);
 });
