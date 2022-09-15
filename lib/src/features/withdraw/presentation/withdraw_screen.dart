@@ -10,7 +10,7 @@ class WithdrawScreen extends StatelessWidget {
     {"name": "México", "icon": "lib/src/resources/images/icon_mexico_flag.png"},
     {
       "name": "República Dominicana",
-      "icon": "lib/src/resources/images/icon_mexico_flag.png"
+      "icon": "lib/src/resources/images/icon_dominican_flag.png"
     },
   ];
 

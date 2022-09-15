@@ -220,7 +220,7 @@ class _SwapScreenState extends State<SwapScreen> {
                                 onPressed: () {},
                                 child: const Image(
                                   image: AssetImage(
-                                      "lib/src/resources/images/Coinbase 2.png"),
+                                      "lib/src/resources/images/icon_coinbase.png"),
                                   height: 63,
                                 ),
                               ),
