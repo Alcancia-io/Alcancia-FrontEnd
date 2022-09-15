@@ -3,16 +3,18 @@ import 'package:alcancia/src/features/registration/provider/timer_provider.dart'
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/provider/user.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OTPScreen extends ConsumerStatefulWidget {
-  const OTPScreen({Key? key, required this.password}) : super(key: key);
+  OTPScreen({Key? key, required this.password}) : super(key: key);
   final String password;
+  final Uri url = Uri.parse('https://flutter.dev');
 
   @override
   ConsumerState<OTPScreen> createState() => _OTPScreenState();
@@ -22,12 +24,6 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
   final codeController = TextEditingController();
   bool acceptTerms = false;
   String error = "";
-
-  @override
-  void dispose() {
-    codeController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +118,10 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                   color: alcanciaLightBlue,
                                 ),
                               ),
-                              onPressed: () {}),
+                              onPressed: () {
+                                registrationController.sendOTP(user.phoneNumber);
+                              },
+                          ),
                         ],
                       ),
                       Row(
@@ -143,11 +142,24 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                   }
                                 }),
                           ),
-                          const Expanded(
+                          Expanded(
                             child: Padding(
                               padding: EdgeInsets.only(left: 8.0),
-                              child: Text(
-                                  "He leído y acepto la Política de Privacidad y Tratamiento de Datos"),
+                              child: RichText(
+                                text: TextSpan(
+                                    text: "He leído y acepto la ",
+                                    style: Theme.of(context).textTheme.bodyText2,
+                                    children: [
+                                      TextSpan(
+                                        text:
+                                            "Política de Privacidad y Tratamiento de Datos", style: TextStyle(color: alcanciaLightBlue),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                          _launchUrl();
+                                          },
+                                      )
+                                    ]),
+                              ),
                             ),
                           ),
                         ],
@@ -196,5 +208,17 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    codeController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _launchUrl() async {
+    if (!await launchUrl(widget.url)) {
+      throw 'Could not launch $widget.url';
+    }
   }
 }
