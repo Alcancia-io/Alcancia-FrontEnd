@@ -4,6 +4,7 @@ import 'package:alcancia/src/features/swap/presentation/swap_screen.dart';
 import 'package:alcancia/src/features/transactions-list/presentation/transactions_list_screen.dart';
 import 'package:alcancia/src/features/welcome/presentation/welcome_screen.dart';
 import 'package:alcancia/src/features/registration/presentation/registration_screen.dart';
+import 'package:alcancia/src/features/withdraw/presentation/withdraw_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
 import 'package:alcancia/src/shared/models/transaction.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,7 +56,13 @@ final routerProvider = Provider<GoRouter>((ref) {
     GoRoute(
       name: "transaction_detail",
       path: "/transaction_detail",
-      builder: (context, state) => TransactionDetail(txn: state.extra as Transaction),
+      builder: (context, state) =>
+          TransactionDetail(txn: state.extra as Transaction),
+    ),
+    GoRoute(
+      name: "withdraw",
+      path: "/withdraw",
+      builder: (context, state) => WithdrawScreen(),
     ),
   ]);
 });

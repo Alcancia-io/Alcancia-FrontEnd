@@ -7,11 +7,15 @@ class AlcanciaDropdown extends StatefulWidget {
     this.dropdownWidth,
     this.onChanged,
     required this.dropdownItems,
+    this.color,
+    this.itemsAlignment,
   }) : super(key: key);
 
   final double? dropdownWidth;
   final List<Map> dropdownItems;
   final Function? onChanged;
+  final Color? color;
+  final MainAxisAlignment? itemsAlignment;
 
   @override
   State<AlcanciaDropdown> createState() => _AlcanciaDropdownState();
@@ -30,13 +34,19 @@ class _AlcanciaDropdownState extends State<AlcanciaDropdown> {
     return Container(
       width: widget.dropdownWidth,
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor,
+        color: widget.color ?? Theme.of(context).primaryColor,
         borderRadius: const BorderRadius.all(
           Radius.circular(8),
         ),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
+          style: TextStyle(
+            fontSize: 15,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
+          ),
           isExpanded: true,
           value: dropdownValue,
           onChanged: (newValue) {
@@ -53,12 +63,16 @@ class _AlcanciaDropdownState extends State<AlcanciaDropdown> {
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment:
+                      widget.itemsAlignment ?? MainAxisAlignment.spaceAround,
                   children: [
                     item['icon'] == null
                         ? const Text("")
                         : Image(
-                            image: AssetImage(item['icon']),
+                            width: 18,
+                            image: AssetImage(
+                              item['icon'],
+                            ),
                             // width: 20,
                           ),
                     Text(item['name']),

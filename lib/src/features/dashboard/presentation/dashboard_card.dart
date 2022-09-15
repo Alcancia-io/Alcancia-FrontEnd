@@ -155,7 +155,9 @@ class DashboardCard extends StatelessWidget {
                                   ),
                                   AlcanciaButton(
                                     buttonText: "Retirar",
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      context.push("/withdraw");
+                                    },
                                     width: 116,
                                     height: 38,
                                     color: alcanciaMidBlue,

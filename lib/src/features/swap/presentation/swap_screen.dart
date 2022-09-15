@@ -115,7 +115,7 @@ class _SwapScreenState extends State<SwapScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     AlcanciaDropdown(
-                                        dropdownWidth: 130,
+                                        dropdownWidth: 120,
                                         dropdownItems: targetCurrencyCodes,
                                         onChanged: (newValue) {
                                           setState(() {
@@ -161,7 +161,7 @@ class _SwapScreenState extends State<SwapScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   AlcanciaDropdown(
-                                    dropdownWidth: 130,
+                                    dropdownWidth: 120,
                                     dropdownItems: baseCurrencyCodes,
                                   ),
                                   Container(
