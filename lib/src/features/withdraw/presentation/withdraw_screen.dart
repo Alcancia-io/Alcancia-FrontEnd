@@ -33,19 +33,20 @@ class WithdrawScreen extends StatelessWidget {
                         state: StateToolbar.titleIcon,
                         logoHeight: 40,
                       ),
-                      Text(
+                      const Text(
                         "Hola!",
-                        style: txtTheme.headline1,
+                        style: TextStyle(
+                            fontSize: 35, fontWeight: FontWeight.w700),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 12),
+                        padding: const EdgeInsets.only(top: 12),
                         child: Text(
                           "Completa la siguiente información para realizar el retiro de tu dinero:",
                           style: txtTheme.bodyText1,
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.only(top: 20),
+                        padding: const EdgeInsets.only(top: 20),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -63,97 +64,49 @@ class WithdrawScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Container(
-                        padding: EdgeInsets.only(top: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      const LabeledTextFormField(
+                        controller: null,
+                        labelText: "Banco",
+                        inputType: TextInputType.name,
+                        padding: EdgeInsets.only(bottom: 16, top: 10),
+                      ),
+                      const LabeledTextFormField(
+                        controller: null,
+                        labelText: "Número CLABE / Número de cuenta",
+                        inputType: TextInputType.name,
+                        padding: EdgeInsets.only(bottom: 16),
+                      ),
+                      const LabeledTextFormField(
+                        controller: null,
+                        labelText: "INE / Cédula",
+                        inputType: TextInputType.name,
+                        padding: EdgeInsets.only(bottom: 16),
+                      ),
+                      const LabeledTextFormField(
+                        controller: null,
+                        labelText: "Nombre del dueño de la cuenta",
+                        inputType: TextInputType.name,
+                        padding: EdgeInsets.only(bottom: 16),
+                      ),
+                      const LabeledTextFormField(
+                        controller: null,
+                        labelText: "Monto de retiro",
+                        inputType: TextInputType.number,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 24),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              "Banco",
-                              style: txtTheme.bodyText1,
-                            ),
-                            Container(
-                              height: 45,
-                              child: TextField(),
-                            ),
+                            AlcanciaButton(
+                              buttonText: "Siguiente",
+                              onPressed: () {},
+                              color: alcanciaLightBlue,
+                              width: 308,
+                              height: 64,
+                            )
                           ],
                         ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(top: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Número CLABE / Número de cuenta",
-                              style: txtTheme.bodyText1,
-                            ),
-                            Container(
-                              height: 45,
-                              child: TextField(),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(top: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "INE / Cédula",
-                              style: txtTheme.bodyText1,
-                            ),
-                            Container(
-                              height: 45,
-                              child: TextField(),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(top: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Nombre del dueño de la cuenta",
-                              style: txtTheme.bodyText1,
-                            ),
-                            Container(
-                              height: 45,
-                              child: TextField(),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(top: 20, bottom: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Monto de retiro",
-                              style: txtTheme.bodyText1,
-                            ),
-                            Container(
-                              height: 45,
-                              child: TextField(),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          AlcanciaButton(
-                            buttonText: "Siguiente",
-                            onPressed: () {},
-                            color: alcanciaLightBlue,
-                            width: 308,
-                            height: 64,
-                          )
-                        ],
                       )
                     ],
                   ),
