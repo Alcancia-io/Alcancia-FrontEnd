@@ -1,5 +1,6 @@
 import 'package:alcancia/src/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:alcancia/src/features/login/presentation/login_screen.dart';
+import 'package:alcancia/src/features/registration/presentation/otp_screen.dart';
 import 'package:alcancia/src/features/welcome/presentation/welcome_screen.dart';
 import 'package:alcancia/src/features/registration/presentation/registration_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,6 +27,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       name: "registration",
       path: "/registration",
       builder: (context, state) => RegistrationScreen(),
+    ),
+    GoRoute(
+      name: "otp",
+      path: "/otp",
+      builder: (context, state) => OTPScreen(),
     ),
   ]);
 });
