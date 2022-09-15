@@ -42,7 +42,7 @@ class DashboardScreen extends StatelessWidget {
                     }
 
                     if (result.isLoading) {
-                      return const Text("is loading...");
+                      return const Center(child: CircularProgressIndicator());
                     }
 
                     Map<String, dynamic> response =
@@ -104,7 +104,7 @@ class DashboardScreen extends StatelessWidget {
             ),
           );
         }
-        return const CircularProgressIndicator();
+        return const Center(child: CircularProgressIndicator());
       },
     );
   }

@@ -4,7 +4,7 @@ import 'colors.dart';
 
 class AlcanciaTheme {
   static const TextTheme _textTheme = TextTheme(
-      headline1: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
+      headline1: TextStyle(fontWeight: FontWeight.w700, fontSize: 35),
       headline2: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
       subtitle1: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
       subtitle2: TextStyle(fontWeight: FontWeight.w400, fontSize: 18),

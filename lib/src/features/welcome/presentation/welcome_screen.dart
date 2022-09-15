@@ -40,7 +40,9 @@ class WelcomeScreen extends StatelessWidget {
                 physics: ClampingScrollPhysics(),
                 child: Column(
                   children: [
-                    AlcanciaToolbar(state:stateToolbar.logoNoletters,height: size.height / 12),
+                    AlcanciaToolbar(
+                        state: StateToolbar.logoNoletters,
+                        logoHeight: size.height / 12),
 
                     //AlcanciaLogo(height: size.height / 12),
                     Transform(

@@ -47,6 +47,7 @@ dependencies:
   flutter_riverpod: ^2.0.0-dev.9
   flutter_secure_storage: ^5.0.2
   flutter_dotenv: ^5.0.2
+  http: ^0.13.5
 
 dev_dependencies:
   flutter_test:

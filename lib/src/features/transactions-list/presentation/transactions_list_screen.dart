@@ -38,7 +38,7 @@ class TransactionsListScreen extends StatelessWidget {
                     }
 
                     if (result.isLoading) {
-                      return const Text("is loading...");
+                      return const Center(child: CircularProgressIndicator());
                     }
 
                     Map<String, dynamic> response =
@@ -56,14 +56,14 @@ class TransactionsListScreen extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          AlcanciaToolbar(
-                            state: stateToolbar.titleIcon,
+                          const AlcanciaToolbar(
+                            state: StateToolbar.titleIcon,
                             title: 'Actividad',
-                            height: 38,
+                            logoHeight: 38,
                           ),
                           Expanded(
                             child: AlcanciaTransactions(
-                              transactions: transactionsList
+                              transactions: transactionsList,
                             ),
                           ),
                         ],
@@ -75,7 +75,7 @@ class TransactionsListScreen extends StatelessWidget {
             ),
           );
         }
-        return const CircularProgressIndicator();
+        return const Center(child: CircularProgressIndicator());
       },
     );
   }
