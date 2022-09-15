@@ -1,8 +1,6 @@
 import 'package:alcancia/src/shared/models/storage_item.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
-import 'package:alcancia/src/shared/components/alcancia_button.dart';
-import 'package:alcancia/src/shared/components/alcancia_logo.dart';
-import 'package:alcancia/src/shared/components/alcancia_text_field.dart';
+import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -244,7 +242,6 @@ class LoginScreen extends ConsumerWidget {
                                           fontWeight: FontWeight.bold),
                                     ),
                                     onPressed: () {
-                                      //TODO: Register navigation
                                       context.push("/registration");
                                     }),
                               ],
