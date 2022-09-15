@@ -82,6 +82,8 @@ class WelcomeScreen extends StatelessWidget {
                             ),
                             const Spacer(),
                             AlcanciaButton(
+                              width: 340,
+                              height: 55,
                               buttonText: "Registrate",
                               onPressed: () {
                                 context.push('/registration');

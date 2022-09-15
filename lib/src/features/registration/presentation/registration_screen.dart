@@ -293,6 +293,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   height: 15,
                 ),
                 AlcanciaButton(
+                  width: 340,
+                  height: 55,
                   buttonText: "Siguiente",
                   onPressed: () {
                     final user = User(

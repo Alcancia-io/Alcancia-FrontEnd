@@ -230,6 +230,8 @@ class LoginScreen extends ConsumerWidget {
                                     }
                                   }
                                   return AlcanciaButton(
+                                    width: 340,
+                                    height: 55,
                                     buttonText: "Iniciar sesión",
                                     onPressed: () {
                                       setLoginInputFields();
