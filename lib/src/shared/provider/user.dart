@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 class User {
   final String userId;
@@ -9,8 +10,25 @@ class User {
   String phoneNumber;
   final DateTime dob;
 
+  User(
+      {required this.userId,
+      required this.surname,
+      required this.gender,
+      required this.phoneNumber,
+      required this.dob,
+      required this.name,
+      required this.email});
 
-  User({required this.userId, required this.surname, required this.gender, required this.phoneNumber, required this.dob, required this.name, required this.email});
+  factory User.fromJSON(Map<String, dynamic> map) {
+    return User(
+        userId: map["userId"],
+        surname: map["surname"],
+        gender: map["gender"],
+        phoneNumber: map["phoneNumber"],
+        dob: DateFormat('dd/MM/yyyy').parse(map["dob "]),
+        name: map["name"],
+        email: map["email"]);
+  }
 }
 
 class UserState extends StateNotifier<User?> {
