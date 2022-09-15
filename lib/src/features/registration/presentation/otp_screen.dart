@@ -179,6 +179,8 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                   if (validOTP) {
                                     await registrationController.signUp(
                                         user, widget.password);
+                                    timer.onExecute.add(StopWatchExecute.stop);
+                                    timer.dispose();
                                     context.go("/login");
                                   } else {
                                     setState(() {
