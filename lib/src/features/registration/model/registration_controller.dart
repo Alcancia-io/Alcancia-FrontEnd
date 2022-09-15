@@ -88,7 +88,7 @@ class RegistrationController {
       "phoneNumber": user.phoneNumber,
       "gender": user.gender,
       "password": password,
-      "dob": DateFormat('dd/MM/yyyy').format(user.dob)
+      "dob": DateFormat('YYYY-MM-dd').format(user.dob)
     };
     try {
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
@@ -111,7 +111,7 @@ class RegistrationController {
       } else if (result.data != null) {
         print("data");
         print(result.data);
-        final data = result.data!["data"] as Map<String, dynamic>;
+        final data = result.data!["signup"] as Map<String, dynamic>;
         final user = User.fromJSON(data);
         print("Success!");
         return user;
