@@ -27,7 +27,7 @@ class _SwapScreenState extends State<SwapScreen> {
     {"name": "DOP", "icon": "lib/src/resources/images/icon_mexico_flag.svg"},
   ];
   final List<Map> baseCurrencyCodes = [
-    {"name": "USD"},
+    {"name": "USDC"},
   ];
 
   late String sourceDropdownVal = targetCurrencyCodes.first['name'];
@@ -236,7 +236,7 @@ class _SwapScreenState extends State<SwapScreen> {
                 ],
               );
             }
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           },
         ),
       ),

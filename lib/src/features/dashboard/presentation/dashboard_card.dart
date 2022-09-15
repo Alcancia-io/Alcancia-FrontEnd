@@ -47,7 +47,7 @@ class DashboardCard extends StatelessWidget {
                 }
 
                 if (result.isLoading) {
-                  return Text("is loading...");
+                  return const Center(child: CircularProgressIndicator());
                 }
                 var balance = result.data?['me']['balance'];
 
@@ -173,7 +173,7 @@ class DashboardCard extends StatelessWidget {
             ),
           );
         } else {
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         }
       },
     );
