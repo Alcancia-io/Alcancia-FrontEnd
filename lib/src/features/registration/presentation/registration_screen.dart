@@ -1,6 +1,9 @@
 import 'package:alcancia/src/features/registration/data/country.dart';
 import 'package:alcancia/src/features/registration/data/signup_mutation.dart';
+import 'package:alcancia/src/features/registration/provider/registration_controller_provider.dart';
+import 'package:alcancia/src/features/registration/provider/timer_provider.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
+import 'package:alcancia/src/shared/provider/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
@@ -12,6 +15,7 @@ import 'package:intl/intl.dart';
 import '../data/gender.dart';
 import 'gender_picker.dart';
 import 'country_picker.dart';
+import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class RegistrationScreen extends ConsumerWidget {
   RegistrationScreen({Key? key}) : super(key: key);
@@ -42,15 +46,15 @@ class RegistrationScreen extends ConsumerWidget {
     return true;
   }
 
-  setRegistrationInput(Country selectedCountry, Gender? selectedGender, DateTime selectedDate) {
+  setRegistrationInput(User user) {
     signupInput = {
-      "name": nameController.text,
-      "surname": lastNameController.text,
-      "email": emailController.text,
-      "phoneNumber": "${selectedCountry.dialCode}${phoneController.text}",
-      "gender": selectedGender.string,
+      "name": user.name,
+      "surname": user.surname,
+      "email": user.email,
+      "phoneNumber": user.phoneNumber,
+      "gender": user.gender,
       "password": confirmPasswordController.text,
-      "dob": DateFormat('dd/MM/yyyy').format(selectedDate)
+      "dob": DateFormat('dd/MM/yyyy').format(user.dob)
     };
   }
 
@@ -63,6 +67,8 @@ class RegistrationScreen extends ConsumerWidget {
     final selectedCountry = ref.watch(selectedCountryProvider);
     final selectedGender = ref.watch(selectedGenderProvider);
     final selectedDate = ref.watch(selectedDateProvider);
+    final timer = ref.watch(timerProvider);
+    final registrationController = ref.watch(registrationControllerProvider);
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -290,11 +296,26 @@ class RegistrationScreen extends ConsumerWidget {
                           children: [
                             AlcanciaButton(
                               () {
-                                setRegistrationInput(selectedCountry, selectedGender, selectedDate);
-                                if (checkPassword())
+                                final user = User(
+                                  userId: "",
+                                  name: nameController.text,
+                                  surname: lastNameController.text,
+                                  email: emailController.text,
+                                  gender: selectedGender.string,
+                                  phoneNumber: "+${selectedCountry.dialCode}${phoneController.text}",
+                                  dob: selectedDate,
+                                );
+                                setRegistrationInput(user);
+                                if (checkPassword()) {
                                   runMutation(
-                                    {"signupUserInput": signupInput},
+                                      {"signupUserInput": signupInput}
                                   );
+                                  ref.read(userProvider.notifier).setUser(user);
+                                  registrationController.sendOTP(user.phoneNumber);
+                                  timer.setPresetMinuteTime(5);
+                                  timer.onExecute.add(StopWatchExecute.start);
+                                  context.go("/otp");
+                                }
                               },
                               "Siguiente",
                             ),
@@ -312,11 +333,26 @@ class RegistrationScreen extends ConsumerWidget {
                     }
                     return AlcanciaButton(
                       ()  {
-                        setRegistrationInput(selectedCountry, selectedGender, selectedDate);
-                        if (checkPassword())
+                        final user = User(
+                          userId: "",
+                          name: nameController.text,
+                          surname: lastNameController.text,
+                          email: emailController.text,
+                          gender: selectedGender.string,
+                          phoneNumber: "+${selectedCountry.dialCode}${phoneController.text}",
+                          dob: selectedDate,
+                        );
+                        setRegistrationInput(user);
+                        if (checkPassword()) {
                           runMutation(
-                            {"signupUserInput": signupInput},
+                            {"signupUserInput": signupInput}
                           );
+                          ref.read(userProvider.notifier).setUser(user);
+                          registrationController.sendOTP(user.phoneNumber);
+                          timer.setPresetMinuteTime(5);
+                          timer.onExecute.add(StopWatchExecute.start);
+                          context.go("/otp");
+                        }
                       },
                       "Siguiente",
                     );
