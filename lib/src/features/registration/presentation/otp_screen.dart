@@ -24,6 +24,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
   final codeController = TextEditingController();
   bool acceptTerms = false;
   String error = "";
+  bool _loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +34,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
@@ -110,17 +112,20 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                         children: [
                           const Text("¿No recibiste el código?"),
                           CupertinoButton(
-                              child: const Text(
-                                "Reenviar",
-                                style: TextStyle(
-                                  decoration: TextDecoration.underline,
-                                  fontWeight: FontWeight.bold,
-                                  color: alcanciaLightBlue,
-                                ),
+                            child: const Text(
+                              "Reenviar",
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                fontWeight: FontWeight.bold,
+                                color: alcanciaLightBlue,
                               ),
-                              onPressed: () {
-                                registrationController.sendOTP(user.phoneNumber);
-                              },
+                            ),
+                            onPressed: () async {
+                              await registrationController
+                                  .sendOTP(user.phoneNumber);
+                              timer.setPresetMinuteTime(5, add: false);
+                              timer.onExecute.add(StopWatchExecute.start);
+                            },
                           ),
                         ],
                       ),
@@ -148,14 +153,17 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                               child: RichText(
                                 text: TextSpan(
                                     text: "He leído y acepto la ",
-                                    style: Theme.of(context).textTheme.bodyText2,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText2,
                                     children: [
                                       TextSpan(
                                         text:
-                                            "Política de Privacidad y Tratamiento de Datos", style: TextStyle(color: alcanciaLightBlue),
+                                            "Política de Privacidad y Tratamiento de Datos",
+                                        style:
+                                            TextStyle(color: alcanciaLightBlue),
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () {
-                                          _launchUrl();
+                                            _launchUrl();
                                           },
                                       )
                                     ]),
@@ -167,37 +175,44 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                       Center(
                         child: Column(
                           children: [
-                            AlcanciaButton(
-                              buttonText: "Crea tu cuenta",
-                              onPressed: () async {
-                                if (acceptTerms) {
-                                  final validOTP =
-                                      await registrationController.verifyOTP(
-                                          codeController.text,
-                                          user.phoneNumber);
-                                  print(validOTP);
-                                  if (validOTP) {
-                                    await registrationController.signUp(
-                                        user, widget.password);
-                                    timer.onExecute.add(StopWatchExecute.stop);
-                                    timer.dispose();
-                                    context.go("/login");
+                            if (_loading) ...[
+                              const CircularProgressIndicator(),
+                            ] else ...[
+                              AlcanciaButton(
+                                buttonText: "Crea tu cuenta",
+                                onPressed: () async {
+                                  if (acceptTerms) {
+                                    _setLoading(true);
+                                    final validOTP =
+                                        await registrationController.verifyOTP(
+                                            codeController.text,
+                                            user.phoneNumber);
+                                    if (validOTP) {
+                                      await registrationController.signUp(
+                                          user, widget.password);
+                                      timer.onExecute
+                                          .add(StopWatchExecute.stop);
+                                      timer.dispose();
+                                      context.go("/login");
+                                    } else {
+                                      setState(() {
+                                        error = "Código inválido";
+                                      });
+                                    }
                                   } else {
                                     setState(() {
-                                      error = "Código inválido";
+                                      error =
+                                          "Acepta la Política de Privacidad";
                                     });
                                   }
-                                } else {
-                                  setState(() {
-                                    error = "Acepta la Política de Privacidad";
-                                  });
-                                }
-                              },
-                            ),
-                            Text(
-                              error,
-                              style: const TextStyle(color: Colors.red),
-                            ),
+                                  _setLoading(false);
+                                },
+                              ),
+                              Text(
+                                error,
+                                style: const TextStyle(color: Colors.red),
+                              ),
+                            ],
                           ],
                         ),
                       ),
@@ -222,5 +237,11 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
     if (!await launchUrl(widget.url)) {
       throw 'Could not launch $widget.url';
     }
+  }
+
+  void _setLoading(bool loading) {
+    setState(() {
+      _loading = loading;
+    });
   }
 }
