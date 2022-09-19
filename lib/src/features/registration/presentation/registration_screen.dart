@@ -1,6 +1,9 @@
 import 'package:alcancia/src/features/registration/data/country.dart';
 import 'package:alcancia/src/features/registration/data/signup_mutation.dart';
+import 'package:alcancia/src/features/registration/provider/registration_controller_provider.dart';
+import 'package:alcancia/src/features/registration/provider/timer_provider.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
+import 'package:alcancia/src/shared/provider/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
@@ -12,6 +15,7 @@ import 'package:intl/intl.dart';
 import '../data/gender.dart';
 import 'gender_picker.dart';
 import 'country_picker.dart';
+import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 
 class RegistrationScreen extends ConsumerStatefulWidget {
@@ -29,8 +33,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
-  bool obscurePassword = false;
-  bool obscureConfirmPassword = false;
+  bool obscurePassword = true;
+  bool obscureConfirmPassword = true;
 
   final selectedDateProvider =
       StateProvider.autoDispose<DateTime>((ref) => DateTime.now());
@@ -77,19 +81,6 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
         validDate(date));
   }
 
-  setRegistrationInput(
-      Country selectedCountry, Gender? selectedGender, DateTime selectedDate) {
-    signupInput = {
-      "name": nameController.text,
-      "surname": lastNameController.text,
-      "email": emailController.text,
-      "phoneNumber": "${selectedCountry.dialCode}${phoneController.text}",
-      "gender": selectedGender.string,
-      "password": confirmPasswordController.text,
-      "dob": DateFormat('dd/MM/yyyy').format(selectedDate)
-    };
-  }
-
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -97,6 +88,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
     final selectedDate = ref.watch(selectedDateProvider);
     final selectedCountry = ref.watch(selectedCountryProvider);
     final selectedGender = ref.watch(selectedGenderProvider);
+    final timer = ref.watch(timerProvider);
+    final registrationController = ref.watch(registrationControllerProvider);
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -280,7 +273,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   suffixIcon: GestureDetector(
                     onTap: () {
                       setState(() {
-                        obscureConfirmPassword = !obscurePassword;
+                        obscureConfirmPassword = !obscureConfirmPassword;
                       });
                     },
                     child: Icon(obscureConfirmPassword
@@ -299,69 +292,27 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                 const SizedBox(
                   height: 15,
                 ),
-                Mutation(
-                  options: MutationOptions(
-                    document: gql(signupMutation),
-                    onCompleted: (resultData) {
-                      if (resultData != null) {
-                        context.go("/login");
-                      }
-                    },
-                  ),
-                  builder: (
-                    MultiSourceResult<Object?> Function(Map<String, dynamic>,
-                            {Object? optimisticResult})
-                        runMutation,
-                    QueryResult<Object?>? result,
-                  ) {
-                    print(result);
-                    if (result != null) {
-                      if (result.isLoading) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                      if (result.hasException) {
-                        return Column(
-                          children: [
-                            AlcanciaButton(
-                              buttonText: "Siguiente",
-                              onPressed: () {
-                                setRegistrationInput(selectedCountry,
-                                    selectedGender, selectedDate);
-                                if (isValid(selectedCountry, selectedGender,
-                                    selectedDate)) {
-                                  runMutation(
-                                    {"signupUserInput": signupInput},
-                                  );
-                                }
-                              },
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                result.exception!.graphqlErrors.first.message,
-                                style: const TextStyle(
-                                    color: Colors.red, fontSize: 12),
-                              ),
-                            ),
-                          ],
-                        );
-                      }
-                    }
-                    return AlcanciaButton(
-                      buttonText: "Siguiente",
-                      onPressed: () {
-                        setRegistrationInput(
-                            selectedCountry, selectedGender, selectedDate);
-                        if (isValid(
-                            selectedCountry, selectedGender, selectedDate)) {
-                          runMutation(
-                            {"signupUserInput": signupInput},
-                          );
-                        }
-                      },
+                AlcanciaButton(
+                  buttonText: "Siguiente",
+                  onPressed: () {
+                    final user = User(
+                      userId: "",
+                      name: nameController.text,
+                      surname: lastNameController.text,
+                      email: emailController.text,
+                      gender: selectedGender.string,
+                      phoneNumber:
+                          "+${selectedCountry.dialCode}${phoneController.text}",
+                      dob: selectedDate,
                     );
+                    if (isValid(
+                        selectedCountry, selectedGender, selectedDate)) {
+                      ref.read(userProvider.notifier).setUser(user);
+                      registrationController.sendOTP(user.phoneNumber);
+                      timer.setPresetMinuteTime(5);
+                      timer.onExecute.add(StopWatchExecute.start);
+                      context.go("/otp", extra: passwordController.text);
+                    }
                   },
                 ),
               ],

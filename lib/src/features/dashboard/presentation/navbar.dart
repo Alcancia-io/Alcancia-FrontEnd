@@ -58,7 +58,7 @@ class AlcanciaNavbar extends StatelessWidget {
               ),
             );
           } else {
-            return CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           }
         });
   }
