@@ -62,21 +62,22 @@ class RegistrationController {
             document: gql(verifyOTPQuery),
             variables: {"verificationCode": otp, "phoneNumber": phoneNumber}),
       );
-
       if (result.hasException) {
         print("Exception");
-        print(result.exception?.graphqlErrors[0].message);
-      } else if (result.data != null) {
+        final e = result.exception?.graphqlErrors[0].message;
+        return Future.error(e!);
+      } else {
         print("data");
         print(result.data);
         final valid = result.data!["verifyOTP"]["valid"] as bool;
-        return valid;
+        if (valid)
+          return valid;
+        return Future.error("Código inválido");
       }
-      return false;
     } catch (e) {
       print("Error");
       print(e);
-      return false;
+      return Future.error(e);
     }
   }
 
@@ -107,7 +108,8 @@ class RegistrationController {
 
       if (result.hasException) {
         print("Exception");
-        print(result.exception?.graphqlErrors[0].message);
+        final e = result.exception?.graphqlErrors[0].message;
+        return Future.error(e!);
       } else if (result.data != null) {
         print("data");
         print(result.data);
@@ -120,7 +122,7 @@ class RegistrationController {
     } catch (e) {
       print("Error");
       print(e);
-      return null;
+      return Future.error(e);
     }
   }
 }

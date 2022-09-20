@@ -183,20 +183,18 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                 onPressed: () async {
                                   if (acceptTerms) {
                                     _setLoading(true);
-                                    final validOTP =
-                                        await registrationController.verifyOTP(
-                                            codeController.text,
-                                            user.phoneNumber);
-                                    if (validOTP) {
+                                    try {
+                                      await registrationController.verifyOTP(
+                                          codeController.text, user.phoneNumber);
                                       await registrationController.signUp(
                                           user, widget.password);
                                       timer.onExecute
                                           .add(StopWatchExecute.stop);
                                       timer.dispose();
                                       context.go("/login");
-                                    } else {
+                                    } catch (err) {
                                       setState(() {
-                                        error = "Código inválido";
+                                        error = err.toString();
                                       });
                                     }
                                   } else {
