@@ -1,25 +1,30 @@
+import 'package:alcancia/src/features/ramp/presentation/ramp-payment.dart';
 import 'package:alcancia/src/features/swap/data/exchange_api.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_link.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
+import 'package:alcancia/src/shared/provider/user.dart';
 import 'package:alcancia/src/shared/services/exchange_api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:ramp_flutter/ramp_flutter.dart';
 
-class SwapScreen extends StatefulWidget {
+class SwapScreen extends ConsumerStatefulWidget {
   const SwapScreen({Key? key}) : super(key: key);
 
   @override
-  State<SwapScreen> createState() => _SwapScreenState();
+  ConsumerState<SwapScreen> createState() => _SwapScreenState();
 }
 
-class _SwapScreenState extends State<SwapScreen> {
+class _SwapScreenState extends ConsumerState<SwapScreen> {
+  RampPaymentService _rampPaymentService = RampPaymentService();
   ExchangeApiService exchangeApiService =
       ExchangeApiService(baseCurrencyCode: "USD");
   late String targetAmount = "";
@@ -37,6 +42,10 @@ class _SwapScreenState extends State<SwapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(userProvider);
+    print('this is the user in the swap screen');
+    print(user?.email);
+    print(user?.walletAddress);
     var txtTheme = Theme.of(context).textTheme;
     return Scaffold(
       body: SafeArea(
@@ -44,6 +53,11 @@ class _SwapScreenState extends State<SwapScreen> {
           future: exchangeApiService.fetchCurrency(sourceDropdownVal),
           builder: (context, snapshot) {
             var conversionRate = snapshot.data?.conversionRate;
+            // var usdc
+            if (targetAmount == "") {}
+            var usdc = targetAmount == ""
+                ? 0.0
+                : int.parse(sourceAmountController.text) / conversionRate!;
 
             if (snapshot.hasError) {
               return Text("${snapshot.error}");
@@ -206,7 +220,13 @@ class _SwapScreenState extends State<SwapScreen> {
                           child: AlcanciaButton(
                             buttonText: "Tarjeta de Débito/Crédito",
                             onPressed: () {
-                              _presentRamp();
+                              _rampPaymentService.presentRamp(
+                                usdc,
+                                "A01209400@itesm.mx",
+                                "0xffffffffffff",
+                                "MXN",
+                              );
+                              // _presentRamp();
                             },
                             color: alcanciaLightBlue,
                             width: double.infinity,
@@ -254,19 +274,4 @@ class _SwapScreenState extends State<SwapScreen> {
       ),
     );
   }
-
-  void _presentRamp() {
-    Configuration configuration = Configuration();
-    configuration.fiatCurrency = "EUR";
-    configuration.fiatValue = "15";
-    configuration.deepLinkScheme = "myawesomeapp";
-    RampFlutter.showRamp(
-        configuration, onPurchaseCreated, onRampFailed, onRampClosed);
-  }
-
-  void onPurchaseCreated(Purchase purchase, String token, String url) {}
-
-  void onRampFailed() {}
-
-  void onRampClosed() {}
 }

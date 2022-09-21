@@ -296,15 +296,16 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   buttonText: "Siguiente",
                   onPressed: () {
                     final user = User(
-                      userId: "",
-                      name: nameController.text,
-                      surname: lastNameController.text,
-                      email: emailController.text,
-                      gender: selectedGender.string,
-                      phoneNumber:
-                          "+${selectedCountry.dialCode}${phoneController.text}",
-                      dob: selectedDate,
-                    );
+                        userId: "",
+                        name: nameController.text,
+                        surname: lastNameController.text,
+                        email: emailController.text,
+                        gender: selectedGender.string,
+                        phoneNumber:
+                            "+${selectedCountry.dialCode}${phoneController.text}",
+                        dob: selectedDate,
+                        balance: 0,
+                        walletAddress: "");
                     if (isValid(
                         selectedCountry, selectedGender, selectedDate)) {
                       ref.read(userProvider.notifier).setUser(user);

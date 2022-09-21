@@ -93,17 +93,15 @@ class RegistrationController {
     try {
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
       GraphQLClient _client = graphQLConfiguration.clientToQuery();
-      QueryResult result = await _client.mutate(
-          MutationOptions(
-            document: gql(signupMutation),
-            variables: {"signupUserInput": signupInput}
-            //onCompleted: (resultData) {
-            //  if (resultData != null) {
-            //    context.go("/login");
-            //  }
-            //},
-          )
-      );
+      QueryResult result = await _client.mutate(MutationOptions(
+          document: gql(signupMutation),
+          variables: {"signupUserInput": signupInput}
+          //onCompleted: (resultData) {
+          //  if (resultData != null) {
+          //    context.go("/login");
+          //  }
+          //},
+          ));
 
       if (result.hasException) {
         print("Exception");

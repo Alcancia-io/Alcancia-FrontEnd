@@ -1,5 +1,6 @@
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/models/storage_item.dart';
+import 'package:alcancia/src/shared/provider/user.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:alcancia/src/features/login/data/login_mutation.dart';
+import 'package:intl/intl.dart';
 
 final rememberEmailProvider = StateProvider.autoDispose<bool>((ref) => false);
 
@@ -38,6 +40,7 @@ class LoginScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider);
     final size = MediaQuery.of(context).size;
     final rememberMe = ref.watch(rememberEmailProvider);
     final appLocalization = AppLocalizations.of(context)!;
@@ -178,11 +181,19 @@ class LoginScreen extends ConsumerWidget {
                                   document: gql(loginMutation),
                                   onCompleted: (dynamic resultData) {
                                     if (resultData != null) {
-                                      // TODO: uncomment this
-                                      // context.go("/dashboard");
                                       final token =
                                           resultData["login"]["access_token"];
+                                      var userJson =
+                                          resultData["login"]["user"];
+                                      userJson["dob"] = "12/12/2022";
+                                      print(userJson);
+                                      var user = User.fromJSON(userJson);
+
                                       saveToken(token);
+                                      // save user
+                                      ref
+                                          .read(userProvider.notifier)
+                                          .setUser(user);
                                       context.go("/homescreen/0");
                                     }
                                   },

@@ -1,26 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:ramp_flutter/ramp_flutter.dart';
 
-class RampPayment extends StatelessWidget {
-  const RampPayment({Key? key}) : super(key: key);
+class RampPaymentService {
+  const RampPaymentService();
 
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        onPressed: _presentRamp,
-        child: const Text("Present Ramp"),
-      ),
-    );
-  }
-
-  void _presentRamp() {
+  presentRamp(double usdc, String userEmail, String userWalletAddress,
+      String fiatCurrency) {
     Configuration configuration = Configuration();
     configuration.fiatCurrency = "EUR";
     configuration.fiatValue = "15";
     configuration.deepLinkScheme = "myawesomeapp";
+    configuration.hostApiKey = "";
     RampFlutter.showRamp(
         configuration, onPurchaseCreated, onRampFailed, onRampClosed);
   }
