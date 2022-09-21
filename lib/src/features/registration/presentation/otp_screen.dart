@@ -123,8 +123,8 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                             onPressed: () async {
                               await registrationController
                                   .sendOTP(user.phoneNumber);
-                              timer.setPresetMinuteTime(5, add: false);
-                              timer.onExecute.add(StopWatchExecute.start);
+                              timer.onResetTimer();
+                              timer.onStartTimer();
                             },
                           ),
                         ],
@@ -188,8 +188,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                           codeController.text, user.phoneNumber);
                                       await registrationController.signUp(
                                           user, widget.password);
-                                      timer.onExecute
-                                          .add(StopWatchExecute.stop);
+                                      timer.onStopTimer();
                                       timer.dispose();
                                       ScaffoldMessenger.of(context).showSnackBar(_snackBar());
                                       context.go("/login");

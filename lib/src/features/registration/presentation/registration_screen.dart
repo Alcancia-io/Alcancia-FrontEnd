@@ -310,7 +310,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                       ref.read(userProvider.notifier).setUser(user);
                       registrationController.sendOTP(user.phoneNumber);
                       timer.setPresetMinuteTime(5, add: false);
-                      timer.onExecute.add(StopWatchExecute.start);
+                      timer.onResetTimer();
+                      timer.onStartTimer();
                       context.push("/otp", extra: passwordController.text);
                     }
                   },
