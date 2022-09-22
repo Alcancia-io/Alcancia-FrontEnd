@@ -77,10 +77,10 @@ class AlcanciaToolbar extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Image.asset(
-                    "lib/src/resources/images/profile.png",
-                    width: 38,
-                    height: 38,
+                  const CircleAvatar(
+                    backgroundImage: AssetImage(
+                      "lib/src/resources/images/default_profile_pic.jpg",
+                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 16),

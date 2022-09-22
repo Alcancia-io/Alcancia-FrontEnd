@@ -190,11 +190,9 @@ class LoginScreen extends ConsumerWidget {
                                       var user = User.fromJSON(userJson);
 
                                       saveToken(token);
-                                      // save user
-                                      ref
-                                          .read(userProvider.notifier)
-                                          .setUser(user);
                                       context.go("/homescreen/0");
+                                      // save user
+
                                     }
                                   },
                                 ),
