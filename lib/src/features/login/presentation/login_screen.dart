@@ -192,7 +192,9 @@ class LoginScreen extends ConsumerWidget {
                                       saveToken(token);
                                       context.go("/homescreen/0");
                                       // save user
-
+                                      ref
+                                          .read(userProvider.notifier)
+                                          .setUser(user);
                                     }
                                   },
                                 ),

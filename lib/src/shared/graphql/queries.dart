@@ -13,6 +13,11 @@ const String meQuery = """
     }
   }
 """;
+const String isAuthenticated = """
+  query {
+    isUserAuthenticated
+  }
+""";
 
 const String userProfit = """
   query{

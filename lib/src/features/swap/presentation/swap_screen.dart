@@ -196,7 +196,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                           : (int.parse(sourceAmountController
                                                       .text) /
                                                   conversionRate!)
-                                              .toStringAsFixed(4),
+                                              .toStringAsFixed(2),
                                       style: txtTheme.bodyText1,
                                     ),
                                   ),
@@ -222,9 +222,9 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                             onPressed: () {
                               _rampPaymentService.presentRamp(
                                 usdc,
-                                "A01209400@itesm.mx",
-                                "0xffffffffffff",
-                                "MXN",
+                                user?.email as String,
+                                user?.walletAddress as String,
+                                sourceDropdownVal,
                               );
                               // _presentRamp();
                             },

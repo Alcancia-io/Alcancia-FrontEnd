@@ -49,8 +49,7 @@ class TransactionDetail extends StatelessWidget {
                   ),
                   TransactionDetailItem(
                     leftText: 'Id transacción',
-                    rightText:
-                        '${txn.transactionID.substring(0, txn.transactionID.indexOf('-'))}',
+                    rightText: '${txn.transactionID.substring(0, 7)}',
                   ),
                   TransactionDetailItem(
                     leftText: 'Valor depósito',

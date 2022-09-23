@@ -20,12 +20,12 @@ import 'package:go_router/go_router.dart';
 import 'package:alcancia/src/features/transaction-detail/presentation/transaction_detail.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-Future<bool> fetchToken() async {
+Future<bool> isUserAuthenticated() async {
   StorageService service = StorageService();
   var token = await service.readSecureData("token");
   GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token as String);
   GraphQLClient client = graphQLConfiguration.clientToQuery();
-  var result = await client.query(QueryOptions(document: gql(meQuery)));
+  var result = await client.query(QueryOptions(document: gql(isAuthenticated)));
   return !result.hasException;
   // print(result.hasException);
 }
@@ -86,12 +86,27 @@ final routerProvider = Provider<GoRouter>(
       redirect: (context, state) async {
         print(state.location);
         // if (await fetchToken() && state.location != "/dashboard") {
-        if (await fetchToken()) {
-          return state.location != "/dashboard" ? "/dashboard" : null;
+        final isUserInDashboard = state.location == "/homescreen/0";
+        final isTransactions = state.location == "/homescreen/1";
+        final isSwap = state.location == "/swap";
+        final isTransactionDetail = state.location == "/transaction_detail";
+        // final isUserInSwapScreen = state.location == "/homescreen/0";
+        if (await isUserAuthenticated()) {
+          if (isUserInDashboard) {
+            return null;
+          } else if (isTransactions) {
+            return null;
+          } else if (isSwap) {
+            return null;
+          } else if (isTransactionDetail) {
+            return null;
+          } else {
+            return "/homescreen/0";
+          }
           // return "/dashboard";
         }
         // means is not authenticated
-        return state.location != "/login" ? "/login" : null;
+        // return state.location != "/login" ? "/login" : null;
       },
     );
   },

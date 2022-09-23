@@ -6,19 +6,29 @@ class RampPaymentService {
   presentRamp(double usdc, String userEmail, String userWalletAddress,
       String fiatCurrency) {
     Configuration configuration = Configuration();
-    configuration.fiatCurrency = "EUR";
-    configuration.fiatValue = "15";
-    configuration.deepLinkScheme = "myawesomeapp";
+    configuration.fiatCurrency = "USD";
+    configuration.userEmailAddress = "juandatorr_1999@hotmail.com";
+    configuration.userAddress = userWalletAddress;
+    configuration.fiatValue = usdc.toStringAsFixed(2);
+    configuration.deepLinkScheme = "Alcancía";
+    configuration.swapAsset = "ETH_USDC";
     configuration.hostApiKey = "";
+
     RampFlutter.showRamp(
         configuration, onPurchaseCreated, onRampFailed, onRampClosed);
   }
 
-  void onPurchaseCreated(Purchase purchase, String token, String url) {}
+  void onPurchaseCreated(Purchase purchase, String token, String url) {
+    print(purchase);
+    print(token);
+    print(url);
+  }
 
   void onRampFailed() {
     print('Failed');
   }
 
-  void onRampClosed() {}
+  void onRampClosed() {
+    print("ramp closed");
+  }
 }

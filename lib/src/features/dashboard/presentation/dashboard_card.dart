@@ -79,7 +79,7 @@ class DashboardCard extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.only(top: 16, bottom: 24),
                         child: Text(
-                          "\$ ${balance.toStringAsFixed(3)} USDC",
+                          "\$${balance.toStringAsFixed(3)} USDC",
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 35,
@@ -116,7 +116,7 @@ class DashboardCard extends StatelessWidget {
                                 padding:
                                     const EdgeInsets.only(top: 8, bottom: 20),
                                 child: Text(
-                                  "\$ $userProfit USDC",
+                                  "\$0 USDC",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 35,
