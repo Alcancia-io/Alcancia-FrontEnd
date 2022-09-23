@@ -25,7 +25,7 @@ class User {
         surname: map["surname"],
         gender: map["gender"],
         phoneNumber: map["phoneNumber"],
-        dob: DateFormat('dd/MM/yyyy').parse(map["dob "]),
+        dob: DateFormat('yyyy-MM-dd').parse(map["dob"]),
         name: map["name"],
         email: map["email"]);
   }
