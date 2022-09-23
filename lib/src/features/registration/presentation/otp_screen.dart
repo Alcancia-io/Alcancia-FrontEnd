@@ -110,17 +110,17 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                         children: [
                           const Text("¿No recibiste el código?"),
                           CupertinoButton(
-                              child: const Text(
-                                "Reenviar",
-                                style: TextStyle(
-                                  decoration: TextDecoration.underline,
-                                  fontWeight: FontWeight.bold,
-                                  color: alcanciaLightBlue,
-                                ),
+                            child: const Text(
+                              "Reenviar",
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                fontWeight: FontWeight.bold,
+                                color: alcanciaLightBlue,
                               ),
-                              onPressed: () {
-                                registrationController.sendOTP(user.phoneNumber);
-                              },
+                            ),
+                            onPressed: () {
+                              registrationController.sendOTP(user.phoneNumber);
+                            },
                           ),
                         ],
                       ),
@@ -148,14 +148,17 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                               child: RichText(
                                 text: TextSpan(
                                     text: "He leído y acepto la ",
-                                    style: Theme.of(context).textTheme.bodyText2,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText2,
                                     children: [
                                       TextSpan(
                                         text:
-                                            "Política de Privacidad y Tratamiento de Datos", style: TextStyle(color: alcanciaLightBlue),
+                                            "Política de Privacidad y Tratamiento de Datos",
+                                        style:
+                                            TextStyle(color: alcanciaLightBlue),
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () {
-                                          _launchUrl();
+                                            _launchUrl();
                                           },
                                       )
                                     ]),
@@ -168,6 +171,9 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                         child: Column(
                           children: [
                             AlcanciaButton(
+                              color: alcanciaLightBlue,
+                              width: 308,
+                              height: 64,
                               buttonText: "Crea tu cuenta",
                               onPressed: () async {
                                 if (acceptTerms) {

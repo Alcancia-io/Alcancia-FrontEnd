@@ -1,3 +1,4 @@
+import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/models/storage_item.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
@@ -230,6 +231,9 @@ class LoginScreen extends ConsumerWidget {
                                     }
                                   }
                                   return AlcanciaButton(
+                                    color: alcanciaLightBlue,
+                                    width: 304,
+                                    height: 64,
                                     buttonText: "Iniciar sesión",
                                     onPressed: () {
                                       setLoginInputFields();
