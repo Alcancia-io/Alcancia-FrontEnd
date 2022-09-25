@@ -109,11 +109,12 @@ class DashboardCard extends StatelessWidget {
                         ),
                         builder: (QueryResult result,
                             {VoidCallback? refetch, FetchMore? fetchMore}) {
-                          if (result.hasException) {
-                            return Text("error");
-                          }
+                          // Commented for now to show the buttons
+                          // if (result.hasException) {
+                          //   return Text("error");
+                          // }
                           if (result.isLoading) {
-                            return Text("is loading...");
+                            return CircularProgressIndicator();
                           }
                           var userProfit = result.data?['getUserProfit'];
 
@@ -133,7 +134,7 @@ class DashboardCard extends StatelessWidget {
                                 padding:
                                     const EdgeInsets.only(top: 8, bottom: 20),
                                 child: Text(
-                                  "\$ $userProfit USDC",
+                                  "\$0 USDC",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 35,
