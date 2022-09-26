@@ -1,17 +1,26 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
+import 'package:alcancia/src/shared/components/alcancia_action_dialog.dart';
+import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
+import 'package:alcancia/src/shared/provider/auth_service_provider.dart';
 import 'package:alcancia/src/shared/provider/user.dart';
+import 'package:alcancia/src/shared/services/graphql_client_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UserProfileScreen extends ConsumerWidget {
   UserProfileScreen({Key? key}) : super(key: key);
   final Uri url = Uri.parse('https://flutter.dev');
 
+  final GraphqlService _gqlService = GraphqlService();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
+    final authService = ref.watch(authServiceProvider(_gqlService));
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -50,15 +59,34 @@ class UserProfileScreen extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlcanciaActionDialog(
+                              child: Text("¿Seguro que quieres borrar tu cuenta?\nEsta acción no se puede deshacer.", style: Theme.of(context).textTheme.titleLarge,),
+                              acceptText: "Confirmar",
+                              acceptColor: Colors.red,
+                              cancelText: "Cancelar",
+                              acceptAction: () async {
+                                try {
+                                  print("logging out");
+                                  await authService.deleteAccount();
+                                  context.go("/");
+                                } catch (e) {
+                                  print("error");
+                                }
+                              });
+                        });
+                  },
                   style: OutlinedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(100)),
-                      padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
+                      padding: const EdgeInsets.only(
+                          left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
                       foregroundColor: Colors.red,
                       side: BorderSide(color: Colors.red),
-                      splashFactory: NoSplash.splashFactory
-                  ),
+                      splashFactory: NoSplash.splashFactory),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -75,15 +103,34 @@ class UserProfileScreen extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlcanciaActionDialog(
+                              child: Text("¿Seguro que quieres cerrar sesión?", style: Theme.of(context).textTheme.titleLarge,),
+                              acceptText: "Confirmar",
+                              acceptColor: Colors.red,
+                              cancelText: "Cancelar",
+                              acceptAction: () async {
+                                try {
+                                  print("logging out");
+                                  await authService.logout();
+                                  context.go("/");
+                                } catch (e) {
+                                  print("error");
+                                }
+                              });
+                        });
+                  },
                   style: OutlinedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(100)),
-                    padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
-                    foregroundColor: alcanciaLightBlue,
-                    side: BorderSide(color: alcanciaLightBlue),
-                    splashFactory: NoSplash.splashFactory
-                  ),
+                      padding: const EdgeInsets.only(
+                          left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
+                      foregroundColor: alcanciaLightBlue,
+                      side: const BorderSide(color: alcanciaLightBlue),
+                      splashFactory: NoSplash.splashFactory),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
