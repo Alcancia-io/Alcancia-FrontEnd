@@ -1,9 +1,10 @@
+import 'package:alcancia/src/shared/services/graphql_client_service.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class AuthService {
-  AuthService({required this.graphQLClient});
+  AuthService({required this.graphQLService});
 
-  GraphQLClient graphQLClient;
+  GraphqlService graphQLService;
 
   static String logoutQuery = """
   query {
@@ -11,11 +12,44 @@ class AuthService {
   }
 """;
 
+  static String deleteAccountQuery = """
+  query {
+    deleteAccount
+  }
+  """;
+
+  Future<GraphQLClient> _graphQLClient() async {
+    final asyncClient = await graphQLService.createClient();
+    return asyncClient.value;
+  }
+
   Future<void> logout() async {
     try {
-      QueryResult result = await graphQLClient.query(
+      GraphQLClient client = await _graphQLClient();
+      QueryResult result = await client.query(
         QueryOptions(
           document: gql(logoutQuery),
+        ),
+      );
+
+      if (result.hasException) {
+        print(result.exception?.graphqlErrors[0].message);
+      } else if (result.data != null) {
+        print(result.data);
+        print(result.data!["logout"]);
+      }
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<void> deleteAccount() async {
+    return;
+    try {
+      GraphQLClient client = await _graphQLClient();
+      QueryResult result = await client.query(
+        QueryOptions(
+          document: gql(deleteAccountQuery),
         ),
       );
 
