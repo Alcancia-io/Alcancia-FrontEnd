@@ -24,6 +24,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
   final codeController = TextEditingController();
   bool acceptTerms = false;
   String error = "";
+  bool _loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +34,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
@@ -118,8 +120,11 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                 color: alcanciaLightBlue,
                               ),
                             ),
-                            onPressed: () {
-                              registrationController.sendOTP(user.phoneNumber);
+                            onPressed: () async {
+                              await registrationController
+                                  .sendOTP(user.phoneNumber);
+                              timer.onResetTimer();
+                              timer.onStartTimer();
                             },
                           ),
                         ],
@@ -170,40 +175,47 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                       Center(
                         child: Column(
                           children: [
-                            AlcanciaButton(
-                              color: alcanciaLightBlue,
-                              width: 308,
-                              height: 64,
-                              buttonText: "Crea tu cuenta",
-                              onPressed: () async {
-                                if (acceptTerms) {
-                                  final validOTP =
+                            if (_loading) ...[
+                              const CircularProgressIndicator(),
+                            ] else ...[
+                              AlcanciaButton(
+                                color: alcanciaLightBlue,
+                                width: 308,
+                                height: 64,
+                                buttonText: "Crea tu cuenta",
+                                onPressed: () async {
+                                  if (acceptTerms) {
+                                    _setLoading(true);
+                                    try {
                                       await registrationController.verifyOTP(
                                           codeController.text,
                                           user.phoneNumber);
-                                  print(validOTP);
-                                  if (validOTP) {
-                                    await registrationController.signUp(
-                                        user, widget.password);
-                                    timer.onExecute.add(StopWatchExecute.stop);
-                                    timer.dispose();
-                                    context.go("/login");
+                                      await registrationController.signUp(
+                                          user, widget.password);
+                                      timer.onStopTimer();
+                                      timer.dispose();
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(_snackBar());
+                                      context.go("/login");
+                                    } catch (err) {
+                                      setState(() {
+                                        error = err.toString();
+                                      });
+                                    }
                                   } else {
                                     setState(() {
-                                      error = "Código inválido";
+                                      error =
+                                          "Acepta la Política de Privacidad";
                                     });
                                   }
-                                } else {
-                                  setState(() {
-                                    error = "Acepta la Política de Privacidad";
-                                  });
-                                }
-                              },
-                            ),
-                            Text(
-                              error,
-                              style: const TextStyle(color: Colors.red),
-                            ),
+                                  _setLoading(false);
+                                },
+                              ),
+                              Text(
+                                error,
+                                style: const TextStyle(color: Colors.red),
+                              ),
+                            ],
                           ],
                         ),
                       ),
@@ -218,6 +230,18 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
     );
   }
 
+  SnackBar _snackBar() {
+    return SnackBar(
+      content: Text(
+        "Tu cuenta ha sido creada exitosamente. Revisa tu correo para confirmar tu cuenta.",
+        style: Theme.of(context).textTheme.bodyText2,
+      ),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Theme.of(context).inputDecorationTheme.fillColor,
+      duration: Duration(seconds: 5),
+    );
+  }
+
   @override
   void dispose() {
     codeController.dispose();
@@ -228,5 +252,11 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
     if (!await launchUrl(widget.url)) {
       throw 'Could not launch $widget.url';
     }
+  }
+
+  void _setLoading(bool loading) {
+    setState(() {
+      _loading = loading;
+    });
   }
 }
