@@ -3,16 +3,18 @@ import 'package:ramp_flutter/ramp_flutter.dart';
 class RampPaymentService {
   const RampPaymentService();
 
-  presentRamp(double usdc, String userEmail, String userWalletAddress,
-      String fiatCurrency) {
+  presentRamp(double? usdc, String? userEmail, String? userWalletAddress,
+      String? fiatCurrency) {
     Configuration configuration = Configuration();
     configuration.fiatCurrency = "USD";
     configuration.userEmailAddress = "juandatorr_1999@hotmail.com";
-    configuration.userAddress = userWalletAddress;
-    configuration.fiatValue = usdc.toStringAsFixed(2);
+    configuration.userAddress = "0x85fE9a50f74b048A26301A7B052cE2F92da6Bf00";
+    print(usdc);
+    // configuration.fiatValue = usdc.toString();
     configuration.deepLinkScheme = "Alcancía";
     configuration.swapAsset = "ETH_USDC";
     configuration.hostApiKey = "";
+    configuration.url = "https://ri-widget-staging.firebaseapp.com/";
 
     RampFlutter.showRamp(
         configuration, onPurchaseCreated, onRampFailed, onRampClosed);

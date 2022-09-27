@@ -92,9 +92,9 @@ class DashboardCard extends StatelessWidget {
                         ),
                         builder: (QueryResult result,
                             {VoidCallback? refetch, FetchMore? fetchMore}) {
-                          if (result.hasException) {
-                            return Text("error");
-                          }
+                          // if (result.hasException) {
+                          //   return Text("error");
+                          // }
                           if (result.isLoading) {
                             return Text("is loading...");
                           }

@@ -188,6 +188,7 @@ class LoginScreen extends ConsumerWidget {
                                       userJson["dob"] = "12/12/2022";
                                       print(userJson);
                                       var user = User.fromJSON(userJson);
+                                      print(user);
 
                                       saveToken(token);
                                       context.go("/homescreen/0");

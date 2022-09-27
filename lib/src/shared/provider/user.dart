@@ -9,7 +9,7 @@ class User {
   final String gender;
   String phoneNumber;
   final DateTime dob;
-  final int balance;
+  final double balance;
   String walletAddress;
 
   User({

@@ -220,12 +220,12 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                           child: AlcanciaButton(
                             buttonText: "Tarjeta de Débito/Crédito",
                             onPressed: () {
-                              _rampPaymentService.presentRamp(
-                                usdc,
-                                user?.email as String,
-                                user?.walletAddress as String,
-                                sourceDropdownVal,
-                              );
+                              _rampPaymentService.presentRamp(usdc, "", "", ""
+                                  // usdc,
+                                  // user?.email as String,
+                                  // user?.walletAddress as String,
+                                  // sourceDropdownVal,
+                                  );
                               // _presentRamp();
                             },
                             color: alcanciaLightBlue,
