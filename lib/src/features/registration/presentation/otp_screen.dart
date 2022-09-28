@@ -179,18 +179,23 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                               const CircularProgressIndicator(),
                             ] else ...[
                               AlcanciaButton(
+                                color: alcanciaLightBlue,
+                                width: 308,
+                                height: 64,
                                 buttonText: "Crea tu cuenta",
                                 onPressed: () async {
                                   if (acceptTerms) {
                                     _setLoading(true);
                                     try {
                                       await registrationController.verifyOTP(
-                                          codeController.text, user.phoneNumber);
+                                          codeController.text,
+                                          user.phoneNumber);
                                       await registrationController.signUp(
                                           user, widget.password);
                                       timer.onStopTimer();
                                       timer.dispose();
-                                      ScaffoldMessenger.of(context).showSnackBar(_snackBar());
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(_snackBar());
                                       context.go("/login");
                                     } catch (err) {
                                       setState(() {
@@ -228,13 +233,11 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
   SnackBar _snackBar() {
     return SnackBar(
       content: Text(
-        "Tu cuenta ha sido creada exitosamente. Revisa tu correo para confirmar tu cuenta.", style: Theme.of(context).textTheme.bodyText2,),
-      behavior:
-      SnackBarBehavior.floating,
-      backgroundColor:
-      Theme.of(context)
-          .inputDecorationTheme
-          .fillColor,
+        "Tu cuenta ha sido creada exitosamente. Revisa tu correo para confirmar tu cuenta.",
+        style: Theme.of(context).textTheme.bodyText2,
+      ),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Theme.of(context).inputDecorationTheme.fillColor,
       duration: Duration(seconds: 5),
     );
   }
