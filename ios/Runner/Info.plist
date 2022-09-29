@@ -29,12 +29,12 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
-	<key>NSCameraUsageDescription</key>
-    <string>Please give us access to your camera to complete the verification.</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>Please give us access to your photo library to verify you.</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Please give us access to your camera to complete the verification.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Please give us access to your photo library to verify you.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

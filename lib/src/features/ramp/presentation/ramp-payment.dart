@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ramp_flutter/ramp_flutter.dart';
 
 class RampPaymentService {
@@ -13,7 +14,7 @@ class RampPaymentService {
     // configuration.fiatValue = usdc.toString();
     configuration.deepLinkScheme = "Alcancía";
     configuration.swapAsset = "ETH_USDC";
-    configuration.hostApiKey = "";
+    configuration.hostApiKey = dotenv.env['RAMP_STAGE_KEY'] as String;
     configuration.url = "https://ri-widget-staging.firebaseapp.com/";
 
     RampFlutter.showRamp(
@@ -21,7 +22,8 @@ class RampPaymentService {
   }
 
   void onPurchaseCreated(Purchase purchase, String token, String url) {
-    print(purchase);
+    print(purchase.id);
+    print(purchase.status);
     print(token);
     print(url);
   }
