@@ -38,6 +38,7 @@ class _SwapScreenState extends State<SwapScreen> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         body: SafeArea(
           child: FutureBuilder<ExchangeApi>(
             future: exchangeApiService.fetchCurrency(sourceDropdownVal),

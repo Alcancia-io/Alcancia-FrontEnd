@@ -37,6 +37,7 @@ class AlcanciaTransactions extends StatelessWidget {
     return SizedBox(
       height: height,
       child: ListView.builder(
+        physics: BouncingScrollPhysics()  ,
         itemCount: transactions?.length,
         itemBuilder: (BuildContext context, int index) {
           var txn = transactions?[index];
