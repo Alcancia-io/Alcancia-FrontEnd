@@ -96,7 +96,7 @@ class DashboardCard extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.only(top: 16, bottom: 24),
                         child: Text(
-                          "\$ ${balance} USDC",
+                          "\$${balance} USDC",
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 35,
@@ -109,9 +109,9 @@ class DashboardCard extends StatelessWidget {
                         ),
                         builder: (QueryResult result,
                             {VoidCallback? refetch, FetchMore? fetchMore}) {
-                          if (result.hasException) {
-                            return Text("error");
-                          }
+                          // if (result.hasException) {
+                          //   return Text("error");
+                          // }
                           if (result.isLoading) {
                             return Text("is loading...");
                           }
@@ -133,7 +133,7 @@ class DashboardCard extends StatelessWidget {
                                 padding:
                                     const EdgeInsets.only(top: 8, bottom: 20),
                                 child: Text(
-                                  "\$ $userProfit USDC",
+                                  "\$0 USDC",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 35,
