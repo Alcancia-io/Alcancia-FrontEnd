@@ -44,7 +44,9 @@ class AlcanciaTransactionItem extends StatelessWidget {
                           "${txn.type.isDepositOrWithdraw()} ${txn.sourceAsset}",
                           style: txtTheme.bodyText2,
                         ),
-                        Text(txn.createdAt),
+                        Text(
+                          txn.createdAt.substring(0, 10),
+                        ),
                       ],
                     ),
                   ),
