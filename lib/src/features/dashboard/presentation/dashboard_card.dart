@@ -96,7 +96,7 @@ class DashboardCard extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.only(top: 16, bottom: 24),
                         child: Text(
-                          "\$ ${balance} USDC",
+                          "\$${balance.toStringAsFixed(3)} USDC",
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 35,
