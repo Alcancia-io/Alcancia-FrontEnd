@@ -47,229 +47,222 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     print(user?.email);
     print(user?.walletAddress);
     var txtTheme = Theme.of(context).textTheme;
-    return Scaffold(
-      body: SafeArea(
-        child: FutureBuilder<ExchangeApi>(
-          future: exchangeApiService.fetchCurrency(sourceDropdownVal),
-          builder: (context, snapshot) {
-            var conversionRate = snapshot.data?.conversionRate;
-            // var usdc
-            if (targetAmount == "") {}
-            var usdc = targetAmount == ""
-                ? 0.0
-                : int.parse(sourceAmountController.text) / conversionRate!;
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        body: SafeArea(
+          child: FutureBuilder<ExchangeApi>(
+            future: exchangeApiService.fetchCurrency(sourceDropdownVal),
+            builder: (context, snapshot) {
+              var conversionRate = snapshot.data?.conversionRate;
 
-            if (snapshot.hasError) {
-              return Text("${snapshot.error}");
-            } else if (snapshot.hasData) {
-              return Column(
-                children: [
-                  const AlcanciaToolbar(
-                    state: StateToolbar.logoNoletters,
-                    logoHeight: 40,
-                  ),
-
-                  // general container, sets padding
-                  Container(
-                    padding: const EdgeInsets.only(
-                      left: 34,
-                      right: 34,
-                      bottom: 32,
+              if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              } else if (snapshot.hasData) {
+                return ListView(
+                  children: [
+                    const AlcanciaToolbar(
+                      state: StateToolbar.logoNoletters,
+                      logoHeight: 40,
                     ),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: 4,
-                            bottom: 32,
-                          ),
-                          child: Text(
-                            "Deposita a tu cuenta",
-                            style: txtTheme.subtitle1,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            bottom: 32,
-                          ),
-                          child: Text(
-                            "¡Empecemos!",
-                            style: txtTheme.headline1,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            bottom: 30,
-                          ),
-                          child: Text(
-                            "Ingresa el monto que deseas convertir de nuestra opciones. A continuación, se presenta a cuanto equivale en",
-                            style: txtTheme.bodyText1,
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? alcanciaCardDark
-                                    : alcanciaFieldLight,
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(7),
+
+                    // general container, sets padding
+                    Container(
+                      padding: const EdgeInsets.only(
+                        left: 34,
+                        right: 34,
+                        bottom: 32,
+                      ),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              top: 4,
+                              bottom: 32,
+                            ),
+                            child: Text(
+                              "Deposita a tu cuenta",
+                              style: txtTheme.subtitle1,
                             ),
                           ),
-                          height: 200,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "¿Cuánto deseas convertir?",
-                                style: txtTheme.bodyText1,
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: 32,
+                            ),
+                            child: Text(
+                              "¡Empecemos!",
+                              style: txtTheme.headline1,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: 30,
+                            ),
+                            child: Text(
+                              "Ingresa el monto que deseas convertir de nuestra opciones. A continuación, se presenta a cuanto equivale en",
+                              style: txtTheme.bodyText1,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? alcanciaCardDark
+                                  : alcanciaFieldLight,
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(7),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8),
-                                child: Row(
+                            ),
+                            height: 200,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "¿Cuánto deseas convertir?",
+                                  style: txtTheme.bodyText1,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      AlcanciaDropdown(
+                                          dropdownWidth: 130,
+                                          dropdownItems: targetCurrencyCodes,
+                                          onChanged: (newValue) {
+                                            setState(() {
+                                              sourceDropdownVal = newValue;
+                                              exchangeApiService
+                                                  .fetchCurrency(newValue);
+                                            });
+                                          }),
+                                      SizedBox(
+                                        height: 45,
+                                        width: 150,
+                                        child: TextField(
+                                          style: const TextStyle(fontSize: 15),
+                                          decoration: InputDecoration(
+                                            fillColor:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                          inputFormatters: <TextInputFormatter>[
+                                            FilteringTextInputFormatter
+                                                .digitsOnly
+                                          ],
+                                          keyboardType: TextInputType.number,
+                                          controller: sourceAmountController,
+                                          onChanged: (text) {
+                                            setState(() {
+                                              targetAmount = text;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      bottom: 12, top: 12),
+                                  child: Center(
+                                    child: SvgPicture.asset(
+                                        "lib/src/resources/images/arrow_down_purple.svg"),
+                                  ),
+                                ),
+                                Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     AlcanciaDropdown(
-                                        dropdownWidth: 130,
-                                        dropdownItems: targetCurrencyCodes,
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            sourceDropdownVal = newValue;
-                                            exchangeApiService
-                                                .fetchCurrency(newValue);
-                                          });
-                                        }),
-                                    SizedBox(
+                                      dropdownWidth: 130,
+                                      dropdownItems: baseCurrencyCodes,
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: Theme.of(context).primaryColor,
+                                      ),
                                       height: 45,
                                       width: 150,
-                                      child: TextField(
-                                        style: const TextStyle(fontSize: 15),
-                                        decoration: InputDecoration(
-                                          fillColor:
-                                              Theme.of(context).primaryColor,
-                                        ),
-                                        inputFormatters: <TextInputFormatter>[
-                                          FilteringTextInputFormatter.digitsOnly
-                                        ],
-                                        keyboardType: TextInputType.number,
-                                        controller: sourceAmountController,
-                                        onChanged: (text) {
-                                          setState(() {
-                                            targetAmount = text;
-                                          });
-                                        },
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        targetAmount == ""
+                                            ? ""
+                                            : (int.parse(sourceAmountController
+                                                        .text) /
+                                                    conversionRate!)
+                                                .toStringAsFixed(4),
+                                        style: txtTheme.bodyText1,
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(bottom: 12, top: 12),
-                                child: Center(
-                                  child: SvgPicture.asset(
-                                      "lib/src/resources/images/arrow_down_purple.svg"),
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  AlcanciaDropdown(
-                                    dropdownWidth: 130,
-                                    dropdownItems: baseCurrencyCodes,
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.only(left: 10),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                    height: 45,
-                                    width: 150,
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      targetAmount == ""
-                                          ? ""
-                                          : (int.parse(sourceAmountController
-                                                      .text) /
-                                                  conversionRate!)
-                                              .toStringAsFixed(2),
-                                      style: txtTheme.bodyText1,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        Container(
-                          alignment: Alignment.topLeft,
-                          padding: const EdgeInsets.only(
-                            top: 32,
+                          Container(
+                            alignment: Alignment.topLeft,
+                            padding: const EdgeInsets.only(
+                              top: 32,
+                            ),
+                            child: Text(
+                              "Medio de pago:",
+                              style: txtTheme.bodyText1,
+                            ),
                           ),
-                          child: Text(
-                            "Medio de pago:",
-                            style: txtTheme.bodyText1,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 12),
-                          child: AlcanciaButton(
-                            buttonText: "Tarjeta de Débito/Crédito",
-                            onPressed: () {
-                              _rampPaymentService.presentRamp(usdc, "", "", ""
-                                  // usdc,
-                                  // user?.email as String,
-                                  // user?.walletAddress as String,
-                                  // sourceDropdownVal,
-                                  );
-                              // _presentRamp();
-                            },
-                            color: alcanciaLightBlue,
-                            width: double.infinity,
-                            height: 64,
-                          ),
-                        ),
-                        Padding(
+                          Padding(
                             padding: const EdgeInsets.only(top: 10, bottom: 12),
-                            child: SizedBox(
-                              height: 64,
+                            child: AlcanciaButton(
+                              buttonText: "Tarjeta de Débito/Crédito",
+                              onPressed: () {},
+                              color: alcanciaLightBlue,
                               width: double.infinity,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  primary: Color(0xFFC9E0FF),
-                                ),
-                                onPressed: () {},
-                                child: const Image(
-                                  image: AssetImage(
-                                      "lib/src/resources/images/Coinbase 2.png"),
-                                  height: 63,
-                                ),
-                              ),
-                            )),
-                        Container(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Text("¿Tienes alguna inquietud? "),
-                              AlcanciaLink(
-                                text: 'Haz click aquí',
-                              ),
-                            ],
+                              height: 64,
+                            ),
                           ),
-                        ),
-                      ],
+                          Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 10, bottom: 12),
+                              child: SizedBox(
+                                height: 64,
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Color(0xFFC9E0FF),
+                                  ),
+                                  onPressed: () {},
+                                  child: const Image(
+                                    image: AssetImage(
+                                        "lib/src/resources/images/Coinbase 2.png"),
+                                    height: 63,
+                                  ),
+                                ),
+                              )),
+                          Container(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Text("¿Tienes alguna inquietud? "),
+                                AlcanciaLink(
+                                  text: 'Haz click aquí',
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              );
-            }
-            return const Center(child: CircularProgressIndicator());
-          },
+                  ],
+                );
+              }
+              return const Center(child: CircularProgressIndicator());
+            },
+          ),
         ),
       ),
     );

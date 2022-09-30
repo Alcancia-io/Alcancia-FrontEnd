@@ -1,3 +1,4 @@
+import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'alcancia_button.dart';
@@ -47,6 +48,9 @@ class AlcanciaListPickerDialog extends StatelessWidget {
               ),
               AlcanciaButton(
                 buttonText: "Aceptar",
+                color: alcanciaLightBlue,
+                width: 308,
+                height: 64,
                 onPressed: () {
                   Navigator.pop(context);
                 },
