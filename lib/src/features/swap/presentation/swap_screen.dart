@@ -5,6 +5,7 @@ import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_link.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/services/exchange_api_service.dart';
+import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -31,40 +32,56 @@ class _SwapScreenState extends State<SwapScreen> {
   ];
 
   late String sourceDropdownVal = targetCurrencyCodes.first['name'];
+  final ResponsiveService responsiveService = ResponsiveService();
 
   @override
   Widget build(BuildContext context) {
-    var txtTheme = Theme.of(context).textTheme;
+    final txtTheme = Theme.of(context).textTheme;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: SafeArea(
-        child: FutureBuilder<ExchangeApi>(
-          future: exchangeApiService.fetchCurrency(sourceDropdownVal),
-          builder: (context, snapshot) {
-            var conversionRate = snapshot.data?.conversionRate;
+        child: SingleChildScrollView(
+          child: FutureBuilder<ExchangeApi>(
+            future: exchangeApiService.fetchCurrency(sourceDropdownVal),
+            builder: (context, snapshot) {
+              var conversionRate = snapshot.data?.conversionRate;
 
-            if (snapshot.hasError) {
-              return Text("${snapshot.error}");
-            } else if (snapshot.hasData) {
+              // if (snapshot.hasError) {
+              //   return Text("${snapshot.error}");
+              // }
+              // if (snapshot.hasData) {
               return Column(
                 children: [
-                  const AlcanciaToolbar(
+                  AlcanciaToolbar(
                     state: StateToolbar.logoNoletters,
-                    logoHeight: 40,
+                    logoHeight: responsiveService.getHeightPixels(
+                      40,
+                      screenHeight,
+                    ),
                   ),
 
                   // general container, sets padding
                   Container(
-                    padding: const EdgeInsets.only(
-                      left: 34,
-                      right: 34,
-                      bottom: 32,
+                    padding: EdgeInsets.only(
+                      top: 20,
+                      left: responsiveService.getWidthPixels(30, screenWidth),
+                      right: responsiveService.getWidthPixels(30, screenWidth),
+                      bottom: 34,
                     ),
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(
-                            top: 4,
-                            bottom: 32,
+                          padding: EdgeInsets.only(
+                            top: responsiveService.getHeightPixels(
+                              4,
+                              screenHeight,
+                            ),
+                            bottom: responsiveService.getHeightPixels(
+                              32,
+                              screenHeight,
+                            ),
                           ),
                           child: Text(
                             "Deposita a tu cuenta",
@@ -72,8 +89,11 @@ class _SwapScreenState extends State<SwapScreen> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(
-                            bottom: 32,
+                          padding: EdgeInsets.only(
+                            bottom: responsiveService.getHeightPixels(
+                              32,
+                              screenHeight,
+                            ),
                           ),
                           child: Text(
                             "¡Empecemos!",
@@ -90,7 +110,24 @@ class _SwapScreenState extends State<SwapScreen> {
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.all(12),
+                          padding: EdgeInsets.only(
+                            top: responsiveService.getHeightPixels(
+                              20,
+                              screenHeight,
+                            ),
+                            bottom: responsiveService.getHeightPixels(
+                              20,
+                              screenHeight,
+                            ),
+                            left: responsiveService.getWidthPixels(
+                              12,
+                              screenWidth,
+                            ),
+                            right: responsiveService.getWidthPixels(
+                              12,
+                              screenWidth,
+                            ),
+                          ),
                           decoration: BoxDecoration(
                             color:
                                 Theme.of(context).brightness == Brightness.dark
@@ -100,7 +137,6 @@ class _SwapScreenState extends State<SwapScreen> {
                               Radius.circular(7),
                             ),
                           ),
-                          height: 200,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -115,18 +151,32 @@ class _SwapScreenState extends State<SwapScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     AlcanciaDropdown(
-                                        dropdownWidth: 130,
-                                        dropdownItems: targetCurrencyCodes,
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            sourceDropdownVal = newValue;
-                                            exchangeApiService
-                                                .fetchCurrency(newValue);
-                                          });
-                                        }),
+                                      dropdownWidth:
+                                          responsiveService.getWidthPixels(
+                                        150,
+                                        screenWidth,
+                                      ),
+                                      dropdownHeight: responsiveService
+                                          .getHeightPixels(45, screenHeight),
+                                      dropdownItems: targetCurrencyCodes,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          sourceDropdownVal = newValue;
+                                          exchangeApiService
+                                              .fetchCurrency(newValue);
+                                        });
+                                      },
+                                    ),
+                                    // this is the input field
                                     SizedBox(
-                                      height: 45,
-                                      width: 150,
+                                      height: responsiveService.getHeightPixels(
+                                        45,
+                                        screenHeight,
+                                      ),
+                                      width: responsiveService.getWidthPixels(
+                                        150,
+                                        screenWidth,
+                                      ),
                                       child: TextField(
                                         style: const TextStyle(fontSize: 15),
                                         decoration: InputDecoration(
@@ -150,7 +200,7 @@ class _SwapScreenState extends State<SwapScreen> {
                               ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.only(bottom: 12, top: 12),
+                                    const EdgeInsets.only(top: 8, bottom: 8),
                                 child: Center(
                                   child: SvgPicture.asset(
                                       "lib/src/resources/images/arrow_down_purple.svg"),
@@ -161,7 +211,10 @@ class _SwapScreenState extends State<SwapScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   AlcanciaDropdown(
-                                    dropdownWidth: 130,
+                                    dropdownWidth: responsiveService
+                                        .getWidthPixels(150, screenWidth),
+                                    dropdownHeight: responsiveService
+                                        .getHeightPixels(45, screenHeight),
                                     dropdownItems: baseCurrencyCodes,
                                   ),
                                   Container(
@@ -170,8 +223,14 @@ class _SwapScreenState extends State<SwapScreen> {
                                       borderRadius: BorderRadius.circular(8),
                                       color: Theme.of(context).primaryColor,
                                     ),
-                                    height: 45,
-                                    width: 150,
+                                    height: responsiveService.getHeightPixels(
+                                      45,
+                                      screenHeight,
+                                    ),
+                                    width: responsiveService.getWidthPixels(
+                                      150,
+                                      screenWidth,
+                                    ),
                                     alignment: Alignment.centerLeft,
                                     child: Text(
                                       targetAmount == ""
@@ -205,26 +264,32 @@ class _SwapScreenState extends State<SwapScreen> {
                             onPressed: () {},
                             color: alcanciaLightBlue,
                             width: double.infinity,
-                            height: 64,
+                            height: responsiveService.getHeightPixels(
+                              64,
+                              screenHeight,
+                            ),
                           ),
                         ),
                         Padding(
-                            padding: const EdgeInsets.only(top: 10, bottom: 12),
-                            child: SizedBox(
-                              height: 64,
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  primary: Color(0xFFC9E0FF),
-                                ),
-                                onPressed: () {},
-                                child: const Image(
-                                  image: AssetImage(
-                                      "lib/src/resources/images/Coinbase 2.png"),
-                                  height: 63,
-                                ),
+                          padding: const EdgeInsets.only(top: 10, bottom: 12),
+                          child: SizedBox(
+                            height: responsiveService.getHeightPixels(
+                              64,
+                              screenHeight,
+                            ),
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Color(0xFFC9E0FF),
                               ),
-                            )),
+                              onPressed: () {},
+                              child: const Image(
+                                image: AssetImage(
+                                    "lib/src/resources/images/Coinbase 2.png"),
+                              ),
+                            ),
+                          ),
+                        ),
                         Container(
                           padding: const EdgeInsets.only(top: 20),
                           child: Row(
@@ -242,9 +307,10 @@ class _SwapScreenState extends State<SwapScreen> {
                   ),
                 ],
               );
-            }
-            return const Center(child: CircularProgressIndicator());
-          },
+              // }
+              return const Center(child: CircularProgressIndicator());
+            },
+          ),
         ),
       ),
     );
