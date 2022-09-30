@@ -51,7 +51,7 @@ class UserState extends StateNotifier<User?> {
     state?.phoneNumber = phone;
   }
 
-  void setUser(User user) {
+  void setUser(User? user) {
     state = user;
   }
 

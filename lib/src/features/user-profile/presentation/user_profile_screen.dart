@@ -73,6 +73,7 @@ class UserProfileScreen extends ConsumerWidget {
                                 try {
                                   await authService.deleteAccount();
                                   context.go("/");
+                                  ref.read(userProvider.notifier).setUser(null);
                                 } catch (e) {
                                   print(e);
                                 }
@@ -116,6 +117,7 @@ class UserProfileScreen extends ConsumerWidget {
                                 try {
                                   await authService.logout();
                                   context.go("/");
+                                  ref.read(userProvider.notifier).setUser(null);
                                 } catch (e) {
                                   print(e);
                                 }
