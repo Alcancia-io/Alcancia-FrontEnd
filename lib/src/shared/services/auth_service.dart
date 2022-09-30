@@ -43,8 +43,7 @@ class AuthService {
     }
   }
 
-  Future<void> deleteAccount() async {
-    return;
+  Future<bool> deleteAccount() async {
     try {
       GraphQLClient client = await _graphQLClient();
       QueryResult result = await client.query(
@@ -57,9 +56,11 @@ class AuthService {
         print(result.exception?.graphqlErrors[0].message);
       } else if (result.data != null) {
         print(result.data);
+        return result.data!["deleteAccount"] as bool;
       }
+      return false;
     } catch (e) {
-      print(e);
+      return Future.error(e);
     }
   }
 }
