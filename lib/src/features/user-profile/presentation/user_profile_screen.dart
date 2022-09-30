@@ -13,6 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class UserProfileScreen extends ConsumerWidget {
   UserProfileScreen({Key? key}) : super(key: key);
+
   final Uri url = Uri.parse('https://flutter.dev');
 
   final GraphqlService _gqlService = GraphqlService();
@@ -62,7 +63,7 @@ class UserProfileScreen extends ConsumerWidget {
                   onPressed: () async {
                     await showDialog(
                         context: context,
-                        builder: (BuildContext context) {
+                        builder: (BuildContext ctx) {
                           return AlcanciaActionDialog(
                               child: Text("¿Seguro que quieres borrar tu cuenta?\nEsta acción no se puede deshacer.", style: Theme.of(context).textTheme.titleLarge,),
                               acceptText: "Confirmar",
@@ -70,11 +71,10 @@ class UserProfileScreen extends ConsumerWidget {
                               cancelText: "Cancelar",
                               acceptAction: () async {
                                 try {
-                                  print("logging out");
                                   await authService.deleteAccount();
                                   context.go("/");
                                 } catch (e) {
-                                  print("error");
+                                  print(e);
                                 }
                               });
                         });
@@ -106,7 +106,7 @@ class UserProfileScreen extends ConsumerWidget {
                   onPressed: () async {
                     await showDialog(
                         context: context,
-                        builder: (BuildContext context) {
+                        builder: (BuildContext ctx) {
                           return AlcanciaActionDialog(
                               child: Text("¿Seguro que quieres cerrar sesión?", style: Theme.of(context).textTheme.titleLarge,),
                               acceptText: "Confirmar",
@@ -114,11 +114,10 @@ class UserProfileScreen extends ConsumerWidget {
                               cancelText: "Cancelar",
                               acceptAction: () async {
                                 try {
-                                  print("logging out");
                                   await authService.logout();
                                   context.go("/");
                                 } catch (e) {
-                                  print("error");
+                                  print(e);
                                 }
                               });
                         });
