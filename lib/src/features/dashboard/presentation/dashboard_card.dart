@@ -50,6 +50,8 @@ class DashboardCard extends StatelessWidget {
                   return const Center(child: CircularProgressIndicator());
                 }
                 var balance = result.data?['me']['balance'];
+                var balanceFormatted = "0";
+                if (balance != 0) balanceFormatted = balance.toStringAsFixed(3);
 
                 return Container(
                   padding: const EdgeInsets.all(16.0),
@@ -79,7 +81,7 @@ class DashboardCard extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.only(top: 16, bottom: 24),
                         child: Text(
-                          "\$${balance.toStringAsFixed(3)} USDC",
+                          "\$${balanceFormatted} USDC",
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 35,

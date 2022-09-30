@@ -8,10 +8,10 @@ class RampPaymentService {
       String? fiatCurrency) {
     Configuration configuration = Configuration();
     configuration.fiatCurrency = "USD";
-    configuration.userEmailAddress = "juandatorr_1999@hotmail.com";
-    configuration.userAddress = "0x85fE9a50f74b048A26301A7B052cE2F92da6Bf00";
+    configuration.userEmailAddress = userEmail;
+    configuration.userAddress = userWalletAddress;
     print(usdc);
-    // configuration.fiatValue = usdc.toString();
+    configuration.fiatValue = usdc?.toStringAsFixed(2);
     configuration.deepLinkScheme = "Alcancía";
     configuration.swapAsset = "ETH_USDC";
     configuration.hostApiKey = dotenv.env['RAMP_STAGE_KEY'] as String;

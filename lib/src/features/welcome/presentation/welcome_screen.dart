@@ -62,8 +62,8 @@ class WelcomeScreen extends StatelessWidget {
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 35),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.only(top: 16.0),
+                        Padding(
+                          padding: EdgeInsets.only(top: size.height*0.01),
                           child: Text(
                             "Construye tu portafolio de ahorro basado en crypto",
                             style: TextStyle(
@@ -72,13 +72,16 @@ class WelcomeScreen extends StatelessWidget {
                         ),
                         const Spacer(),
                         AlcanciaButton(
+                        color: alcanciaLightBlue,
+                        width: 308,
+                        height: size.height*0.06,
                           buttonText: "Registrate",
                           onPressed: () {
                             context.push('/registration');
                           },
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 16.0),
+                          padding: EdgeInsets.only(top: size.height*0.01),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,

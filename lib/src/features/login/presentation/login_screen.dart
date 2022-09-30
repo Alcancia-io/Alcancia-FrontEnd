@@ -71,14 +71,15 @@ class LoginScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding:  EdgeInsets.only(bottom: size.height*0.05,top: size.height*0.04),
-                          child:  const Text(
+                          padding: EdgeInsets.only(
+                              bottom: size.height * 0.05,
+                              top: size.height * 0.04),
+                          child: const Text(
                             '¡Hola!\nBienvenido',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 35),
                           ),
                         ),
-
                         Form(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           child: Column(
@@ -101,9 +102,12 @@ class LoginScreen extends ConsumerWidget {
                                     },
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.only(bottom: size.height*0.005,top: size.height*0.005),
+                                    padding: EdgeInsets.only(
+                                        bottom: size.height * 0.005,
+                                        top: size.height * 0.005),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: [
                                         SizedBox(
                                           width: 25,
@@ -154,7 +158,8 @@ class LoginScreen extends ConsumerWidget {
                                     },
                                   ),
                                   Padding(
-                                    padding:  EdgeInsets.only(bottom: size.height*0.04, top: 10),
+                                    padding: EdgeInsets.only(
+                                        bottom: size.height * 0.04, top: 10),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
@@ -162,8 +167,8 @@ class LoginScreen extends ConsumerWidget {
                                             child: Row(
                                               children: const [
                                                 Padding(
-                                                  padding:
-                                                      EdgeInsets.only(right: 4.0),
+                                                  padding: EdgeInsets.only(
+                                                      right: 4.0),
                                                   child: Icon(CupertinoIcons
                                                       .question_circle),
                                                 ),
@@ -196,10 +201,12 @@ class LoginScreen extends ConsumerWidget {
                                           resultData["login"]["access_token"];
                                       var userJson =
                                           resultData["login"]["user"];
-                                      userJson["dob"] = "12/12/2022";
+                                      // userJson["dob"] =
+                                      //     resultData["login"]["dob"];
                                       print(userJson);
                                       var user = User.fromJSON(userJson);
                                       print(user);
+                                      print(user.dob);
 
                                       saveToken(token);
                                       context.go("/homescreen/0");
@@ -227,6 +234,9 @@ class LoginScreen extends ConsumerWidget {
                                       return Column(
                                         children: [
                                           AlcanciaButton(
+                                            color: alcanciaLightBlue,
+                                            width: 304,
+                                            height: size.height * 0.06,
                                             buttonText: "Iniciar sesión",
                                             onPressed: () {
                                               setLoginInputFields();
@@ -255,7 +265,7 @@ class LoginScreen extends ConsumerWidget {
                                   return AlcanciaButton(
                                     color: alcanciaLightBlue,
                                     width: 304,
-                                    height: size.height*0.065,
+                                    height: size.height * 0.065,
                                     buttonText: "Iniciar sesión",
                                     onPressed: () {
                                       setLoginInputFields();
@@ -296,6 +306,4 @@ class LoginScreen extends ConsumerWidget {
       ),
     );
   }
-
 }
-

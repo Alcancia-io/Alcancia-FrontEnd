@@ -1,15 +1,20 @@
 import 'package:alcancia/src/features/dashboard/data/transactions_query.dart';
 import 'package:alcancia/src/features/dashboard/presentation/dashboard_card.dart';
 import 'package:alcancia/src/features/dashboard/presentation/navbar.dart';
+import 'package:alcancia/src/features/registration/model/GraphQLConfig.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:alcancia/src/shared/components/alcancia_transactions_list.dart';
+import 'package:alcancia/src/shared/graphql/queries.dart';
+import 'package:alcancia/src/shared/provider/user.dart';
 import 'package:alcancia/src/shared/services/graphql_client_service.dart';
+import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 // import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends ConsumerWidget {
   DashboardScreen({Key? key}) : super(key: key);
 
   final GraphqlService _gqlService = GraphqlService();
@@ -21,13 +26,30 @@ class DashboardScreen extends StatelessWidget {
   };
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    Future<QueryResult<Object?>> getUserInformation() async {
+      StorageService service = StorageService();
+      var token = await service.readSecureData("token");
+      GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "${token}1");
+      GraphQLClient client = graphQLConfiguration.clientToQuery();
+      var result = await client.query(QueryOptions(document: gql(meQuery)));
+      return result;
+      // print(result.hasException);
+    }
+
+    Future.delayed(Duration.zero, () async {
+      var result = await getUserInformation();
+      if (!result.hasException) {
+        var user = User.fromJSON(result.data?["me"]);
+        ref.read(userProvider.notifier).setUser(user);
+      }
+    });
+
     return FutureBuilder(
       future: _gqlService.createClient(),
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return Scaffold(
-
             body: SafeArea(
               child: GraphQLProvider(
                 client: snapshot.data,
@@ -71,7 +93,8 @@ class DashboardScreen extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(bottom: 22),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   const Text(
                                     "Actividad",

@@ -1,4 +1,6 @@
 import 'package:alcancia/src/resources/colors/app_theme.dart';
+import 'package:alcancia/src/shared/graphql/queries.dart';
+import 'package:alcancia/src/shared/provider/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,6 +23,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
+
     var uri = dotenv.env['API_URL'] as String;
 
     final HttpLink httpLink = HttpLink(

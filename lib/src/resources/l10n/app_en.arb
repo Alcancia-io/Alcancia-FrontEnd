@@ -7,6 +7,6 @@
   "password": "Password",
   "errorRequiredField": "This field is mandatory",
   "errorEmailFormat": "Are you sure?, verify your email",
-  "errorInvalidPassword": "",
+  "errorInvalidPassword": "Invalid Password.\nYou need 8 characters, a number and a special character",
   "errorPasswordMatch": "Passwords do not match"
 }

@@ -187,6 +187,8 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                   if (acceptTerms) {
                                     _setLoading(true);
                                     try {
+                                      print(user.dob);
+
                                       await registrationController.verifyOTP(
                                           codeController.text,
                                           user.phoneNumber);

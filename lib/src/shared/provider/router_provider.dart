@@ -101,6 +101,7 @@ final routerProvider = Provider<GoRouter>(
           } else if (isTransactionDetail) {
             return null;
           } else {
+            // return "/homescreen/0";
             return "/homescreen/0";
           }
           // return "/dashboard";

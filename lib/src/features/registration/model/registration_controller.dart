@@ -70,8 +70,7 @@ class RegistrationController {
         print("data");
         print(result.data);
         final valid = result.data!["verifyOTP"]["valid"] as bool;
-        if (valid)
-          return valid;
+        if (valid) return valid;
         return Future.error("Código inválido");
       }
     } catch (e) {
@@ -111,6 +110,8 @@ class RegistrationController {
       } else if (result.data != null) {
         print("data");
         print(result.data);
+        result.data!["signup"]["balance"] = 0.0;
+        result.data!["signup"]["walletAddress"] = "";
         final data = result.data!["signup"] as Map<String, dynamic>;
         final user = User.fromJSON(data);
         print("Success!");
