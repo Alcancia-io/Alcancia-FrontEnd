@@ -1,3 +1,4 @@
+import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'alcancia_button.dart';
 
@@ -39,19 +40,30 @@ class AlcanciaActionDialog extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
                 child: child,
               ),
-              AlcanciaButton(
-                buttonText: acceptText,
-                color: acceptColor,
-                onPressed: () {
-                  acceptAction();
-                  Navigator.pop(context);
-                },
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: AlcanciaButton(
+                  buttonText: acceptText,
+                  width: 308,
+                  height: 40,
+                  color: acceptColor,
+                  onPressed: () {
+                    acceptAction();
+                    Navigator.pop(context);
+                  },
+                ),
               ),
-              AlcanciaButton(
-                buttonText: cancelText,
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: AlcanciaButton(
+                  buttonText: cancelText,
+                  width: 308,
+                  height: 40,
+                  color: alcanciaLightBlue,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
               )
             ],
           ),
