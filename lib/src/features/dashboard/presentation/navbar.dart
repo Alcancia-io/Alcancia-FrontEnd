@@ -14,6 +14,7 @@ class AlcanciaNavbar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider);
     return FutureBuilder(
         future: _storageService.readSecureData("token"),
         builder: (context, AsyncSnapshot snapshot) {
@@ -55,7 +56,7 @@ class AlcanciaNavbar extends ConsumerWidget {
 
                   return AlcanciaToolbar(
                     state: StateToolbar.profileTitleIcon,
-                    userName: userName,
+                    userName: "${user?.name}",
                     logoHeight: 38,
                   );
                 },

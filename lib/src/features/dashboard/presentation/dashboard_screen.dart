@@ -30,7 +30,7 @@ class DashboardScreen extends ConsumerWidget {
     Future<QueryResult<Object?>> getUserInformation() async {
       StorageService service = StorageService();
       var token = await service.readSecureData("token");
-      GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "${token}1");
+      GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "${token}");
       GraphQLClient client = graphQLConfiguration.clientToQuery();
       var result = await client.query(QueryOptions(document: gql(meQuery)));
       return result;
