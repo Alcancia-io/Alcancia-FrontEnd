@@ -1,5 +1,6 @@
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/models/storage_item.dart';
+import 'package:alcancia/src/shared/provider/user.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
@@ -178,10 +179,23 @@ class LoginScreen extends ConsumerWidget {
                                   document: gql(loginMutation),
                                   onCompleted: (dynamic resultData) {
                                     if (resultData != null) {
-                                      // TODO: uncomment this
-                                      // context.go("/dashboard");
                                       final token =
                                           resultData["login"]["access_token"];
+                                      print(resultData["login"]["user"]);
+                                      Map<String, dynamic> data =
+                                          resultData["login"]["user"];
+                                      User user = User(
+                                          userId: data["userId"],
+                                          surname: data["surname"],
+                                          gender: data["gender"],
+                                          phoneNumber: data["phoneNumber"],
+                                          dob: DateTime
+                                              .parse(data["dob"]),
+                                          name: data["name"],
+                                          email: data["email"]);
+                                      ref
+                                          .read(userProvider.notifier)
+                                          .setUser(user);
                                       saveToken(token);
                                       context.go("/homescreen/0");
                                     }
