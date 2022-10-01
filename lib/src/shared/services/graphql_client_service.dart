@@ -7,7 +7,7 @@ class GraphqlService {
   final StorageService _storageService = StorageService();
   final uri = dotenv.env["API_URL"];
 
-  Future<Object?> createClient() async {
+  Future<ValueNotifier<GraphQLClient>> createClient() async {
     try {
       var token = await _storageService.readSecureData("token");
       // create http link with token
@@ -24,7 +24,7 @@ class GraphqlService {
       );
       return client;
     } catch (exception) {
-      return exception;
+      return Future.error(exception);
     }
   }
 }
