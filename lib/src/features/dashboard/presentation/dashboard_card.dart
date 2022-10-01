@@ -98,7 +98,7 @@ class DashboardCard extends StatelessWidget {
                           //   return Text("error");
                           // }
                           if (result.isLoading) {
-                            return Text("is loading...");
+                            return CircularProgressIndicator();
                           }
                           var userProfit = result.data?['getUserProfit'];
 

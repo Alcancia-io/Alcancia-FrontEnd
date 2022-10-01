@@ -48,7 +48,7 @@ class AlcanciaNavbar extends ConsumerWidget {
                   }
 
                   if (result.isLoading) {
-                    return Text("is loading...");
+                    return CircularProgressIndicator();
                   }
 
                   var userName = result.data?['me']['name'];

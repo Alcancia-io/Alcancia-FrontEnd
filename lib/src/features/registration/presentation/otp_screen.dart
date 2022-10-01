@@ -14,7 +14,7 @@ import 'package:url_launcher/url_launcher.dart';
 class OTPScreen extends ConsumerStatefulWidget {
   OTPScreen({Key? key, required this.password}) : super(key: key);
   final String password;
-  final Uri url = Uri.parse('https://flutter.dev');
+  final Uri url = Uri.parse('https://landing.alcancia.io/privacypolicy');
 
   @override
   ConsumerState<OTPScreen> createState() => _OTPScreenState();
