@@ -1,6 +1,7 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/models/storage_item.dart';
+import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
@@ -17,7 +18,7 @@ final rememberEmailProvider = StateProvider.autoDispose<bool>((ref) => false);
 class LoginScreen extends ConsumerWidget {
   LoginScreen({Key? key}) : super(key: key);
   final StorageService _storageService = StorageService();
-
+  final ResponsiveService responsiveService = ResponsiveService();
   final obscurePasswordProvider =
       StateProvider.autoDispose<bool>((ref) => true);
 
@@ -40,6 +41,8 @@ class LoginScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
+    final screenHeight = size.height;
+    final screenWidth = size.width;
     final rememberMe = ref.watch(rememberEmailProvider);
     final appLocalization = AppLocalizations.of(context)!;
     final obscurePassword = ref.watch(obscurePasswordProvider);
@@ -68,14 +71,17 @@ class LoginScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding:  EdgeInsets.only(bottom: size.height*0.05,top: size.height*0.04),
-                          child:  const Text(
+                          padding: EdgeInsets.only(
+                              bottom: responsiveService.getHeightPixels(
+                                  50, screenHeight),
+                              top: responsiveService.getHeightPixels(
+                                  40, screenHeight)),
+                          child: const Text(
                             '¡Hola!\nBienvenido',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 35),
                           ),
                         ),
-
                         Form(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           child: Column(
@@ -98,9 +104,14 @@ class LoginScreen extends ConsumerWidget {
                                     },
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.only(bottom: size.height*0.005,top: size.height*0.005),
+                                    padding: EdgeInsets.only(
+                                        bottom: responsiveService
+                                            .getHeightPixels(6, screenHeight),
+                                        top: responsiveService.getHeightPixels(
+                                            6, screenHeight)),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: [
                                         SizedBox(
                                           width: 25,
@@ -151,7 +162,11 @@ class LoginScreen extends ConsumerWidget {
                                     },
                                   ),
                                   Padding(
-                                    padding:  EdgeInsets.only(bottom: size.height*0.04, top: 10),
+                                    padding: EdgeInsets.only(
+                                        bottom: responsiveService
+                                            .getHeightPixels(6, screenHeight),
+                                        top: responsiveService.getHeightPixels(
+                                            6, screenHeight)),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
@@ -159,8 +174,8 @@ class LoginScreen extends ConsumerWidget {
                                             child: Row(
                                               children: const [
                                                 Padding(
-                                                  padding:
-                                                      EdgeInsets.only(right: 4.0),
+                                                  padding: EdgeInsets.only(
+                                                      right: 4.0),
                                                   child: Icon(CupertinoIcons
                                                       .question_circle),
                                                 ),
@@ -243,7 +258,8 @@ class LoginScreen extends ConsumerWidget {
                                   return AlcanciaButton(
                                     color: alcanciaLightBlue,
                                     width: 304,
-                                    height: size.height*0.065,
+                                    height: responsiveService.getHeightPixels(
+                                        10, screenHeight),
                                     buttonText: "Iniciar sesión",
                                     onPressed: () {
                                       setLoginInputFields();
@@ -284,6 +300,4 @@ class LoginScreen extends ConsumerWidget {
       ),
     );
   }
-
 }
-
