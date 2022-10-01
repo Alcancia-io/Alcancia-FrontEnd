@@ -1,16 +1,18 @@
-import 'package:alcancia/src/resources/colors/colors.dart';
+import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:flutter/material.dart';
 
 class AlcanciaDropdown extends StatefulWidget {
   const AlcanciaDropdown({
     Key? key,
     this.dropdownWidth,
+    this.dropdownHeight,
     this.onChanged,
     required this.dropdownItems,
     this.itemsAlignment,
   }) : super(key: key);
 
   final double? dropdownWidth;
+  final double? dropdownHeight;
   final List<Map> dropdownItems;
   final Function? onChanged;
   final MainAxisAlignment? itemsAlignment;
@@ -21,6 +23,7 @@ class AlcanciaDropdown extends StatefulWidget {
 
 class _AlcanciaDropdownState extends State<AlcanciaDropdown> {
   late String dropdownValue = widget.dropdownItems.first['name'];
+  final ResponsiveService _responsiveService = ResponsiveService();
 
   @override
   void initState() {
@@ -36,36 +39,11 @@ class _AlcanciaDropdownState extends State<AlcanciaDropdown> {
     );
   }
 
-  getAlcanciaDropdownMenuItem(Map item) {
-    return DropdownMenuItem<String>(
-      value: item['name'],
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          mainAxisAlignment:
-              widget.itemsAlignment ?? MainAxisAlignment.spaceAround,
-          children: [
-            if (item['icon'] != null)
-              Padding(
-                padding: const EdgeInsets.only(right: 5),
-                child: Image(
-                  width: 18,
-                  image: AssetImage(
-                    item['icon'],
-                  ),
-                ),
-              ),
-            Text(item['name'])
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
       width: widget.dropdownWidth,
+      height: widget.dropdownHeight,
       decoration: dropdownDecoration(context),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
@@ -96,8 +74,9 @@ class _AlcanciaDropdownState extends State<AlcanciaDropdown> {
 class AlcanciaDropdownItem extends StatelessWidget {
   final Map item;
   final MainAxisAlignment? itemsAlignment;
+  final ResponsiveService _responsiveService = ResponsiveService();
 
-  const AlcanciaDropdownItem({
+  AlcanciaDropdownItem({
     super.key,
     required this.item,
     this.itemsAlignment,
@@ -105,8 +84,9 @@ class AlcanciaDropdownItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var screenHeight = MediaQuery.of(context).size.height;
     return Padding(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(0),
       child: Row(
         mainAxisAlignment: itemsAlignment ?? MainAxisAlignment.spaceAround,
         children: [
@@ -120,7 +100,12 @@ class AlcanciaDropdownItem extends StatelessWidget {
                 ),
               ),
             ),
-          Text(item['name'])
+          Text(
+            item['name'],
+            style: TextStyle(
+              fontSize: _responsiveService.getHeightPixels(18, screenHeight),
+            ),
+          )
         ],
       ),
     );
