@@ -23,7 +23,13 @@ class WelcomeScreen extends StatelessWidget {
         //  return Text(result.exception.toString());
         //}
         if (result.isLoading) {
-          return const Text('Loading...');
+          return Scaffold(
+            body: Center(
+              child: AlcanciaLogo(
+                height: 120,
+              ),
+            ),
+          );
         }
         //print(result.data);
         return Container(
