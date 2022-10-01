@@ -88,6 +88,7 @@ final routerProvider = Provider<GoRouter>(
         // if (await fetchToken() && state.location != "/dashboard") {
         final isUserInDashboard = state.location == "/homescreen/0";
         final isTransactions = state.location == "/homescreen/1";
+        final isProfile = state.location == "/homescreen/2";
         final isSwap = state.location == "/swap";
         final isTransactionDetail = state.location == "/transaction_detail";
         // final isUserInSwapScreen = state.location == "/homescreen/0";
@@ -99,6 +100,8 @@ final routerProvider = Provider<GoRouter>(
           } else if (isSwap) {
             return null;
           } else if (isTransactionDetail) {
+            return null;
+          } else if (isProfile) {
             return null;
           } else {
             // return "/homescreen/0";
