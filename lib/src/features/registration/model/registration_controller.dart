@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:alcancia/src/shared/provider/user.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:alcancia/src/features/registration/data/signup_mutation.dart';
@@ -36,12 +38,15 @@ class RegistrationController {
   Future<void> sendOTP(String phoneNumber) async {
     try {
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
-      GraphQLClient _client = graphQLConfiguration.clientToQuery();
-      QueryResult result = await _client.query(
+      GraphQLClient client = graphQLConfiguration.clientToQuery();
+      // inspect(_client);
+      var result = await client.query(
         QueryOptions(
             document: gql(sendOTPQuery),
             variables: {"phoneNumber": phoneNumber}),
       );
+      print(token);
+      print(result);
 
       if (result.hasException) {
         print(result.exception?.graphqlErrors[0].message);

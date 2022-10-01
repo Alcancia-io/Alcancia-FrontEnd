@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:alcancia/src/features/registration/data/country.dart';
 import 'package:alcancia/src/features/registration/data/signup_mutation.dart';
 import 'package:alcancia/src/features/registration/provider/registration_controller_provider.dart';
@@ -308,7 +310,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                         phoneNumber:
                             "+${selectedCountry.dialCode}${phoneController.text}",
                         dob: selectedDate,
-                        balance: 0,
+                        balance: 0.0,
                         walletAddress: "");
                     if (isValid(
                         selectedCountry, selectedGender, selectedDate)) {
