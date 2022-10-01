@@ -15,6 +15,23 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     var pattern = getPattern(context);
+    return Query(
+      options: QueryOptions(document: gql(meQuery)),
+      builder: (QueryResult<Object?> result,
+          {VoidCallback? refetch, FetchMore? fetchMore}) {
+        //if (result.hasException) {
+        //  return Text(result.exception.toString());
+        //}
+        if (result.isLoading) {
+          return Scaffold(
+            body: Center(
+              child: AlcanciaLogo(
+                height: 120,
+              ),
+            ),
+          );
+        }
+        //print(result.data);
 
     return Container(
       decoration: BoxDecoration(
