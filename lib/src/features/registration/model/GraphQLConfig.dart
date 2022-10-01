@@ -1,19 +1,19 @@
 import "package:flutter/material.dart";
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import "package:graphql_flutter/graphql_flutter.dart";
 
-class GraphQLConfig  {
+class GraphQLConfig {
   GraphQLConfig({required this.token});
 
   String token;
   static HttpLink httpLink = HttpLink(
-    'http://localhost:8000/graphql',
+    dotenv.env["API_URL"] as String,
   );
 
   ///if you want to pass token
-  ValueNotifier<GraphQLClient> graphInit()  {
+  ValueNotifier<GraphQLClient> graphInit() {
     // We're using HiveStore for persistence,
     // so we need to initialize Hive.
-
 
     final AuthLink authLink = AuthLink(
       getToken: () async => 'Bearer $token',
@@ -33,11 +33,6 @@ class GraphQLConfig  {
 
     return client;
   }
-
-
-
-
-
 
   GraphQLClient clientToQuery() {
     AuthLink authLink = AuthLink(
