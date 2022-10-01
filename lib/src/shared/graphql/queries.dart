@@ -13,3 +13,9 @@ const String userProfit = """
     getUserProfit
   }
 """;
+
+const String isAuthenticated = """
+  query {
+    isUserAuthenticated
+  }
+""";
