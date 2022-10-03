@@ -39,6 +39,7 @@ class MyApp extends ConsumerWidget {
     return GraphQLProvider(
       client: client,
       child: MaterialApp.router(
+          debugShowCheckedModeBanner: false,
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
