@@ -230,6 +230,12 @@ class LoginScreen extends ConsumerWidget {
                                       return Column(
                                         children: [
                                           AlcanciaButton(
+                                            width: responsiveService
+                                                .getWidthPixels(
+                                                    304, screenWidth),
+                                            height: responsiveService
+                                                .getHeightPixels(
+                                                    64, screenHeight),
                                             buttonText: "Iniciar sesión",
                                             onPressed: () {
                                               setLoginInputFields();
@@ -257,9 +263,10 @@ class LoginScreen extends ConsumerWidget {
                                   }
                                   return AlcanciaButton(
                                     color: alcanciaLightBlue,
-                                    width: 304,
+                                    width: responsiveService.getWidthPixels(
+                                        304, screenWidth),
                                     height: responsiveService.getHeightPixels(
-                                        10, screenHeight),
+                                        64, screenHeight),
                                     buttonText: "Iniciar sesión",
                                     onPressed: () {
                                       setLoginInputFields();

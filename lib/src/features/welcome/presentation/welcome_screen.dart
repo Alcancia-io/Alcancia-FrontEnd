@@ -1,5 +1,6 @@
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:alcancia/src/shared/components/alcancia_logo.dart';
+import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,10 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final screenHeight = size.height;
+    final screenWidth = size.width;
     var pattern = getPattern(context);
+    final ResponsiveService responsiveService = ResponsiveService();
     return Query(
       options: QueryOptions(document: gql(meQuery)),
       builder: (QueryResult<Object?> result,
@@ -66,7 +70,6 @@ class WelcomeScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
-
                           children: [
                             const Text(
                               "Descubre una nueva forma de ahorrar",
@@ -84,15 +87,21 @@ class WelcomeScreen extends StatelessWidget {
                             const Spacer(),
                             AlcanciaButton(
                               color: alcanciaLightBlue,
-                              width: 304,
-                              height: size.height*0.06,
+                              width: responsiveService.getWidthPixels(
+                                  304, screenWidth),
+                              height: responsiveService.getHeightPixels(
+                                  64, screenHeight),
                               buttonText: "Registrate",
                               onPressed: () {
                                 context.push('/registration');
                               },
                             ),
                             Padding(
-                              padding:  EdgeInsets.only(top: size.height*0.01),
+                              padding: EdgeInsets.only(
+                                  top: responsiveService.getHeightPixels(
+                                8,
+                                screenHeight,
+                              )),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
