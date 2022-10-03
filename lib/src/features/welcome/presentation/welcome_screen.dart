@@ -66,7 +66,6 @@ class WelcomeScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
-
                           children: [
                             const Text(
                               "Descubre una nueva forma de ahorrar",
@@ -85,14 +84,14 @@ class WelcomeScreen extends StatelessWidget {
                             AlcanciaButton(
                               color: alcanciaLightBlue,
                               width: 304,
-                              height: size.height*0.06,
+                              height: 64,
                               buttonText: "Registrate",
                               onPressed: () {
                                 context.push('/registration');
                               },
                             ),
                             Padding(
-                              padding:  EdgeInsets.only(top: size.height*0.01),
+                              padding: const EdgeInsets.only(top: 16.0),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,

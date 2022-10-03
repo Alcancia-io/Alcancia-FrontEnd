@@ -1,7 +1,6 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/models/storage_item.dart';
-import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
@@ -18,7 +17,7 @@ final rememberEmailProvider = StateProvider.autoDispose<bool>((ref) => false);
 class LoginScreen extends ConsumerWidget {
   LoginScreen({Key? key}) : super(key: key);
   final StorageService _storageService = StorageService();
-  final ResponsiveService responsiveService = ResponsiveService();
+
   final obscurePasswordProvider =
       StateProvider.autoDispose<bool>((ref) => true);
 
@@ -41,8 +40,6 @@ class LoginScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
-    final screenHeight = size.height;
-    final screenWidth = size.width;
     final rememberMe = ref.watch(rememberEmailProvider);
     final appLocalization = AppLocalizations.of(context)!;
     final obscurePassword = ref.watch(obscurePasswordProvider);
@@ -51,36 +48,29 @@ class LoginScreen extends ConsumerWidget {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
-        resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomInset: false,
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 32.0, right: 32.0),
-              child: Center(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: AlcanciaToolbar(
-                        state: StateToolbar.logoNoletters,
-                        logoHeight: size.height / 8,
-                      ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 32.0, right: 32.0),
+            child: Center(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AlcanciaToolbar(
+                      state: StateToolbar.logoNoletters,
+                      logoHeight: size.height / 8,
                     ),
-                    Column(
+                  ),
+                  Expanded(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                              bottom: responsiveService.getHeightPixels(
-                                  50, screenHeight),
-                              top: responsiveService.getHeightPixels(
-                                  40, screenHeight)),
-                          child: const Text(
-                            '¡Hola!\nBienvenido',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 35),
-                          ),
+                        const Text(
+                          '¡Hola!\nBienvenido',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 35),
                         ),
                         Form(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -103,37 +93,29 @@ class LoginScreen extends ConsumerWidget {
                                       }
                                     },
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        bottom: responsiveService
-                                            .getHeightPixels(6, screenHeight),
-                                        top: responsiveService.getHeightPixels(
-                                            6, screenHeight)),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        SizedBox(
-                                          width: 25,
-                                          child: Checkbox(
-                                              value: rememberMe,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(4),
-                                              ),
-                                              onChanged: (value) {
-                                                ref
-                                                    .read(rememberEmailProvider
-                                                        .notifier)
-                                                    .state = value!;
-                                              }),
-                                        ),
-                                        const Padding(
-                                          padding: EdgeInsets.only(left: 8.0),
-                                          child: Text("Recordar usuario"),
-                                        ),
-                                      ],
-                                    ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width: 25,
+                                        child: Checkbox(
+                                            value: rememberMe,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                            onChanged: (value) {
+                                              ref
+                                                  .read(rememberEmailProvider
+                                                      .notifier)
+                                                  .state = value!;
+                                            }),
+                                      ),
+                                      const Padding(
+                                        padding: EdgeInsets.only(left: 8.0),
+                                        child: Text("Recordar usuario"),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -161,32 +143,25 @@ class LoginScreen extends ConsumerWidget {
                                       }
                                     },
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        bottom: responsiveService
-                                            .getHeightPixels(6, screenHeight),
-                                        top: responsiveService.getHeightPixels(
-                                            6, screenHeight)),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        CupertinoButton(
-                                            child: Row(
-                                              children: const [
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      right: 4.0),
-                                                  child: Icon(CupertinoIcons
-                                                      .question_circle),
-                                                ),
-                                                Text("Olvidé mi contraseña"),
-                                              ],
-                                            ),
-                                            onPressed: () {
-                                              // TODO: Forgot Password navigation
-                                            }),
-                                      ],
-                                    ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      CupertinoButton(
+                                          child: Row(
+                                            children: const [
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(right: 4.0),
+                                                child: Icon(CupertinoIcons
+                                                    .question_circle),
+                                              ),
+                                              Text("Olvidé mi contraseña"),
+                                            ],
+                                          ),
+                                          onPressed: () {
+                                            // TODO: Forgot Password navigation
+                                          }),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -258,8 +233,7 @@ class LoginScreen extends ConsumerWidget {
                                   return AlcanciaButton(
                                     color: alcanciaLightBlue,
                                     width: 304,
-                                    height: responsiveService.getHeightPixels(
-                                        10, screenHeight),
+                                    height: 64,
                                     buttonText: "Iniciar sesión",
                                     onPressed: () {
                                       setLoginInputFields();
@@ -291,8 +265,8 @@ class LoginScreen extends ConsumerWidget {
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
