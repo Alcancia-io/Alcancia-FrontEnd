@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -9,25 +11,34 @@ class User {
   final String gender;
   String phoneNumber;
   final DateTime dob;
+  final double balance;
+  String walletAddress;
 
-  User(
-      {required this.userId,
-      required this.surname,
-      required this.gender,
-      required this.phoneNumber,
-      required this.dob,
-      required this.name,
-      required this.email});
+  User({
+    required this.userId,
+    required this.surname,
+    required this.gender,
+    required this.phoneNumber,
+    required this.dob,
+    required this.name,
+    required this.email,
+    required this.balance,
+    required this.walletAddress,
+  });
 
   factory User.fromJSON(Map<String, dynamic> map) {
     return User(
-        userId: map["userId"],
-        surname: map["surname"],
-        gender: map["gender"],
-        phoneNumber: map["phoneNumber"],
-        dob: DateFormat('yyyy-MM-dd').parse(map["dob"]),
-        name: map["name"],
-        email: map["email"]);
+      userId: map["userId"],
+      surname: map["surname"],
+      gender: map["gender"],
+      phoneNumber: map["phoneNumber"],
+      dob: DateFormat('yyyy-MM-dd').parse(map["dob"]),
+      // dob: map['dob'],
+      name: map["name"],
+      email: map["email"],
+      balance: map['balance'].toDouble(),
+      walletAddress: map['walletAddress'],
+    );
   }
 }
 
@@ -44,6 +55,8 @@ class UserState extends StateNotifier<User?> {
       gender: "Gender",
       phoneNumber: "",
       dob: DateTime.now(),
+      balance: 0,
+      walletAddress: "",
     );
   }
 
@@ -51,7 +64,7 @@ class UserState extends StateNotifier<User?> {
     state?.phoneNumber = phone;
   }
 
-  void setUser(User user) {
+  void setUser(User? user) {
     state = user;
   }
 

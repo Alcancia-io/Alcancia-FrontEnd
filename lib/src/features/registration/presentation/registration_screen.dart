@@ -308,6 +308,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                       phoneNumber:
                           "+${selectedCountry.dialCode}${phoneController.text}",
                       dob: selectedDate,
+                      balance: 0.0,
+                      walletAddress: "",
                     );
                     if (isValid(
                         selectedCountry, selectedGender, selectedDate)) {

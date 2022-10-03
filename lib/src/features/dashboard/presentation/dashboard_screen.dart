@@ -49,7 +49,6 @@ class DashboardScreen extends ConsumerWidget {
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return Scaffold(
-
             body: SafeArea(
               child: GraphQLProvider(
                 client: snapshot.data,
@@ -93,7 +92,8 @@ class DashboardScreen extends ConsumerWidget {
                             Padding(
                               padding: const EdgeInsets.only(bottom: 22),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   const Text(
                                     "Actividad",
