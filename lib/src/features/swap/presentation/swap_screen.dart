@@ -1,23 +1,27 @@
+import 'dart:developer';
+
 import 'package:alcancia/src/features/swap/data/exchange_api.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_link.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
+import 'package:alcancia/src/shared/provider/user.dart';
 import 'package:alcancia/src/shared/services/exchange_api_service.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 
-class SwapScreen extends StatefulWidget {
+class SwapScreen extends ConsumerStatefulWidget {
   const SwapScreen({Key? key}) : super(key: key);
 
   @override
-  State<SwapScreen> createState() => _SwapScreenState();
+  ConsumerState<SwapScreen> createState() => _SwapScreenState();
 }
 
-class _SwapScreenState extends State<SwapScreen> {
+class _SwapScreenState extends ConsumerState<SwapScreen> {
   ExchangeApiService exchangeApiService =
       ExchangeApiService(baseCurrencyCode: "USD");
   late String targetAmount = "";
@@ -36,6 +40,8 @@ class _SwapScreenState extends State<SwapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var user = ref.watch(userProvider);
+    inspect(user);
     final txtTheme = Theme.of(context).textTheme;
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
