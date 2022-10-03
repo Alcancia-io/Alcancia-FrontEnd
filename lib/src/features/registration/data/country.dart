@@ -386,14 +386,14 @@ const List<Country> countries = [
   //   minLength: 15,
   //   maxLength: 15,
   // ),
-  // Country(
-  //   name: "Colombia",
-  //   flag: "🇨🇴",
-  //   code: "CO",
-  //   dialCode: "57",
-  //   minLength: 10,
-  //   maxLength: 10,
-  // ),
+  Country(
+    name: "Colombia",
+    flag: "🇨🇴",
+    code: "CO",
+    dialCode: "57",
+    minLength: 10,
+    maxLength: 10,
+  ),
   // Country(
   //   name: "Comoros",
   //   flag: "🇰🇲",

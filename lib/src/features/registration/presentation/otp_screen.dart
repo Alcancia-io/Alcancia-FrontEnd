@@ -235,12 +235,12 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
   SnackBar _snackBar() {
     return SnackBar(
       content: Text(
-        "Tu cuenta ha sido creada exitosamente. Revisa tu correo para confirmar tu cuenta.",
+        "Tu cuenta ha sido creada exitosamente. Revisa tu bandeja de entrada del correo para confirmar tu cuenta.",
         style: Theme.of(context).textTheme.bodyText2,
       ),
       behavior: SnackBarBehavior.floating,
       backgroundColor: Theme.of(context).inputDecorationTheme.fillColor,
-      duration: Duration(seconds: 5),
+      duration: Duration(seconds: 20),
     );
   }
 

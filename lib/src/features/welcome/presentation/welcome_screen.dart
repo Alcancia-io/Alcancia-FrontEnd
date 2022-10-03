@@ -92,7 +92,7 @@ class WelcomeScreen extends StatelessWidget {
                                 color: alcanciaLightBlue,
                                 width: 308,
                                 height: size.height * 0.06,
-                                buttonText: "Registrate",
+                                buttonText: "Regístrate",
                                 onPressed: () {
                                   context.push('/registration');
                                 },
