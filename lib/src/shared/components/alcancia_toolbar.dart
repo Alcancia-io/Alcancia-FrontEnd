@@ -71,7 +71,7 @@ class AlcanciaToolbar extends StatelessWidget {
         );
       case StateToolbar.profileTitleIcon:
         return Container(
-          padding: const EdgeInsets.only(bottom: 24, top: 20),
+          padding: const EdgeInsets.only(bottom: 24),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

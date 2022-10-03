@@ -66,14 +66,31 @@ class DashboardCard extends StatelessWidget {
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text(
-                            "Balance",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(
+                              top: 6,
+                              bottom: 6,
+                              left: 12,
                             ),
-                          ),
+                            decoration: BoxDecoration(
+                              color: ctx.brightness == Brightness.dark
+                                  ? Color(0xFF1F318C)
+                                  : Color.fromARGB(255, 217, 217, 217),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8),
+                              ),
+                            ),
+                            width: 198,
+                            height: 30,
+                            child: const Text(
+                              'Balance',
+                              style: TextStyle(
+                                // color: Colors.white,
+                                fontSize: 15,
+                              ),
+                            ),
+                          )
                         ],
                       ),
                       Container(
@@ -92,6 +109,7 @@ class DashboardCard extends StatelessWidget {
                         ),
                         builder: (QueryResult result,
                             {VoidCallback? refetch, FetchMore? fetchMore}) {
+                          // Commented for now to show the buttons
                           // if (result.hasException) {
                           //   return Text("error");
                           // }

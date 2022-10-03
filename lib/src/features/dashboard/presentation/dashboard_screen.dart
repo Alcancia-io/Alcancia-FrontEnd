@@ -73,54 +73,51 @@ class DashboardScreen extends ConsumerWidget {
                       response,
                     ).getTransactions();
 
-                    return SingleChildScrollView(
-                      child: Container(
-                        padding: const EdgeInsets.only(
-                          left: 24,
-                          right: 24,
-                          bottom: 24,
-                          top: 0,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            AlcanciaNavbar(),
-                            Container(
-                              padding: const EdgeInsets.only(bottom: 16),
-                              child: DashboardCard(),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 22),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text(
-                                    "Actividad",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                    return Container(
+                      padding: const EdgeInsets.only(
+                        left: 24,
+                        right: 24,
+                        bottom: 24,
+                        top: 0,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AlcanciaNavbar(),
+                          Container(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: DashboardCard(),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 22),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Actividad",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  AlcanciaButton(
-                                    buttonText: "Ver más",
-                                    onPressed: () {
-                                      // context.push("/homescreen/1");
-                                      context.go("/homescreen/1");
-                                    },
-                                    color: const Color(0x00FFFFFF),
-                                    rounded: true,
-                                    height: 24,
-                                  ),
-                                ],
-                              ),
+                                ),
+                                AlcanciaButton(
+                                  buttonText: "Ver más",
+                                  onPressed: () {
+                                    // context.push("/homescreen/1");
+                                    context.go("/homescreen/1");
+                                  },
+                                  color: const Color(0x00FFFFFF),
+                                  rounded: true,
+                                  height: 24,
+                                ),
+                              ],
                             ),
-                            AlcanciaTransactions(
-                              transactions: transactionsList,
-                              height: 200,
-                            ),
-                          ],
-                        ),
+                          ),
+                          AlcanciaTransactions(
+                            transactions: transactionsList,
+                            height: 200,
+                          ),
+                        ],
                       ),
                     );
                   },
