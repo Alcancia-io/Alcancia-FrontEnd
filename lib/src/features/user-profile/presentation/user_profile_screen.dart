@@ -167,7 +167,7 @@ class UserProfileScreen extends ConsumerWidget {
           padding: const EdgeInsets.only(left: 48.0, right: 48.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -177,14 +177,18 @@ class UserProfileScreen extends ConsumerWidget {
                   height: 100,
                 ),
               ),
-              Text(
-                "${user.name} ${user.surname}",
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(fontWeight: FontWeight.bold),
+              Column(
+                children: [
+                  Text(
+                    "${user.name} ${user.surname}",
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  Text(user.email),
+                ],
               ),
-              Text(user.email),
             ],
           ),
         ),
