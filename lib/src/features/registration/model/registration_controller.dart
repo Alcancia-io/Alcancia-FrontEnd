@@ -70,8 +70,7 @@ class RegistrationController {
         print("data");
         print(result.data);
         final valid = result.data!["verifyOTP"]["valid"] as bool;
-        if (valid)
-          return valid;
+        if (valid) return valid;
         return Future.error("Código inválido");
       }
     } catch (e) {
@@ -94,17 +93,15 @@ class RegistrationController {
     try {
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
       GraphQLClient _client = graphQLConfiguration.clientToQuery();
-      QueryResult result = await _client.mutate(
-          MutationOptions(
-            document: gql(signupMutation),
-            variables: {"signupUserInput": signupInput}
-            //onCompleted: (resultData) {
-            //  if (resultData != null) {
-            //    context.go("/login");
-            //  }
-            //},
-          )
-      );
+      QueryResult result = await _client.mutate(MutationOptions(
+          document: gql(signupMutation),
+          variables: {"signupUserInput": signupInput}
+          //onCompleted: (resultData) {
+          //  if (resultData != null) {
+          //    context.go("/login");
+          //  }
+          //},
+          ));
 
       if (result.hasException) {
         print("Exception");
@@ -113,6 +110,8 @@ class RegistrationController {
       } else if (result.data != null) {
         print("data");
         print(result.data);
+        result.data!["signup"]["balance"] = 0.0;
+        result.data!["signup"]["walletAddress"] = "";
         final data = result.data!["signup"] as Map<String, dynamic>;
         final user = User.fromJSON(data);
         print("Success!");

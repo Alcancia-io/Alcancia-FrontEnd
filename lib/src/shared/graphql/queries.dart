@@ -1,9 +1,15 @@
 const String meQuery = """
   query {
     me {
+      userId,
+      surname,
+      gender,
+      phoneNumber,
+      dob,
       name,
       email,
-      balance
+      balance,
+      walletAddress
     }
   }
 """;
@@ -11,5 +17,11 @@ const String meQuery = """
 const String userProfit = """
   query{
     getUserProfit
+  }
+""";
+
+const String isAuthenticated = """
+  query {
+    isUserAuthenticated
   }
 """;
