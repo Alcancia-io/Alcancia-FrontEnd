@@ -14,7 +14,8 @@ import 'package:url_launcher/url_launcher.dart';
 class UserProfileScreen extends ConsumerWidget {
   UserProfileScreen({Key? key}) : super(key: key);
 
-  final Uri url = Uri.parse('https://flutter.dev');
+  final Uri url = Uri.parse('https://landing.alcancia.io/privacypolicy');
+  final Uri url2 = Uri.parse('https://landing.alcancia.io/termsandconditions');
 
   final GraphqlService _gqlService = GraphqlService();
 
@@ -36,7 +37,7 @@ class UserProfileScreen extends ConsumerWidget {
               _profileCard(context, user!),
               GestureDetector(
                 onTap: () {
-                  _launchUrl();
+                  _launchUrl(url2);
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -56,16 +57,47 @@ class UserProfileScreen extends ConsumerWidget {
                   ),
                 ),
               ),
+              GestureDetector(
+                onTap: () {
+                  _launchUrl(url);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(Icons.info_outline),
+                      ),
+                      Text(
+                        "Políticas de Privacidad",
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                      Spacer(),
+                      Icon(Icons.chevron_right)
+                    ],
+                  ),
+                ),
+              ),
               Spacer(),
               Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: OutlinedButton(
+                child: AlcanciaButton(
+                  foregroundColor: Colors.red,
+                  side: BorderSide(color: Colors.red),
+                  buttonText: "Borrar cuenta",
+                  fontSize: 18,
+                  padding: const EdgeInsets.only(
+                      left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
                   onPressed: () async {
                     await showDialog(
                         context: context,
                         builder: (BuildContext ctx) {
                           return AlcanciaActionDialog(
-                              child: Text("¿Seguro que quieres borrar tu cuenta?\nEsta acción no se puede deshacer.", style: Theme.of(context).textTheme.titleLarge,),
+                              child: Text(
+                                "¿Seguro que quieres borrar tu cuenta?\nEsta acción no se puede deshacer.",
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
                               acceptText: "Confirmar",
                               acceptColor: Colors.red,
                               cancelText: "Cancelar",
@@ -75,75 +107,56 @@ class UserProfileScreen extends ConsumerWidget {
                                   context.go("/");
                                   ref.read(userProvider.notifier).setUser(null);
                                 } catch (e) {
-                                  print(e);
+                                  ScaffoldMessenger.of(context).showSnackBar(_snackBar(context, "Hubo un problema al borrar tu cuenta."));
                                 }
                               });
                         });
                   },
-                  style: OutlinedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(100)),
-                      padding: const EdgeInsets.only(
-                          left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
-                      foregroundColor: Colors.red,
-                      side: BorderSide(color: Colors.red),
-                      splashFactory: NoSplash.splashFactory),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Icon(Icons.delete_forever),
-                      ),
-                      Text("Borrar cuenta")
-                    ],
+                  rounded: true,
+                  icon: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(Icons.delete_forever),
                   ),
-                ),
+                )
               ),
               Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: OutlinedButton(
-                  onPressed: () async {
-                    await showDialog(
-                        context: context,
-                        builder: (BuildContext ctx) {
-                          return AlcanciaActionDialog(
-                              child: Text("¿Seguro que quieres cerrar sesión?", style: Theme.of(context).textTheme.titleLarge,),
-                              acceptText: "Confirmar",
-                              acceptColor: Colors.red,
-                              cancelText: "Cancelar",
-                              acceptAction: () async {
-                                try {
-                                  await authService.logout();
-                                  context.go("/");
-                                  ref.read(userProvider.notifier).setUser(null);
-                                } catch (e) {
-                                  print(e);
-                                }
-                              });
-                        });
-                  },
-                  style: OutlinedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(100)),
-                      padding: const EdgeInsets.only(
-                          left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
-                      foregroundColor: alcanciaLightBlue,
-                      side: const BorderSide(color: alcanciaLightBlue),
-                      splashFactory: NoSplash.splashFactory),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Icon(Icons.power_settings_new),
-                      ),
-                      Text("Cerrar sesión")
-                    ],
-                  ),
-                ),
+                  padding: const EdgeInsets.all(16.0),
+                  child: AlcanciaButton(
+                    foregroundColor: alcanciaLightBlue,
+                    side: BorderSide(color: alcanciaLightBlue),
+                    buttonText: "Cerrar sesión",
+                    fontSize: 18,
+                    padding: const EdgeInsets.only(
+                        left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
+                    onPressed: () async {
+                      await showDialog(
+                          context: context,
+                          builder: (BuildContext ctx) {
+                            return AlcanciaActionDialog(
+                                child: Text(
+                                  "¿Seguro que quieres cerrar sesión?",
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ),
+                                acceptText: "Confirmar",
+                                acceptColor: Colors.red,
+                                cancelText: "Cancelar",
+                                acceptAction: () async {
+                                  try {
+                                    await authService.logout();
+                                    context.go("/");
+                                    ref.read(userProvider.notifier).setUser(null);
+                                  } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(_snackBar(context, "Hubo un problema al cerrar sesión"));
+                                  }
+                                });
+                          });
+                    },
+                    rounded: true,
+                    icon: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(Icons.delete_forever),
+                    ),
+                  )
               ),
             ],
           ),
@@ -171,10 +184,15 @@ class UserProfileScreen extends ConsumerWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset(
-                  "lib/src/resources/images/profile.png",
-                  width: 100,
-                  height: 100,
+                child: ClipOval(
+                  child: SizedBox.fromSize(
+                    size: Size.fromRadius(48), // Image radius
+                    child: Image.asset(
+                      "lib/src/resources/images/profile.png",
+                      width: 100,
+                      height: 100,
+                    ),
+                  ),
                 ),
               ),
               Column(
@@ -196,7 +214,19 @@ class UserProfileScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _launchUrl() async {
+  SnackBar _snackBar(BuildContext context, String string) {
+    return SnackBar(
+      content: Text(
+        string,
+        style: Theme.of(context).textTheme.bodyText2,
+      ),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Theme.of(context).inputDecorationTheme.fillColor,
+      duration: Duration(seconds: 5),
+    );
+  }
+
+  Future<void> _launchUrl(url) async {
     if (!await launchUrl(url)) {
       throw 'Could not launch $url';
     }
