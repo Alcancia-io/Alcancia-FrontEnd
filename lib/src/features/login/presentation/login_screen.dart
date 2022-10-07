@@ -181,21 +181,6 @@ class LoginScreen extends ConsumerWidget {
                                     if (resultData != null) {
                                       final token =
                                           resultData["login"]["access_token"];
-                                      print(resultData["login"]["user"]);
-                                      Map<String, dynamic> data =
-                                          resultData["login"]["user"];
-                                      User user = User(
-                                          userId: data["userId"],
-                                          surname: data["surname"],
-                                          gender: data["gender"],
-                                          phoneNumber: data["phoneNumber"],
-                                          dob: DateTime
-                                              .parse(data["dob"]),
-                                          name: data["name"],
-                                          email: data["email"]);
-                                      ref
-                                          .read(userProvider.notifier)
-                                          .setUser(user);
                                       saveToken(token);
                                       context.go("/homescreen/0");
                                     }
