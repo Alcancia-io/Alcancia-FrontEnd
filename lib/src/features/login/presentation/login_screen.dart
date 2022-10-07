@@ -1,6 +1,5 @@
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/models/storage_item.dart';
-import 'package:alcancia/src/shared/provider/user.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
