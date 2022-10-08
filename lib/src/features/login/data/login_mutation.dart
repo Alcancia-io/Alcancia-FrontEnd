@@ -3,8 +3,14 @@ const String loginMutation = """
     login(loginUserInput: \$loginUserInput) {
       access_token,
       user {
-        balance,
-        email
+        userId,
+        name,
+        surname,
+        gender,
+        phoneNumber,
+        email,
+        dob
+        
       }
     }
   }

@@ -1,5 +1,6 @@
 import 'package:alcancia/src/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:alcancia/src/features/transactions-list/presentation/transactions_list_screen.dart';
+import 'package:alcancia/src/features/user-profile/presentation/user_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
@@ -57,6 +58,9 @@ class _AlcanciaTabbarState extends State<AlcanciaTabbar> {
       case 1:
         currentScreenPage = TransactionsListScreen();
         break;
+      case 2:
+        currentScreenPage = UserProfileScreen();
+        break;
     }
 
     return Scaffold(
@@ -82,6 +86,11 @@ class _AlcanciaTabbarState extends State<AlcanciaTabbar> {
               1,
               "lib/src/resources/images/icon_transactions.svg",
               "Actividad",
+            ),
+            getTabItem(
+              2,
+              "lib/src/resources/images/user_profile.svg",
+              "Perfil",
             ),
           ],
         ),

@@ -204,8 +204,6 @@ class LoginScreen extends ConsumerWidget {
                                   document: gql(loginMutation),
                                   onCompleted: (dynamic resultData) {
                                     if (resultData != null) {
-                                      // TODO: uncomment this
-                                      // context.go("/dashboard");
                                       final token =
                                           resultData["login"]["access_token"];
                                       saveToken(token);
