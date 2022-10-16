@@ -220,16 +220,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       }
                                     },
                                   ),
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        userName = null;
-                                      });
-                                    },
-                                    child: const AlcanciaLink(
-                                      text: "Iniciar sesión con otra cuenta",
+                                  if (userName != null)
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          userName = null;
+                                          emailController.text = "";
+                                        });
+                                      },
+                                      child: const AlcanciaLink(
+                                        text: "Iniciar sesión con otra cuenta",
+                                      ),
                                     ),
-                                  ),
                                   Padding(
                                     padding: EdgeInsets.only(
                                         bottom: responsiveService
@@ -279,8 +281,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                           resultData["login"]["user"]["name"];
                                       final userEmail =
                                           resultData["login"]["user"]["email"];
+                                      if (rememberMe) {
+                                        saveUserInfo(userName, userEmail);
+                                      }
                                       saveToken(token);
-                                      saveUserInfo(userName, userEmail);
                                       context.go("/homescreen/0");
                                     }
                                   },
