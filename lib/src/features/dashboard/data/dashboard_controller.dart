@@ -81,6 +81,5 @@ final dashboardControllerProvider = Provider((ref) => DashboardController());
 final userInformationProvider = FutureProvider.autoDispose<User>((ref) {
   final dashboardController = ref.watch(dashboardControllerProvider);
   final userInfo = dashboardController.getAllUserInformation();
-  userInfo.then((value) => ref.read(userProvider.notifier).state = value);
-  return userInfo;
+  return userInfo.then((value) => ref.read(userProvider.notifier).state = value);
 });
