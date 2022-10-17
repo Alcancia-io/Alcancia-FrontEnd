@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 
-final authServiceProvider = Provider.family<AuthService, GraphqlService>((ref, service) {
+
+final authServiceProvider = Provider<AuthService>((ref) {
+  final service = ref.watch(graphQLServiceProvider);
   return AuthService(graphQLService: service);
 });

@@ -16,13 +16,10 @@ class UserProfileScreen extends ConsumerWidget {
 
   final Uri url = Uri.parse('https://landing.alcancia.io/privacypolicy');
   final Uri url2 = Uri.parse('https://landing.alcancia.io/termsandconditions');
-
-  final GraphqlService _gqlService = GraphqlService();
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
-    final authService = ref.watch(authServiceProvider(_gqlService));
+    final authService = ref.watch(authServiceProvider);
     return Scaffold(
       body: SafeArea(
         child: Padding(
