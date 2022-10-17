@@ -1,24 +1,18 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
-import 'package:alcancia/src/shared/graphql/queries.dart';
-import 'package:alcancia/src/shared/provider/user.dart';
-import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 
-class DashboardCard extends ConsumerWidget {
-  DashboardCard({Key? key}) : super(key: key);
-  final StorageService _storageService = StorageService();
+class DashboardCard extends StatelessWidget {
+  DashboardCard({Key? key, required this.userProfit, required this.userBalance}) : super(key: key);
+  double userProfit;
+  double userBalance;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    var user = ref.watch(userProvider);
+  Widget build(BuildContext context) {
     var ctx = Theme.of(context);
-    var balance = user?.balance == 0.0 ? 0 : user?.balance.toStringAsFixed(3);
+    var balance = userBalance == 0.0 ? 0 : userBalance.toStringAsFixed(3);
+    var profit = userProfit == 0.0 ? 0 : userProfit.toStringAsFixed(3);
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
@@ -54,66 +48,50 @@ class DashboardCard extends ConsumerWidget {
               ),
             ),
           ),
-          Query(
-            options: QueryOptions(
-              document: gql(userProfit),
-            ),
-            builder: (QueryResult result,
-                {VoidCallback? refetch, FetchMore? fetchMore}) {
-              // if (result.hasException) {
-              //   return Text("error");
-              // }
-              if (result.isLoading) {
-                return CircularProgressIndicator();
-              }
-              var userProfit = result.data?['getUserProfit'];
-
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                child: const Text(
+                  "Ganancias",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.only(top: 8, bottom: 20),
+                child: Text(
+                  "\$${profit} USDC",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 35,
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    child: const Text(
-                      "Ganancias",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  AlcanciaButton(
+                    buttonText: "Depositar",
+                    onPressed: () {
+                      context.push("/swap");
+                    },
+                    width: 116,
+                    height: 38,
+                    color: alcanciaMidBlue,
                   ),
-                  Container(
-                    padding: const EdgeInsets.only(top: 8, bottom: 20),
-                    child: Text(
-                      "\$0 USDC",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 35,
-                      ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      AlcanciaButton(
-                        buttonText: "Depositar",
-                        onPressed: () {
-                          context.push("/swap");
-                        },
-                        width: 116,
-                        height: 38,
-                        color: alcanciaMidBlue,
-                      ),
-                      AlcanciaButton(
-                        buttonText: "Retirar",
-                        onPressed: () {},
-                        width: 116,
-                        height: 38,
-                        color: alcanciaMidBlue,
-                      )
-                    ],
-                  ),
+                  AlcanciaButton(
+                    buttonText: "Retirar",
+                    onPressed: () {},
+                    width: 116,
+                    height: 38,
+                    color: alcanciaMidBlue,
+                  )
                 ],
-              );
-            },
+              ),
+            ],
           ),
         ],
       ),

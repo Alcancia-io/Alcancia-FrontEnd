@@ -1,5 +1,4 @@
-import 'dart:ffi';
-
+import 'package:alcancia/src/shared/models/transaction.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -13,6 +12,8 @@ class User {
   final DateTime dob;
   final double balance;
   String walletAddress;
+  List<Transaction>? transactions;
+  double userProfit;
 
   User({
     required this.userId,
@@ -24,6 +25,7 @@ class User {
     required this.email,
     required this.balance,
     required this.walletAddress,
+    this.userProfit = 0
   });
 
   factory User.fromJSON(Map<String, dynamic> map) {

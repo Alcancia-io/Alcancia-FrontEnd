@@ -14,7 +14,7 @@ const String meQuery = """
   }
 """;
 
-const String userProfit = """
+const String userProfitQuery = """
   query{
     getUserProfit
   }
