@@ -4,6 +4,7 @@ import 'package:alcancia/src/features/dashboard/presentation/navbar.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:alcancia/src/shared/components/alcancia_transactions_list.dart';
 import 'package:alcancia/src/shared/provider/user.dart';
+import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -27,10 +28,15 @@ class DashboardScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AlcanciaNavbar(username: user.name,),
+                AlcanciaNavbar(
+                  username: user.name,
+                ),
                 Container(
                   padding: const EdgeInsets.only(bottom: 16),
-                  child: DashboardCard(userProfit: user.userProfit, userBalance: user.balance,),
+                  child: DashboardCard(
+                    userProfit: user.userProfit,
+                    userBalance: user.balance,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 22),
