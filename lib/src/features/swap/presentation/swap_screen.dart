@@ -10,8 +10,10 @@ import 'package:alcancia/src/shared/services/exchange_api_service.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SwapScreen extends ConsumerStatefulWidget {
   const SwapScreen({Key? key}) : super(key: key);
@@ -280,11 +282,13 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                             child: AlcanciaButton(
                               buttonText: "Tarjeta de Débito/Crédito",
                               onPressed: () {
-                                _rampPaymentService.presentRamp(
-                                    usdc,
-                                    user?.email,
-                                    user?.walletAddress,
-                                    sourceDropdownVal);
+                                // _rampPaymentService.presentRamp(
+                                //     usdc,
+                                //     user?.email,
+                                //     user?.walletAddress,
+                                //     sourceDropdownVal);
+                                _launchUrl(Uri.parse(
+                                    "https://ri-widget-staging.firebaseapp.com/?userAddress=${user?.walletAddress}&userEmailAddress=${user?.email}&fiatValue=${usdc?.toStringAsFixed(2)}&fiatCurrency=USD&selectedCountryCode=MX&hostApiKey=${dotenv.env['RAMP_STAGE_KEY']}"));
                               },
                               color: alcanciaLightBlue,
                               width: double.infinity,
@@ -339,5 +343,11 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _launchUrl(url) async {
+    if (!await launchUrl(url)) {
+      throw 'Could not launch $url';
+    }
   }
 }
