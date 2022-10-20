@@ -9,14 +9,12 @@ class RampPaymentService {
   presentRamp(double? usdc, String? userEmail, String? userWalletAddress,
       String? fiatCurrency) {
     Configuration configuration = Configuration();
-    configuration.fiatCurrency = "USD";
-
+    // configuration.fiatCurrency = "USD";
     configuration.userEmailAddress = userEmail;
     configuration.userAddress = userWalletAddress;
-    print(usdc);
-    configuration.fiatValue = usdc?.toStringAsFixed(2);
-    configuration.deepLinkScheme = "Alcancía";
-    configuration.swapAsset = "ETH_USDC";
+    // configuration.fiatValue = usdc?.toStringAsFixed(2);
+    configuration.deepLinkScheme = "alcancia";
+    // configuration.swapAsset = "ETH_USDC";
     configuration.hostApiKey = dotenv.env['RAMP_STAGE_KEY'];
     configuration.url = "https://ri-widget-staging.firebaseapp.com/";
     configuration.hostAppName = "Alcancia";
