@@ -15,56 +15,10 @@ class AlcanciaNavbar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
-    return FutureBuilder(
-        future: _storageService.readSecureData("token"),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            var uri = dotenv.env['API_URL'] as String;
-            var token = snapshot.data;
-
-            final HttpLink httpLink = HttpLink(
-              uri,
-              defaultHeaders: <String, String>{
-                'Authorization': 'Bearer $token'
-              },
-            );
-
-            final ValueNotifier<GraphQLClient> myClient = ValueNotifier(
-              GraphQLClient(
-                cache: GraphQLCache(),
-                link: httpLink,
-              ),
-            );
-            return GraphQLProvider(
-              client: myClient,
-              child: Query(
-                options: QueryOptions(
-                  document: gql(meQuery),
-                ),
-                builder: (QueryResult result,
-                    {VoidCallback? refetch, FetchMore? fetchMore}) {
-                  if (result.hasException) {
-                    return Text("error");
-                  }
-
-                  if (result.isLoading) {
-                    return CircularProgressIndicator();
-                  }
-
-                  var userName = result.data?['me']['name'];
-                  // user = User.fromJSON(result.data?["me"]);
-
-                  return AlcanciaToolbar(
-                    state: StateToolbar.profileTitleIcon,
-                    userName: "${user?.name}",
-                    logoHeight: 38,
-                  );
-                },
-              ),
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        });
+    return AlcanciaToolbar(
+      state: StateToolbar.profileTitleIcon,
+      userName: "${user?.name}",
+      logoHeight: 38,
+    );
   }
 }

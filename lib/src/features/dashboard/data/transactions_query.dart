@@ -4,12 +4,13 @@ const String transactionsQuery = """
       totalItems,
       items {
         createdAt,
-        transactionID,
+        id,
         sourceAmount,
         sourceAsset,
         targetAsset,
         amount,
         type
+        
       }
     }
   }

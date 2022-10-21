@@ -11,7 +11,7 @@ class User {
   final String gender;
   String phoneNumber;
   final DateTime dob;
-  final double balance;
+  double balance;
   String walletAddress;
 
   User({
@@ -62,6 +62,10 @@ class UserState extends StateNotifier<User?> {
 
   void setPhoneNumber(String phone) {
     state?.phoneNumber = phone;
+  }
+
+  void setBalance(double balance) {
+    state!.balance = balance;
   }
 
   void setUser(User? user) {

@@ -24,3 +24,8 @@ const String userProfit = """
     getUserProfit
   }
 """;
+const String userBalance = """
+  query{
+    getWalletBalance
+  }
+""";

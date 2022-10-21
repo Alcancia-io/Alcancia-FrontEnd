@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:alcancia/src/features/dashboard/data/transactions_query.dart';
 import 'package:alcancia/src/features/dashboard/presentation/dashboard_card.dart';
 import 'package:alcancia/src/features/dashboard/presentation/navbar.dart';
@@ -27,6 +29,26 @@ class DashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    Timer? timer;
+    void getUserBalance() async {
+      StorageService service = StorageService();
+      var token = await service.readSecureData("token");
+      GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "${token}");
+      GraphQLClient client = graphQLConfiguration.clientToQuery();
+      var result = await client.query(QueryOptions(document: gql(meQuery)));
+      print(result);
+      if (!result.hasException) {
+        ref
+            .read(userProvider.notifier)
+            .setUser(User.fromJSON(result.data?['me']));
+      }
+
+      // print(result.hasException);
+    }
+
+    timer =
+        Timer.periodic(Duration(seconds: 10), (Timer t) => getUserBalance());
+
     Future<QueryResult<Object?>> getUserInformation() async {
       StorageService service = StorageService();
       var token = await service.readSecureData("token");
@@ -91,7 +113,8 @@ class DashboardScreen extends ConsumerWidget {
                               child: DashboardCard(),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(bottom: 22),
+                              padding:
+                                  const EdgeInsets.only(bottom: 22, top: 20),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
