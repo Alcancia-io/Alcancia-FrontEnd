@@ -7,6 +7,7 @@ import 'package:alcancia/src/features/registration/model/GraphQLConfig.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:alcancia/src/shared/components/alcancia_transactions_list.dart';
 import 'package:alcancia/src/shared/graphql/queries.dart';
+import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:alcancia/src/shared/provider/user.dart';
 import 'package:alcancia/src/shared/services/graphql_client_service.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
@@ -35,12 +36,12 @@ class DashboardScreen extends ConsumerWidget {
       var token = await service.readSecureData("token");
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "${token}");
       GraphQLClient client = graphQLConfiguration.clientToQuery();
-      var result = await client.query(QueryOptions(document: gql(meQuery)));
+      var result = await client.query(QueryOptions(document: gql(userBalance)));
       print(result);
       if (!result.hasException) {
         ref
-            .read(userProvider.notifier)
-            .setUser(User.fromJSON(result.data?['me']));
+            .read(balanceProvider.notifier)
+            .setBalance(Balance.fromJSON(result.data));
       }
 
       // print(result.hasException);
@@ -65,6 +66,7 @@ class DashboardScreen extends ConsumerWidget {
         var user = User.fromJSON(result.data?["me"]);
         ref.read(userProvider.notifier).setUser(user);
       }
+      getUserBalance();
     });
 
     return FutureBuilder(

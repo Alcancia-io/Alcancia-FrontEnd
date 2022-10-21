@@ -10,9 +10,9 @@ class Balance {
     required this.balance,
   });
 
-  factory Balance.fromJSON(double balance) {
+  factory Balance.fromJSON(Map<String, dynamic>? map) {
     return Balance(
-      balance: balance.toDouble(),
+      balance: map?['getWalletBalance'].toDouble(),
     );
   }
 }

@@ -22,12 +22,12 @@ class DashboardCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     Timer? timer;
     var ctx = Theme.of(context);
-    var user = ref.watch(userProvider);
+    var balanceFinal = ref.watch(balanceProvider);
 
-    print(user);
-    var balance = user?.balance;
+    print(balanceFinal);
+    var balance = balanceFinal?.balance;
     var balanceFormatted = "0";
-    if (balance != 0) balanceFormatted = balance!.toStringAsFixed(18);
+    if (balance != 0) balanceFormatted = balance!.toStringAsFixed(6);
 
     return Container(
       padding: const EdgeInsets.all(16.0),
@@ -57,10 +57,10 @@ class DashboardCard extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.only(top: 16, bottom: 24),
             child: Text(
-              "\$${ref.watch(userProvider)?.balance} USDC",
+              "\$${balanceFormatted} USDC",
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 35,
+                fontSize: 32,
               ),
             ),
           ),
