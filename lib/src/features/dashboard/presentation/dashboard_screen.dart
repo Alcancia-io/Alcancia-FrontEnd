@@ -33,28 +33,35 @@ class DashboardScreenState extends ConsumerState<DashboardScreen> {
       "itemsPerPage": 3,
     },
   };
+  void getUserBalance() async {
+    StorageService service = StorageService();
+    var token = await service.readSecureData("token");
+    GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "${token}");
+    GraphQLClient client = graphQLConfiguration.clientToQuery();
+    var result = await client.query(QueryOptions(document: gql(userBalance)));
+    print(result);
+    if (!result.hasException) {
+      ref
+          .read(balanceProvider.notifier)
+          .setBalance(Balance.fromJSON(result.data));
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    timer =
+        Timer.periodic(Duration(seconds: 10), (Timer t) => getUserBalance());
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    void getUserBalance() async {
-      StorageService service = StorageService();
-      var token = await service.readSecureData("token");
-      GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "${token}");
-      GraphQLClient client = graphQLConfiguration.clientToQuery();
-      var result = await client.query(QueryOptions(document: gql(userBalance)));
-      print(result);
-      if (!result.hasException) {
-        ref
-            .read(balanceProvider.notifier)
-            .setBalance(Balance.fromJSON(result.data));
-      }
-
-      // print(result.hasException);
-    }
-
-    timer =
-        Timer.periodic(Duration(seconds: 15), (Timer t) => getUserBalance());
-
     Future<QueryResult<Object?>> getUserInformation() async {
       StorageService service = StorageService();
       var token = await service.readSecureData("token");
@@ -71,7 +78,6 @@ class DashboardScreenState extends ConsumerState<DashboardScreen> {
         var user = User.fromJSON(result.data?["me"]);
         ref.read(userProvider.notifier).setUser(user);
       }
-      getUserBalance();
     });
 
     return FutureBuilder(
@@ -163,16 +169,5 @@ class DashboardScreenState extends ConsumerState<DashboardScreen> {
         return const Center(child: CircularProgressIndicator());
       },
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    timer?.cancel();
-    super.dispose();
   }
 }
