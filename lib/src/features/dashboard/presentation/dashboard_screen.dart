@@ -17,8 +17,14 @@ import 'package:go_router/go_router.dart';
 // import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-class DashboardScreen extends ConsumerWidget {
+class DashboardScreen extends ConsumerStatefulWidget {
   DashboardScreen({Key? key}) : super(key: key);
+  @override
+  ConsumerState<DashboardScreen> createState() => DashboardScreenState();
+}
+
+class DashboardScreenState extends ConsumerState<DashboardScreen> {
+  Timer? timer;
 
   final GraphqlService _gqlService = GraphqlService();
   final getUserTransactionsInput = {
@@ -29,8 +35,7 @@ class DashboardScreen extends ConsumerWidget {
   };
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    Timer? timer;
+  Widget build(BuildContext context) {
     void getUserBalance() async {
       StorageService service = StorageService();
       var token = await service.readSecureData("token");
@@ -48,7 +53,7 @@ class DashboardScreen extends ConsumerWidget {
     }
 
     timer =
-        Timer.periodic(Duration(seconds: 10), (Timer t) => getUserBalance());
+        Timer.periodic(Duration(seconds: 15), (Timer t) => getUserBalance());
 
     Future<QueryResult<Object?>> getUserInformation() async {
       StorageService service = StorageService();
@@ -158,5 +163,16 @@ class DashboardScreen extends ConsumerWidget {
         return const Center(child: CircularProgressIndicator());
       },
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 }

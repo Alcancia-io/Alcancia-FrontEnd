@@ -288,7 +288,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                 //     user?.walletAddress,
                                 //     sourceDropdownVal);
                                 _launchUrl(Uri.parse(
-                                    "https://ri-widget-staging.firebaseapp.com/?userAddress=${user?.walletAddress}&userEmailAddress=${user?.email}&fiatValue=${usdc?.toStringAsFixed(2)}&fiatCurrency=USD&selectedCountryCode=MX&hostApiKey=${dotenv.env['RAMP_STAGE_KEY']}"));
+                                    "https://ri-widget-staging.firebaseapp.com/?userAddress=${user?.walletAddress}&userEmailAddress=${user?.email}&fiatValue=${usdc?.toStringAsFixed(2)}&fiatCurrency=USD&selectedCountryCode=MX&hostApiKey=${dotenv.env['RAMP_STAGE_KEY']}&swapAsset=CELO_CUSD"));
                               },
                               color: alcanciaLightBlue,
                               width: double.infinity,
