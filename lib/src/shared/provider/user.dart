@@ -40,6 +40,8 @@ class User {
       walletAddress: map['walletAddress'],
     );
   }
+
+  static final sampleUser = User(userId: "", surname: "", gender: "", phoneNumber: "", dob: DateTime.now(), name: "", email: "", balance: 0.0, walletAddress: "");
 }
 
 class UserState extends StateNotifier<User?> {
