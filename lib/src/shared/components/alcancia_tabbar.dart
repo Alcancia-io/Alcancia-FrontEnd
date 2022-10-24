@@ -12,6 +12,8 @@ class AlcanciaTabbar extends StatefulWidget {
     required this.selectedIndex,
   }) : super(key: key);
 
+  final screens = [DashboardScreen(), TransactionsListScreen(), UserProfileScreen()];
+
   @override
   State<AlcanciaTabbar> createState() => _AlcanciaTabbarState();
 }
@@ -49,19 +51,6 @@ class _AlcanciaTabbarState extends State<AlcanciaTabbar> {
   @override
   Widget build(BuildContext context) {
     var ctx = Theme.of(context);
-    Widget currentScreenPage = const Text("");
-
-    switch (widget.selectedIndex) {
-      case 0:
-        currentScreenPage = DashboardScreen();
-        break;
-      case 1:
-        currentScreenPage = TransactionsListScreen();
-        break;
-      case 2:
-        currentScreenPage = UserProfileScreen();
-        break;
-    }
 
     return Scaffold(
       bottomNavigationBar: SizedBox(
@@ -69,10 +58,7 @@ class _AlcanciaTabbarState extends State<AlcanciaTabbar> {
           currentIndex: widget.selectedIndex,
           selectedItemColor: ctx.iconTheme.color,
           onTap: (newTabIndex) {
-            setState(() {
               context.go('/homescreen/$newTabIndex');
-              widget.selectedIndex = newTabIndex;
-            });
           },
           // this will be needed when more than 3 items in the bar
           // type: BottomNavigationBarType.fixed,
@@ -95,7 +81,7 @@ class _AlcanciaTabbarState extends State<AlcanciaTabbar> {
           ],
         ),
       ),
-      body: currentScreenPage,
+      body: widget.screens[widget.selectedIndex],
     );
   }
 }

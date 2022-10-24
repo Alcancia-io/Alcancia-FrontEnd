@@ -79,33 +79,18 @@ final routerProvider = Provider<GoRouter>(
         ),
       ],
       redirect: (context, state) async {
-        print(state.location);
-        // if (await fetchToken() && state.location != "/dashboard") {
-        final isUserInDashboard = state.location == "/homescreen/0";
-        final isTransactions = state.location == "/homescreen/1";
-        final isProfile = state.location == "/homescreen/2";
-        final isSwap = state.location == "/swap";
-        final isTransactionDetail = state.location == "/transaction_detail";
-        // final isUserInSwapScreen = state.location == "/homescreen/0";
-        if (await isUserAuthenticated()) {
-          if (isUserInDashboard) {
-            return null;
-          } else if (isTransactions) {
-            return null;
-          } else if (isSwap) {
-            return null;
-          } else if (isTransactionDetail) {
-            return null;
-          } else if (isProfile) {
-            return null;
-          } else {
-            // return "/homescreen/0";
-            return "/homescreen/0";
-          }
-          // return "/dashboard";
-        }
-        // means is not authenticated
-        // return state.location != "/login" ? "/login" : null;
+        final loginLoc = state.namedLocation("login");
+        final loggingIn = state.subloc == loginLoc;
+        final createAccountLoc = state.namedLocation("registration");
+        final welcomeLoc = state.namedLocation("welcome");
+        final isStartup = state.subloc == welcomeLoc;
+        final creatingAccount = state.subloc == createAccountLoc;
+        final loggedIn = await isUserAuthenticated();
+        final home = state.namedLocation("homescreen", params: {"id": "0"});
+
+        if (!loggedIn && !loggingIn && !creatingAccount && !isStartup) return welcomeLoc;
+        if (loggedIn && (loggingIn || creatingAccount || isStartup)) return home;
+        return null;
       },
     );
   },
