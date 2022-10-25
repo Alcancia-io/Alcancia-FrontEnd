@@ -4,7 +4,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 class UserService {
   late GraphQLConfig graphQLConfig;
-  late GraphQLClient client;
+  late Future<GraphQLClient> client;
 
   UserService() {
     graphQLConfig = GraphQLConfig();
@@ -12,7 +12,8 @@ class UserService {
   }
 
   Future<QueryResult> getUser() async {
-    return await client.query(
+    var clientResponse = await client;
+    return await clientResponse.query(
       QueryOptions(
         document: gql(meQuery),
       ),
