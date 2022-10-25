@@ -4,21 +4,13 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 class GraphQLConfig {
   final StorageService _storageService = StorageService();
-  String? token;
-
-  GraphQLConfig() {
-    fetchToken();
-  }
-
-  fetchToken() async {
-    token = await _storageService.readSecureData("token");
-  }
 
   static HttpLink httpLink = HttpLink(
     dotenv.env["API_URL"] as String,
   );
 
-  GraphQLClient clientToQuery() {
+  Future<GraphQLClient> clientToQuery() async {
+    var token = await _storageService.readSecureData("token");
     AuthLink authLink = AuthLink(
       getToken: () async => 'Bearer $token',
     );
