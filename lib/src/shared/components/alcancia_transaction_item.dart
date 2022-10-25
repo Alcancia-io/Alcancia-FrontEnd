@@ -1,5 +1,5 @@
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
-import 'package:alcancia/src/shared/models/transaction.dart';
+import 'package:alcancia/src/shared/models/transaction_model.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
