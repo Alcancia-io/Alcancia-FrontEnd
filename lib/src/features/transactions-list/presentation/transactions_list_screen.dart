@@ -1,7 +1,8 @@
-import 'package:alcancia/src/features/dashboard/data/transactions_query.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/components/alcancia_transactions_list.dart';
+import 'package:alcancia/src/shared/graphql/queries/transactions_query.dart';
 import 'package:alcancia/src/shared/services/graphql_client_service.dart';
+import 'package:alcancia/src/shared/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -9,6 +10,7 @@ class TransactionsListScreen extends StatelessWidget {
   TransactionsListScreen({Key? key}) : super(key: key);
 
   final GraphqlService _gqlService = GraphqlService();
+  final TransactionsService txnsService = TransactionsService();
   final getUserTransactionsInput = {
     "userTransactionsInput": {
       "currentPage": 0,
@@ -44,9 +46,8 @@ class TransactionsListScreen extends StatelessWidget {
                     Map<String, dynamic> response =
                         result.data?['getUserTransactions'];
 
-                    var transactionsList = AlcanciaTransactions.fromJson(
-                      response,
-                    ).getTransactions();
+                    var transactionsList =
+                        txnsService.getTransactionsFromJson(response);
 
                     return Container(
                       padding: const EdgeInsets.only(
@@ -63,7 +64,7 @@ class TransactionsListScreen extends StatelessWidget {
                           ),
                           Expanded(
                             child: AlcanciaTransactions(
-                              transactions: transactionsList,
+                              txns: transactionsList,
                             ),
                           ),
                         ],
