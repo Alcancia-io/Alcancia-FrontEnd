@@ -340,25 +340,30 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         },
                                       ),
                                       if (userName != null) ...[
-                                        InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              userName = null;
-                                              emailController.text = "";
-                                            });
-                                          },
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                "Iniciar sesión con",
-                                                style: txtTheme.bodyText1,
-                                              ),
-                                              const AlcanciaLink(
-                                                text: "otra cuenta",
-                                              ),
-                                            ],
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            top: 30,
+                                          ),
+                                          child: InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                userName = null;
+                                                emailController.text = "";
+                                              });
+                                            },
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  "Iniciar sesión con ",
+                                                  style: txtTheme.bodyText1,
+                                                ),
+                                                const AlcanciaLink(
+                                                  text: "otra cuenta",
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ] else ...[
