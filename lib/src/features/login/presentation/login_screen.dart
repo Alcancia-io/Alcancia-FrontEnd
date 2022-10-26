@@ -61,9 +61,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     var userEmail = await _storageService.readSecureData("userEmail");
     userName = await _storageService.readSecureData("userName");
 
-    print(userEmail);
-    print(userName);
-
     if (userEmail != null) {
       emailController.text = userEmail;
     }
@@ -86,6 +83,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var txtTheme = Theme.of(context).textTheme;
     final size = MediaQuery.of(context).size;
     final screenHeight = size.height;
     final screenWidth = size.width;
@@ -220,18 +218,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       }
                                     },
                                   ),
-                                  if (userName != null)
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          userName = null;
-                                          emailController.text = "";
-                                        });
-                                      },
-                                      child: const AlcanciaLink(
-                                        text: "Iniciar sesión con otra cuenta",
-                                      ),
-                                    ),
                                   Padding(
                                     padding: EdgeInsets.only(
                                         bottom: responsiveService
@@ -337,38 +323,70 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       );
                                     }
                                   }
-                                  return AlcanciaButton(
-                                    color: alcanciaLightBlue,
-                                    width: responsiveService.getWidthPixels(
-                                        304, screenWidth),
-                                    height: responsiveService.getHeightPixels(
-                                        64, screenHeight),
-                                    buttonText: "Iniciar sesión",
-                                    onPressed: () {
-                                      setLoginInputFields();
-                                      runMutation(
-                                        {"loginUserInput": loginUserInput},
-                                      );
-                                    },
+                                  return Column(
+                                    children: [
+                                      AlcanciaButton(
+                                        color: alcanciaLightBlue,
+                                        width: responsiveService.getWidthPixels(
+                                            304, screenWidth),
+                                        height: responsiveService
+                                            .getHeightPixels(64, screenHeight),
+                                        buttonText: "Iniciar sesión",
+                                        onPressed: () {
+                                          setLoginInputFields();
+                                          runMutation(
+                                            {"loginUserInput": loginUserInput},
+                                          );
+                                        },
+                                      ),
+                                      if (userName != null) ...[
+                                        InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              userName = null;
+                                              emailController.text = "";
+                                            });
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Iniciar sesión con",
+                                                style: txtTheme.bodyText1,
+                                              ),
+                                              const AlcanciaLink(
+                                                text: "otra cuenta",
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ] else ...[
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text("No tengo cuenta."),
+                                            CupertinoButton(
+                                              child: const Text(
+                                                "Registrarme",
+                                                style: TextStyle(
+                                                  decoration:
+                                                      TextDecoration.underline,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                context.push("/registration");
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ]
+                                    ],
                                   );
                                 },
                               ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text("No tengo cuenta."),
-                                CupertinoButton(
-                                    child: const Text(
-                                      "Registrarme",
-                                      style: TextStyle(
-                                          decoration: TextDecoration.underline,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    onPressed: () {
-                                      context.push("/registration");
-                                    }),
-                              ],
                             ),
                           ],
                         ),
