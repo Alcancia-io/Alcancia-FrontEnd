@@ -13,15 +13,3 @@ const String meQuery = """
     }
   }
 """;
-
-const String userProfitQuery = """
-  query{
-    getUserProfit
-  }
-""";
-
-const String isAuthenticated = """
-  query {
-    isUserAuthenticated
-  }
-""";

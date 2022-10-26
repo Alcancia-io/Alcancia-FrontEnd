@@ -1,4 +1,4 @@
-import 'package:alcancia/src/shared/provider/user.dart';
+import 'package:alcancia/src/shared/models/user_model.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:alcancia/src/features/registration/data/signup_mutation.dart';
 import 'package:intl/intl.dart';

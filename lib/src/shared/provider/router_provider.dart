@@ -1,4 +1,4 @@
-import 'package:alcancia/src/features/dashboard/presentation/dashboard_screen.dart';
+import 'package:alcancia/src/screens/dashboard/dashboard_screen.dart';
 import 'package:alcancia/src/features/login/presentation/login_screen.dart';
 import 'package:alcancia/src/features/registration/model/GraphQLConfig.dart';
 import 'package:alcancia/src/features/swap/presentation/swap_screen.dart';
@@ -7,7 +7,7 @@ import 'package:alcancia/src/features/welcome/presentation/welcome_screen.dart';
 import 'package:alcancia/src/features/registration/presentation/registration_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
 import 'package:alcancia/src/shared/graphql/queries.dart';
-import 'package:alcancia/src/shared/models/transaction.dart';
+import 'package:alcancia/src/shared/models/transaction_model.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -27,7 +27,7 @@ Future<bool> isUserAuthenticated() async {
 final routerProvider = Provider<GoRouter>(
   (ref) {
     return GoRouter(
-      debugLogDiagnostics: true,
+      // debugLogDiagnostics: true,
       routes: [
         GoRoute(
           name: "welcome",
@@ -103,6 +103,7 @@ final routerProvider = Provider<GoRouter>(
           }
           // return "/dashboard";
         }
+        return null;
         // means is not authenticated
         // return state.location != "/login" ? "/login" : null;
       },
