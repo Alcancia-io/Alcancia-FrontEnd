@@ -4,7 +4,7 @@ import 'package:alcancia/src/features/registration/provider/registration_control
 import 'package:alcancia/src/features/registration/provider/timer_provider.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
-import 'package:alcancia/src/shared/provider/user.dart';
+import 'package:alcancia/src/shared/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
@@ -13,6 +13,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
+import '../../../shared/models/user_model.dart';
 import '../data/gender.dart';
 import 'gender_picker.dart';
 import 'country_picker.dart';

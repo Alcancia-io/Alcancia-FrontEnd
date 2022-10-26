@@ -5,8 +5,32 @@ import '../models/alcancia_models.dart';
 class UserState extends StateNotifier<User?> {
   UserState() : super(null);
 
-  void setUser(User user) {
+  Future<void> login(String email, String password) async {
+    // This mocks some sort of request / response
+    state = User(
+      userId: "",
+      name: "My Name",
+      surname: "My Surname",
+      email: "My Email",
+      gender: "Gender",
+      phoneNumber: "",
+      dob: DateTime.now(),
+      balance: 0,
+      walletAddress: "",
+    );
+  }
+
+  void setUser(User? user) {
     state = user;
+  }
+
+  void setPhoneNumber(String phone) {
+    state?.phoneNumber = phone;
+  }
+
+  Future<void> logout() async {
+    // In this example user==null iff we're logged out
+    state = null; // No request is mocked here but I guess we could
   }
 }
 

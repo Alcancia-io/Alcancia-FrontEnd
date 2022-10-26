@@ -2,7 +2,7 @@ import 'package:alcancia/src/features/registration/provider/registration_control
 import 'package:alcancia/src/features/registration/provider/timer_provider.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
-import 'package:alcancia/src/shared/provider/user.dart';
+import 'package:alcancia/src/shared/provider/user_provider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
