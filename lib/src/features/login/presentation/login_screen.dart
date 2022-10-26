@@ -1,4 +1,5 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
+import 'package:alcancia/src/shared/components/alcancia_link.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/models/storage_item.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
@@ -15,16 +16,58 @@ import 'package:alcancia/src/features/login/data/login_mutation.dart';
 
 final rememberEmailProvider = StateProvider.autoDispose<bool>((ref) => false);
 
-class LoginScreen extends ConsumerWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
+
+  @override
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends ConsumerState<LoginScreen> {
+  @override
+  void initState() {
+    super.initState();
+    readUserInfo();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+  }
+
   final StorageService _storageService = StorageService();
   final ResponsiveService responsiveService = ResponsiveService();
+  String? userName;
+
   final obscurePasswordProvider =
       StateProvider.autoDispose<bool>((ref) => true);
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
   var loginUserInput;
+
+  saveUserInfo(String name, String email) async {
+    final StorageItem userName = StorageItem("userName", name);
+    final StorageItem userEmail = StorageItem("userEmail", email);
+
+    await _storageService.writeSecureData(userName);
+    await _storageService.writeSecureData(userEmail);
+  }
+
+  readUserInfo() async {
+    var userEmail = await _storageService.readSecureData("userEmail");
+    userName = await _storageService.readSecureData("userName");
+
+    if (userEmail != null) {
+      emailController.text = userEmail;
+    }
+    if (userName != null) {
+      setState(() {});
+    }
+  }
 
   saveToken(String token) async {
     final StorageItem storageItem = StorageItem("token", token);
@@ -39,7 +82,8 @@ class LoginScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    var txtTheme = Theme.of(context).textTheme;
     final size = MediaQuery.of(context).size;
     final screenHeight = size.height;
     final screenWidth = size.width;
@@ -76,9 +120,9 @@ class LoginScreen extends ConsumerWidget {
                                   50, screenHeight),
                               top: responsiveService.getHeightPixels(
                                   40, screenHeight)),
-                          child: const Text(
-                            '¡Hola!\nBienvenido',
-                            style: TextStyle(
+                          child: Text(
+                            '¡Hola!\nBienvenido ${userName ?? ""}',
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 35),
                           ),
                         ),
@@ -88,53 +132,66 @@ class LoginScreen extends ConsumerWidget {
                             children: [
                               Column(
                                 children: [
-                                  LabeledTextFormField(
-                                    controller: emailController,
-                                    labelText: appLocalization.email,
-                                    inputType: TextInputType.emailAddress,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return appLocalization
-                                            .errorRequiredField;
-                                      } else {
-                                        return value.isValidEmail()
-                                            ? null
-                                            : appLocalization.errorEmailFormat;
-                                      }
-                                    },
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        bottom: responsiveService
-                                            .getHeightPixels(6, screenHeight),
-                                        top: responsiveService.getHeightPixels(
-                                            6, screenHeight)),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                  if (userName == null)
+                                    Column(
                                       children: [
-                                        SizedBox(
-                                          width: 25,
-                                          child: Checkbox(
-                                              value: rememberMe,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(4),
-                                              ),
-                                              onChanged: (value) {
-                                                ref
-                                                    .read(rememberEmailProvider
-                                                        .notifier)
-                                                    .state = value!;
-                                              }),
+                                        LabeledTextFormField(
+                                          controller: emailController,
+                                          labelText: appLocalization.email,
+                                          inputType: TextInputType.emailAddress,
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return appLocalization
+                                                  .errorRequiredField;
+                                            } else {
+                                              return value.isValidEmail()
+                                                  ? null
+                                                  : appLocalization
+                                                      .errorEmailFormat;
+                                            }
+                                          },
                                         ),
-                                        const Padding(
-                                          padding: EdgeInsets.only(left: 8.0),
-                                          child: Text("Recordar usuario"),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              bottom: responsiveService
+                                                  .getHeightPixels(
+                                                      6, screenHeight),
+                                              top: responsiveService
+                                                  .getHeightPixels(
+                                                      6, screenHeight)),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              SizedBox(
+                                                width: 25,
+                                                child: Checkbox(
+                                                    value: rememberMe,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4),
+                                                    ),
+                                                    onChanged: (value) {
+                                                      ref
+                                                          .read(
+                                                              rememberEmailProvider
+                                                                  .notifier)
+                                                          .state = value!;
+                                                    }),
+                                              ),
+                                              const Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 8.0),
+                                                child: Text("Recordar usuario"),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     ),
-                                  ),
                                 ],
                               ),
                               Column(
@@ -206,6 +263,13 @@ class LoginScreen extends ConsumerWidget {
                                     if (resultData != null) {
                                       final token =
                                           resultData["login"]["access_token"];
+                                      final userName =
+                                          resultData["login"]["user"]["name"];
+                                      final userEmail =
+                                          resultData["login"]["user"]["email"];
+                                      if (rememberMe) {
+                                        saveUserInfo(userName, userEmail);
+                                      }
                                       saveToken(token);
                                       context.go("/homescreen/0");
                                     }
@@ -259,38 +323,75 @@ class LoginScreen extends ConsumerWidget {
                                       );
                                     }
                                   }
-                                  return AlcanciaButton(
-                                    color: alcanciaLightBlue,
-                                    width: responsiveService.getWidthPixels(
-                                        304, screenWidth),
-                                    height: responsiveService.getHeightPixels(
-                                        64, screenHeight),
-                                    buttonText: "Iniciar sesión",
-                                    onPressed: () {
-                                      setLoginInputFields();
-                                      runMutation(
-                                        {"loginUserInput": loginUserInput},
-                                      );
-                                    },
+                                  return Column(
+                                    children: [
+                                      AlcanciaButton(
+                                        color: alcanciaLightBlue,
+                                        width: responsiveService.getWidthPixels(
+                                            304, screenWidth),
+                                        height: responsiveService
+                                            .getHeightPixels(64, screenHeight),
+                                        buttonText: "Iniciar sesión",
+                                        onPressed: () {
+                                          setLoginInputFields();
+                                          runMutation(
+                                            {"loginUserInput": loginUserInput},
+                                          );
+                                        },
+                                      ),
+                                      if (userName != null) ...[
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            top: 30,
+                                          ),
+                                          child: InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                userName = null;
+                                                emailController.text = "";
+                                              });
+                                            },
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  "Iniciar sesión con ",
+                                                  style: txtTheme.bodyText1,
+                                                ),
+                                                const AlcanciaLink(
+                                                  text: "otra cuenta",
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ] else ...[
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text("No tengo cuenta."),
+                                            CupertinoButton(
+                                              child: const Text(
+                                                "Registrarme",
+                                                style: TextStyle(
+                                                  decoration:
+                                                      TextDecoration.underline,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                context.push("/registration");
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ]
+                                    ],
                                   );
                                 },
                               ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text("No tengo cuenta."),
-                                CupertinoButton(
-                                    child: const Text(
-                                      "Registrarme",
-                                      style: TextStyle(
-                                          decoration: TextDecoration.underline,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    onPressed: () {
-                                      context.push("/registration");
-                                    }),
-                              ],
                             ),
                           ],
                         ),
