@@ -122,7 +122,7 @@ final routerProvider = Provider<GoRouter>(
             return null;
           } else {
             // return "/homescreen/0";
-            return "/login";
+            return "/";
           }
         }
         return null;
