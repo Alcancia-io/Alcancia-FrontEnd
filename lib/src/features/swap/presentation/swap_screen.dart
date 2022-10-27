@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SwapScreen extends ConsumerStatefulWidget {
   const SwapScreen({Key? key}) : super(key: key);
@@ -40,6 +41,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appLoc = AppLocalizations.of(context)!;
     var user = ref.watch(userProvider);
     inspect(user);
     final txtTheme = Theme.of(context).textTheme;
@@ -96,7 +98,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                 ),
                               ),
                               child: Text(
-                                "Deposita a tu cuenta",
+                                appLoc.labelDepositToYourAccount,
                                 style: txtTheme.subtitle1,
                               ),
                             ),
@@ -108,7 +110,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                 ),
                               ),
                               child: Text(
-                                "¡Empecemos!",
+                                appLoc.labelLetsStart,
                                 style: txtTheme.headline1,
                               ),
                             ),
@@ -117,7 +119,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                 bottom: 30,
                               ),
                               child: Text(
-                                "Ingresa el monto que deseas convertir de nuestra opciones. A continuación, se presenta a cuanto equivale en",
+                                appLoc.labelInputAmount,
                                 style: txtTheme.bodyText1,
                               ),
                             ),
@@ -153,7 +155,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "¿Cuánto deseas convertir?",
+                                    appLoc.labelAmountQuestion,
                                     style: txtTheme.bodyText1,
                                   ),
                                   Padding(
@@ -275,7 +277,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                 top: 32,
                               ),
                               child: Text(
-                                "Medio de pago:",
+                                appLoc.labelPaymentMethod,
                                 style: txtTheme.bodyText1,
                               ),
                             ),
@@ -283,7 +285,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                               padding:
                                   const EdgeInsets.only(top: 10, bottom: 12),
                               child: AlcanciaButton(
-                                buttonText: "Tarjeta de Débito/Crédito",
+                                buttonText: appLoc.labelDebitCredit,
                                 onPressed: () {},
                                 color: alcanciaLightBlue,
                                 width: double.infinity,
@@ -318,10 +320,10 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                               padding: const EdgeInsets.only(top: 20),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Text("¿Tienes alguna inquietud? "),
+                                children: [
+                                  Text(appLoc.labelConcern),
                                   AlcanciaLink(
-                                    text: 'Haz click aquí',
+                                    text: appLoc.labelClickHere,
                                   ),
                                 ],
                               ),

@@ -8,8 +8,8 @@ import 'package:alcancia/src/shared/services/graphql_client_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UserProfileScreen extends ConsumerWidget {
   UserProfileScreen({Key? key}) : super(key: key);
@@ -23,6 +23,7 @@ class UserProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
     final authService = ref.watch(authServiceProvider(_gqlService));
+    final appLoc = AppLocalizations.of(context)!;
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -32,7 +33,7 @@ class UserProfileScreen extends ConsumerWidget {
               AlcanciaToolbar(
                 state: StateToolbar.titleIcon,
                 logoHeight: 38,
-                title: "Perfil",
+                title: appLoc.labelProfile,
               ),
               _profileCard(context, user!),
               GestureDetector(
@@ -48,7 +49,7 @@ class UserProfileScreen extends ConsumerWidget {
                         child: Icon(Icons.info_outline),
                       ),
                       Text(
-                        "Términos y condiciones",
+                        appLoc.labelTermsAndConditions,
                         style: Theme.of(context).textTheme.labelLarge,
                       ),
                       Spacer(),
@@ -70,7 +71,7 @@ class UserProfileScreen extends ConsumerWidget {
                         child: Icon(Icons.info_outline),
                       ),
                       Text(
-                        "Políticas de Privacidad",
+                        appLoc.labelPrivacyPolicy,
                         style: Theme.of(context).textTheme.labelLarge,
                       ),
                       Spacer(),
@@ -85,7 +86,7 @@ class UserProfileScreen extends ConsumerWidget {
                 child: AlcanciaButton(
                   foregroundColor: Colors.red,
                   side: BorderSide(color: Colors.red),
-                  buttonText: "Borrar cuenta",
+                  buttonText: appLoc.labelDeleteAccount,
                   fontSize: 18,
                   padding: const EdgeInsets.only(
                       left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
@@ -95,19 +96,19 @@ class UserProfileScreen extends ConsumerWidget {
                         builder: (BuildContext ctx) {
                           return AlcanciaActionDialog(
                               child: Text(
-                                "¿Seguro que quieres borrar tu cuenta?\nEsta acción no se puede deshacer.",
+                                appLoc.labelDeleteAccountConfirmation,
                                 style: Theme.of(context).textTheme.titleLarge,
                               ),
-                              acceptText: "Confirmar",
+                              acceptText: appLoc.labelConfirm,
                               acceptColor: Colors.red,
-                              cancelText: "Cancelar",
+                              cancelText: appLoc.labelCancel,
                               acceptAction: () async {
                                 try {
                                   await authService.deleteAccount();
                                   context.go("/");
                                   ref.read(userProvider.notifier).setUser(null);
                                 } catch (e) {
-                                  ScaffoldMessenger.of(context).showSnackBar(_snackBar(context, "Hubo un problema al borrar tu cuenta."));
+                                  ScaffoldMessenger.of(context).showSnackBar(_snackBar(context, appLoc.errorDeleteAccount));
                                 }
                               });
                         });
@@ -124,7 +125,7 @@ class UserProfileScreen extends ConsumerWidget {
                   child: AlcanciaButton(
                     foregroundColor: alcanciaLightBlue,
                     side: BorderSide(color: alcanciaLightBlue),
-                    buttonText: "Cerrar sesión",
+                    buttonText: appLoc.labelSignOut,
                     fontSize: 18,
                     padding: const EdgeInsets.only(
                         left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
@@ -134,19 +135,19 @@ class UserProfileScreen extends ConsumerWidget {
                           builder: (BuildContext ctx) {
                             return AlcanciaActionDialog(
                                 child: Text(
-                                  "¿Seguro que quieres cerrar sesión?",
+                                  appLoc.labelSignOutConfirmation,
                                   style: Theme.of(context).textTheme.titleLarge,
                                 ),
-                                acceptText: "Confirmar",
+                                acceptText: appLoc.labelConfirm,
                                 acceptColor: Colors.red,
-                                cancelText: "Cancelar",
+                                cancelText: appLoc.labelCancel,
                                 acceptAction: () async {
                                   try {
                                     await authService.logout();
                                     context.go("/");
                                     ref.read(userProvider.notifier).setUser(null);
                                   } catch (e) {
-                                    ScaffoldMessenger.of(context).showSnackBar(_snackBar(context, "Hubo un problema al cerrar sesión"));
+                                    ScaffoldMessenger.of(context).showSnackBar(_snackBar(context, appLoc.errorSignOut));
                                   }
                                 });
                           });

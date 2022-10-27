@@ -4,6 +4,7 @@ import 'package:alcancia/src/shared/components/alcancia_transactions_list.dart';
 import 'package:alcancia/src/shared/services/graphql_client_service.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TransactionsListScreen extends StatelessWidget {
   TransactionsListScreen({Key? key}) : super(key: key);
@@ -18,6 +19,7 @@ class TransactionsListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLoc = AppLocalizations.of(context)!;
     return FutureBuilder(
       future: _gqlService.createClient(),
       builder: (context, AsyncSnapshot snapshot) {
@@ -56,9 +58,9 @@ class TransactionsListScreen extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          const AlcanciaToolbar(
+                          AlcanciaToolbar(
                             state: StateToolbar.titleIcon,
-                            title: 'Actividad',
+                            title: appLoc.labelActivity,
                             logoHeight: 38,
                           ),
                           Expanded(

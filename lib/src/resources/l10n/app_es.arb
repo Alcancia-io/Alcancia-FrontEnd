@@ -1,9 +1,106 @@
 {
-  "helloWorld": "¡Hola Mundo!",
-  "email": "Correo electrónico",
-  "password": "Contraseña",
+  "labelEmail": "Correo electrónico",
+  "labelPassword": "Contraseña",
   "errorRequiredField": "Este campo es obligatorio",
   "errorEmailFormat": "¿Estas seguro?, verifica tu correo",
   "errorInvalidPassword": "Contraseña inválida.\nMínimo 8 carácteres, un número y un carácter especial",
-  "errorPasswordMatch": "Las contraseñas no coinciden"
+  "errorPasswordMatch": "Las contraseñas no coinciden",
+  "labelHello": "¡Hola!",
+  "labelHelloWelcome": "¡Hola!\nBienvenido",
+  "labelRegisterSubtitle": "Completa la siguiente información para crear tu cuenta:",
+  "labelName": "Nombre(s)",
+  "labelLastName": "Apellido(s)",
+  "labelPhone": "Celular",
+  "labelBirthdate": "Fecha de nacimiento",
+  "errorAge": "Necesitas ser mayor de 18 años de edad",
+  "labelGenderIdentification": "¿Con cuál género te sientes identificado?",
+  "errorSelectGender": "Selecciona un género",
+  "labelConfirmPassword": "Confirmar contraseña",
+  "labelSelectOption": "Selecciona una opción",
+  "labelSelectDialogTitle": "Selecciona una opción:",
+  "labelGenderWoman": "Mujer",
+  "labelGenderMan": "Hombre",
+  "labelGenderNonbinary": "No Binario",
+  "labelGenderOther": "Otro",
+  "labelNext": "Siguiente",
+  "labelAccept": "Aceptar",
+  "labelWelcomeTitle": "Descubre una nueva forma de ahorrar",
+  "labelWelcomeSubtitle": "Construye tu portafolio de ahorro basado en crypto",
+  "labelRegister": "Registrate",
+  "labelExistingAccount": "¿Ya tienes cuenta?",
+  "labelWelcome": "Bienvenido",
+  "labelRememberUser": "Recordar usuario",
+  "labelForgotPassword": "Olvidé mi contraseña",
+  "labelLogIn": "Iniciar sesión",
+  "labelNeedAccount": "¿No tienes cuenta?",
+  "labelAlmostDone": "Ya casi \nterminamos,",
+  "labelCode": "Código",
+  "labelDidNotReceiveCode": "¿No recibiste el código?",
+  "labelResend": "Reenviar",
+  "labelCreateAccount": "Crea tu cuenta",
+  "errorAcceptPrivacyPolicy": "Acepta la Política de Privacidad",
+  "labelReadAndAccepted": "He leído y acepto la ",
+  "labelPrivacyPolicyAndDataProtection": "Política de Privacidad y Tratamiento de Datos",
+  "labelEnterCodePhone": "Ingresa el código de 6 dígitos que enviamos a tu celular {phoneNumber}",
+  "@labelEnterCodePhone": {
+    "description": "Ask user to enter code sent to phone number",
+    "placeholders": {
+      "phoneNumber": {
+        "type": "String",
+        "example": "+521234567890"
+      }
+    }
+  },
+  "labelBalance": "Balance",
+  "labelBalanceValue": "${balance} USDC",
+  "@labelBalanceValue": {
+    "description": "User balance",
+    "placeholders": {
+      "balance": {
+        "type": "String",
+        "example": "0"
+      }
+    }
+  },
+  "labelProfits": "Ganancias",
+  "labelProfitsValue": "${profits} USDC",
+  "@labelProfitsValue": {
+    "description": "User profits",
+    "placeholders": {
+      "profits": {
+        "type": "String",
+        "example": "0"
+      }
+    }
+  },
+  "labelDeposit": "Depositar",
+  "labelWithdraw": "Retirar",
+  "labelActivity": "Actividad",
+  "labelSeeMore": "Ver más",
+  "labelDepositToYourAccount": "Deposita a tu cuenta",
+  "labelLetsStart": "¡Empecemos!",
+  "labelInputAmount": "Ingresa el monto que deseas convertir de nuestra opciones. A continuación, se presenta a cuanto equivale en",
+  "labelAmountQuestion": "¿Cuánto deseas convertir?",
+  "labelPaymentMethod": "Medio de pago:",
+  "labelDebitCredit": "Tarjeta de Débito/Crédito",
+  "labelConcern": "¿Tienes alguna inquietud?",
+  "labelClickHere": "Haz click aquí",
+  "labelActivityDetail": "Detalle de la actividad",
+  "labelDate": "Fecha",
+  "labelTransactionId": "Id transacción",
+  "labelDepositValue": "Valor depósito",
+  "labelUSDCValue": "Valor USDC",
+  "labelTransactionType": "Tipo de TXN",
+  "labelClose": "Cerrar",
+  "labelProfile": "Perfil",
+  "labelTermsAndConditions": "Términos y condiciones",
+  "labelPrivacyPolicy": "Políticas de Privacidad",
+  "labelDeleteAccount": "Borrar cuenta",
+  "labelDeleteAccountConfirmation": "¿Seguro que quieres borrar tu cuenta?\nEsta acción no se puede deshacer.",
+  "errorDeleteAccount": "Hubo un problema al borrar tu cuenta.",
+  "labelConfirm": "Confirmar",
+  "labelCancel": "Cancelar",
+  "labelSignOut": "Cerrar sesión",
+  "labelSignOutConfirmation": "¿Seguro que quieres cerrar sesión?",
+  "errorSignOut": "Hubo un problema al cerrar sesión"
 }

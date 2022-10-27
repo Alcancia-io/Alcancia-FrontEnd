@@ -1,12 +1,106 @@
 {
-  "helloWorld": "Hello World!",
-  "@helloWorld": {
-    "description": "The conventional newborn programmer greeting"
-  },
-  "email": "Email",
-  "password": "Password",
+  "labelEmail": "Email",
+  "labelPassword": "Password",
   "errorRequiredField": "This field is mandatory",
   "errorEmailFormat": "Are you sure?, verify your email",
-  "errorInvalidPassword": "",
-  "errorPasswordMatch": "Passwords do not match"
+  "errorInvalidPassword": "Invalid password.\n8 characters minimum, a number and a special character",
+  "errorPasswordMatch": "Password do not match",
+  "labelHello": "Hello!",
+  "labelHelloWelcome": "Hello!\nWelcome",
+  "labelRegisterSubtitle": "Fill out the following information to create your account:",
+  "labelName": "Name(s)",
+  "labelLastName": "Last Name",
+  "labelPhone": "Phone number",
+  "labelBirthdate": "Birthdate",
+  "errorAge": "You must be 18 years or older",
+  "labelGenderIdentification": "To which gender do you identify the most?",
+  "errorSelectGender": "Select a gender",
+  "labelConfirmPassword": "Confirm password",
+  "labelSelectOption": "Select an option",
+  "labelSelectDialogTitle": "Select an option:",
+  "labelGenderWoman": "Woman",
+  "labelGenderMan": "Man",
+  "labelGenderNonbinary": "Non-binary",
+  "labelGenderOther": "Other",
+  "labelNext": "Next",
+  "labelAccept": "Accept",
+  "labelWelcomeTitle": "Discover a new way of saving",
+  "labelWelcomeSubtitle": "Build your crypto-based portfolio",
+  "labelRegister": "Register",
+  "labelExistingAccount": "Already have an account?",
+  "labelWelcome": "Welcome",
+  "labelRememberUser": "Remember user",
+  "labelForgotPassword": "Forgot my password",
+  "labelLogIn": "Log in",
+  "labelNeedAccount": "Don't have an account?",
+  "labelAlmostDone": "We're almost \ndone,",
+  "labelCode": "Code",
+  "labelDidNotReceiveCode": "Didn't get a code?",
+  "labelResend": "Resend",
+  "labelCreateAccount": "Create account",
+  "errorAcceptPrivacyPolicy": "Accept the Privacy Policy",
+  "labelReadAndAccepted": "I have read and agreed to the ",
+  "labelPrivacyPolicyAndDataProtection": "Terms of Service & Privacy Policy",
+  "labelEnterCodePhone": "Enter the 6 digit code sent to {phoneNumber}",
+  "@labelEnterCodePhone": {
+    "description": "Ask user to enter code sent to phone number",
+    "placeholders": {
+      "phoneNumber": {
+        "type": "String",
+        "example": "+521234567890"
+      }
+    }
+  },
+  "labelBalance": "Balance",
+  "labelBalanceValue": "${balance} USDC",
+  "@labelBalanceValue": {
+    "description": "User balance",
+    "placeholders": {
+      "balance": {
+        "type": "String",
+        "example": "0"
+      }
+    }
+  },
+  "labelProfits": "Profits",
+  "labelProfitsValue": "${profits} USDC",
+  "@labelProfitsValue": {
+    "description": "User profits",
+    "placeholders": {
+      "profits": {
+        "type": "String",
+        "example": "0"
+      }
+    }
+  },
+  "labelDeposit": "Deposit",
+  "labelWithdraw": "Withdraw",
+  "labelActivity": "Activity",
+  "labelSeeMore": "See more",
+  "labelDepositToYourAccount": "Deposit to your account",
+  "labelLetsStart": "Let's get started!",
+  "labelInputAmount": "Enter the amount you wish to convert from our selection. Below, you can see the equivalent in",
+  "labelAmountQuestion": "How much do you wish to convert?",
+  "labelPaymentMethod": "Payment method:",
+  "labelDebitCredit": "Debit/Credit card",
+  "labelConcern": "Have a concern?",
+  "labelClickHere": "Click here",
+  "labelActivityDetail": "Activity detail",
+  "labelDate": "Date",
+  "labelTransactionId": "Transaction ID",
+  "labelDepositValue": "Deposit value",
+  "labelUSDCValue": "USDC value",
+  "labelTransactionType": "TXN Type",
+  "labelClose": "Close",
+  "labelProfile": "Profile",
+  "labelTermsAndConditions": "Terms and conditions",
+  "labelPrivacyPolicy": "Privacy Policy",
+  "labelDeleteAccount": "Delete account",
+  "labelDeleteAccountConfirmation": "Are you sure you want to delete your account?\nThis cannot be undone.",
+  "errorDeleteAccount": "There was a problem deleting your account.",
+  "labelConfirm": "Confirm",
+  "labelCancel": "Cancel",
+  "labelSignOut": "Sign out",
+  "labelSignOutConfirmation": "Are you sure you want to sign out?",
+  "errorSignOut": "There was a problem signing you out."
 }

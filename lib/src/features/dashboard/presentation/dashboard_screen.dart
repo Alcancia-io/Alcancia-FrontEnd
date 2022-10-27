@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DashboardScreen extends ConsumerWidget {
   DashboardScreen({Key? key}) : super(key: key);
@@ -26,6 +27,7 @@ class DashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final appLoc = AppLocalizations.of(context)!;
     Future<QueryResult<Object?>> getUserInformation() async {
       StorageService service = StorageService();
       var token = await service.readSecureData("token");
@@ -93,15 +95,15 @@ class DashboardScreen extends ConsumerWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
-                                  "Actividad",
+                                Text(
+                                  appLoc.labelActivity,
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 AlcanciaButton(
-                                  buttonText: "Ver más",
+                                  buttonText: appLoc.labelSeeMore,
                                   onPressed: () {
                                     // context.push("/homescreen/1");
                                     context.go("/homescreen/1");

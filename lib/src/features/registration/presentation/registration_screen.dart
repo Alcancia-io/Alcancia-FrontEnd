@@ -1,5 +1,4 @@
 import 'package:alcancia/src/features/registration/data/country.dart';
-import 'package:alcancia/src/features/registration/data/signup_mutation.dart';
 import 'package:alcancia/src/features/registration/provider/registration_controller_provider.dart';
 import 'package:alcancia/src/features/registration/provider/timer_provider.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
@@ -11,12 +10,9 @@ import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:intl/intl.dart';
 import '../data/gender.dart';
 import 'gender_picker.dart';
 import 'country_picker.dart';
-import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 
 class RegistrationScreen extends ConsumerStatefulWidget {
@@ -111,14 +107,14 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                     )),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
-                      "¡Hola!",
+                      appLocalization.labelHello,
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
                     ),
                     Text(
-                        "Completa la siguiente información para crear tu cuenta",
+                    appLocalization.labelRegisterSubtitle,
                         style: TextStyle(fontSize: 15)),
                   ],
                 ),
@@ -127,7 +123,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                 ),
                 LabeledTextFormField(
                   controller: nameController,
-                  labelText: "Nombre(s)",
+                  labelText: appLocalization.labelName,
                   inputType: TextInputType.name,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -141,7 +137,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                 ),
                 LabeledTextFormField(
                   controller: lastNameController,
-                  labelText: "Apellido(s)",
+                  labelText: appLocalization.labelLastName,
                   inputType: TextInputType.name,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -156,7 +152,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Celular"),
+                    Text(appLocalization.labelPhone),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -204,7 +200,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                       if (adultDate.isBefore(DateTime.now())) {
                         return null;
                       }
-                      return "Necesitas ser mayor de 18 años de edad";
+                      return appLocalization.errorAge;
                     }
                     return null;
                   },
@@ -215,7 +211,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                 GenderPicker(
                   selectedGenderProvider: selectedGenderProvider,
                   validator: (Gender? gender) {
-                    if (selectedGender == null) return "Selecciona un género";
+                    if (selectedGender == null) return appLocalization.errorSelectGender;
                     return null;
                   },
                 ),
@@ -224,7 +220,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                 ),
                 LabeledTextFormField(
                   controller: emailController,
-                  labelText: "Correo electrónico",
+                  labelText: appLocalization.labelEmail,
                   inputType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -241,7 +237,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                 ),
                 LabeledTextFormField(
                   controller: passwordController,
-                  labelText: "Contraseña",
+                  labelText: appLocalization.labelPassword,
                   obscure: obscurePassword,
                   suffixIcon: GestureDetector(
                     onTap: () {
@@ -269,7 +265,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                 ),
                 LabeledTextFormField(
                   controller: confirmPasswordController,
-                  labelText: "Confirmar contraseña",
+                  labelText: appLocalization.labelConfirmPassword,
                   obscure: obscureConfirmPassword,
                   suffixIcon: GestureDetector(
                     onTap: () {
@@ -294,7 +290,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   height: 15,
                 ),
                 AlcanciaButton(
-                  buttonText: "Siguiente",
+                  buttonText: appLocalization.labelNext,
                   color: alcanciaLightBlue,
                   width: 304,
                   height: 64,

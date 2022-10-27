@@ -4,11 +4,10 @@ import 'package:alcancia/src/shared/graphql/queries.dart';
 import 'package:alcancia/src/shared/provider/user.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DashboardCard extends ConsumerWidget {
   DashboardCard({Key? key}) : super(key: key);
@@ -18,7 +17,8 @@ class DashboardCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var user = ref.watch(userProvider);
     var ctx = Theme.of(context);
-    var balance = user?.balance == 0.0 ? 0 : user?.balance.toStringAsFixed(3);
+    String balance = user?.balance == 0.0 ? "0" : user?.balance.toStringAsFixed(3) ?? "0";
+    final appLoc = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
@@ -34,9 +34,9 @@ class DashboardCard extends ConsumerWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               Text(
-                "Balance",
+                appLoc.labelBalance,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -47,7 +47,7 @@ class DashboardCard extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.only(top: 16, bottom: 24),
             child: Text(
-              "\$${balance} USDC",
+              appLoc.labelBalanceValue(balance),
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 35,
@@ -72,8 +72,8 @@ class DashboardCard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    child: const Text(
-                      "Ganancias",
+                    child: Text(
+                      appLoc.labelProfits,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -83,7 +83,7 @@ class DashboardCard extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.only(top: 8, bottom: 20),
                     child: Text(
-                      "\$0 USDC",
+                      appLoc.labelProfitsValue("0"),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 35,
@@ -94,7 +94,7 @@ class DashboardCard extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       AlcanciaButton(
-                        buttonText: "Depositar",
+                        buttonText: appLoc.labelDeposit,
                         onPressed: () {
                           context.push("/swap");
                         },
@@ -103,7 +103,7 @@ class DashboardCard extends ConsumerWidget {
                         color: alcanciaMidBlue,
                       ),
                       AlcanciaButton(
-                        buttonText: "Retirar",
+                        buttonText: appLoc.labelWithdraw,
                         onPressed: () {},
                         width: 116,
                         height: 38,

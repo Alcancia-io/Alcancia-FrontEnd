@@ -10,6 +10,7 @@ import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OTPScreen extends ConsumerStatefulWidget {
   OTPScreen({Key? key, required this.password}) : super(key: key);
@@ -31,6 +32,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
     final user = ref.watch(userProvider);
     final timer = ref.watch(timerProvider);
     final registrationController = ref.watch(registrationControllerProvider);
+    final appLocalization = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -49,10 +51,10 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.all(0.0),
                         child: Text(
-                          "Ya casi \nterminamos,",
+                          appLocalization.labelAlmostDone,
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 35),
                         ),
@@ -60,14 +62,14 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                       Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                            "Ingresa el código de 6 dígitos que enviamos a tu celular ${user!.phoneNumber}"),
+                            appLocalization.labelEnterCodePhone(user!.phoneNumber)),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: LabeledTextFormField(
                             controller: codeController,
                             autofillHints: [AutofillHints.oneTimeCode],
-                            labelText: "Código"),
+                            labelText: appLocalization.labelCode),
                       ),
                       StreamBuilder<int>(
                           stream: timer.rawTime,
@@ -110,10 +112,10 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text("¿No recibiste el código?"),
+                          Text(appLocalization.labelDidNotReceiveCode),
                           CupertinoButton(
-                            child: const Text(
-                              "Reenviar",
+                            child: Text(
+                              appLocalization.labelResend,
                               style: TextStyle(
                                 decoration: TextDecoration.underline,
                                 fontWeight: FontWeight.bold,
@@ -152,13 +154,13 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                               padding: EdgeInsets.only(left: 8.0),
                               child: RichText(
                                 text: TextSpan(
-                                    text: "He leído y acepto la ",
+                                    text: appLocalization.labelReadAndAccepted,
                                     style:
                                         Theme.of(context).textTheme.bodyText2,
                                     children: [
                                       TextSpan(
                                         text:
-                                            "Política de Privacidad y Tratamiento de Datos",
+                                            appLocalization.labelPrivacyPolicyAndDataProtection,
                                         style:
                                             TextStyle(color: alcanciaLightBlue),
                                         recognizer: TapGestureRecognizer()
@@ -182,7 +184,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                 color: alcanciaLightBlue,
                                 width: 308,
                                 height: 64,
-                                buttonText: "Crea tu cuenta",
+                                buttonText: appLocalization.labelCreateAccount,
                                 onPressed: () async {
                                   if (acceptTerms) {
                                     _setLoading(true);
@@ -205,7 +207,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                   } else {
                                     setState(() {
                                       error =
-                                          "Acepta la Política de Privacidad";
+                                          appLocalization.errorAcceptPrivacyPolicy;
                                     });
                                   }
                                   _setLoading(false);

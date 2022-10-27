@@ -76,8 +76,8 @@ class LoginScreen extends ConsumerWidget {
                                   50, screenHeight),
                               top: responsiveService.getHeightPixels(
                                   40, screenHeight)),
-                          child: const Text(
-                            '¡Hola!\nBienvenido',
+                          child: Text(
+                            appLocalization.labelHelloWelcome,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 35),
                           ),
@@ -90,7 +90,7 @@ class LoginScreen extends ConsumerWidget {
                                 children: [
                                   LabeledTextFormField(
                                     controller: emailController,
-                                    labelText: appLocalization.email,
+                                    labelText: appLocalization.labelEmail,
                                     inputType: TextInputType.emailAddress,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
@@ -128,9 +128,9 @@ class LoginScreen extends ConsumerWidget {
                                                     .state = value!;
                                               }),
                                         ),
-                                        const Padding(
+                                        Padding(
                                           padding: EdgeInsets.only(left: 8.0),
-                                          child: Text("Recordar usuario"),
+                                          child: Text(appLocalization.labelRememberUser),
                                         ),
                                       ],
                                     ),
@@ -141,7 +141,7 @@ class LoginScreen extends ConsumerWidget {
                                 children: [
                                   LabeledTextFormField(
                                     controller: passwordController,
-                                    labelText: appLocalization.password,
+                                    labelText: appLocalization.labelPassword,
                                     obscure: obscurePassword,
                                     suffixIcon: GestureDetector(
                                       onTap: () {
@@ -172,14 +172,14 @@ class LoginScreen extends ConsumerWidget {
                                       children: [
                                         CupertinoButton(
                                             child: Row(
-                                              children: const [
-                                                Padding(
+                                              children: [
+                                                const Padding(
                                                   padding: EdgeInsets.only(
                                                       right: 4.0),
                                                   child: Icon(CupertinoIcons
                                                       .question_circle),
                                                 ),
-                                                Text("Olvidé mi contraseña"),
+                                                Text(appLocalization.labelForgotPassword),
                                               ],
                                             ),
                                             onPressed: () {
@@ -234,7 +234,7 @@ class LoginScreen extends ConsumerWidget {
                                             height: responsiveService
                                                 .getHeightPixels(
                                                     64, screenHeight),
-                                            buttonText: "Iniciar sesión",
+                                            buttonText: appLocalization.labelLogIn,
                                             onPressed: () {
                                               setLoginInputFields();
                                               runMutation(
@@ -265,7 +265,7 @@ class LoginScreen extends ConsumerWidget {
                                         304, screenWidth),
                                     height: responsiveService.getHeightPixels(
                                         64, screenHeight),
-                                    buttonText: "Iniciar sesión",
+                                    buttonText: appLocalization.labelLogIn,
                                     onPressed: () {
                                       setLoginInputFields();
                                       runMutation(
@@ -279,10 +279,10 @@ class LoginScreen extends ConsumerWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Text("No tengo cuenta."),
+                                Text(appLocalization.labelNeedAccount),
                                 CupertinoButton(
-                                    child: const Text(
-                                      "Registrarme",
+                                    child: Text(
+                                      appLocalization.labelRegister,
                                       style: TextStyle(
                                           decoration: TextDecoration.underline,
                                           fontWeight: FontWeight.bold),
