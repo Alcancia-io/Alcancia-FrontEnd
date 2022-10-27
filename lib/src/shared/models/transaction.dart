@@ -19,7 +19,7 @@ class Transaction {
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(
-      transactionID: json["transactionID"] as String,
+      transactionID: json["id"] as String,
       createdAt: json["createdAt"] as String,
       sourceAmount: json["sourceAmount"] as int,
       sourceAsset: json["sourceAsset"] as String,
