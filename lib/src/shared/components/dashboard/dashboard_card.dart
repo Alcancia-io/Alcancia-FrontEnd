@@ -1,19 +1,21 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
+import 'package:alcancia/src/shared/provider/balance_provider.dart';
+import 'package:alcancia/src/shared/provider/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class DashboardCard extends StatelessWidget {
-  DashboardCard({Key? key, required this.userProfit, required this.userBalance})
-      : super(key: key);
-  double userProfit;
-  double userBalance;
+class DashboardCard extends ConsumerWidget {
+  DashboardCard({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     var ctx = Theme.of(context);
-    var balance = userBalance == 0.0 ? 0 : userBalance.toStringAsFixed(3);
-    var profit = userProfit == 0.0 ? 0 : userProfit.toStringAsFixed(3);
+    var userBalance = ref.watch(balanceProvider);
+    var balance = userBalance?.balance == 0.0
+        ? 0
+        : userBalance?.balance.toStringAsFixed(6);
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
@@ -45,32 +47,13 @@ class DashboardCard extends StatelessWidget {
               "\$${balance} USDC",
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 35,
+                fontSize: 30,
               ),
             ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                child: const Text(
-                  "Ganancias",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(top: 8, bottom: 20),
-                child: Text(
-                  "\$${profit} USDC",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 35,
-                  ),
-                ),
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

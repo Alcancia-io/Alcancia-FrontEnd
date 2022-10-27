@@ -20,6 +20,8 @@ Future<bool> isUserAuthenticated() async {
   GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "${token}");
   GraphQLClient client = graphQLConfiguration.clientToQuery();
   var result = await client.query(QueryOptions(document: gql(isAuthenticated)));
+
+  print(result.hasException);
   return !result.hasException;
   // print(result.hasException);
 }
@@ -86,6 +88,12 @@ final routerProvider = Provider<GoRouter>(
         final isSwap = state.location == "/swap";
         final isTransactionDetail = state.location == "/transaction_detail";
         // final isUserInSwapScreen = state.location == "/homescreen/0";
+        final isWelcome = state.location == "/";
+        final isLogin = state.location == "/login";
+        final isRegister = state.location == "/registration";
+        final isOTP = state.location == "/otp";
+
+        print(await isUserAuthenticated());
         if (await isUserAuthenticated()) {
           if (isUserInDashboard) {
             return null;
@@ -102,6 +110,20 @@ final routerProvider = Provider<GoRouter>(
             return "/homescreen/0";
           }
           // return "/dashboard";
+        } else {
+          print("NOT AUTHE");
+          if (isWelcome) {
+            return null;
+          } else if (isLogin) {
+            return null;
+          } else if (isRegister) {
+            return null;
+          } else if (isOTP) {
+            return null;
+          } else {
+            // return "/homescreen/0";
+            return "/login";
+          }
         }
         return null;
         // means is not authenticated

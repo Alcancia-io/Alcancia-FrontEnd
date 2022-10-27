@@ -1,10 +1,18 @@
+import 'dart:async';
+import 'dart:developer';
+
+import 'package:alcancia/src/features/registration/model/GraphQLConfig.dart';
 import 'package:alcancia/src/screens/dashboard/dashboard_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_transactions_list.dart';
+import 'package:alcancia/src/shared/graphql/queries/walletbalance_query.dart';
+import 'package:alcancia/src/shared/provider/balance_provider.dart';
+import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 import '../../shared/provider/user_provider.dart';
 
@@ -16,35 +24,60 @@ class DashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+  Timer? timer;
   final DashboardController dashboardController = DashboardController();
   late List<Transaction> txns;
   bool _isLoading = false;
   String _error = "";
 
+  void setUserInformation() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      var userInfo = await dashboardController.fetchUserInformation();
+      txns = userInfo.txns;
+      ref.watch(userProvider.notifier).setUser(userInfo.user);
+      ref
+          .watch(balanceProvider.notifier)
+          .setBalance(Balance(balance: userInfo.user.balance));
+    } catch (err) {
+      setState(() {
+        _error = err.toString();
+      });
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  void setUserBalance() async {
+    try {
+      var balance = await dashboardController.fetchUserBalance();
+      ref.watch(balanceProvider.notifier).setBalance(Balance(balance: balance));
+      print(balance);
+    } catch (err) {
+      setState(() {
+        _error = err.toString();
+      });
+    }
+  }
+
+  void setTimer() {
+    timer = Timer.periodic(
+        const Duration(seconds: 10), (Timer t) => setUserBalance());
+  }
+
   @override
   void initState() {
     super.initState();
-    () async {
-      setState(() {
-        _isLoading = true;
-      });
-      try {
-        var userInfo = await dashboardController.fetchUserInformation();
-        txns = userInfo.txns;
-        ref.watch(userProvider.notifier).setUser(userInfo.user);
-      } catch (err) {
-        setState(() {
-          _error = err.toString();
-        });
-      }
-      setState(() {
-        _isLoading = false;
-      });
-    }();
+    setUserInformation();
+    setTimer();
   }
 
   @override
   void dispose() {
+    timer?.cancel();
     super.dispose();
   }
 
@@ -62,21 +95,18 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             left: 24,
             right: 24,
             bottom: 24,
-            top: 0,
+            top: 10,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AlcanciaNavbar(username: user!.name),
               Container(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: DashboardCard(
-                  userProfit: user.userProfit,
-                  userBalance: user.balance,
-                ),
+                padding: const EdgeInsets.only(bottom: 16, top: 10),
+                child: DashboardCard(),
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 22),
+                padding: const EdgeInsets.only(bottom: 22, top: 22),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
