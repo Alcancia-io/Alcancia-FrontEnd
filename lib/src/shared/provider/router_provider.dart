@@ -21,7 +21,6 @@ Future<bool> isUserAuthenticated() async {
   GraphQLClient client = graphQLConfiguration.clientToQuery();
   var result = await client.query(QueryOptions(document: gql(isAuthenticated)));
 
-  print(result.hasException);
   return !result.hasException;
   // print(result.hasException);
 }
@@ -93,7 +92,6 @@ final routerProvider = Provider<GoRouter>(
         final isRegister = state.location == "/registration";
         final isOTP = state.location == "/otp";
 
-        print(await isUserAuthenticated());
         if (await isUserAuthenticated()) {
           if (isUserInDashboard) {
             return null;

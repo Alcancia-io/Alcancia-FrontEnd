@@ -1,18 +1,12 @@
 import 'dart:async';
-import 'dart:developer';
-
-import 'package:alcancia/src/features/registration/model/GraphQLConfig.dart';
 import 'package:alcancia/src/screens/dashboard/dashboard_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_transactions_list.dart';
-import 'package:alcancia/src/shared/graphql/queries/walletbalance_query.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
-import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 
 import '../../shared/provider/user_provider.dart';
 
@@ -55,12 +49,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     try {
       var balance = await dashboardController.fetchUserBalance();
       ref.watch(balanceProvider.notifier).setBalance(Balance(balance: balance));
-      print(balance);
-    } catch (err) {
-      setState(() {
-        _error = err.toString();
-      });
-    }
+    } catch (err) {}
   }
 
   void setTimer() {

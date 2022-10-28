@@ -1,7 +1,6 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
-import 'package:alcancia/src/shared/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -13,9 +12,13 @@ class DashboardCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var ctx = Theme.of(context);
     var userBalance = ref.watch(balanceProvider);
-    var balance = userBalance?.balance == 0.0
-        ? 0
-        : userBalance?.balance.toStringAsFixed(6);
+    Object? balance = 0.0;
+    if (userBalance?.balance != null) {
+      balance = userBalance?.balance == 0.0
+          ? 0
+          : userBalance?.balance.toStringAsFixed(6);
+    }
+
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(

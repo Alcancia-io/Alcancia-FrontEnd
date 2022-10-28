@@ -28,7 +28,6 @@ class DashboardController {
     UserService userService = UserService();
     try {
       var response = await userService.getUserBalance();
-      print(response);
       if (response.data != null) {
         final balance = response.data!["getWalletBalance"].toDouble();
 

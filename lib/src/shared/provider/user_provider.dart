@@ -25,7 +25,6 @@ class UserState extends StateNotifier<User?> {
   }
 
   void setBalance(double balance) {
-    print("Balnc ${balance}");
     state?.balance = balance;
   }
 

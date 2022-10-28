@@ -7,12 +7,6 @@ class Balance {
   Balance({
     required this.balance,
   });
-
-  factory Balance.fromJSON(Map<String, dynamic>? map) {
-    return Balance(
-      balance: map?['getWalletBalance'].toDouble(),
-    );
-  }
 }
 
 class BalanceState extends StateNotifier<Balance?> {
