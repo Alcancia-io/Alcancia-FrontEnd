@@ -36,6 +36,28 @@ class UserProfileScreen extends ConsumerWidget {
               _profileCard(context, user),
               GestureDetector(
                 onTap: () {
+                  context.pushNamed("account");
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(Icons.person_outline_outlined),
+                      ),
+                      Text(
+                        "Mi cuenta",
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                      Spacer(),
+                      Icon(Icons.chevron_right)
+                    ],
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
                   _launchUrl(url2);
                 },
                 child: Padding(
@@ -70,28 +92,6 @@ class UserProfileScreen extends ConsumerWidget {
                       ),
                       Text(
                         "Políticas de Privacidad",
-                        style: Theme.of(context).textTheme.labelLarge,
-                      ),
-                      Spacer(),
-                      Icon(Icons.chevron_right)
-                    ],
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  context.pushNamed("account");
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(Icons.person_outline_outlined),
-                      ),
-                      Text(
-                        "Mi cuenta",
                         style: Theme.of(context).textTheme.labelLarge,
                       ),
                       Spacer(),
