@@ -1,5 +1,4 @@
 import 'package:alcancia/src/features/registration/data/country.dart';
-import 'package:alcancia/src/features/registration/data/signup_mutation.dart';
 import 'package:alcancia/src/features/registration/provider/registration_controller_provider.dart';
 import 'package:alcancia/src/features/registration/provider/timer_provider.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
@@ -11,13 +10,10 @@ import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:intl/intl.dart';
 import '../../../shared/models/user_model.dart';
 import '../data/gender.dart';
 import 'gender_picker.dart';
 import 'country_picker.dart';
-import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 
 class RegistrationScreen extends ConsumerStatefulWidget {
@@ -306,6 +302,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                       surname: lastNameController.text,
                       email: emailController.text,
                       gender: selectedGender.string,
+                      country: selectedCountry.code,
                       phoneNumber:
                           "+${selectedCountry.dialCode}${phoneController.text}",
                       dob: selectedDate,

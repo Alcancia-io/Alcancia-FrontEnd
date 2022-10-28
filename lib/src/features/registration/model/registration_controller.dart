@@ -63,19 +63,14 @@ class RegistrationController {
             variables: {"verificationCode": otp, "phoneNumber": phoneNumber}),
       );
       if (result.hasException) {
-        print("Exception");
         final e = result.exception?.graphqlErrors[0].message;
         return Future.error(e!);
       } else {
-        print("data");
-        print(result.data);
         final valid = result.data!["verifyOTP"]["valid"] as bool;
         if (valid) return valid;
         return Future.error("Código inválido");
       }
     } catch (e) {
-      print("Error");
-      print(e);
       return Future.error(e);
     }
   }
@@ -88,7 +83,8 @@ class RegistrationController {
       "phoneNumber": user.phoneNumber,
       "gender": user.gender,
       "password": password,
-      "dob": DateFormat('yyyy-MM-dd').format(user.dob)
+      "dob": DateFormat('yyyy-MM-dd').format(user.dob),
+      "country": user.country,
     };
     try {
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
@@ -96,31 +92,20 @@ class RegistrationController {
       QueryResult result = await _client.mutate(MutationOptions(
           document: gql(signupMutation),
           variables: {"signupUserInput": signupInput}
-          //onCompleted: (resultData) {
-          //  if (resultData != null) {
-          //    context.go("/login");
-          //  }
-          //},
           ));
 
       if (result.hasException) {
-        print("Exception");
         final e = result.exception?.graphqlErrors[0].message;
         return Future.error(e!);
       } else if (result.data != null) {
-        print("data");
-        print(result.data);
         result.data!["signup"]["balance"] = 0.0;
         result.data!["signup"]["walletAddress"] = "";
         final data = result.data!["signup"] as Map<String, dynamic>;
         final user = User.fromJSON(data);
-        print("Success!");
         return user;
       }
       return null;
     } catch (e) {
-      print("Error");
-      print(e);
       return Future.error(e);
     }
   }
