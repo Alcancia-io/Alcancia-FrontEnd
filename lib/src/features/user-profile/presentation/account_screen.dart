@@ -1,6 +1,7 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_action_dialog.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
+import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/provider/auth_service_provider.dart';
 import 'package:alcancia/src/shared/provider/user_provider.dart';
@@ -87,7 +88,7 @@ class AccountScreen extends ConsumerWidget {
                                   ref.read(userProvider.notifier).setUser(null);
                                 } catch (e) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                      _snackBar(context,
+                                      AlcanciaSnackBar(context,
                                           "Hubo un problema al borrar tu cuenta."));
                                 }
                               },
@@ -104,18 +105,6 @@ class AccountScreen extends ConsumerWidget {
           ),
         ),
       ),
-    );
-  }
-
-  SnackBar _snackBar(BuildContext context, String string) {
-    return SnackBar(
-      content: Text(
-        string,
-        style: Theme.of(context).textTheme.bodyText2,
-      ),
-      behavior: SnackBarBehavior.floating,
-      backgroundColor: Theme.of(context).inputDecorationTheme.fillColor,
-      duration: Duration(seconds: 5),
     );
   }
 }

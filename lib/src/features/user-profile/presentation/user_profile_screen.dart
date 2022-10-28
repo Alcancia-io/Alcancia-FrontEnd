@@ -1,17 +1,17 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_action_dialog.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
+import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
-import 'package:alcancia/src/shared/models/storage_item.dart';
 import 'package:alcancia/src/shared/provider/auth_service_provider.dart';
 import 'package:alcancia/src/shared/provider/user_provider.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
+import 'package:alcancia/src/shared/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../shared/models/user_model.dart';
 
 class UserProfileScreen extends ConsumerWidget {
   UserProfileScreen({Key? key}) : super(key: key);
@@ -133,7 +133,7 @@ class UserProfileScreen extends ConsumerWidget {
                                     context.go("/");
                                   } catch (e) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                        _snackBar(context,
+                                        AlcanciaSnackBar(context,
                                             "Hubo un problema al cerrar sesión"));
                                   }
                                   ref.read(userProvider.notifier).setUser(null);
@@ -199,18 +199,6 @@ class UserProfileScreen extends ConsumerWidget {
           ),
         ),
       ),
-    );
-  }
-
-  SnackBar _snackBar(BuildContext context, String string) {
-    return SnackBar(
-      content: Text(
-        string,
-        style: Theme.of(context).textTheme.bodyText2,
-      ),
-      behavior: SnackBarBehavior.floating,
-      backgroundColor: Theme.of(context).inputDecorationTheme.fillColor,
-      duration: Duration(seconds: 5),
     );
   }
 
