@@ -2,26 +2,26 @@ import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_action_dialog.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
+import 'package:alcancia/src/shared/models/storage_item.dart';
 import 'package:alcancia/src/shared/provider/auth_service_provider.dart';
-import 'package:alcancia/src/shared/provider/user.dart';
-import 'package:alcancia/src/shared/services/graphql_client_service.dart';
+import 'package:alcancia/src/shared/provider/user_provider.dart';
+import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../../shared/models/user_model.dart';
 
 class UserProfileScreen extends ConsumerWidget {
   UserProfileScreen({Key? key}) : super(key: key);
 
   final Uri url = Uri.parse('https://landing.alcancia.io/privacypolicy');
   final Uri url2 = Uri.parse('https://landing.alcancia.io/termsandconditions');
-
-  final GraphqlService _gqlService = GraphqlService();
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider) ?? User.sampleUser;
-    final authService = ref.watch(authServiceProvider(_gqlService));
+    final authService = ref.watch(authServiceProvider);
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -125,10 +125,16 @@ class UserProfileScreen extends ConsumerWidget {
                                 acceptAction: () async {
                                   try {
                                     await authService.logout();
-                                    context.goNamed("welcome");
-                                    ref.read(userProvider.notifier).setUser(null);
+                                    await deleteToken();
+                                    ref
+                                        .read(userProvider.notifier)
+                                        .setUser(null);
+
+                                    context.go("/");
                                   } catch (e) {
-                                    ScaffoldMessenger.of(context).showSnackBar(_snackBar(context, "Hubo un problema al cerrar sesión"));
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        _snackBar(context,
+                                            "Hubo un problema al cerrar sesión"));
                                   }
                                   ref.read(userProvider.notifier).setUser(null);
                                 });
@@ -139,8 +145,7 @@ class UserProfileScreen extends ConsumerWidget {
                       padding: EdgeInsets.all(8.0),
                       child: Icon(Icons.delete_forever),
                     ),
-                  )
-              ),
+                  )),
             ],
           ),
         ),
@@ -213,5 +218,10 @@ class UserProfileScreen extends ConsumerWidget {
     if (!await launchUrl(url)) {
       throw 'Could not launch $url';
     }
+  }
+
+  deleteToken() async {
+    final StorageService _storageService = StorageService();
+    await _storageService.deleteSecureData("token");
   }
 }

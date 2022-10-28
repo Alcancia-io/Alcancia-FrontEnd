@@ -1,6 +1,7 @@
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class GraphqlService {
@@ -28,3 +29,5 @@ class GraphqlService {
     }
   }
 }
+
+final graphQLServiceProvider = Provider((ref) => GraphqlService());

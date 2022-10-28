@@ -1,4 +1,4 @@
-import 'package:alcancia/src/features/dashboard/presentation/dashboard_screen.dart';
+import 'package:alcancia/src/screens/dashboard/dashboard_screen.dart';
 import 'package:alcancia/src/features/transactions-list/presentation/transactions_list_screen.dart';
 import 'package:alcancia/src/features/user-profile/presentation/user_profile_screen.dart';
 import 'package:flutter/material.dart';
