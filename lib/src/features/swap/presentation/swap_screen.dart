@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:alcancia/src/features/swap/data/exchange_api.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SwapScreen extends ConsumerStatefulWidget {
   const SwapScreen({Key? key}) : super(key: key);
@@ -57,7 +58,9 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
               future: exchangeApiService.fetchCurrency(sourceDropdownVal),
               builder: (context, snapshot) {
                 var conversionRate = snapshot.data?.conversionRate;
-
+                var usdc = targetAmount == ""
+                    ? 0.0
+                    : int.parse(sourceAmountController.text) / conversionRate!;
                 if (snapshot.hasError) {
                   return Text("${snapshot.error}");
                 }
@@ -284,7 +287,10 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                   const EdgeInsets.only(top: 10, bottom: 12),
                               child: AlcanciaButton(
                                 buttonText: "Tarjeta de Débito/Crédito",
-                                onPressed: () {},
+                                onPressed: () {
+                                  _launchUrl(Uri.parse(
+                                      "https://ri-widget-staging.firebaseapp.com/?userAddress=${user?.walletAddress}&userEmailAddress=${user?.email}&fiatValue=${usdc?.toStringAsFixed(2)}&fiatCurrency=USD&selectedCountryCode=MX&hostApiKey=${dotenv.env['RAMP_STAGE_KEY']}&swapAsset=CELO_CUSD"));
+                                },
                                 color: alcanciaLightBlue,
                                 width: double.infinity,
                                 height: responsiveService.getHeightPixels(
@@ -339,5 +345,11 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _launchUrl(url) async {
+    if (!await launchUrl(url)) {
+      throw 'Could not launch $url';
+    }
   }
 }
