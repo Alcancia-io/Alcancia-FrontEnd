@@ -92,6 +92,7 @@ final routerProvider = Provider<GoRouter>(
         final isLogin = state.location == "/login";
         final isRegister = state.location == "/registration";
         final isOTP = state.location == "/otp";
+        final isAccount = state.location == "/account";
 
         if (await isUserAuthenticated()) {
           if (isUserInDashboard) {
@@ -103,6 +104,8 @@ final routerProvider = Provider<GoRouter>(
           } else if (isTransactionDetail) {
             return null;
           } else if (isProfile) {
+            return null;
+          } else if (isAccount) {
             return null;
           } else {
             // return "/homescreen/0";

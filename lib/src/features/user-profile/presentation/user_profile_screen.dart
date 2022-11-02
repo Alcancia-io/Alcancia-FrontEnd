@@ -36,7 +36,7 @@ class UserProfileScreen extends ConsumerWidget {
               _profileCard(context, user),
               GestureDetector(
                 onTap: () {
-                  context.pushNamed("account");
+                  context.push("/account");
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
