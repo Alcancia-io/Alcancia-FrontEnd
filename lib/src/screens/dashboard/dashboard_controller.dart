@@ -2,9 +2,6 @@ import 'package:alcancia/src/shared/services/services.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
 
 class DashboardController {
-  final UserService userService = UserService();
-  final TransactionsService transactionsService = TransactionsService();
-
   var userTransactionsInput = {
     "userTransactionsInput": {
       "currentPage": 0,
@@ -13,6 +10,7 @@ class DashboardController {
   };
 
   Future<User> fetchUser() async {
+    UserService userService = UserService();
     try {
       var response = await userService.getUser();
       if (response.data != null) {
@@ -26,7 +24,23 @@ class DashboardController {
     return Future.error('Error getting user');
   }
 
+  Future<double> fetchUserBalance() async {
+    UserService userService = UserService();
+    try {
+      var response = await userService.getUserBalance();
+      if (response.data != null) {
+        final balance = response.data!["getWalletBalance"].toDouble();
+
+        return balance;
+      }
+    } catch (error) {
+      return Future.error(error);
+    }
+    return Future.error('Error getting balance');
+  }
+
   Future<List<Transaction>> fetchUserTransactions() async {
+    TransactionsService transactionsService = TransactionsService();
     try {
       var response = await transactionsService.getUserTransactions(
         userTransactionsInput,

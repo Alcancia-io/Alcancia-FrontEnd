@@ -9,7 +9,7 @@ class User {
   final String gender;
   String phoneNumber;
   final DateTime dob;
-  final double balance;
+  double balance;
   String walletAddress;
   List<Transaction>? transactions;
   double userProfit;

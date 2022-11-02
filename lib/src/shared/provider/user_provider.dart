@@ -24,6 +24,10 @@ class UserState extends StateNotifier<User?> {
     state = user;
   }
 
+  void setBalance(double balance) {
+    state?.balance = balance;
+  }
+
   void setPhoneNumber(String phone) {
     state?.phoneNumber = phone;
   }
