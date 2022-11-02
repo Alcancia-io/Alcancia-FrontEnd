@@ -35,11 +35,12 @@ class UserProfileScreen extends ConsumerWidget {
               ),
               _profileCard(context, user),
               GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   context.push("/account");
                 },
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                child: Container(
+                  padding: EdgeInsets.all(16.0),
                   child: Row(
                     children: [
                       Padding(
@@ -57,10 +58,11 @@ class UserProfileScreen extends ConsumerWidget {
                 ),
               ),
               GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   _launchUrl(url2);
                 },
-                child: Padding(
+                child: Container(
                   padding: const EdgeInsets.all(16.0),
                   child: Row(
                     children: [
@@ -79,10 +81,11 @@ class UserProfileScreen extends ConsumerWidget {
                 ),
               ),
               GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onTap: () {
                   _launchUrl(url);
                 },
-                child: Padding(
+                child: Container(
                   padding: const EdgeInsets.all(16.0),
                   child: Row(
                     children: [
