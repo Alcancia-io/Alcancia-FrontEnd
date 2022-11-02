@@ -1,4 +1,5 @@
 import 'package:alcancia/src/resources/colors/app_theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,7 +10,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   await initHiveForFlutter();
-  await dotenv.load();
+  if (kReleaseMode) {
+    await dotenv.load(fileName: ".env.prod");
+  } else {
+    await dotenv.load(fileName: ".env.dev");
+  }
 
   runApp(const ProviderScope(child: MyApp()));
 }
