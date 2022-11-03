@@ -130,6 +130,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   controller: nameController,
                   labelText: "Nombre(s)",
                   inputType: TextInputType.name,
+                  autofillHints: [AutofillHints.givenName],
+                  textInputAction: TextInputAction.next,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return appLocalization.errorRequiredField;
@@ -144,6 +146,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   controller: lastNameController,
                   labelText: "Apellido(s)",
                   inputType: TextInputType.name,
+                  autofillHints: [AutofillHints.familyName],
+                  textInputAction: TextInputAction.next,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return appLocalization.errorRequiredField;
@@ -175,6 +179,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                               style: Theme.of(context).textTheme.bodyText1,
                               controller: phoneController,
                               keyboardType: TextInputType.phone,
+                              autofillHints: [AutofillHints.telephoneNumber],
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return appLocalization.errorRequiredField;
@@ -227,6 +232,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   controller: emailController,
                   labelText: "Correo electrónico",
                   inputType: TextInputType.emailAddress,
+                  autofillHints: [AutofillHints.email],
+                  textInputAction: TextInputAction.next,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return appLocalization.errorRequiredField;
@@ -244,6 +251,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   controller: passwordController,
                   labelText: "Contraseña",
                   obscure: obscurePassword,
+                  autofillHints: [AutofillHints.newPassword],
+                  textInputAction: TextInputAction.next,
                   suffixIcon: GestureDetector(
                     onTap: () {
                       setState(() {
@@ -272,6 +281,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   controller: confirmPasswordController,
                   labelText: "Confirmar contraseña",
                   obscure: obscureConfirmPassword,
+                  textInputAction: TextInputAction.done,
                   suffixIcon: GestureDetector(
                     onTap: () {
                       setState(() {
