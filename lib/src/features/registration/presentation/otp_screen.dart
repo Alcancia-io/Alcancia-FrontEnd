@@ -66,6 +66,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                         padding: const EdgeInsets.all(8.0),
                         child: LabeledTextFormField(
                             controller: codeController,
+                            inputType: TextInputType.number,
                             autofillHints: [AutofillHints.oneTimeCode],
                             labelText: "Código"),
                       ),
