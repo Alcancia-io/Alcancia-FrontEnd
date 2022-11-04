@@ -13,7 +13,7 @@
   "labelPhone": "Phone number",
   "labelBirthdate": "Birthdate",
   "errorAge": "You must be 18 years or older",
-  "labelGenderIdentification": "To which gender do you identify the most?",
+  "labelGenderIdentification": "What gender do you identify with?",
   "errorSelectGender": "Select a gender",
   "labelConfirmPassword": "Confirm password",
   "labelSelectOption": "Select an option",
@@ -53,26 +53,8 @@
   },
   "labelBalance": "Balance",
   "labelBalanceValue": "${balance} USDC",
-  "@labelBalanceValue": {
-    "description": "User balance",
-    "placeholders": {
-      "balance": {
-        "type": "String",
-        "example": "0"
-      }
-    }
-  },
   "labelProfits": "Profits",
   "labelProfitsValue": "${profits} USDC",
-  "@labelProfitsValue": {
-    "description": "User profits",
-    "placeholders": {
-      "profits": {
-        "type": "String",
-        "example": "0"
-      }
-    }
-  },
   "labelDeposit": "Deposit",
   "labelWithdraw": "Withdraw",
   "labelActivity": "Activity",
@@ -102,5 +84,13 @@
   "labelCancel": "Cancel",
   "labelSignOut": "Sign out",
   "labelSignOutConfirmation": "Are you sure you want to sign out?",
-  "errorSignOut": "There was a problem signing you out."
+  "errorSignOut": "There was a problem signing you out.",
+  "labelUserInfoUpdateTitle": "Update your information",
+  "labelUserInfoUpdateSubtitle": "Hello {name}! Please update the following information:",
+  "labelSaveAndUpdate": "Save and update",
+  "labelMethod": "Verification method",
+  "labelCallOrSMS": "Choose how you want to receive your verification code: ",
+  "labelSMS": "SMS",
+  "labelCall": "Phone call",
+  "labelFeeDisclaimer": "Message and data rates may apply. You'll receive a new code for every sign in attempt."
 }

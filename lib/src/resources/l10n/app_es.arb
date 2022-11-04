@@ -102,5 +102,22 @@
   "labelCancel": "Cancelar",
   "labelSignOut": "Cerrar sesión",
   "labelSignOutConfirmation": "¿Seguro que quieres cerrar sesión?",
-  "errorSignOut": "Hubo un problema al cerrar sesión"
+  "errorSignOut": "Hubo un problema al cerrar sesión",
+  "labelUserInfoUpdateTitle": "Actualización de datos",
+  "labelUserInfoUpdateSubtitle": "¡Hola {name}! Te invitamos a que actualices la siguiente información:",
+  "@labelUserInfoUpdateSubtitle": {
+    "description": "User information update subtitle",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Juan"
+      }
+    }
+  },
+  "labelSaveAndUpdate": "Guardar y actualizar",
+  "labelMethod": "Método",
+  "labelCallOrSMS": "Elige si deseas recibir el código de verificación por medio de SMS o llamada",
+  "labelSMS": "SMS",
+  "labelCall": "Llamada",
+  "labelFeeDisclaimer": "Podrían aplicar tarifas de mensajes y transmisión de datos. Para la autenticación multifactor recibirás un código en cada intento de inicio de sesión."
 }
