@@ -27,6 +27,17 @@ class User {
     this.userProfit = 0,
   });
 
+  static final sampleUser = User(
+      userId: "",
+      surname: "",
+      gender: "",
+      phoneNumber: "",
+      dob: DateTime.now(),
+      name: "",
+      email: "",
+      balance: 0.0,
+      walletAddress: "");
+
   factory User.fromJSON(Map<String, dynamic> map) {
     return User(
       userId: map["userId"],

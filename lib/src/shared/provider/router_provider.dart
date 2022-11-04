@@ -3,6 +3,7 @@ import 'package:alcancia/src/features/login/presentation/login_screen.dart';
 import 'package:alcancia/src/features/registration/model/GraphQLConfig.dart';
 import 'package:alcancia/src/features/swap/presentation/swap_screen.dart';
 import 'package:alcancia/src/features/registration/presentation/otp_screen.dart';
+import 'package:alcancia/src/features/user-profile/presentation/account_screen.dart';
 import 'package:alcancia/src/features/welcome/presentation/welcome_screen.dart';
 import 'package:alcancia/src/features/registration/presentation/registration_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
@@ -50,9 +51,9 @@ final routerProvider = Provider<GoRouter>(
           },
         ),
         GoRoute(
-          name: "dashboard",
-          path: "/dashboard",
-          builder: (context, state) => DashboardScreen(),
+          name: "account",
+          path: "/account",
+          builder: (context, state) => AccountScreen(),
         ),
         GoRoute(
           name: "registration",
@@ -91,6 +92,7 @@ final routerProvider = Provider<GoRouter>(
         final isLogin = state.location == "/login";
         final isRegister = state.location == "/registration";
         final isOTP = state.location == "/otp";
+        final isAccount = state.location == "/account";
 
         if (await isUserAuthenticated()) {
           if (isUserInDashboard) {
@@ -102,6 +104,8 @@ final routerProvider = Provider<GoRouter>(
           } else if (isTransactionDetail) {
             return null;
           } else if (isProfile) {
+            return null;
+          } else if (isAccount) {
             return null;
           } else {
             // return "/homescreen/0";
@@ -124,8 +128,6 @@ final routerProvider = Provider<GoRouter>(
           }
         }
         return null;
-        // means is not authenticated
-        // return state.location != "/login" ? "/login" : null;
       },
     );
   },
