@@ -3,6 +3,7 @@ import 'package:alcancia/src/features/registration/provider/registration_control
 import 'package:alcancia/src/features/registration/provider/timer_provider.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
+import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
@@ -150,8 +151,9 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                     timer.onStopTimer();
                                     timer.dispose();
                                     _setLoading(false);
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(_snackBar());
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        AlcanciaSnackBar(context,
+                                            "Tu cuenta ha sido creada exitosamente. Revisa tu correo para confirmar tu cuenta."));
                                     context.go("/login");
                                   } catch (err) {
                                     setState(() {
@@ -177,18 +179,6 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  SnackBar _snackBar() {
-    return SnackBar(
-      content: Text(
-        "Tu cuenta ha sido creada exitosamente. Revisa tu correo para confirmar tu cuenta.",
-        style: Theme.of(context).textTheme.bodyText2,
-      ),
-      behavior: SnackBarBehavior.floating,
-      backgroundColor: Theme.of(context).inputDecorationTheme.fillColor,
-      duration: Duration(seconds: 5),
     );
   }
 
