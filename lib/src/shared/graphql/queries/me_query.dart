@@ -9,7 +9,8 @@ const String meQuery = """
       name,
       email,
       balance,
-      walletAddress
+      walletAddress,
+      country
     }
   }
 """;
