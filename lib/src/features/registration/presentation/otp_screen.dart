@@ -1,9 +1,8 @@
+import 'package:alcancia/src/features/registration/model/user_registration_model.dart';
 import 'package:alcancia/src/features/registration/provider/registration_controller_provider.dart';
 import 'package:alcancia/src/features/registration/provider/timer_provider.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
-import 'package:alcancia/src/shared/provider/user_provider.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
@@ -12,9 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OTPScreen extends ConsumerStatefulWidget {
-  OTPScreen({Key? key, required this.password}) : super(key: key);
-  final String password;
-  final Uri url = Uri.parse('https://flutter.dev');
+  OTPScreen({Key? key, required this.userRegistrationData}) : super(key: key);
+  final UserRegistrationModel userRegistrationData;
+  final Uri url = Uri.parse('');
 
   @override
   ConsumerState<OTPScreen> createState() => _OTPScreenState();
@@ -22,13 +21,11 @@ class OTPScreen extends ConsumerStatefulWidget {
 
 class _OTPScreenState extends ConsumerState<OTPScreen> {
   final codeController = TextEditingController();
-  bool acceptTerms = false;
   String error = "";
   bool _loading = false;
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(userProvider);
     final timer = ref.watch(timerProvider);
     final registrationController = ref.watch(registrationControllerProvider);
     return GestureDetector(
@@ -60,7 +57,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                       Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                            "Ingresa el código de 6 dígitos que enviamos a tu celular ${user!.phoneNumber}"),
+                            "Ingresa el código de 6 dígitos que enviamos a tu celular ${widget.userRegistrationData.user.phoneNumber}"),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -121,54 +118,11 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                               ),
                             ),
                             onPressed: () async {
-                              await registrationController
-                                  .sendOTP(user.phoneNumber);
+                              await registrationController.sendOTP(
+                                  widget.userRegistrationData.user.phoneNumber);
                               timer.onResetTimer();
                               timer.onStartTimer();
                             },
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: 25,
-                            child: Checkbox(
-                                value: acceptTerms,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                onChanged: (value) {
-                                  if (value != null) {
-                                    setState(() {
-                                      acceptTerms = value;
-                                    });
-                                  }
-                                }),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 8.0),
-                              child: RichText(
-                                text: TextSpan(
-                                    text: "He leído y acepto la ",
-                                    style:
-                                        Theme.of(context).textTheme.bodyText2,
-                                    children: [
-                                      TextSpan(
-                                        text:
-                                            "Política de Privacidad y Tratamiento de Datos",
-                                        style:
-                                            TextStyle(color: alcanciaLightBlue),
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () {
-                                            _launchUrl();
-                                          },
-                                      )
-                                    ]),
-                              ),
-                            ),
                           ),
                         ],
                       ),
@@ -184,31 +138,27 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                 height: 64,
                                 buttonText: "Crea tu cuenta",
                                 onPressed: () async {
-                                  if (acceptTerms) {
-                                    _setLoading(true);
-                                    try {
-                                      await registrationController.verifyOTP(
-                                          codeController.text,
-                                          user.phoneNumber);
-                                      await registrationController.signUp(
-                                          user, widget.password);
-                                      timer.onStopTimer();
-                                      timer.dispose();
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(_snackBar());
-                                      context.go("/login");
-                                    } catch (err) {
-                                      setState(() {
-                                        error = err.toString();
-                                      });
-                                    }
-                                  } else {
+                                  _setLoading(true);
+                                  try {
+                                    await registrationController.verifyOTP(
+                                        codeController.text,
+                                        widget.userRegistrationData.user
+                                            .phoneNumber);
+                                    await registrationController.signUp(
+                                        widget.userRegistrationData.user,
+                                        widget.userRegistrationData.password);
+                                    timer.onStopTimer();
+                                    timer.dispose();
+                                    _setLoading(false);
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(_snackBar());
+                                    context.go("/login");
+                                  } catch (err) {
                                     setState(() {
-                                      error =
-                                          "Acepta la Política de Privacidad";
+                                      error = err.toString();
+                                      _loading = false;
                                     });
                                   }
-                                  _setLoading(false);
                                 },
                               ),
                               Text(

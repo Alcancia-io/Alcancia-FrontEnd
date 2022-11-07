@@ -1,3 +1,4 @@
+import 'package:alcancia/src/features/registration/presentation/phone_registration_screen.dart';
 import 'package:alcancia/src/screens/dashboard/dashboard_screen.dart';
 import 'package:alcancia/src/features/login/presentation/login_screen.dart';
 import 'package:alcancia/src/features/registration/model/GraphQLConfig.dart';
@@ -5,6 +6,7 @@ import 'package:alcancia/src/features/swap/presentation/swap_screen.dart';
 import 'package:alcancia/src/features/registration/presentation/otp_screen.dart';
 import 'package:alcancia/src/features/welcome/presentation/welcome_screen.dart';
 import 'package:alcancia/src/features/registration/presentation/registration_screen.dart';
+import 'package:alcancia/src/features/registration/model/user_registration_model.dart';
 import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
 import 'package:alcancia/src/shared/graphql/queries.dart';
 import 'package:alcancia/src/shared/models/transaction_model.dart';
@@ -60,6 +62,11 @@ final routerProvider = Provider<GoRouter>(
           builder: (context, state) => const RegistrationScreen(),
         ),
         GoRoute(
+          name: "phone-registration",
+          path: "/phone-registration",
+          builder: (context, state) => PhoneRegistrationScreen(userRegistrationData: state.extra as UserRegistrationModel),
+        ),
+        GoRoute(
           name: "swap",
           path: "/swap",
           builder: (context, state) => SwapScreen(),
@@ -74,7 +81,7 @@ final routerProvider = Provider<GoRouter>(
           name: "otp",
           path: "/otp",
           builder: (context, state) => OTPScreen(
-            password: state.extra! as String,
+            userRegistrationData: state.extra as UserRegistrationModel,
           ),
         ),
       ],
@@ -90,6 +97,7 @@ final routerProvider = Provider<GoRouter>(
         final isWelcome = state.location == "/";
         final isLogin = state.location == "/login";
         final isRegister = state.location == "/registration";
+        final isPhoneRegistration = state.location == "/phone-registration";
         final isOTP = state.location == "/otp";
 
         if (await isUserAuthenticated()) {
@@ -117,6 +125,8 @@ final routerProvider = Provider<GoRouter>(
           } else if (isRegister) {
             return null;
           } else if (isOTP) {
+            return null;
+          } else if (isPhoneRegistration) {
             return null;
           } else {
             // return "/homescreen/0";
