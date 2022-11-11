@@ -74,9 +74,7 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "otp",
           path: "/otp",
-          builder: (context, state) => OTPScreen(
-            password: state.extra! as String,
-          ),
+          builder: (context, state) => OTPScreen(),
         ),
       ],
       redirect: (context, state) async {
