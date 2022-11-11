@@ -88,7 +88,8 @@ class RegistrationController {
       "phoneNumber": user.phoneNumber,
       "gender": user.gender,
       "password": password,
-      "dob": DateFormat('yyyy-MM-dd').format(user.dob)
+      "dob": DateFormat('yyyy-MM-dd').format(user.dob),
+      "country": user.country
     };
     try {
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);

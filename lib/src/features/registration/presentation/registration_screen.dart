@@ -306,6 +306,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                       surname: lastNameController.text,
                       email: emailController.text,
                       gender: selectedGender.string,
+                      country: selectedCountry.code,
                       phoneNumber:
                           "+${selectedCountry.dialCode}${phoneController.text}",
                       dob: selectedDate,

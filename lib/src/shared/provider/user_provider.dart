@@ -13,6 +13,7 @@ class UserState extends StateNotifier<User?> {
       surname: "My Surname",
       email: "My Email",
       gender: "Gender",
+      country: "",
       phoneNumber: "",
       dob: DateTime.now(),
       balance: 0,
