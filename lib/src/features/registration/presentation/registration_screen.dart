@@ -1,6 +1,7 @@
 import 'package:alcancia/src/features/registration/data/country.dart';
 import 'package:alcancia/src/features/registration/data/signup_mutation.dart';
 import 'package:alcancia/src/features/registration/provider/registration_controller_provider.dart';
+import 'package:alcancia/src/features/registration/provider/timer_provider.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
 import 'package:alcancia/src/shared/provider/user_provider.dart';
@@ -86,6 +87,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
     final selectedDate = ref.watch(selectedDateProvider);
     final selectedCountry = ref.watch(selectedCountryProvider);
     final selectedGender = ref.watch(selectedGenderProvider);
+    final timer = ref.watch(timerProvider);
     final registrationController = ref.watch(registrationControllerProvider);
 
     return GestureDetector(
@@ -312,6 +314,9 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                         selectedCountry, selectedGender, selectedDate)) {
                       ref.read(userProvider.notifier).setUser(user);
                       registrationController.signUp(user, passwordController.text);
+                      timer.setPresetMinuteTime(1, add: false);
+                      timer.onResetTimer();
+                      timer.onStartTimer();
                       context.push("/otp");
                     }
                   },
