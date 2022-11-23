@@ -10,15 +10,40 @@ class RegistrationController {
 
   static String verifyOTPQuery = """
   query(\$verificationCode: String!, \$email: String!) {
-    verifyOTP(verificationCode: \$verificationCode, email: \$email, isAuthRequired: false) {
-      status,
-      to,
-      valid
-    }
+    verifyOTP(verificationCode: \$verificationCode, email: \$email, isAuthRequired: false)
   }
 """;
 
-  Future<bool> verifyOTP(String otp, String email) async {
+  static String resendVerificationQuery = """
+  query(\$email: String!) {
+    resendVerification(email: \$email) {
+      DeliveryMedium
+    }
+  }
+  """;
+
+  Future<void> resendVerificationCode(String email) async {
+    try {
+      GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
+      GraphQLClient _client = graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+            document: gql(resendVerificationQuery),
+            variables: {"email": email}),
+      );
+      if (result.hasException) {
+        print(email);
+        print(result.exception);
+        final e = result.exception?.graphqlErrors[0].message;
+        return Future.error(e!);
+      }
+    } catch (e) {
+      print(e);
+      return Future.error(e);
+    }
+  }
+
+  Future<void> verifyOTP(String otp, String email) async {
     try {
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
       GraphQLClient _client = graphQLConfiguration.clientToQuery();
@@ -27,20 +52,12 @@ class RegistrationController {
             document: gql(verifyOTPQuery),
             variables: {"verificationCode": otp, "email": email}),
       );
+      print("Verifying");
       if (result.hasException) {
-        print("Exception");
         final e = result.exception?.graphqlErrors[0].message;
         return Future.error(e!);
-      } else {
-        print("data");
-        print(result.data);
-        final valid = result.data!["verifyOTP"]["valid"] as bool;
-        if (valid) return valid;
-        return Future.error("Código inválido");
       }
     } catch (e) {
-      print("Error");
-      print(e);
       return Future.error(e);
     }
   }
