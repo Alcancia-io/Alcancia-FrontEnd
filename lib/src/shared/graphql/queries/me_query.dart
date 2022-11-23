@@ -4,6 +4,7 @@ const String meQuery = """
       userId,
       surname,
       gender,
+      country,
       phoneNumber,
       dob,
       name,
