@@ -48,10 +48,11 @@ dependencies:
   flutter_secure_storage: ^5.0.2
   stop_watch_timer: ^2.0.0
 
-
   flutter_dotenv: ^5.0.2
   url_launcher: ^6.1.5
   http: ^0.13.5
+  firebase_core:
+  firebase_messaging: ^14.1.1
 
 dev_dependencies:
   flutter_test:
