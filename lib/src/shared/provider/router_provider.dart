@@ -6,8 +6,11 @@ import 'package:alcancia/src/features/registration/presentation/otp_screen.dart'
 import 'package:alcancia/src/features/user-profile/presentation/account_screen.dart';
 import 'package:alcancia/src/features/welcome/presentation/welcome_screen.dart';
 import 'package:alcancia/src/features/registration/presentation/registration_screen.dart';
+import 'package:alcancia/src/screens/login/mfa_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
 import 'package:alcancia/src/shared/graphql/queries.dart';
+import 'package:alcancia/src/shared/models/alcancia_models.dart';
+import 'package:alcancia/src/shared/models/login_data_model.dart';
 import 'package:alcancia/src/shared/models/transaction_model.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,7 +24,6 @@ Future<bool> isUserAuthenticated() async {
   GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "${token}");
   GraphQLClient client = graphQLConfiguration.clientToQuery();
   var result = await client.query(QueryOptions(document: gql(isAuthenticated)));
-
   return !result.hasException;
   // print(result.hasException);
 }
@@ -74,10 +76,13 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "otp",
           path: "/otp",
-          builder: (context, state) => OTPScreen(
-            password: state.extra! as String,
-          ),
+          builder: (context, state) => OTPScreen(),
         ),
+        GoRoute(
+          name: "mfa",
+          path: "/mfa",
+          builder: (context, state) => MFAScreen(data: state.extra as LoginDataModel),
+        )
       ],
       redirect: (context, state) async {
         print(state.location);
@@ -93,6 +98,7 @@ final routerProvider = Provider<GoRouter>(
         final isRegister = state.location == "/registration";
         final isOTP = state.location == "/otp";
         final isAccount = state.location == "/account";
+        final isMFA = state.location == "/mfa";
 
         if (await isUserAuthenticated()) {
           if (isUserInDashboard) {
@@ -121,6 +127,8 @@ final routerProvider = Provider<GoRouter>(
           } else if (isRegister) {
             return null;
           } else if (isOTP) {
+            return null;
+          } else if (isMFA) {
             return null;
           } else {
             // return "/homescreen/0";

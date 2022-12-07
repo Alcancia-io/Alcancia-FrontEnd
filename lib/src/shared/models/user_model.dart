@@ -7,6 +7,7 @@ class User {
   final String name;
   final String surname;
   final String gender;
+  final String country;
   String phoneNumber;
   final DateTime dob;
   double balance;
@@ -18,6 +19,7 @@ class User {
     required this.userId,
     required this.surname,
     required this.gender,
+    required this.country,
     required this.phoneNumber,
     required this.dob,
     required this.name,
@@ -31,6 +33,7 @@ class User {
       userId: "",
       surname: "",
       gender: "",
+      country: "",
       phoneNumber: "",
       dob: DateTime.now(),
       name: "",
@@ -43,6 +46,7 @@ class User {
       userId: map["userId"],
       surname: map["surname"],
       gender: map["gender"],
+      country: map["country"],
       phoneNumber: map["phoneNumber"],
       dob: DateFormat('yyyy-MM-dd').parse(map["dob"]),
       name: map["name"],

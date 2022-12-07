@@ -8,74 +8,56 @@ class RegistrationController {
   RegistrationController({required this.token});
   String token;
 
-  static String sendOTPAuthQuery = """
-  query(\$phoneNumber: String!) {
-    sendOTP(phoneNumber: \$phoneNumber, isAuthRequired: true) {
-      status
-    }
-  }
-""";
-  static String sendOTPQuery = """
-  query(\$phoneNumber: String!) {
-    sendOTP(phoneNumber: \$phoneNumber, isAuthRequired: false) {
-      status
-    }
-  }
-""";
-
   static String verifyOTPQuery = """
-  query(\$verificationCode: String!, \$phoneNumber: String!) {
-    verifyOTP(verificationCode: \$verificationCode, phoneNumber: \$phoneNumber, isAuthRequired: false) {
-      status,
-      to,
-      valid
-    }
+  query(\$verificationCode: String!, \$email: String!) {
+    verifyOTP(verificationCode: \$verificationCode, email: \$email, isAuthRequired: false)
   }
 """;
 
-  Future<void> sendOTP(String phoneNumber) async {
+  static String resendVerificationQuery = """
+  query(\$email: String!) {
+    resendVerification(email: \$email) {
+      DeliveryMedium
+    }
+  }
+  """;
+
+  Future<void> resendVerificationCode(String email) async {
     try {
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
       GraphQLClient _client = graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-            document: gql(sendOTPQuery),
-            variables: {"phoneNumber": phoneNumber}),
+            document: gql(resendVerificationQuery),
+            variables: {"email": email}),
       );
-
       if (result.hasException) {
-        print(result.exception?.graphqlErrors[0].message);
-      } else if (result.data != null) {
-        print(result.data);
+        print(email);
+        print(result.exception);
+        final e = result.exception?.graphqlErrors[0].message;
+        return Future.error(e!);
       }
     } catch (e) {
       print(e);
+      return Future.error(e);
     }
   }
 
-  Future<bool> verifyOTP(String otp, String phoneNumber) async {
+  Future<void> verifyOTP(String otp, String email) async {
     try {
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
       GraphQLClient _client = graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
             document: gql(verifyOTPQuery),
-            variables: {"verificationCode": otp, "phoneNumber": phoneNumber}),
+            variables: {"verificationCode": otp, "email": email}),
       );
+      print("Verifying");
       if (result.hasException) {
-        print("Exception");
         final e = result.exception?.graphqlErrors[0].message;
         return Future.error(e!);
-      } else {
-        print("data");
-        print(result.data);
-        final valid = result.data!["verifyOTP"]["valid"] as bool;
-        if (valid) return valid;
-        return Future.error("Código inválido");
       }
     } catch (e) {
-      print("Error");
-      print(e);
       return Future.error(e);
     }
   }
@@ -88,9 +70,11 @@ class RegistrationController {
       "phoneNumber": user.phoneNumber,
       "gender": user.gender,
       "password": password,
-      "dob": DateFormat('yyyy-MM-dd').format(user.dob)
+      "dob": DateFormat('yyyy-MM-dd').format(user.dob),
+      "country": user.country
     };
     try {
+      print(signupInput.toString());
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
       GraphQLClient _client = graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.mutate(MutationOptions(

@@ -7,14 +7,13 @@ import 'package:alcancia/src/shared/provider/user_provider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OTPScreen extends ConsumerStatefulWidget {
-  OTPScreen({Key? key, required this.password}) : super(key: key);
-  final String password;
+  OTPScreen({Key? key}) : super(key: key);
   final Uri url = Uri.parse('https://flutter.dev');
 
   @override
@@ -85,7 +84,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                 decoration: ShapeDecoration(
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
-                                            BorderRadius.circular(100),
+                                        BorderRadius.circular(100),
                                         side: BorderSide(
                                             color: alcanciaLightBlue))),
                                 child: Padding(
@@ -100,7 +99,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                       Text(
                                         displayTime,
                                         style:
-                                            TextStyle(color: alcanciaLightBlue),
+                                        TextStyle(color: alcanciaLightBlue),
                                       ),
                                     ],
                                   ),
@@ -121,12 +120,12 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                 color: alcanciaLightBlue,
                               ),
                             ),
-                            onPressed: () async {
+                            onPressed: timer.rawTime.value == 0 ? () async {
                               await registrationController
-                                  .sendOTP(user.phoneNumber);
+                                  .resendVerificationCode(user.email);
                               timer.onResetTimer();
                               timer.onStartTimer();
-                            },
+                            } : null,
                           ),
                         ],
                       ),
@@ -190,11 +189,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                     try {
                                       await registrationController.verifyOTP(
                                           codeController.text,
-                                          user.phoneNumber);
-                                      await registrationController.signUp(
-                                          user, widget.password);
-                                      timer.onStopTimer();
-                                      timer.dispose();
+                                          user.email);
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(AlcanciaSnackBar(
                                               context,

@@ -11,13 +11,10 @@ import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:intl/intl.dart';
 import '../../../shared/models/user_model.dart';
 import '../data/gender.dart';
 import 'gender_picker.dart';
 import 'country_picker.dart';
-import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 
 class RegistrationScreen extends ConsumerStatefulWidget {
@@ -306,6 +303,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                       surname: lastNameController.text,
                       email: emailController.text,
                       gender: selectedGender.string,
+                      country: selectedCountry.code,
                       phoneNumber:
                           "+${selectedCountry.dialCode}${phoneController.text}",
                       dob: selectedDate,
@@ -315,11 +313,11 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                     if (isValid(
                         selectedCountry, selectedGender, selectedDate)) {
                       ref.read(userProvider.notifier).setUser(user);
-                      registrationController.sendOTP(user.phoneNumber);
-                      timer.setPresetMinuteTime(5, add: false);
+                      registrationController.signUp(user, passwordController.text);
+                      timer.setPresetMinuteTime(1, add: false);
                       timer.onResetTimer();
                       timer.onStartTimer();
-                      context.push("/otp", extra: passwordController.text);
+                      context.push("/otp");
                     }
                   },
                 ),

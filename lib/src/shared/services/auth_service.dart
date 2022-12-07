@@ -1,10 +1,15 @@
-import 'package:alcancia/src/shared/services/graphql_client_service.dart';
+import 'package:alcancia/src/features/login/data/login_mutation.dart';
+import 'package:alcancia/src/shared/services/graphql_service.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class AuthService {
-  AuthService({required this.graphQLService});
+  late GraphQLConfig graphQLConfig;
+  late Future<GraphQLClient> client;
 
-  GraphqlService graphQLService;
+  AuthService() {
+    graphQLConfig = GraphQLConfig();
+    client = graphQLConfig.clientToQuery();
+  }
 
   static String logoutQuery = """
   query {
@@ -18,15 +23,16 @@ class AuthService {
   }
   """;
 
-  Future<GraphQLClient> _graphQLClient() async {
-    final asyncClient = await graphQLService.createClient();
-    return asyncClient.value;
+  static String completeSignInQuery = """
+  query(\$verificationCode: String!){
+    completeSignIn(verificationCode: \$verificationCode)
   }
+  """;
 
   Future<void> logout() async {
     try {
-      GraphQLClient client = await _graphQLClient();
-      QueryResult result = await client.query(
+      final clientResponse = await client;
+      QueryResult result = await clientResponse.query(
         QueryOptions(
           document: gql(logoutQuery),
         ),
@@ -45,12 +51,13 @@ class AuthService {
 
   Future<bool> deleteAccount() async {
     try {
-      GraphQLClient client = await _graphQLClient();
-      QueryResult result = await client.query(
+      final clientResponse = await client;
+      QueryResult result = await clientResponse.query(
         QueryOptions(
           document: gql(deleteAccountQuery),
         ),
       );
+      print("deleting user");
 
       if (result.hasException) {
         print(result.exception?.graphqlErrors[0].message);
@@ -62,5 +69,26 @@ class AuthService {
     } catch (e) {
       return Future.error(e);
     }
+  }
+
+  Future<QueryResult> completeSignIn(String verificationCode) async {
+      final clientResponse = await client;
+      return await clientResponse.query(
+        QueryOptions(
+            document: gql(completeSignInQuery),
+            variables: {"verificationCode": verificationCode}),
+      );
+  }
+
+  Future<QueryResult> login(String email, String password) async {
+      final clientResponse = await client;
+      return await clientResponse.mutate(
+        MutationOptions(
+          document: gql(loginMutation),
+          variables: {
+            "loginUserInput": {"email": email, "password": password}
+          },
+        ),
+      );
   }
 }

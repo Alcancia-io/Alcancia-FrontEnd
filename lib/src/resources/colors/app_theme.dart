@@ -15,6 +15,10 @@ class AlcanciaTheme {
 
   static ThemeData get lightTheme {
     return ThemeData(
+      splashFactory: NoSplash.splashFactory,
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      hoverColor: Colors.transparent,
       canvasColor: alcanciaBgLight,
       brightness: Brightness.light,
       scaffoldBackgroundColor: alcanciaBgLight,
@@ -58,6 +62,10 @@ class AlcanciaTheme {
 
   static ThemeData get darkTheme {
     return ThemeData(
+      splashFactory: NoSplash.splashFactory,
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      hoverColor: Colors.transparent,
       canvasColor: alcanciaBgDark,
       brightness: Brightness.dark,
       scaffoldBackgroundColor: alcanciaBgDark,
