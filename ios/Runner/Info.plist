@@ -50,5 +50,14 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>Mati verification SDK requires camera use</string>
+
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Mati verification SDK requires microphone use</string>
+
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Mati verification SDK requires access to media library</string>
+
 </dict>
 </plist>

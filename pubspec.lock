@@ -231,6 +231,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  fluttertoast:
+    dependency: "direct main"
+    description:
+      name: fluttertoast
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "8.1.2"
   go_router:
     dependency: "direct main"
     description:
@@ -364,13 +371,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.5"
-  mati_plugin_flutter:
-    dependency: "direct main"
-    description:
-      name: mati_plugin_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.9.0"
   meta:
     dependency: transitive
     description:
@@ -378,6 +378,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
+  metamap_plugin_flutter:
+    dependency: "direct main"
+    description:
+      name: metamap_plugin_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
   modal_bottom_sheet:
     dependency: "direct main"
     description:

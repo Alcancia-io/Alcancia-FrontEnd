@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:alcancia/src/features/swap/data/exchange_api.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
+import 'package:alcancia/src/screens/metamap/metamap_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_link.dart';
@@ -11,8 +12,10 @@ import 'package:alcancia/src/shared/services/exchange_api_service.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 class SwapScreen extends ConsumerStatefulWidget {
   const SwapScreen({Key? key}) : super(key: key);
@@ -37,6 +40,13 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
 
   late String sourceDropdownVal = targetCurrencyCodes.first['name'];
   final ResponsiveService responsiveService = ResponsiveService();
+
+  // metamap
+  final MetaMapController metaMapController = MetaMapController();
+  final metamapDomicanFlowId = dotenv.env['DOMINICAN_FLOW_ID'] as String;
+  final metamapMexicanResidentId =
+      dotenv.env['MEXICO_RESIDENTS_FLOW_ID'] as String;
+  final metamapMexicanINEId = dotenv.env['MEXICO_INE_FLOW_ID'] as String;
 
   @override
   Widget build(BuildContext context) {
@@ -289,15 +299,26 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                   var verified = false;
                                   var resident = false;
 
-                                  if (sourceDropdownVal == 'MXN') {
-                                    if (verified) {
-                                      // TODO: If mxn go to suarmi screen and if dop go to crypto pay
-                                    } else {
-                                      //TODO: Preguntar en un form de single select si es residente o no
-                                      if (resident) {
-                                      } else {}
+                                  if (verified) {
+                                    context.push('/');
+                                    // go to checkout form
+                                  } else {
+                                    if (sourceDropdownVal == 'MXN' &&
+                                        resident) {
+                                      metaMapController.showMatiFlow(
+                                          metamapMexicanResidentId);
                                     }
-                                  } else if (sourceDropdownVal == 'DOP') {}
+                                    if (sourceDropdownVal == 'MXN' &&
+                                        !resident) {
+                                      metaMapController
+                                          .showMatiFlow(metamapMexicanINEId);
+                                    }
+
+                                    if (sourceDropdownVal == "DOP") {
+                                      metaMapController
+                                          .showMatiFlow(metamapDomicanFlowId);
+                                    }
+                                  }
                                 },
                                 color: alcanciaLightBlue,
                                 width: double.infinity,
