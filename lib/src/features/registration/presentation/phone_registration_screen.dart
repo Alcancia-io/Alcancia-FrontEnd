@@ -155,17 +155,25 @@ class _OTPMethodScreenState extends ConsumerState<PhoneRegistrationScreen> {
                     color: alcanciaLightBlue,
                     width: double.infinity,
                     height: 64,
-                    onPressed: () {
+                    onPressed: () async {
                       if (acceptTerms) {
                         if (phoneController.text.isNotEmpty) {
-                          final phoneNumber =
-                              "+${selectedCountry.dialCode}${phoneController.text}";
-                          widget.userRegistrationData.user.phoneNumber = phoneNumber;
-                          registrationController.sendOTP(phoneNumber);
-                          timer.setPresetMinuteTime(5, add: false);
-                          timer.onResetTimer();
-                          timer.onStartTimer();
-                          context.push("/otp", extra: widget.userRegistrationData);
+                          try {
+                            final phoneNumber =
+                                "+${selectedCountry.dialCode}${phoneController.text}";
+                            widget.userRegistrationData.user.phoneNumber = phoneNumber;
+                            widget.userRegistrationData.user.country = selectedCountry.code;
+                            await registrationController.signUp(widget.userRegistrationData.user, widget.userRegistrationData.password);
+                            timer.setPresetMinuteTime(1, add: false);
+                            timer.onResetTimer();
+                            timer.onStartTimer();
+                            context.push("/otp", extra: widget.userRegistrationData);
+                          } catch (e) {
+                            setState(() {
+                              error =
+                              e.toString();
+                            });
+                          }
                         } else {
                           setState(() {
                             error =

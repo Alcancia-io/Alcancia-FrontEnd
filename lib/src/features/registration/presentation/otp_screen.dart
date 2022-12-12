@@ -71,62 +71,70 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                           stream: timer.rawTime,
                           initialData: 0,
                           builder:
-                              (BuildContext context, AsyncSnapshot snapshot) {
+                              (BuildContext ctx, AsyncSnapshot snapshot) {
                             final value = snapshot.data;
                             final displayTime = StopWatchTimer.getDisplayTime(
                                 value,
                                 hours: false,
                                 milliSecond: false);
-                            return Center(
-                              child: Container(
-                                decoration: ShapeDecoration(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                        BorderRadius.circular(100),
-                                        side: BorderSide(
-                                            color: alcanciaLightBlue))),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.timer_sharp,
-                                        color: alcanciaLightBlue,
+                            return Column(
+                              children: [
+                                Center(
+                                  child: Container(
+                                    decoration: ShapeDecoration(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            side: BorderSide(
+                                                color: alcanciaLightBlue))),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.timer_sharp,
+                                            color: alcanciaLightBlue,
+                                          ),
+                                          Text(
+                                            displayTime,
+                                            style:
+                                                TextStyle(color: alcanciaLightBlue),
+                                          ),
+                                        ],
                                       ),
-                                      Text(
-                                        displayTime,
-                                        style:
-                                        TextStyle(color: alcanciaLightBlue),
-                                      ),
-                                    ],
+                                    ),
                                   ),
                                 ),
-                              ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Text("¿No recibiste el código?"),
+                                    TextButton(
+                                      onPressed: value <= 0
+                                          ? () async {
+                                        await registrationController
+                                            .resendVerificationCode(widget.userRegistrationData.user.email);
+                                        timer.onResetTimer();
+                                        timer.onStartTimer();
+                                      }
+                                          : null,
+                                      style: TextButton.styleFrom(
+                                          foregroundColor: alcanciaLightBlue
+                                      ),
+                                      child: const Text(
+                                        "Reenviar",
+                                        style: TextStyle(
+                                          decoration: TextDecoration.underline,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             );
                           }),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text("¿No recibiste el código?"),
-                          CupertinoButton(
-                            child: const Text(
-                              "Reenviar",
-                              style: TextStyle(
-                                decoration: TextDecoration.underline,
-                                fontWeight: FontWeight.bold,
-                                color: alcanciaLightBlue,
-                              ),
-                            ),
-                            onPressed: timer.rawTime.value == 0 ? () async {
-                              await registrationController
-                                  .resendVerificationCode(user.email);
-                              timer.onResetTimer();
-                              timer.onStartTimer();
-                            } : null,
-                          ),
-                        ],
-                      ),
                       Center(
                         child: Column(
                           children: [
@@ -139,26 +147,18 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                 height: 64,
                                 buttonText: "Crea tu cuenta",
                                 onPressed: () async {
-                                  if (acceptTerms) {
-                                    _setLoading(true);
-                                    try {
-                                      await registrationController.verifyOTP(
-                                          codeController.text,
-                                          widget.userRegistrationData.user.email);
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(AlcanciaSnackBar(
-                                              context,
-                                              "Tu cuenta ha sido creada exitosamente. Revisa tu correo para confirmar tu cuenta."));
-                                      context.go("/login");
-                                    } catch (err) {
-                                      setState(() {
-                                        error = err.toString();
-                                      });
-                                    }
-                                  } else {
+                                  _setLoading(true);
+                                  try {
+                                    await registrationController.verifyOTP(
+                                        codeController.text,
+                                        widget.userRegistrationData.user.email);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        AlcanciaSnackBar(context,
+                                            "Tu cuenta ha sido creada exitosamente."));
+                                    context.go("/login");
+                                  } catch (err) {
                                     setState(() {
                                       error = err.toString();
-                                      _loading = false;
                                     });
                                   }
                                 },
