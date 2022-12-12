@@ -16,6 +16,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:alcancia/src/screens/metamap/metamap_dialog.dart';
 
 class SwapScreen extends ConsumerStatefulWidget {
   const SwapScreen({Key? key}) : super(key: key);
@@ -294,7 +295,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                   const EdgeInsets.only(top: 10, bottom: 12),
                               child: AlcanciaButton(
                                 buttonText: "Depositar por transferencia",
-                                onPressed: () {
+                                onPressed: () async {
                                   //Temporary Variables
                                   var verified = false;
                                   var resident = false;
@@ -303,6 +304,14 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                     context.push('/');
                                     // go to checkout form
                                   } else {
+                                    if (sourceDropdownVal == 'MXN') {
+                                      final UserStatus status = await showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return const UserStatusDialog();
+                                          });
+                                      resident = status == UserStatus.resident;
+                                    }
                                     if (sourceDropdownVal == 'MXN' &&
                                         resident) {
                                       metaMapController.showMatiFlow(

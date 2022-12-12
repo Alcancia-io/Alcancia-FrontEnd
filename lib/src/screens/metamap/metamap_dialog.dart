@@ -24,7 +24,7 @@ class _UserStatusDialogState extends State<UserStatusDialog> {
       child: Container(
         constraints: BoxConstraints(
           minHeight: size.height * 0.3,
-          maxHeight: size.height * 0.5,
+          maxHeight: size.height * 0.4,
         ),
         decoration: BoxDecoration(
           color: Theme.of(context).inputDecorationTheme.fillColor,
