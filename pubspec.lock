@@ -364,6 +364,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.5"
+  mati_plugin_flutter:
+    dependency: "direct main"
+    description:
+      name: mati_plugin_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.9.0"
   meta:
     dependency: transitive
     description:

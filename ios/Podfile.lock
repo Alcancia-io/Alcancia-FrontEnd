@@ -5,6 +5,10 @@ PODS:
   - Flutter (1.0.0)
   - flutter_secure_storage (3.3.1):
     - Flutter
+  - mati_plugin_flutter (2.2.2):
+    - Flutter
+    - MetaMap-ID-SDK (= 3.10.0)
+  - MetaMap-ID-SDK (3.10.0)
   - path_provider_ios (0.0.1):
     - Flutter
   - ReachabilitySwift (5.0.0)
@@ -15,11 +19,13 @@ DEPENDENCIES:
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
   - Flutter (from `Flutter`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+  - mati_plugin_flutter (from `.symlinks/plugins/mati_plugin_flutter/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
   trunk:
+    - MetaMap-ID-SDK
     - ReachabilitySwift
 
 EXTERNAL SOURCES:
@@ -29,6 +35,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
+  mati_plugin_flutter:
+    :path: ".symlinks/plugins/mati_plugin_flutter/ios"
   path_provider_ios:
     :path: ".symlinks/plugins/path_provider_ios/ios"
   url_launcher_ios:
@@ -38,10 +46,12 @@ SPEC CHECKSUMS:
   connectivity_plus: 413a8857dd5d9f1c399a39130850d02fe0feaf7e
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
+  mati_plugin_flutter: 18beae240be16f927056c30ad1d264800cd8cc72
+  MetaMap-ID-SDK: 5c1cbd248cb646fced9aa69fce15b28e69a879b6
   path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
 
-PODFILE CHECKSUM: ef19549a9bc3046e7bb7d2fab4d021637c0c58a3
+PODFILE CHECKSUM: 7368163408c647b7eb699d0d788ba6718e18fb8d
 
 COCOAPODS: 1.11.3

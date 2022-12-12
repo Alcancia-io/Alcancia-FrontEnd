@@ -48,7 +48,7 @@ dependencies:
   flutter_secure_storage: ^5.0.2
   stop_watch_timer: ^2.0.0
 
-
+  mati_plugin_flutter: ^2.9.0
   flutter_dotenv: ^5.0.2
   url_launcher: ^6.1.5
   http: ^0.13.5

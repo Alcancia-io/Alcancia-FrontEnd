@@ -283,8 +283,22 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                               padding:
                                   const EdgeInsets.only(top: 10, bottom: 12),
                               child: AlcanciaButton(
-                                buttonText: "Tarjeta de Débito/Crédito",
-                                onPressed: () {},
+                                buttonText: "Depositar por transferencia",
+                                onPressed: () {
+                                  //Temporary Variables
+                                  var verified = false;
+                                  var resident = false;
+
+                                  if (sourceDropdownVal == 'MXN') {
+                                    if (verified) {
+                                      // TODO: If mxn go to suarmi screen and if dop go to crypto pay
+                                    } else {
+                                      //TODO: Preguntar en un form de single select si es residente o no
+                                      if (resident) {
+                                      } else {}
+                                    }
+                                  } else if (sourceDropdownVal == 'DOP') {}
+                                },
                                 color: alcanciaLightBlue,
                                 width: double.infinity,
                                 height: responsiveService.getHeightPixels(
