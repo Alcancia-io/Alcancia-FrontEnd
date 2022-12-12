@@ -5,13 +5,17 @@ PODS:
   - Flutter (1.0.0)
   - flutter_secure_storage (3.3.1):
     - Flutter
-  - mati_plugin_flutter (2.2.2):
+  - fluttertoast (0.0.2):
+    - Flutter
+    - Toast
+  - MetaMap-ID-SDK (3.10.0)
+  - metamap_plugin_flutter (2.2.2):
     - Flutter
     - MetaMap-ID-SDK (= 3.10.0)
-  - MetaMap-ID-SDK (3.10.0)
   - path_provider_ios (0.0.1):
     - Flutter
   - ReachabilitySwift (5.0.0)
+  - Toast (4.0.0)
   - url_launcher_ios (0.0.1):
     - Flutter
 
@@ -19,7 +23,8 @@ DEPENDENCIES:
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
   - Flutter (from `Flutter`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
-  - mati_plugin_flutter (from `.symlinks/plugins/mati_plugin_flutter/ios`)
+  - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
+  - metamap_plugin_flutter (from `.symlinks/plugins/metamap_plugin_flutter/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
@@ -27,6 +32,7 @@ SPEC REPOS:
   trunk:
     - MetaMap-ID-SDK
     - ReachabilitySwift
+    - Toast
 
 EXTERNAL SOURCES:
   connectivity_plus:
@@ -35,8 +41,10 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
-  mati_plugin_flutter:
-    :path: ".symlinks/plugins/mati_plugin_flutter/ios"
+  fluttertoast:
+    :path: ".symlinks/plugins/fluttertoast/ios"
+  metamap_plugin_flutter:
+    :path: ".symlinks/plugins/metamap_plugin_flutter/ios"
   path_provider_ios:
     :path: ".symlinks/plugins/path_provider_ios/ios"
   url_launcher_ios:
@@ -46,12 +54,14 @@ SPEC CHECKSUMS:
   connectivity_plus: 413a8857dd5d9f1c399a39130850d02fe0feaf7e
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
-  mati_plugin_flutter: 18beae240be16f927056c30ad1d264800cd8cc72
+  fluttertoast: eb263d302cc92e04176c053d2385237e9f43fad0
   MetaMap-ID-SDK: 5c1cbd248cb646fced9aa69fce15b28e69a879b6
+  metamap_plugin_flutter: 0656fdb22d38061eba1093ecd7057df81f32d3b9
   path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
+  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
 
-PODFILE CHECKSUM: 7368163408c647b7eb699d0d788ba6718e18fb8d
+PODFILE CHECKSUM: 4e8f8b2be68aeea4c0d5beb6ff1e79fface1d048
 
 COCOAPODS: 1.11.3
