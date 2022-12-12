@@ -8,6 +8,7 @@ const String signupMutation = """
       phoneNumber,
       gender,
       dob,
+      country,
     }
   }
 """;

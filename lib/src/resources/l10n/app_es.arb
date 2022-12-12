@@ -4,6 +4,6 @@
   "password": "Contraseña",
   "errorRequiredField": "Este campo es obligatorio",
   "errorEmailFormat": "¿Estas seguro?, verifica tu correo",
-  "errorInvalidPassword": "Contraseña inválida.\nMínimo 8 carácteres, un número y un carácter especial",
+  "errorInvalidPassword": "Contraseña inválida.\nMínimo 8 carácteres, una letra mayuscula, una minuscula, un número y un carácter especial",
   "errorPasswordMatch": "Las contraseñas no coinciden"
 }

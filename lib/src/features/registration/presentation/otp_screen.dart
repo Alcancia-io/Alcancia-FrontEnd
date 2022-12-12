@@ -6,9 +6,9 @@ import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OTPScreen extends ConsumerStatefulWidget {
@@ -82,7 +82,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                 decoration: ShapeDecoration(
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
-                                            BorderRadius.circular(100),
+                                        BorderRadius.circular(100),
                                         side: BorderSide(
                                             color: alcanciaLightBlue))),
                                 child: Padding(
@@ -97,7 +97,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                       Text(
                                         displayTime,
                                         style:
-                                            TextStyle(color: alcanciaLightBlue),
+                                        TextStyle(color: alcanciaLightBlue),
                                       ),
                                     ],
                                   ),
@@ -118,12 +118,12 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                 color: alcanciaLightBlue,
                               ),
                             ),
-                            onPressed: () async {
-                              await registrationController.sendOTP(
-                                  widget.userRegistrationData.user.phoneNumber);
+                            onPressed: timer.rawTime.value == 0 ? () async {
+                              await registrationController
+                                  .resendVerificationCode(user.email);
                               timer.onResetTimer();
                               timer.onStartTimer();
-                            },
+                            } : null,
                           ),
                         ],
                       ),
@@ -139,23 +139,23 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                 height: 64,
                                 buttonText: "Crea tu cuenta",
                                 onPressed: () async {
-                                  _setLoading(true);
-                                  try {
-                                    await registrationController.verifyOTP(
-                                        codeController.text,
-                                        widget.userRegistrationData.user
-                                            .phoneNumber);
-                                    await registrationController.signUp(
-                                        widget.userRegistrationData.user,
-                                        widget.userRegistrationData.password);
-                                    timer.onStopTimer();
-                                    timer.dispose();
-                                    _setLoading(false);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        AlcanciaSnackBar(context,
-                                            "Tu cuenta ha sido creada exitosamente. Revisa tu correo para confirmar tu cuenta."));
-                                    context.go("/login");
-                                  } catch (err) {
+                                  if (acceptTerms) {
+                                    _setLoading(true);
+                                    try {
+                                      await registrationController.verifyOTP(
+                                          codeController.text,
+                                          widget.userRegistrationData.user.email);
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(AlcanciaSnackBar(
+                                              context,
+                                              "Tu cuenta ha sido creada exitosamente. Revisa tu correo para confirmar tu cuenta."));
+                                      context.go("/login");
+                                    } catch (err) {
+                                      setState(() {
+                                        error = err.toString();
+                                      });
+                                    }
+                                  } else {
                                     setState(() {
                                       error = err.toString();
                                       _loading = false;
