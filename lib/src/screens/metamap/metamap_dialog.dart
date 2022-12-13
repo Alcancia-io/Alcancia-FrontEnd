@@ -14,6 +14,7 @@ class UserStatusDialog extends StatefulWidget {
 
 class _UserStatusDialogState extends State<UserStatusDialog> {
   UserStatus status = UserStatus.resident;
+  TextEditingController professionTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class _UserStatusDialogState extends State<UserStatusDialog> {
       child: Container(
         constraints: BoxConstraints(
           minHeight: size.height * 0.3,
-          maxHeight: size.height * 0.4,
+          maxHeight: size.height * 0.5,
         ),
         decoration: BoxDecoration(
           color: Theme.of(context).inputDecorationTheme.fillColor,
@@ -37,7 +38,11 @@ class _UserStatusDialogState extends State<UserStatusDialog> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                "Selecciona una opción",
+                "Necesitamos saber más,",
+                style: Theme.of(context).textTheme.headline2,
+              ),
+              Text(
+                "¿Cuál es tu estatus migratorio en México?",
                 style: Theme.of(context).textTheme.bodyText1,
               ),
               Column(
@@ -80,6 +85,21 @@ class _UserStatusDialogState extends State<UserStatusDialog> {
                   ),
                 ],
               ),
+              Text(
+                "¿Cuál es tu profesión?",
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
+              TextField(
+                style:
+                Theme.of(context).textTheme.bodyMedium,
+                decoration: InputDecoration(
+                    fillColor: Theme.of(context)
+                        .primaryColor,
+                    labelText: "Profesión",
+                    labelStyle: Theme.of(context).textTheme.bodyMedium
+                ),
+                controller: professionTextController,
+              ),
               AlcanciaButton(
                 buttonText: "Aceptar",
                 color: alcanciaLightBlue,
@@ -94,5 +114,11 @@ class _UserStatusDialogState extends State<UserStatusDialog> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    professionTextController.dispose();
+    super.dispose();
   }
 }
