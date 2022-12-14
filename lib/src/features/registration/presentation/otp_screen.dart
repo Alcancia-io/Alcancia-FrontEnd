@@ -161,6 +161,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                       error = err.toString();
                                     });
                                   }
+                                  _setLoading(false);
                                 },
                               ),
                               Text(
