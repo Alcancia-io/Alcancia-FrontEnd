@@ -145,7 +145,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                 color: alcanciaLightBlue,
                                 width: 308,
                                 height: 64,
-                                buttonText: "Crea tu cuenta",
+                                buttonText: "Siguiente",
                                 onPressed: () async {
                                   _setLoading(true);
                                   try {

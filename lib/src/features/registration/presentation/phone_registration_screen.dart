@@ -151,7 +151,7 @@ class _OTPMethodScreenState extends ConsumerState<PhoneRegistrationScreen> {
               Column(
                 children: [
                   AlcanciaButton(
-                    buttonText: "Siguiente",
+                    buttonText: "Crear mi cuenta",
                     color: alcanciaLightBlue,
                     width: double.infinity,
                     height: 64,
