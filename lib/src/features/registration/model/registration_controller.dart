@@ -52,11 +52,11 @@ class RegistrationController {
             document: gql(verifyOTPQuery),
             variables: {"verificationCode": otp, "email": email}),
       );
-      print("Verifying");
       if (result.hasException) {
         final e = result.exception?.graphqlErrors[0].message;
         return Future.error(e!);
       }
+
     } catch (e) {
       return Future.error(e);
     }
