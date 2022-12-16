@@ -1,5 +1,7 @@
 import 'dart:developer';
+import 'package:alcancia/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:go_router/go_router.dart';
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -28,6 +30,7 @@ class PushNotificationProvider {
         print('Message also contained a notification: ${message.notification}');
       }
       // send to dashboard screen
+      navigatorKey.currentContext!.go("/homescreen/0");
     });
 
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);

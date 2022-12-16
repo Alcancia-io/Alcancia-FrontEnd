@@ -11,6 +11,8 @@ import 'package:alcancia/src/shared/provider/router_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+GlobalKey<NavigatorState> navigatorKey = GlobalKey(debugLabel: "Main Navigator");
+
 void main() async {
   await initHiveForFlutter();
   if (kReleaseMode) {

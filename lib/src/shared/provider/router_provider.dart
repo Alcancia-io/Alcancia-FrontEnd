@@ -1,3 +1,4 @@
+import 'package:alcancia/main.dart';
 import 'package:alcancia/src/screens/dashboard/dashboard_screen.dart';
 import 'package:alcancia/src/features/login/presentation/login_screen.dart';
 import 'package:alcancia/src/features/registration/model/GraphQLConfig.dart';
@@ -10,6 +11,7 @@ import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
 import 'package:alcancia/src/shared/graphql/queries.dart';
 import 'package:alcancia/src/shared/models/transaction_model.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:alcancia/src/features/transaction-detail/presentation/transaction_detail.dart';
@@ -29,6 +31,7 @@ Future<bool> isUserAuthenticated() async {
 final routerProvider = Provider<GoRouter>(
   (ref) {
     return GoRouter(
+      navigatorKey: navigatorKey,
       // debugLogDiagnostics: true,
       routes: [
         GoRoute(
