@@ -1,6 +1,9 @@
 import 'package:alcancia/src/resources/colors/app_theme.dart';
+import 'package:alcancia/src/shared/provider/push_notifications_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:alcancia/firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -15,7 +18,11 @@ void main() async {
   } else {
     await dotenv.load(fileName: ".env.dev");
   }
-
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  final PushNotificationProvider pushNotificationProvider = PushNotificationProvider();
+  pushNotificationProvider.initNotifications();
   runApp(const ProviderScope(child: MyApp()));
 }
 

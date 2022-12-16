@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 @pragma('vm:entry-point')
@@ -11,8 +10,6 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 class PushNotificationProvider {
   initNotifications() async {
-    await Firebase.initializeApp();
-
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     messaging.requestPermission();
 
