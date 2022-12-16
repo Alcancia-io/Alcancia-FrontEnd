@@ -23,17 +23,28 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  final PushNotificationProvider pushNotificationProvider = PushNotificationProvider();
-  pushNotificationProvider.initNotifications();
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
+  // This widget is the root of your application.
+  final PushNotificationProvider pushNotificationProvider = PushNotificationProvider();
+
+  @override
+  void initState() {
+    super.initState();
+    pushNotificationProvider.initNotifications();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final router = ref.watch(routerProvider);
     var uri = dotenv.env['API_URL'] as String;
 

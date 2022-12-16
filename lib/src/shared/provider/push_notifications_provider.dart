@@ -7,11 +7,20 @@ import 'package:go_router/go_router.dart';
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
   inspect(message);
-  // send to dashboard screen
+}
+
+void firebaseMessagingOpenAppHandler(RemoteMessage message) {
+  print("Handling a opened message: ${message.messageId}");
+  navigatorKey.currentContext!.go("/registration");
+}
+
+void handleInitialMessage(RemoteMessage message) {
+  print("Handling initial message: ${message.messageId}");
+  navigatorKey.currentContext!.go("/login");
 }
 
 class PushNotificationProvider {
-  initNotifications() async {
+  Future<void> initNotifications() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     messaging.requestPermission();
 
@@ -20,6 +29,15 @@ class PushNotificationProvider {
       print('this is the token: ');
       print(token);
     });
+
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    if (initialMessage != null) {
+      handleInitialMessage(initialMessage);
+    }
+
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    FirebaseMessaging.onMessageOpenedApp.listen(firebaseMessagingOpenAppHandler);
+
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Got a message whilst in the foreground!');
@@ -30,9 +48,7 @@ class PushNotificationProvider {
         print('Message also contained a notification: ${message.notification}');
       }
       // send to dashboard screen
-      navigatorKey.currentContext!.go("/homescreen/0");
+      navigatorKey.currentContext!.go("/registration");
     });
-
-    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   }
 }
