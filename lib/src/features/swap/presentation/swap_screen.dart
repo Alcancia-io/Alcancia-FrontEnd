@@ -305,27 +305,29 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                     // go to checkout form
                                   } else {
                                     if (sourceDropdownVal == 'MXN') {
-                                      final UserStatus status = await showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return const UserStatusDialog();
-                                          });
+                                      final UserStatus status =
+                                          await showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return const UserStatusDialog();
+                                              });
                                       resident = status == UserStatus.resident;
                                     }
                                     if (sourceDropdownVal == 'MXN' &&
                                         resident) {
                                       metaMapController.showMatiFlow(
-                                          metamapMexicanResidentId);
+                                          metamapMexicanResidentId,
+                                          user!.userId);
                                     }
                                     if (sourceDropdownVal == 'MXN' &&
                                         !resident) {
-                                      metaMapController
-                                          .showMatiFlow(metamapMexicanINEId);
+                                      metaMapController.showMatiFlow(
+                                          metamapMexicanINEId, user!.userId);
                                     }
 
                                     if (sourceDropdownVal == "DOP") {
-                                      metaMapController
-                                          .showMatiFlow(metamapDomicanFlowId);
+                                      metaMapController.showMatiFlow(
+                                          metamapDomicanFlowId, user!.userId);
                                     }
                                   }
                                 },

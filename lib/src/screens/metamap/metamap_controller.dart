@@ -5,9 +5,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 class MetaMapController {
   final metamapClientId = dotenv.env['METAMAP_CLIENT_ID'] as String;
 
-  void showMatiFlow(String flowId) {
+  void showMatiFlow(String flowId, String uid) {
     print(flowId);
-    MetaMapFlutter.showMetaMapFlow(metamapClientId, flowId, {});
+    MetaMapFlutter.showMetaMapFlow(metamapClientId, flowId, {uid: uid});
     MetaMapFlutter.resultCompleter.future.then((result) =>
         Fluttertoast.showToast(
             msg: result is ResultSuccess
