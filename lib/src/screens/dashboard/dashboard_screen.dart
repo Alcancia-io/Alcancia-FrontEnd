@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:alcancia/src/screens/dashboard/dashboard_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_transactions_list.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
@@ -30,6 +31,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     });
     try {
       var userInfo = await dashboardController.fetchUserInformation();
+      inspect(userInfo);
       txns = userInfo.txns;
       ref.watch(userProvider.notifier).setUser(userInfo.user);
       ref

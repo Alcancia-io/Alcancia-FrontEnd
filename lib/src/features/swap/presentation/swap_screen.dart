@@ -294,10 +294,10 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                               padding:
                                   const EdgeInsets.only(top: 10, bottom: 12),
                               child: AlcanciaButton(
-                                buttonText: "Depositar por transferencia",
+                                buttonText: "Transferencia",
                                 onPressed: () async {
                                   //Temporary Variables
-                                  var verified = false;
+                                  var verified = user!.kycVerified;
                                   var resident = false;
 
                                   if (verified) {
@@ -317,17 +317,17 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                         resident) {
                                       metaMapController.showMatiFlow(
                                           metamapMexicanResidentId,
-                                          user!.userId);
+                                          user.userId);
                                     }
                                     if (sourceDropdownVal == 'MXN' &&
                                         !resident) {
                                       metaMapController.showMatiFlow(
-                                          metamapMexicanINEId, user!.userId);
+                                          metamapMexicanINEId, user.userId);
                                     }
 
                                     if (sourceDropdownVal == "DOP") {
                                       metaMapController.showMatiFlow(
-                                          metamapDomicanFlowId, user!.userId);
+                                          metamapDomicanFlowId, user.userId);
                                     }
                                   }
                                 },
@@ -336,27 +336,6 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                 height: responsiveService.getHeightPixels(
                                   64,
                                   screenHeight,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 10, bottom: 12),
-                              child: SizedBox(
-                                height: responsiveService.getHeightPixels(
-                                  64,
-                                  screenHeight,
-                                ),
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Color(0xFFC9E0FF),
-                                  ),
-                                  onPressed: () {},
-                                  child: const Image(
-                                    image: AssetImage(
-                                        "lib/src/resources/images/Coinbase 2.png"),
-                                  ),
                                 ),
                               ),
                             ),

@@ -14,6 +14,7 @@ class User {
   String walletAddress;
   List<Transaction>? transactions;
   double userProfit;
+  bool kycVerified;
 
   User({
     required this.userId,
@@ -27,32 +28,35 @@ class User {
     required this.balance,
     required this.walletAddress,
     this.userProfit = 0,
+    this.kycVerified = false,
   });
 
   static final sampleUser = User(
-      userId: "",
-      surname: "",
-      gender: "",
-      country: "",
-      phoneNumber: "",
-      dob: DateTime.now(),
-      name: "",
-      email: "",
-      balance: 0.0,
-      walletAddress: "");
+    userId: "",
+    surname: "",
+    gender: "",
+    country: "",
+    phoneNumber: "",
+    dob: DateTime.now(),
+    name: "",
+    email: "",
+    balance: 0.0,
+    walletAddress: "",
+    kycVerified: false,
+  );
 
   factory User.fromJSON(Map<String, dynamic> map) {
     return User(
-      userId: map["userId"],
-      surname: map["surname"],
-      gender: map["gender"],
-      country: map["country"],
-      phoneNumber: map["phoneNumber"],
-      dob: DateFormat('yyyy-MM-dd').parse(map["dob"]),
-      name: map["name"],
-      email: map["email"],
-      balance: map['balance'].toDouble(),
-      walletAddress: map['walletAddress'],
-    );
+        userId: map["userId"],
+        surname: map["surname"],
+        gender: map["gender"],
+        country: map["country"],
+        phoneNumber: map["phoneNumber"],
+        dob: DateFormat('yyyy-MM-dd').parse(map["dob"]),
+        name: map["name"],
+        email: map["email"],
+        balance: map['balance'].toDouble(),
+        walletAddress: map['walletAddress'],
+        kycVerified: map['kycVerified']);
   }
 }
