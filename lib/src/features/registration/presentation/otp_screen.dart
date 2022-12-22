@@ -1,9 +1,9 @@
-import 'package:alcancia/src/features/registration/model/user_registration_model.dart';
 import 'package:alcancia/src/features/registration/provider/registration_controller_provider.dart';
 import 'package:alcancia/src/features/registration/provider/timer_provider.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
+import 'package:alcancia/src/shared/models/otp_data_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,8 +12,8 @@ import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OTPScreen extends ConsumerStatefulWidget {
-  OTPScreen({Key? key, required this.userRegistrationData}) : super(key: key);
-  final UserRegistrationModel userRegistrationData;
+  OTPScreen({Key? key, required this.otpDataModel}) : super(key: key);
+  final OTPDataModel otpDataModel;
   final Uri url = Uri.parse('');
 
   @override
@@ -21,9 +21,16 @@ class OTPScreen extends ConsumerStatefulWidget {
 }
 
 class _OTPScreenState extends ConsumerState<OTPScreen> {
-  final codeController = TextEditingController();
-  String error = "";
+  final _codeController = TextEditingController();
+  String _error = "";
   bool _loading = false;
+
+  String _bodyText() {
+    if (widget.otpDataModel.phoneNumber != null) {
+      return "Ingresa el código de 6 dígitos que enviamos a tu celular ${widget.otpDataModel.phoneNumber}";
+    }
+    return "Ingresa el código de 6 dígitos que enviamos a tu celular";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,20 +65,20 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                       Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                            "Ingresa el código de 6 dígitos que enviamos a tu celular ${widget.userRegistrationData.user.phoneNumber}"),
+                          _bodyText(),
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: LabeledTextFormField(
-                            controller: codeController,
+                            controller: _codeController,
                             autofillHints: [AutofillHints.oneTimeCode],
                             labelText: "Código"),
                       ),
                       StreamBuilder<int>(
                           stream: timer.rawTime,
                           initialData: 0,
-                          builder:
-                              (BuildContext ctx, AsyncSnapshot snapshot) {
+                          builder: (BuildContext ctx, AsyncSnapshot snapshot) {
                             final value = snapshot.data;
                             final displayTime = StopWatchTimer.getDisplayTime(
                                 value,
@@ -98,8 +105,8 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                           ),
                                           Text(
                                             displayTime,
-                                            style:
-                                                TextStyle(color: alcanciaLightBlue),
+                                            style: TextStyle(
+                                                color: alcanciaLightBlue),
                                           ),
                                         ],
                                       ),
@@ -113,15 +120,16 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                     TextButton(
                                       onPressed: value <= 0
                                           ? () async {
-                                        await registrationController
-                                            .resendVerificationCode(widget.userRegistrationData.user.email);
-                                        timer.onResetTimer();
-                                        timer.onStartTimer();
-                                      }
+                                              await registrationController
+                                                  .resendVerificationCode(widget
+                                                      .otpDataModel
+                                                      .email);
+                                              timer.onResetTimer();
+                                              timer.onStartTimer();
+                                            }
                                           : null,
                                       style: TextButton.styleFrom(
-                                          foregroundColor: alcanciaLightBlue
-                                      ),
+                                          foregroundColor: alcanciaLightBlue),
                                       child: const Text(
                                         "Reenviar",
                                         style: TextStyle(
@@ -150,22 +158,22 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                   _setLoading(true);
                                   try {
                                     await registrationController.verifyOTP(
-                                        codeController.text,
-                                        widget.userRegistrationData.user.email);
+                                        _codeController.text,
+                                        widget.otpDataModel.email);
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         AlcanciaSnackBar(context,
                                             "Tu cuenta ha sido creada exitosamente."));
                                     context.go("/login");
                                   } catch (err) {
                                     setState(() {
-                                      error = err.toString();
+                                      _error = err.toString();
                                     });
                                   }
                                   _setLoading(false);
                                 },
                               ),
                               Text(
-                                error,
+                                _error,
                                 style: const TextStyle(color: Colors.red),
                               ),
                             ],
@@ -185,7 +193,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
 
   @override
   void dispose() {
-    codeController.dispose();
+    _codeController.dispose();
     super.dispose();
   }
 

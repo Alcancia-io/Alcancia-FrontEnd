@@ -1,4 +1,5 @@
 import 'package:alcancia/src/features/registration/provider/timer_provider.dart';
+import 'package:alcancia/src/shared/models/otp_data_model.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -167,7 +168,8 @@ class _OTPMethodScreenState extends ConsumerState<PhoneRegistrationScreen> {
                             timer.setPresetMinuteTime(1, add: false);
                             timer.onResetTimer();
                             timer.onStartTimer();
-                            context.push("/otp", extra: widget.userRegistrationData);
+                            final email = widget.userRegistrationData.user.email;
+                            context.push("/otp", extra: OTPDataModel(email: email, phoneNumber: phoneNumber));
                           } catch (e) {
                             setState(() {
                               error =
