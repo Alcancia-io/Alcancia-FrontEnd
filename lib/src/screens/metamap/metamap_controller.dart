@@ -7,13 +7,13 @@ class MetaMapController {
 
   void showMatiFlow(String flowId, String uid) {
     print(flowId);
-    MetaMapFlutter.showMetaMapFlow(metamapClientId, flowId, {uid: uid});
+    MetaMapFlutter.showMetaMapFlow(metamapClientId, flowId, {"uid": uid});
     MetaMapFlutter.resultCompleter.future.then((result) =>
         Fluttertoast.showToast(
             msg: result is ResultSuccess
-                ? "Success ${result.verificationId}"
-                : "Cancelled",
-            toastLength: Toast.LENGTH_SHORT,
+                ? "Verificación completada, revisión en proceso..."
+                : "Cancelada",
+            toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM));
   }
 }

@@ -11,7 +11,8 @@ const String meQuery = """
       email,
       balance,
       walletAddress,
-      kycVerified
+      kycVerified,
+      id
     }
   }
 """;

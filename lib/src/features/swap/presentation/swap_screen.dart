@@ -15,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:alcancia/src/screens/metamap/metamap_dialog.dart';
 
@@ -300,10 +301,17 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                   var verified = user!.kycVerified;
                                   var resident = false;
 
-                                  if (verified) {
+                                  if (verified == "SUCCESS") {
                                     context.push('/');
                                     // go to checkout form
-                                  } else {
+                                  } else if (verified == "PENDING") {
+                                    Fluttertoast.showToast(
+                                        msg:
+                                            "Revisión en proceso, espera un momento...",
+                                        toastLength: Toast.LENGTH_LONG,
+                                        gravity: ToastGravity.BOTTOM);
+                                  } else if (verified == "FAILED" ||
+                                      verified == null) {
                                     if (sourceDropdownVal == 'MXN') {
                                       final UserStatus status =
                                           await showDialog(
