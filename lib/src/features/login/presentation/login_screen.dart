@@ -1,8 +1,10 @@
+import 'package:alcancia/src/features/registration/provider/registration_controller_provider.dart';
 import 'package:alcancia/src/features/registration/provider/timer_provider.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_link.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/models/login_data_model.dart';
+import 'package:alcancia/src/shared/models/otp_data_model.dart';
 import 'package:alcancia/src/shared/models/storage_item.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
@@ -93,6 +95,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final appLocalization = AppLocalizations.of(context)!;
     final obscurePassword = ref.watch(obscurePasswordProvider);
     final timer = ref.watch(timerProvider);
+
+    // for unverified users
+    final registrationController = ref.watch(registrationControllerProvider);
+
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -282,6 +288,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       context.push("/mfa", extra: LoginDataModel(email: userEmail, password: passwordController.text, phoneNumber: userPhone));
                                     }
                                   },
+                                  onError: (error) {
+                                    final notVerified = error!.graphqlErrors.first.message.contains("UserNotConfirmedException");
+                                    if (notVerified) {
+                                      registrationController.resendVerificationCode(emailController.text);
+                                      timer.setPresetMinuteTime(1, add: false);
+                                      timer.onResetTimer();
+                                      timer.onStartTimer();
+                                      context.push("/otp", extra: OTPDataModel(email: emailController.text));
+                                    }
+                                  }
                                 ),
                                 builder: (
                                   MultiSourceResult<Object?> Function(
@@ -302,17 +318,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                           AlcanciaButton(
                                             width: responsiveService
                                                 .getWidthPixels(
-                                                    304, screenWidth),
+                                                304, screenWidth),
                                             height: responsiveService
                                                 .getHeightPixels(
-                                                    64, screenHeight),
+                                                64, screenHeight),
                                             buttonText: "Iniciar sesión",
                                             onPressed: () {
                                               setLoginInputFields();
                                               runMutation(
                                                 {
                                                   "loginUserInput":
-                                                      loginUserInput
+                                                  loginUserInput
                                                 },
                                               );
                                             },
