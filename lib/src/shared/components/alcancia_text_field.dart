@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 
 class LabeledTextFormField extends StatelessWidget {
-  const LabeledTextFormField(
-      {Key? key,
-      required this.controller,
-      required this.labelText,
-      this.suffixIcon,
-      this.obscure = false,
-      this.autofillHints,
-      this.inputType,  this.validator,})
-      : super(key: key);
+  const LabeledTextFormField({
+    Key? key,
+    required this.controller,
+    required this.labelText,
+    this.suffixIcon,
+    this.obscure = false,
+    this.autofillHints,
+    this.textInputAction,
+    this.inputType,
+    this.validator,
+  }) : super(key: key);
 
   final TextEditingController controller;
   final String labelText;
@@ -18,6 +20,7 @@ class LabeledTextFormField extends StatelessWidget {
   final String? Function(String?)? validator;
   final TextInputType? inputType;
   final Iterable<String>? autofillHints;
+  final TextInputAction? textInputAction;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +32,7 @@ class LabeledTextFormField extends StatelessWidget {
           controller: controller,
           keyboardType: inputType,
           autofillHints: autofillHints,
+          textInputAction: textInputAction,
           obscureText: obscure,
           decoration: InputDecoration(
             suffixIcon: suffixIcon,
