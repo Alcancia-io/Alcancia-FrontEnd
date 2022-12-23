@@ -298,7 +298,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   height: 64,
                   onPressed: () {
                     final user = User(
-                      userId: "",
+                      id: "",
                       name: nameController.text,
                       surname: lastNameController.text,
                       email: emailController.text,
@@ -313,7 +313,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                     if (isValid(
                         selectedCountry, selectedGender, selectedDate)) {
                       ref.read(userProvider.notifier).setUser(user);
-                      registrationController.signUp(user, passwordController.text);
+                      registrationController.signUp(
+                          user, passwordController.text);
                       timer.setPresetMinuteTime(1, add: false);
                       timer.onResetTimer();
                       timer.onStartTimer();

@@ -7,7 +7,8 @@ class MetaMapController {
 
   void showMatiFlow(String flowId, String uid) {
     print(flowId);
-    MetaMapFlutter.showMetaMapFlow(metamapClientId, flowId, {"uid": uid});
+    MetaMapFlutter.showMetaMapFlow(
+        metamapClientId, flowId, {"uid": uid, "buttonColor": "4E76E5"});
     MetaMapFlutter.resultCompleter.future.then((result) =>
         Fluttertoast.showToast(
             msg: result is ResultSuccess

@@ -1,15 +1,18 @@
 const String meQuery = """
   query {
     me {
-      userId,
+      authId,
       surname,
       gender,
+      country,
       phoneNumber,
       dob,
       name,
       email,
       balance,
-      walletAddress
+      walletAddress,
+      kycStatus,
+      id
     }
   }
 """;

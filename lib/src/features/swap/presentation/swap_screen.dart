@@ -298,10 +298,10 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                 buttonText: "Transferencia",
                                 onPressed: () async {
                                   //Temporary Variables
-                                  var verified = user!.kycVerified;
+                                  var verified = user!.kycStatus;
                                   var resident = false;
 
-                                  if (verified == "SUCCESS") {
+                                  if (verified == "VERIFIED") {
                                     context.push('/');
                                     // go to checkout form
                                   } else if (verified == "PENDING") {
@@ -324,18 +324,17 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                     if (sourceDropdownVal == 'MXN' &&
                                         resident) {
                                       metaMapController.showMatiFlow(
-                                          metamapMexicanResidentId,
-                                          user.userId);
+                                          metamapMexicanResidentId, user.id);
                                     }
                                     if (sourceDropdownVal == 'MXN' &&
                                         !resident) {
                                       metaMapController.showMatiFlow(
-                                          metamapMexicanINEId, user.userId);
+                                          metamapMexicanINEId, user.id);
                                     }
 
                                     if (sourceDropdownVal == "DOP") {
                                       metaMapController.showMatiFlow(
-                                          metamapDomicanFlowId, user.userId);
+                                          metamapDomicanFlowId, user.id);
                                     }
                                   }
                                 },

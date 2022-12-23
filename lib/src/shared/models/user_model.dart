@@ -2,7 +2,8 @@ import 'package:alcancia/src/shared/models/transaction_model.dart';
 import 'package:intl/intl.dart';
 
 class User {
-  final String userId;
+  final String id;
+  final String authId;
   final String email;
   final String name;
   final String surname;
@@ -14,10 +15,11 @@ class User {
   String walletAddress;
   List<Transaction>? transactions;
   double userProfit;
-  String? kycVerified;
+  String? kycStatus;
 
   User({
-    required this.userId,
+    required this.id,
+    required this.authId,
     required this.surname,
     required this.gender,
     required this.country,
@@ -28,11 +30,12 @@ class User {
     required this.balance,
     required this.walletAddress,
     this.userProfit = 0,
-    this.kycVerified = null,
+    this.kycStatus = null,
   });
 
   static final sampleUser = User(
-    userId: "",
+    id: "",
+    authId: "",
     surname: "",
     gender: "",
     country: "",
@@ -42,12 +45,13 @@ class User {
     email: "",
     balance: 0.0,
     walletAddress: "",
-    kycVerified: null,
+    kycStatus: null,
   );
 
   factory User.fromJSON(Map<String, dynamic> map) {
     return User(
-        userId: map["id"],
+        id: map["id"],
+        authId: map["authId"],
         surname: map["surname"],
         gender: map["gender"],
         country: map["country"],
@@ -57,6 +61,6 @@ class User {
         email: map["email"],
         balance: map['balance'].toDouble(),
         walletAddress: map['walletAddress'],
-        kycVerified: map['kycVerified']);
+        kycStatus: map['kycStatus']);
   }
 }
