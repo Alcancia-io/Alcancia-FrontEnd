@@ -1,7 +1,8 @@
 const String meQuery = """
   query {
     me {
-      userId,
+      id,
+      authId,
       surname,
       gender,
       country,
