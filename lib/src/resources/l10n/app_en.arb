@@ -6,7 +6,7 @@
   "errorInvalidPassword": "Invalid password.\n8 characters minimum, a number and a special character",
   "errorPasswordMatch": "Password do not match",
   "labelHello": "Hello!",
-  "labelHelloWelcome": "Hello!\nWelcome",
+  "labelHelloWelcome": "Hello!\nWelcome {username}",
   "labelRegisterSubtitle": "Fill out the following information to create your account:",
   "labelName": "Name(s)",
   "labelLastName": "Last Name",

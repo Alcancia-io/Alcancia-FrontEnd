@@ -1,13 +1,19 @@
-import 'package:alcancia/src/features/dashboard/presentation/dashboard_screen.dart';
+import 'package:alcancia/src/features/registration/presentation/phone_registration_screen.dart';
+import 'package:alcancia/src/screens/dashboard/dashboard_screen.dart';
 import 'package:alcancia/src/features/login/presentation/login_screen.dart';
 import 'package:alcancia/src/features/registration/model/GraphQLConfig.dart';
 import 'package:alcancia/src/features/swap/presentation/swap_screen.dart';
 import 'package:alcancia/src/features/registration/presentation/otp_screen.dart';
+import 'package:alcancia/src/features/user-profile/presentation/account_screen.dart';
 import 'package:alcancia/src/features/welcome/presentation/welcome_screen.dart';
 import 'package:alcancia/src/features/registration/presentation/registration_screen.dart';
+import 'package:alcancia/src/features/registration/model/user_registration_model.dart';
+import 'package:alcancia/src/screens/login/mfa_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
 import 'package:alcancia/src/shared/graphql/queries.dart';
-import 'package:alcancia/src/shared/models/transaction.dart';
+import 'package:alcancia/src/shared/models/alcancia_models.dart';
+import 'package:alcancia/src/shared/models/login_data_model.dart';
+import 'package:alcancia/src/shared/models/transaction_model.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -27,7 +33,7 @@ Future<bool> isUserAuthenticated() async {
 final routerProvider = Provider<GoRouter>(
   (ref) {
     return GoRouter(
-      debugLogDiagnostics: true,
+      // debugLogDiagnostics: true,
       routes: [
         GoRoute(
           name: "welcome",
@@ -49,14 +55,19 @@ final routerProvider = Provider<GoRouter>(
           },
         ),
         GoRoute(
-          name: "dashboard",
-          path: "/dashboard",
-          builder: (context, state) => DashboardScreen(),
+          name: "account",
+          path: "/account",
+          builder: (context, state) => AccountScreen(),
         ),
         GoRoute(
           name: "registration",
           path: "/registration",
           builder: (context, state) => const RegistrationScreen(),
+        ),
+        GoRoute(
+          name: "phone-registration",
+          path: "/phone-registration",
+          builder: (context, state) => PhoneRegistrationScreen(userRegistrationData: state.extra as UserRegistrationModel),
         ),
         GoRoute(
           name: "swap",
@@ -73,9 +84,14 @@ final routerProvider = Provider<GoRouter>(
           name: "otp",
           path: "/otp",
           builder: (context, state) => OTPScreen(
-            password: state.extra! as String,
+            userRegistrationData: state.extra as UserRegistrationModel,
           ),
         ),
+        GoRoute(
+          name: "mfa",
+          path: "/mfa",
+          builder: (context, state) => MFAScreen(data: state.extra as LoginDataModel),
+        )
       ],
       redirect: (context, state) async {
         print(state.location);
@@ -86,6 +102,14 @@ final routerProvider = Provider<GoRouter>(
         final isSwap = state.location == "/swap";
         final isTransactionDetail = state.location == "/transaction_detail";
         // final isUserInSwapScreen = state.location == "/homescreen/0";
+        final isWelcome = state.location == "/";
+        final isLogin = state.location == "/login";
+        final isRegister = state.location == "/registration";
+        final isPhoneRegistration = state.location == "/phone-registration";
+        final isOTP = state.location == "/otp";
+        final isAccount = state.location == "/account";
+        final isMFA = state.location == "/mfa";
+
         if (await isUserAuthenticated()) {
           if (isUserInDashboard) {
             return null;
@@ -97,14 +121,33 @@ final routerProvider = Provider<GoRouter>(
             return null;
           } else if (isProfile) {
             return null;
+          } else if (isAccount) {
+            return null;
           } else {
             // return "/homescreen/0";
             return "/homescreen/0";
           }
           // return "/dashboard";
+        } else {
+          print("NOT AUTHE");
+          if (isWelcome) {
+            return null;
+          } else if (isLogin) {
+            return null;
+          } else if (isRegister) {
+            return null;
+          } else if (isOTP) {
+            return null;
+          } else if (isPhoneRegistration) {
+            return null;
+          } else if (isMFA) {
+            return null;
+          } else {
+            // return "/homescreen/0";
+            return "/";
+          }
         }
-        // means is not authenticated
-        // return state.location != "/login" ? "/login" : null;
+        return null;
       },
     );
   },

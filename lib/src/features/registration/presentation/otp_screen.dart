@@ -1,21 +1,21 @@
+import 'package:alcancia/src/features/registration/model/user_registration_model.dart';
 import 'package:alcancia/src/features/registration/provider/registration_controller_provider.dart';
 import 'package:alcancia/src/features/registration/provider/timer_provider.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
-import 'package:alcancia/src/shared/provider/user.dart';
-import 'package:flutter/gestures.dart';
+import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OTPScreen extends ConsumerStatefulWidget {
-  OTPScreen({Key? key, required this.password}) : super(key: key);
-  final String password;
-  final Uri url = Uri.parse('https://flutter.dev');
+  OTPScreen({Key? key, required this.userRegistrationData}) : super(key: key);
+  final UserRegistrationModel userRegistrationData;
+  final Uri url = Uri.parse('');
 
   @override
   ConsumerState<OTPScreen> createState() => _OTPScreenState();
@@ -23,13 +23,11 @@ class OTPScreen extends ConsumerStatefulWidget {
 
 class _OTPScreenState extends ConsumerState<OTPScreen> {
   final codeController = TextEditingController();
-  bool acceptTerms = false;
   String error = "";
   bool _loading = false;
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(userProvider);
     final timer = ref.watch(timerProvider);
     final registrationController = ref.watch(registrationControllerProvider);
     final appLocalization = AppLocalizations.of(context)!;
@@ -62,7 +60,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                       Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                            appLocalization.labelEnterCodePhone(user!.phoneNumber)),
+                            appLocalization.labelEnterCodePhone(widget.userRegistrationData.user.phoneNumber)),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -75,105 +73,70 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                           stream: timer.rawTime,
                           initialData: 0,
                           builder:
-                              (BuildContext context, AsyncSnapshot snapshot) {
+                              (BuildContext ctx, AsyncSnapshot snapshot) {
                             final value = snapshot.data;
                             final displayTime = StopWatchTimer.getDisplayTime(
                                 value,
                                 hours: false,
                                 milliSecond: false);
-                            return Center(
-                              child: Container(
-                                decoration: ShapeDecoration(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        side: BorderSide(
-                                            color: alcanciaLightBlue))),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.timer_sharp,
-                                        color: alcanciaLightBlue,
+                            return Column(
+                              children: [
+                                Center(
+                                  child: Container(
+                                    decoration: ShapeDecoration(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            side: BorderSide(
+                                                color: alcanciaLightBlue))),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.timer_sharp,
+                                            color: alcanciaLightBlue,
+                                          ),
+                                          Text(
+                                            displayTime,
+                                            style:
+                                                TextStyle(color: alcanciaLightBlue),
+                                          ),
+                                        ],
                                       ),
-                                      Text(
-                                        displayTime,
-                                        style:
-                                            TextStyle(color: alcanciaLightBlue),
-                                      ),
-                                    ],
+                                    ),
                                   ),
                                 ),
-                              ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Text("¿No recibiste el código?"),
+                                    TextButton(
+                                      onPressed: value <= 0
+                                          ? () async {
+                                        await registrationController
+                                            .resendVerificationCode(widget.userRegistrationData.user.email);
+                                        timer.onResetTimer();
+                                        timer.onStartTimer();
+                                      }
+                                          : null,
+                                      style: TextButton.styleFrom(
+                                          foregroundColor: alcanciaLightBlue
+                                      ),
+                                      child: const Text(
+                                        "Reenviar",
+                                        style: TextStyle(
+                                          decoration: TextDecoration.underline,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             );
                           }),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(appLocalization.labelDidNotReceiveCode),
-                          CupertinoButton(
-                            child: Text(
-                              appLocalization.labelResend,
-                              style: TextStyle(
-                                decoration: TextDecoration.underline,
-                                fontWeight: FontWeight.bold,
-                                color: alcanciaLightBlue,
-                              ),
-                            ),
-                            onPressed: () async {
-                              await registrationController
-                                  .sendOTP(user.phoneNumber);
-                              timer.onResetTimer();
-                              timer.onStartTimer();
-                            },
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: 25,
-                            child: Checkbox(
-                                value: acceptTerms,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                onChanged: (value) {
-                                  if (value != null) {
-                                    setState(() {
-                                      acceptTerms = value;
-                                    });
-                                  }
-                                }),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 8.0),
-                              child: RichText(
-                                text: TextSpan(
-                                    text: appLocalization.labelReadAndAccepted,
-                                    style:
-                                        Theme.of(context).textTheme.bodyText2,
-                                    children: [
-                                      TextSpan(
-                                        text:
-                                            appLocalization.labelPrivacyPolicyAndDataProtection,
-                                        style:
-                                            TextStyle(color: alcanciaLightBlue),
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () {
-                                            _launchUrl();
-                                          },
-                                      )
-                                    ]),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
                       Center(
                         child: Column(
                           children: [
@@ -184,30 +147,20 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                 color: alcanciaLightBlue,
                                 width: 308,
                                 height: 64,
-                                buttonText: appLocalization.labelCreateAccount,
+                                buttonText: appLocalization.labelNext,
                                 onPressed: () async {
-                                  if (acceptTerms) {
-                                    _setLoading(true);
-                                    try {
-                                      await registrationController.verifyOTP(
-                                          codeController.text,
-                                          user.phoneNumber);
-                                      await registrationController.signUp(
-                                          user, widget.password);
-                                      timer.onStopTimer();
-                                      timer.dispose();
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(_snackBar());
-                                      context.go("/login");
-                                    } catch (err) {
-                                      setState(() {
-                                        error = err.toString();
-                                      });
-                                    }
-                                  } else {
+                                  _setLoading(true);
+                                  try {
+                                    await registrationController.verifyOTP(
+                                        codeController.text,
+                                        widget.userRegistrationData.user.email);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        AlcanciaSnackBar(context,
+                                            "Tu cuenta ha sido creada exitosamente."));
+                                    context.go("/login");
+                                  } catch (err) {
                                     setState(() {
-                                      error =
-                                          appLocalization.errorAcceptPrivacyPolicy;
+                                      error = err.toString();
                                     });
                                   }
                                   _setLoading(false);
@@ -229,18 +182,6 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  SnackBar _snackBar() {
-    return SnackBar(
-      content: Text(
-        "Tu cuenta ha sido creada exitosamente. Revisa tu correo para confirmar tu cuenta.",
-        style: Theme.of(context).textTheme.bodyText2,
-      ),
-      behavior: SnackBarBehavior.floating,
-      backgroundColor: Theme.of(context).inputDecorationTheme.fillColor,
-      duration: Duration(seconds: 5),
     );
   }
 

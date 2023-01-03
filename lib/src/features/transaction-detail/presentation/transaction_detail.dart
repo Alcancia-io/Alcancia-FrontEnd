@@ -5,7 +5,7 @@ import 'package:alcancia/src/features/transaction-detail/presentation/transactio
 import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../resources/colors/colors.dart';
-import '../../../shared/models/transaction.dart';
+import '../../../shared/models/transaction_model.dart';
 
 class TransactionDetail extends StatelessWidget {
   const TransactionDetail({Key? key, required this.txn}) : super(key: key);

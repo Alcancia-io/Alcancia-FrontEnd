@@ -4,6 +4,7 @@ const String meQuery = """
       userId,
       surname,
       gender,
+      country,
       phoneNumber,
       dob,
       name,
@@ -11,17 +12,5 @@ const String meQuery = """
       balance,
       walletAddress
     }
-  }
-""";
-
-const String userProfitQuery = """
-  query{
-    getUserProfit
-  }
-""";
-
-const String isAuthenticated = """
-  query {
-    isUserAuthenticated
   }
 """;

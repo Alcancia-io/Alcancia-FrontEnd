@@ -6,7 +6,16 @@
   "errorInvalidPassword": "Contraseña inválida.\nMínimo 8 carácteres, un número y un carácter especial",
   "errorPasswordMatch": "Las contraseñas no coinciden",
   "labelHello": "¡Hola!",
-  "labelHelloWelcome": "¡Hola!\nBienvenido",
+  "labelHelloWelcome": "¡Hola!\nBienvenido {username}",
+  "@labelHelloWelcome": {
+    "description": "Welcome user to app",
+    "placeholders": {
+      "username": {
+        "type": "String",
+        "example": ""
+      }
+    }
+  },
   "labelRegisterSubtitle": "Completa la siguiente información para crear tu cuenta:",
   "labelName": "Nombre(s)",
   "labelLastName": "Apellido(s)",
