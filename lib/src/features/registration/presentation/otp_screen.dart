@@ -111,7 +111,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    const Text("¿No recibiste el código?"),
+                                    Text(appLocalization.labelDidNotReceiveCode),
                                     TextButton(
                                       onPressed: value <= 0
                                           ? () async {
@@ -124,8 +124,8 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                       style: TextButton.styleFrom(
                                           foregroundColor: alcanciaLightBlue
                                       ),
-                                      child: const Text(
-                                        "Reenviar",
+                                      child: Text(
+                                        appLocalization.labelResend,
                                         style: TextStyle(
                                           decoration: TextDecoration.underline,
                                           fontWeight: FontWeight.bold,
@@ -156,7 +156,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                         widget.userRegistrationData.user.email);
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         AlcanciaSnackBar(context,
-                                            "Tu cuenta ha sido creada exitosamente."));
+                                            appLocalization.labelAccountCreated));
                                     context.go("/login");
                                   } catch (err) {
                                     setState(() {

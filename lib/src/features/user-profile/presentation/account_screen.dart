@@ -1,3 +1,4 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_action_dialog.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
@@ -16,8 +17,8 @@ class AccountScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userProvider) ?? User.sampleUser;
     final authService = ref.watch(authServiceProvider);
+    final appLoc = AppLocalizations.of(context)!;
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -27,7 +28,7 @@ class AccountScreen extends ConsumerWidget {
               AlcanciaToolbar(
                 state: StateToolbar.titleIcon,
                 logoHeight: 38,
-                title: "Mi Cuenta",
+                title: appLoc.labelMyAccount,
               ),
               GestureDetector(
                 onTap: () {
@@ -49,7 +50,7 @@ class AccountScreen extends ConsumerWidget {
                           child: Icon(Icons.lock_outlined),
                         ),
                         Text(
-                          "Cambiar contraseña",
+                          appLoc.labelChangePassword,
                           style: Theme.of(context).textTheme.labelLarge,
                         ),
                         Spacer(),
@@ -65,7 +66,7 @@ class AccountScreen extends ConsumerWidget {
                   child: AlcanciaButton(
                     foregroundColor: Colors.red,
                     side: BorderSide(color: Colors.red),
-                    buttonText: "Borrar cuenta",
+                    buttonText: appLoc.labelDeleteAccount,
                     fontSize: 18,
                     padding: const EdgeInsets.only(
                         left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
@@ -74,13 +75,9 @@ class AccountScreen extends ConsumerWidget {
                           context: context,
                           builder: (BuildContext ctx) {
                             return AlcanciaActionDialog(
-                              child: Text(
-                                "¿Seguro que quieres borrar tu cuenta?\nEsta acción no se puede deshacer.",
-                                style: Theme.of(context).textTheme.titleLarge,
-                              ),
-                              acceptText: "Confirmar",
+                              acceptText: appLoc.labelConfirm,
                               acceptColor: Colors.red,
-                              cancelText: "Cancelar",
+                              cancelText: appLoc.labelCancel,
                               acceptAction: () async {
                                 try {
                                   await authService.deleteAccount();
@@ -89,14 +86,18 @@ class AccountScreen extends ConsumerWidget {
                                 } catch (e) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       AlcanciaSnackBar(context,
-                                          "Hubo un problema al borrar tu cuenta."));
+                                          appLoc.errorDeleteAccount));
                                 }
                               },
+                              child: Text(
+                                appLoc.labelDeleteAccountConfirmation,
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
                             );
                           });
                     },
                     rounded: true,
-                    icon: Padding(
+                    icon: const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Icon(Icons.delete_forever),
                     ),

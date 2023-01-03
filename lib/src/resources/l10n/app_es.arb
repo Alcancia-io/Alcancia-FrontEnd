@@ -19,7 +19,7 @@
   "labelRegisterSubtitle": "Completa la siguiente información para crear tu cuenta:",
   "labelName": "Nombre(s)",
   "labelLastName": "Apellido(s)",
-  "labelPhone": "Celular",
+  "labelPhone": "Número de teléfono",
   "labelBirthdate": "Fecha de nacimiento",
   "errorAge": "Necesitas ser mayor de 18 años de edad",
   "labelGenderIdentification": "¿Con cuál género te sientes identificado?",
@@ -43,11 +43,13 @@
   "labelLogIn": "Iniciar sesión",
   "labelNeedAccount": "¿No tienes cuenta?",
   "labelAlmostDone": "Ya casi \nterminamos,",
+  "labelEnterPhoneNumber": "Ingresa tu número de teléfono para recibir tu código de verificación.",
+  "errorInvalidPhoneNumber": "Ingresa un número de teléfono válido.",
   "labelCode": "Código",
   "labelDidNotReceiveCode": "¿No recibiste el código?",
   "labelResend": "Reenviar",
   "labelCreateAccount": "Crea tu cuenta",
-  "errorAcceptPrivacyPolicy": "Acepta la Política de Privacidad",
+  "errorAcceptPrivacyPolicy": "Acepta la Política de Privacidad.",
   "labelReadAndAccepted": "He leído y acepto la ",
   "labelPrivacyPolicyAndDataProtection": "Política de Privacidad y Tratamiento de Datos",
   "labelEnterCodePhone": "Ingresa el código de 6 dígitos que enviamos a tu celular {phoneNumber}",
@@ -60,6 +62,7 @@
       }
     }
   },
+  "labelAccountCreated": "Tu cuenta ha sido creada exitosamente.",
   "labelBalance": "Balance",
   "labelBalanceValue": "${balance} USDC",
   "@labelBalanceValue": {
@@ -128,5 +131,7 @@
   "labelCallOrSMS": "Elige si deseas recibir el código de verificación por medio de SMS o llamada",
   "labelSMS": "SMS",
   "labelCall": "Llamada",
-  "labelFeeDisclaimer": "Podrían aplicar tarifas de mensajes y transmisión de datos. Para la autenticación multifactor recibirás un código en cada intento de inicio de sesión."
+  "labelFeeDisclaimer": "Podrían aplicar tarifas de mensajes y transmisión de datos. Para la autenticación multifactor recibirás un código en cada intento de inicio de sesión.",
+  "labelMyAccount": "Mi cuenta",
+  "labelChangePassword": "Cambiar contraseña"
 }

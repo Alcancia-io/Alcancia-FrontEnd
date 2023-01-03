@@ -52,14 +52,14 @@ class _OTPMethodScreenState extends ConsumerState<PhoneRegistrationScreen> {
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
-                    "Número de teléfono",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
+                    appLocalization.labelPhone,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
                   ),
                   Text(
-                      "Ingresa tu número de teléfono para recibir tu código de verificación.",
-                      style: TextStyle(fontSize: 15)),
+                      appLocalization.labelEnterPhoneNumber,
+                      style: const TextStyle(fontSize: 15)),
                 ],
               ),
               Padding(
@@ -67,7 +67,7 @@ class _OTPMethodScreenState extends ConsumerState<PhoneRegistrationScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Celular"),
+                    Text(appLocalization.labelPhone),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -125,13 +125,13 @@ class _OTPMethodScreenState extends ConsumerState<PhoneRegistrationScreen> {
                         padding: EdgeInsets.only(left: 8.0),
                         child: RichText(
                           text: TextSpan(
-                              text: "He leído y acepto la ",
+                              text: appLocalization.labelReadAndAccepted,
                               style: Theme.of(context).textTheme.bodyText2,
                               children: [
                                 TextSpan(
                                   text:
-                                      "Política de Privacidad y Tratamiento de Datos",
-                                  style: TextStyle(color: alcanciaLightBlue),
+                                      appLocalization.labelPrivacyPolicyAndDataProtection,
+                                  style: const TextStyle(color: alcanciaLightBlue),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
                                       _launchUrl();
@@ -145,13 +145,13 @@ class _OTPMethodScreenState extends ConsumerState<PhoneRegistrationScreen> {
                 ),
               ),
               Text(
-                  "Podrían aplicar tarifas de mensajes y transmisión de datos. Para la autenticación multifactor recibirás un código en cada intento de inicio de sesión.",
+                  appLocalization.labelFeeDisclaimer
               ),
               Spacer(),
               Column(
                 children: [
                   AlcanciaButton(
-                    buttonText: "Crear mi cuenta",
+                    buttonText: appLocalization.labelCreateAccount,
                     color: alcanciaLightBlue,
                     width: double.infinity,
                     height: 64,
@@ -177,13 +177,13 @@ class _OTPMethodScreenState extends ConsumerState<PhoneRegistrationScreen> {
                         } else {
                           setState(() {
                             error =
-                            "Ingresa un número de teléfono válido";
+                            appLocalization.errorInvalidPhoneNumber;
                           });
                         }
                       } else {
                         setState(() {
                           error =
-                          "Acepta la Política de Privacidad";
+                          appLocalization.errorAcceptPrivacyPolicy;
                         });
                       }
                     },

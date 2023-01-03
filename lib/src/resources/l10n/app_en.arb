@@ -34,14 +34,17 @@
   "labelLogIn": "Log in",
   "labelNeedAccount": "Don't have an account?",
   "labelAlmostDone": "We're almost \ndone,",
+  "labelEnterPhoneNumber": "Enter your phone number to receive your verification code.",
+  "errorInvalidPhoneNumber": "Enter a valid phone number.",
   "labelCode": "Code",
   "labelDidNotReceiveCode": "Didn't get a code?",
   "labelResend": "Resend",
   "labelCreateAccount": "Create account",
-  "errorAcceptPrivacyPolicy": "Accept the Privacy Policy",
+  "errorAcceptPrivacyPolicy": "Accept the Privacy Policy.",
   "labelReadAndAccepted": "I have read and agreed to the ",
   "labelPrivacyPolicyAndDataProtection": "Terms of Service & Privacy Policy",
   "labelEnterCodePhone": "Enter the 6 digit code sent to {phoneNumber}",
+  "labelAccountCreated": "Account created successfully",
   "labelBalance": "Balance",
   "labelBalanceValue": "${balance} USDC",
   "labelProfits": "Profits",
@@ -83,5 +86,7 @@
   "labelCallOrSMS": "Choose how you want to receive your verification code: ",
   "labelSMS": "SMS",
   "labelCall": "Phone call",
-  "labelFeeDisclaimer": "Message and data rates may apply. You'll receive a new code for every sign in attempt."
+  "labelFeeDisclaimer": "Message and data rates may apply. You'll receive a new code for every sign in attempt.",
+  "labelMyAccount": "My Account",
+  "labelChangePassword": "Change password"
 }

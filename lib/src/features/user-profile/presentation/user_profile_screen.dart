@@ -50,7 +50,7 @@ class UserProfileScreen extends ConsumerWidget {
                         child: Icon(Icons.person_outline_outlined),
                       ),
                       Text(
-                        "Mi cuenta",
+                        appLoc.labelMyAccount,
                         style: Theme.of(context).textTheme.labelLarge,
                       ),
                       Spacer(),
