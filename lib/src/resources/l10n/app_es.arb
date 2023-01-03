@@ -12,7 +12,7 @@
     "placeholders": {
       "username": {
         "type": "String",
-        "example": ""
+        "example": "Juan"
       }
     }
   },

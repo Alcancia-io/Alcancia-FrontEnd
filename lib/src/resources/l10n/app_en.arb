@@ -42,15 +42,6 @@
   "labelReadAndAccepted": "I have read and agreed to the ",
   "labelPrivacyPolicyAndDataProtection": "Terms of Service & Privacy Policy",
   "labelEnterCodePhone": "Enter the 6 digit code sent to {phoneNumber}",
-  "@labelEnterCodePhone": {
-    "description": "Ask user to enter code sent to phone number",
-    "placeholders": {
-      "phoneNumber": {
-        "type": "String",
-        "example": "+521234567890"
-      }
-    }
-  },
   "labelBalance": "Balance",
   "labelBalanceValue": "${balance} USDC",
   "labelProfits": "Profits",

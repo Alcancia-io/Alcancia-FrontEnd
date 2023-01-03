@@ -19,7 +19,7 @@ import 'package:alcancia/src/features/login/data/login_mutation.dart';
 final rememberEmailProvider = StateProvider.autoDispose<bool>((ref) => false);
 
 class LoginScreen extends ConsumerStatefulWidget {
-  LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
@@ -125,7 +125,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   40, screenHeight)),
                           child: Text(
                             appLocalization.labelHelloWelcome(userName ?? ""),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 35),
                           ),
                         ),
@@ -140,7 +140,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       children: [
                                         LabeledTextFormField(
                                           controller: emailController,
-                                          labelText: appLocalization.email,
+                                          labelText: appLocalization.labelEmail,
                                           inputType: TextInputType.emailAddress,
                                           validator: (value) {
                                             if (value == null ||
@@ -185,9 +185,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                                           .state = value!;
                                                     }),
                                               ),
-                                              const Padding(
+                                              Padding(
                                                 padding:
-                                                    EdgeInsets.only(left: 8.0),
+                                                    const EdgeInsets.only(left: 8.0),
                                                 child: Text(appLocalization.labelRememberUser),
                                               ),
                                             ],
@@ -219,6 +219,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         return appLocalization
                                             .errorRequiredField;
                                       }
+                                      return null;
                                     },
                                   ),
                                   Padding(
@@ -379,11 +380,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            const Text(appLocalization.labelNeedAcount),
+                                            Text(appLocalization.labelNeedAccount),
                                             CupertinoButton(
-                                              child: const Text(
+                                              child: Text(
                                                 appLocalization.labelRegister,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   decoration:
                                                       TextDecoration.underline,
                                                   fontWeight: FontWeight.bold,
