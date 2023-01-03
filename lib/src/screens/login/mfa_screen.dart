@@ -125,15 +125,15 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                                       timer.onResetTimer();
                                       timer.onStartTimer();
                                     } : null,
+                                    style: TextButton.styleFrom(
+                                        foregroundColor: alcanciaLightBlue
+                                    ),
                                     child: const Text(
                                       "Reenviar",
                                       style: TextStyle(
                                         decoration: TextDecoration.underline,
                                         fontWeight: FontWeight.bold,
                                       ),
-                                    ),
-                                    style: TextButton.styleFrom(
-                                        foregroundColor: alcanciaLightBlue
                                     ),
                                   ),
                                 ],

@@ -8,7 +8,7 @@ class User {
   final String name;
   final String surname;
   final String gender;
-  final String country;
+  String country;
   String phoneNumber;
   final DateTime dob;
   double balance;
