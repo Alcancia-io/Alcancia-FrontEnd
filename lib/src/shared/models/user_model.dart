@@ -2,7 +2,8 @@ import 'package:alcancia/src/shared/models/transaction_model.dart';
 import 'package:intl/intl.dart';
 
 class User {
-  final String userId;
+  final String id;
+  final String authId;
   final String email;
   final String name;
   final String surname;
@@ -16,7 +17,8 @@ class User {
   double userProfit;
 
   User({
-    required this.userId,
+    required this.id,
+    required this.authId,
     required this.surname,
     required this.gender,
     required this.country,
@@ -30,7 +32,8 @@ class User {
   });
 
   static final sampleUser = User(
-      userId: "",
+      id: "",
+      authId: "",
       surname: "",
       gender: "",
       country: "",
@@ -43,7 +46,8 @@ class User {
 
   factory User.fromJSON(Map<String, dynamic> map) {
     return User(
-      userId: map["userId"],
+      id: map["id"],
+      authId: map["authId"],
       surname: map["surname"],
       gender: map["gender"],
       country: map["country"],
