@@ -6,6 +6,7 @@ import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/models/login_data_model.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
 import 'package:alcancia/src/shared/models/storage_item.dart';
+import 'package:alcancia/src/shared/services/exception_service.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
@@ -41,16 +42,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     passwordController.dispose();
   }
 
+  final ExceptionService exceptionService = ExceptionService();
   final StorageService _storageService = StorageService();
   final ResponsiveService responsiveService = ResponsiveService();
-  String? userName;
-
-  final obscurePasswordProvider =
-      StateProvider.autoDispose<bool>((ref) => true);
-
+  final obscurePasswordProvider = StateProvider.autoDispose<bool>((ref) => true);
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  String? userName;
   var loginUserInput;
 
   saveUserInfo(String name, String email) async {
@@ -79,10 +78,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   setLoginInputFields() {
-    loginUserInput = {
-      "email": emailController.text,
-      "password": passwordController.text
-    };
+    loginUserInput = {"email": emailController.text, "password": passwordController.text};
   }
 
   @override
@@ -125,14 +121,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       children: [
                         Padding(
                           padding: EdgeInsets.only(
-                              bottom: responsiveService.getHeightPixels(
-                                  50, screenHeight),
-                              top: responsiveService.getHeightPixels(
-                                  40, screenHeight)),
+                              bottom: responsiveService.getHeightPixels(50, screenHeight),
+                              top: responsiveService.getHeightPixels(40, screenHeight)),
                           child: Text(
                             '¡Hola!\nBienvenido ${userName ?? ""}',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 35),
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
                           ),
                         ),
                         Form(
@@ -149,51 +142,33 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                           labelText: appLocalization.email,
                                           inputType: TextInputType.emailAddress,
                                           validator: (value) {
-                                            if (value == null ||
-                                                value.isEmpty) {
-                                              return appLocalization
-                                                  .errorRequiredField;
+                                            if (value == null || value.isEmpty) {
+                                              return appLocalization.errorRequiredField;
                                             } else {
-                                              return value.isValidEmail()
-                                                  ? null
-                                                  : appLocalization
-                                                      .errorEmailFormat;
+                                              return value.isValidEmail() ? null : appLocalization.errorEmailFormat;
                                             }
                                           },
                                         ),
                                         Padding(
                                           padding: EdgeInsets.only(
-                                              bottom: responsiveService
-                                                  .getHeightPixels(
-                                                      6, screenHeight),
-                                              top: responsiveService
-                                                  .getHeightPixels(
-                                                      6, screenHeight)),
+                                              bottom: responsiveService.getHeightPixels(6, screenHeight),
+                                              top: responsiveService.getHeightPixels(6, screenHeight)),
                                           child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.start,
                                             children: [
                                               SizedBox(
                                                 width: 25,
                                                 child: Checkbox(
                                                     value: rememberMe,
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              4),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(4),
                                                     ),
                                                     onChanged: (value) {
-                                                      ref
-                                                          .read(
-                                                              rememberEmailProvider
-                                                                  .notifier)
-                                                          .state = value!;
+                                                      ref.read(rememberEmailProvider.notifier).state = value!;
                                                     }),
                                               ),
                                               const Padding(
-                                                padding:
-                                                    EdgeInsets.only(left: 8.0),
+                                                padding: EdgeInsets.only(left: 8.0),
                                                 child: Text("Recordar usuario"),
                                               ),
                                             ],
@@ -211,28 +186,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     obscure: obscurePassword,
                                     suffixIcon: GestureDetector(
                                       onTap: () {
-                                        ref
-                                            .read(obscurePasswordProvider
-                                                .notifier)
-                                            .state = !obscurePassword;
+                                        ref.read(obscurePasswordProvider.notifier).state = !obscurePassword;
                                       },
-                                      child: Icon(obscurePassword
-                                          ? CupertinoIcons.eye
-                                          : CupertinoIcons.eye_fill),
+                                      child: Icon(obscurePassword ? CupertinoIcons.eye : CupertinoIcons.eye_fill),
                                     ),
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return appLocalization
-                                            .errorRequiredField;
+                                        return appLocalization.errorRequiredField;
                                       }
                                     },
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(
-                                        bottom: responsiveService
-                                            .getHeightPixels(6, screenHeight),
-                                        top: responsiveService.getHeightPixels(
-                                            6, screenHeight)),
+                                        bottom: responsiveService.getHeightPixels(6, screenHeight),
+                                        top: responsiveService.getHeightPixels(6, screenHeight)),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
@@ -240,10 +207,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                             child: Row(
                                               children: const [
                                                 Padding(
-                                                  padding: EdgeInsets.only(
-                                                      right: 4.0),
-                                                  child: Icon(CupertinoIcons
-                                                      .question_circle),
+                                                  padding: EdgeInsets.only(right: 4.0),
+                                                  child: Icon(CupertinoIcons.question_circle),
                                                 ),
                                                 Text("Olvidé mi contraseña"),
                                               ],
@@ -267,42 +232,40 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               padding: const EdgeInsets.all(8.0),
                               child: Mutation(
                                 options: MutationOptions(
-                                  document: gql(loginMutation),
-                                  onCompleted: (dynamic resultData) {
-                                    if (resultData != null) {
-                                      final token =
-                                          resultData["login"]["access_token"];
-                                      final userName =
-                                          resultData["login"]["user"]["name"];
-                                      final userEmail =
-                                          resultData["login"]["user"]["email"];
-                                      final userPhone =
-                                      resultData["login"]["user"]["phoneNumber"];
-                                      if (rememberMe) {
-                                        saveUserInfo(userName, userEmail);
+                                    document: gql(loginMutation),
+                                    onCompleted: (dynamic resultData) {
+                                      if (resultData != null) {
+                                        final token = resultData["login"]["access_token"];
+                                        final userName = resultData["login"]["user"]["name"];
+                                        final userEmail = resultData["login"]["user"]["email"];
+                                        final userPhone = resultData["login"]["user"]["phoneNumber"];
+                                        if (rememberMe) {
+                                          saveUserInfo(userName, userEmail);
+                                        }
+                                        saveToken(token);
+                                        timer.setPresetMinuteTime(1, add: false);
+                                        timer.onResetTimer();
+                                        timer.onStartTimer();
+                                        context.push("/mfa",
+                                            extra: LoginDataModel(
+                                                email: userEmail,
+                                                password: passwordController.text,
+                                                phoneNumber: userPhone));
                                       }
-                                      saveToken(token);
-                                      timer.setPresetMinuteTime(1, add: false);
-                                      timer.onResetTimer();
-                                      timer.onStartTimer();
-                                      context.push("/mfa", extra: LoginDataModel(email: userEmail, password: passwordController.text, phoneNumber: userPhone));
-                                    }
-                                  },
-                                  onError: (error) {
-                                    final notVerified = error!.graphqlErrors.first.message.contains("UserNotConfirmedException");
-                                    if (notVerified) {
-                                      registrationController.resendVerificationCode(emailController.text);
-                                      timer.setPresetMinuteTime(1, add: false);
-                                      timer.onResetTimer();
-                                      timer.onStartTimer();
-                                      context.push("/otp", extra: OTPDataModel(email: emailController.text));
-                                    }
-                                  }
-                                ),
+                                    },
+                                    onError: (error) {
+                                      final notVerified =
+                                          error!.graphqlErrors.first.message.contains("UserNotConfirmedException");
+                                      if (notVerified) {
+                                        registrationController.resendVerificationCode(emailController.text);
+                                        timer.setPresetMinuteTime(1, add: false);
+                                        timer.onResetTimer();
+                                        timer.onStartTimer();
+                                        context.push("/otp", extra: OTPDataModel(email: emailController.text));
+                                      }
+                                    }),
                                 builder: (
-                                  MultiSourceResult<Object?> Function(
-                                          Map<String, dynamic>,
-                                          {Object? optimisticResult})
+                                  MultiSourceResult<Object?> Function(Map<String, dynamic>, {Object? optimisticResult})
                                       runMutation,
                                   QueryResult<Object?>? result,
                                 ) {
@@ -313,34 +276,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       );
                                     }
                                     if (result.hasException) {
+                                      var exception = exceptionService.handleException(result.exception);
                                       return Column(
                                         children: [
                                           AlcanciaButton(
-                                            width: responsiveService
-                                                .getWidthPixels(
-                                                304, screenWidth),
-                                            height: responsiveService
-                                                .getHeightPixels(
-                                                64, screenHeight),
+                                            width: responsiveService.getWidthPixels(304, screenWidth),
+                                            height: responsiveService.getHeightPixels(64, screenHeight),
                                             buttonText: "Iniciar sesión",
                                             onPressed: () {
                                               setLoginInputFields();
                                               runMutation(
-                                                {
-                                                  "loginUserInput":
-                                                  loginUserInput
-                                                },
+                                                {"loginUserInput": loginUserInput},
                                               );
                                             },
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Text(
-                                              result.exception!.graphqlErrors
-                                                  .first.message,
+                                              exception!,
                                               style: const TextStyle(
-                                                  color: Colors.red,
-                                                  fontSize: 12),
+                                                color: Colors.red,
+                                                fontSize: 12,
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -351,10 +308,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     children: [
                                       AlcanciaButton(
                                         color: alcanciaLightBlue,
-                                        width: responsiveService.getWidthPixels(
-                                            304, screenWidth),
-                                        height: responsiveService
-                                            .getHeightPixels(64, screenHeight),
+                                        width: responsiveService.getWidthPixels(304, screenWidth),
+                                        height: responsiveService.getHeightPixels(64, screenHeight),
                                         buttonText: "Iniciar sesión",
                                         onPressed: () {
                                           setLoginInputFields();
@@ -376,8 +331,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                               });
                                             },
                                             child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                              mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 Text(
                                                   "Iniciar sesión con ",
@@ -392,16 +346,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         ),
                                       ] else ...[
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             const Text("No tengo cuenta."),
                                             CupertinoButton(
                                               child: const Text(
                                                 "Registrarme",
                                                 style: TextStyle(
-                                                  decoration:
-                                                      TextDecoration.underline,
+                                                  decoration: TextDecoration.underline,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
