@@ -260,8 +260,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   height: 64,
                   onPressed: () {
                     final user = User(
-                      authId: "",
                       id: "",
+                      authId: "",
                       name: nameController.text,
                       surname: lastNameController.text,
                       email: emailController.text,

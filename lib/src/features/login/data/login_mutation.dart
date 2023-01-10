@@ -3,6 +3,7 @@ const String loginMutation = """
     login(loginUserInput: \$loginUserInput) {
       access_token,
       user {
+        id,
         authId,
         name,
         surname,

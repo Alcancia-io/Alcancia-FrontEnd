@@ -8,8 +8,8 @@ class UserState extends StateNotifier<User?> {
   Future<void> login(String email, String password) async {
     // This mocks some sort of request / response
     state = User(
-      authId: "",
       id: "",
+      authId: "",
       name: "My Name",
       surname: "My Surname",
       email: "My Email",

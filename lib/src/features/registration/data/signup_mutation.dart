@@ -2,7 +2,7 @@ const String signupMutation = """
   mutation(\$signupUserInput: CreateUserInput!) {
     signup(signupUserInput: \$signupUserInput) {
       id,
-      authId
+      authId,
       name,
       surname,
       email,
