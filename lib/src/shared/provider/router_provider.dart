@@ -7,12 +7,14 @@ import 'package:alcancia/src/features/user-profile/presentation/account_screen.d
 import 'package:alcancia/src/features/welcome/presentation/welcome_screen.dart';
 import 'package:alcancia/src/features/registration/presentation/registration_screen.dart';
 import 'package:alcancia/src/features/registration/model/user_registration_model.dart';
+import 'package:alcancia/src/screens/checkout/checkout.dart';
 import 'package:alcancia/src/screens/login/mfa_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
 import 'package:alcancia/src/shared/graphql/queries.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:alcancia/src/shared/models/login_data_model.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
+import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/models/transaction_model.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -67,7 +69,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "phone-registration",
           path: "/phone-registration",
-          builder: (context, state) => PhoneRegistrationScreen(userRegistrationData: state.extra as UserRegistrationModel),
+          builder: (context, state) =>
+              PhoneRegistrationScreen(userRegistrationData: state.extra as UserRegistrationModel),
         ),
         GoRoute(
           name: "swap",
@@ -77,8 +80,7 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "transaction_detail",
           path: "/transaction_detail",
-          builder: (context, state) =>
-              TransactionDetail(txn: state.extra as Transaction),
+          builder: (context, state) => TransactionDetail(txn: state.extra as Transaction),
         ),
         GoRoute(
           name: "otp",
@@ -91,7 +93,14 @@ final routerProvider = Provider<GoRouter>(
           name: "mfa",
           path: "/mfa",
           builder: (context, state) => MFAScreen(data: state.extra as LoginDataModel),
-        )
+        ),
+        GoRoute(
+          name: "checkout",
+          path: "/checkout",
+          builder: (context, state) => Checkout(
+            txnInput: state.extra as TransactionInput,
+          ),
+        ),
       ],
       redirect: (context, state) async {
         print(state.location);
@@ -109,6 +118,7 @@ final routerProvider = Provider<GoRouter>(
         final isOTP = state.location == "/otp";
         final isAccount = state.location == "/account";
         final isMFA = state.location == "/mfa";
+        final isCheckout = state.location == "/checkout";
 
         if (await isUserAuthenticated()) {
           if (isUserInDashboard) {
@@ -122,6 +132,8 @@ final routerProvider = Provider<GoRouter>(
           } else if (isProfile) {
             return null;
           } else if (isAccount) {
+            return null;
+          } else if (isCheckout) {
             return null;
           } else {
             // return "/homescreen/0";

@@ -7,6 +7,7 @@ import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_link.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
+import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/provider/user_provider.dart';
 import 'package:alcancia/src/shared/services/exchange_api_service.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
@@ -27,9 +28,9 @@ class SwapScreen extends ConsumerStatefulWidget {
 }
 
 class _SwapScreenState extends ConsumerState<SwapScreen> {
-  ExchangeApiService exchangeApiService =
-      ExchangeApiService(baseCurrencyCode: "USD");
-  late String targetAmount = "";
+  ExchangeApiService exchangeApiService = ExchangeApiService(baseCurrencyCode: "USD");
+  late double targetAmount = 0;
+  late String sourceAmount = "";
   final sourceAmountController = TextEditingController();
   final String baseCurrencyCode = "USD";
   final List<Map> targetCurrencyCodes = [
@@ -46,8 +47,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
   // metamap
   final MetaMapController metaMapController = MetaMapController();
   final metamapDomicanFlowId = dotenv.env['DOMINICAN_FLOW_ID'] as String;
-  final metamapMexicanResidentId =
-      dotenv.env['MEXICO_RESIDENTS_FLOW_ID'] as String;
+  final metamapMexicanResidentId = dotenv.env['MEXICO_RESIDENTS_FLOW_ID'] as String;
   final metamapMexicanINEId = dotenv.env['MEXICO_INE_FLOW_ID'] as String;
 
   @override
@@ -88,10 +88,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                       Container(
                         padding: EdgeInsets.only(
                           top: 20,
-                          left:
-                              responsiveService.getWidthPixels(30, screenWidth),
-                          right:
-                              responsiveService.getWidthPixels(30, screenWidth),
+                          left: responsiveService.getWidthPixels(30, screenWidth),
+                          right: responsiveService.getWidthPixels(30, screenWidth),
                           bottom: 34,
                         ),
                         child: Column(
@@ -153,8 +151,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                 ),
                               ),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).brightness ==
-                                        Brightness.dark
+                                color: Theme.of(context).brightness == Brightness.dark
                                     ? alcanciaCardDark
                                     : alcanciaFieldLight,
                                 borderRadius: const BorderRadius.all(
@@ -171,56 +168,49 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 8),
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         AlcanciaDropdown(
-                                          dropdownWidth:
-                                              responsiveService.getWidthPixels(
+                                          dropdownWidth: responsiveService.getWidthPixels(
                                             150,
                                             screenWidth,
                                           ),
-                                          dropdownHeight:
-                                              responsiveService.getHeightPixels(
-                                                  45, screenHeight),
+                                          dropdownHeight: responsiveService.getHeightPixels(45, screenHeight),
                                           dropdownItems: targetCurrencyCodes,
                                           onChanged: (newValue) {
                                             setState(() {
                                               sourceDropdownVal = newValue;
-                                              exchangeApiService
-                                                  .fetchCurrency(newValue);
+                                              exchangeApiService.fetchCurrency(newValue);
                                             });
                                           },
                                         ),
                                         // this is the input field
                                         SizedBox(
-                                          height:
-                                              responsiveService.getHeightPixels(
+                                          height: responsiveService.getHeightPixels(
                                             45,
                                             screenHeight,
                                           ),
-                                          width:
-                                              responsiveService.getWidthPixels(
+                                          width: responsiveService.getWidthPixels(
                                             150,
                                             screenWidth,
                                           ),
                                           child: TextField(
-                                            style:
-                                                const TextStyle(fontSize: 15),
+                                            style: const TextStyle(fontSize: 15),
                                             decoration: InputDecoration(
-                                              fillColor: Theme.of(context)
-                                                  .primaryColor,
+                                              fillColor: Theme.of(context).primaryColor,
                                             ),
-                                            inputFormatters: <
-                                                TextInputFormatter>[
-                                              FilteringTextInputFormatter
-                                                  .digitsOnly
+                                            inputFormatters: <TextInputFormatter>[
+                                              FilteringTextInputFormatter.digitsOnly
                                             ],
                                             keyboardType: TextInputType.number,
                                             controller: sourceAmountController,
                                             onChanged: (text) {
                                               setState(() {
-                                                targetAmount = text;
+                                                sourceAmount = text;
+                                                if (sourceAmount != "") {
+                                                  targetAmount =
+                                                      double.parse(sourceAmount) / (conversionRate as double);
+                                                }
                                               });
                                             },
                                           ),
@@ -229,34 +219,26 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 8, bottom: 8),
+                                    padding: const EdgeInsets.only(top: 8, bottom: 8),
                                     child: Center(
-                                      child: SvgPicture.asset(
-                                          "lib/src/resources/images/arrow_down_purple.svg"),
+                                      child: SvgPicture.asset("lib/src/resources/images/arrow_down_purple.svg"),
                                     ),
                                   ),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       AlcanciaDropdown(
-                                        dropdownWidth: responsiveService
-                                            .getWidthPixels(150, screenWidth),
-                                        dropdownHeight: responsiveService
-                                            .getHeightPixels(45, screenHeight),
+                                        dropdownWidth: responsiveService.getWidthPixels(150, screenWidth),
+                                        dropdownHeight: responsiveService.getHeightPixels(45, screenHeight),
                                         dropdownItems: baseCurrencyCodes,
                                       ),
                                       Container(
-                                        padding:
-                                            const EdgeInsets.only(left: 10),
+                                        padding: const EdgeInsets.only(left: 10),
                                         decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(8),
                                           color: Theme.of(context).primaryColor,
                                         ),
-                                        height:
-                                            responsiveService.getHeightPixels(
+                                        height: responsiveService.getHeightPixels(
                                           45,
                                           screenHeight,
                                         ),
@@ -266,13 +248,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                         ),
                                         alignment: Alignment.centerLeft,
                                         child: Text(
-                                          targetAmount == ""
-                                              ? ""
-                                              : (int.parse(
-                                                          sourceAmountController
-                                                              .text) /
-                                                      conversionRate!)
-                                                  .toStringAsFixed(4),
+                                          sourceAmount == "" ? "" : targetAmount.toStringAsFixed(4),
                                           style: txtTheme.bodyText1,
                                         ),
                                       ),
@@ -291,9 +267,24 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                 style: txtTheme.bodyText1,
                               ),
                             ),
+                            AlcanciaButton(
+                              buttonText: "CryptoPay",
+                              onPressed: sourceAmount.isEmpty
+                                  ? null
+                                  : () {
+                                      final txnInput = TransactionInput(
+                                        txnMethod: TransactionMethod.suarmi,
+                                        txnType: TransactionType.deposit,
+                                        quantity: double.parse(sourceAmount),
+                                      );
+                                      context.pushNamed(
+                                        "checkout",
+                                        extra: txnInput,
+                                      );
+                                    },
+                            ),
                             Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 10, bottom: 12),
+                              padding: const EdgeInsets.only(top: 10, bottom: 12),
                               child: AlcanciaButton(
                                 buttonText: "Transferencia",
                                 onPressed: () async {
@@ -306,35 +297,27 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                     // go to checkout form
                                   } else if (verified == "PENDING") {
                                     Fluttertoast.showToast(
-                                        msg:
-                                            "Revisión en proceso, espera un momento...",
+                                        msg: "Revisión en proceso, espera un momento...",
                                         toastLength: Toast.LENGTH_LONG,
                                         gravity: ToastGravity.BOTTOM);
-                                  } else if (verified == "FAILED" ||
-                                      verified == null) {
+                                  } else if (verified == "FAILED" || verified == null) {
                                     if (sourceDropdownVal == 'MXN') {
-                                      final UserStatus status =
-                                          await showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return const UserStatusDialog();
-                                              });
+                                      final UserStatus status = await showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return const UserStatusDialog();
+                                          });
                                       resident = status == UserStatus.resident;
                                     }
-                                    if (sourceDropdownVal == 'MXN' &&
-                                        resident) {
-                                      metaMapController.showMatiFlow(
-                                          metamapMexicanResidentId, user.id);
+                                    if (sourceDropdownVal == 'MXN' && resident) {
+                                      metaMapController.showMatiFlow(metamapMexicanResidentId, user.id);
                                     }
-                                    if (sourceDropdownVal == 'MXN' &&
-                                        !resident) {
-                                      metaMapController.showMatiFlow(
-                                          metamapMexicanINEId, user.id);
+                                    if (sourceDropdownVal == 'MXN' && !resident) {
+                                      metaMapController.showMatiFlow(metamapMexicanINEId, user.id);
                                     }
 
                                     if (sourceDropdownVal == "DOP") {
-                                      metaMapController.showMatiFlow(
-                                          metamapDomicanFlowId, user.id);
+                                      metaMapController.showMatiFlow(metamapDomicanFlowId, user.id);
                                     }
                                   }
                                 },
