@@ -68,4 +68,14 @@ class DashboardController {
       return Future.error(error);
     }
   }
+
+  String displayKycStatus(String? status) {
+    // user has completed the process
+    if (status == 'PENDING') return 'En proceso';
+    if (status == 'FAILED') return 'Rechazada';
+    if (status == 'VERIFIED') return 'Exitosa';
+
+    // user hasn't done any verfication
+    return 'No iniciada';
+  }
 }
