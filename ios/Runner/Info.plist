@@ -38,6 +38,12 @@
 		<string>fetch</string>
 		<string>remote-notification</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>Alcancia verification requires camera use</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Alcancia verification requires microphone use</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Alcancia verification requires access to media library</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

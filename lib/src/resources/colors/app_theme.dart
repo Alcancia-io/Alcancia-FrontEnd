@@ -15,6 +15,10 @@ class AlcanciaTheme {
 
   static ThemeData get lightTheme {
     return ThemeData(
+      splashFactory: NoSplash.splashFactory,
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      hoverColor: Colors.transparent,
       canvasColor: alcanciaBgLight,
       brightness: Brightness.light,
       scaffoldBackgroundColor: alcanciaBgLight,
@@ -24,10 +28,11 @@ class AlcanciaTheme {
       fontFamily: 'Gotham',
       textTheme: _textTheme,
       textButtonTheme: TextButtonThemeData(
-        style: ButtonStyle(
-          textStyle:
-              MaterialStateProperty.all(const TextStyle(fontFamily: 'Gotham')),
-        ),
+        style: TextButton.styleFrom(
+          textStyle: const TextStyle(fontFamily: 'Gotham'),
+          splashFactory: NoSplash.splashFactory,
+          shadowColor: Colors.transparent
+        )
       ),
       iconTheme: const IconThemeData(color: Colors.black),
       inputDecorationTheme: InputDecorationTheme(
@@ -58,6 +63,10 @@ class AlcanciaTheme {
 
   static ThemeData get darkTheme {
     return ThemeData(
+      splashFactory: NoSplash.splashFactory,
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      hoverColor: Colors.transparent,
       canvasColor: alcanciaBgDark,
       brightness: Brightness.dark,
       scaffoldBackgroundColor: alcanciaBgDark,

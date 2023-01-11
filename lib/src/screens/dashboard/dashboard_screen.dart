@@ -1,12 +1,18 @@
 import 'dart:async';
+import 'dart:developer';
+
+import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/screens/dashboard/dashboard_controller.dart';
+import 'package:alcancia/src/screens/metamap/metamap_dialog.dart';
+import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_transactions_list.dart';
+import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
+import 'package:alcancia/src/shared/services/metamap_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:alcancia/src/shared/models/alcancia_models.dart';
-import 'package:alcancia/src/shared/components/alcancia_components.dart';
 
 import '../../shared/provider/user_provider.dart';
 
@@ -20,9 +26,11 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   Timer? timer;
   final DashboardController dashboardController = DashboardController();
+  final MetamapService metamapService = MetamapService();
   late List<Transaction> txns;
   bool _isLoading = false;
   String _error = "";
+
 
   void setUserInformation() async {
     setState(() {
@@ -30,6 +38,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     });
     try {
       var userInfo = await dashboardController.fetchUserInformation();
+      inspect(userInfo);
       txns = userInfo.txns;
       ref.watch(userProvider.notifier).setUser(userInfo.user);
       ref
@@ -77,6 +86,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       return const SafeArea(child: Center(child: CircularProgressIndicator()));
     }
     if (_error != "") return SafeArea(child: Center(child: Text(_error)));
+    var kycStatus = dashboardController.displayKycStatus(user!.kycStatus);
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -89,7 +99,51 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AlcanciaNavbar(username: user!.name),
+              AlcanciaNavbar(username: user.name),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Verificación: $kycStatus"),
+                      ),
+                      if (user.kycStatus == "VERIFIED") ... [
+                        SvgPicture.asset("lib/src/resources/images/icon_check.svg", height: 20),
+                      ],
+                      if (user.kycStatus == "FAILED" || user.kycStatus == null) ... [
+                        SvgPicture.asset("lib/src/resources/images/icon_cross.svg", height: 20),
+                      ],
+                    ],
+                  ),
+                  if (user.kycStatus == null) ...[
+                    GestureDetector(
+                      onTap: () async {
+                        var resident = false;
+                        final String flowId;
+                        if (user.country == "MX") {
+                          final UserStatus status =
+                          await showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return const UserStatusDialog();
+                            });
+                          resident = status == UserStatus.resident;
+                          resident ? flowId = metamapService.metamapMexicanResidentId : flowId = metamapService.metamapMexicanINEId;
+                        } else {
+                          flowId = metamapService.metamapDomicanFlowId;
+                        }
+                        metamapService.showMatiFlow(flowId, user.id);
+                      },
+                      child: const Text(
+                        'Verificar',
+                        style: TextStyle(color: alcanciaLightBlue),
+                      ),
+                    )
+                  ],
+                ],
+              ),
               Container(
                 padding: const EdgeInsets.only(bottom: 16, top: 10),
                 child: DashboardCard(),
