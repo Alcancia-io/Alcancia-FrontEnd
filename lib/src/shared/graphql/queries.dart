@@ -4,12 +4,15 @@ const String meQuery = """
       authId,
       surname,
       gender,
+      country,
       phoneNumber,
       dob,
       name,
       email,
       balance,
-      walletAddress
+      walletAddress,
+      kycStatus,
+      id
     }
   }
 """;

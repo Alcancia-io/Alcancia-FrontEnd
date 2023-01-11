@@ -91,11 +91,11 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
               children: [
                 Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: AlcanciaToolbar(
-                      state: StateToolbar.logoLetters,
-                      logoHeight: size.height / 12,
-                    ),
+                  padding: const EdgeInsets.all(16.0),
+                  child: AlcanciaToolbar(
+                    state: StateToolbar.logoLetters,
+                    logoHeight: size.height / 12,
+                  ),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -273,7 +273,9 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                       country: '',
                     );
                     if (isValid(selectedGender, selectedDate)) {
-                      context.push("/phone-registration", extra: UserRegistrationModel(user: user, password: passwordController.text));
+                      context.push("/phone-registration",
+                          extra: UserRegistrationModel(
+                              user: user, password: passwordController.text));
                     }
                   },
                 ),
