@@ -267,60 +267,57 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                 style: txtTheme.bodyText1,
                               ),
                             ),
-                            AlcanciaButton(
-                              buttonText: "CryptoPay",
-                              onPressed: sourceAmount.isEmpty
-                                  ? null
-                                  : () {
-                                      final txnInput = TransactionInput(
-                                        txnMethod: TransactionMethod.suarmi,
-                                        txnType: TransactionType.deposit,
-                                        quantity: double.parse(sourceAmount),
-                                      );
-                                      context.pushNamed(
-                                        "checkout",
-                                        extra: txnInput,
-                                      );
-                                    },
-                            ),
                             Padding(
                               padding: const EdgeInsets.only(top: 10, bottom: 12),
                               child: AlcanciaButton(
                                 buttonText: "Transferencia",
-                                onPressed: () async {
-                                  //Temporary Variables
-                                  var verified = user!.kycStatus;
-                                  var resident = false;
+                                onPressed: sourceAmount.isEmpty
+                                    ? null
+                                    : () async {
+                                        //Temporary Variables
+                                        var verified = user!.kycStatus;
+                                        var resident = false;
 
-                                  if (verified == "VERIFIED") {
-                                    context.push('/');
-                                    // go to checkout form
-                                  } else if (verified == "PENDING") {
-                                    Fluttertoast.showToast(
-                                        msg: "Revisión en proceso, espera un momento...",
-                                        toastLength: Toast.LENGTH_LONG,
-                                        gravity: ToastGravity.BOTTOM);
-                                  } else if (verified == "FAILED" || verified == null) {
-                                    if (sourceDropdownVal == 'MXN') {
-                                      final UserStatus status = await showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return const UserStatusDialog();
-                                          });
-                                      resident = status == UserStatus.resident;
-                                    }
-                                    if (sourceDropdownVal == 'MXN' && resident) {
-                                      metaMapController.showMatiFlow(metamapMexicanResidentId, user.id);
-                                    }
-                                    if (sourceDropdownVal == 'MXN' && !resident) {
-                                      metaMapController.showMatiFlow(metamapMexicanINEId, user.id);
-                                    }
+                                        if (verified == "VERIFIED") {
+                                          final method = sourceDropdownVal == 'MXN'
+                                              ? TransactionMethod.suarmi
+                                              : TransactionMethod.cryptopay;
+                                          final txnInput = TransactionInput(
+                                            txnMethod: method,
+                                            txnType: TransactionType.deposit,
+                                            quantity: double.parse(sourceAmount),
+                                          );
+                                          context.pushNamed(
+                                            "checkout",
+                                            extra: txnInput,
+                                          );
+                                          // go to checkout form
+                                        } else if (verified == "PENDING") {
+                                          Fluttertoast.showToast(
+                                              msg: "Revisión en proceso, espera un momento...",
+                                              toastLength: Toast.LENGTH_LONG,
+                                              gravity: ToastGravity.BOTTOM);
+                                        } else if (verified == "FAILED" || verified == null) {
+                                          if (sourceDropdownVal == 'MXN') {
+                                            final UserStatus status = await showDialog(
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  return const UserStatusDialog();
+                                                });
+                                            resident = status == UserStatus.resident;
+                                          }
+                                          if (sourceDropdownVal == 'MXN' && resident) {
+                                            metaMapController.showMatiFlow(metamapMexicanResidentId, user.id);
+                                          }
+                                          if (sourceDropdownVal == 'MXN' && !resident) {
+                                            metaMapController.showMatiFlow(metamapMexicanINEId, user.id);
+                                          }
 
-                                    if (sourceDropdownVal == "DOP") {
-                                      metaMapController.showMatiFlow(metamapDomicanFlowId, user.id);
-                                    }
-                                  }
-                                },
+                                          if (sourceDropdownVal == "DOP") {
+                                            metaMapController.showMatiFlow(metamapDomicanFlowId, user.id);
+                                          }
+                                        }
+                                      },
                                 color: alcanciaLightBlue,
                                 width: double.infinity,
                                 height: responsiveService.getHeightPixels(
