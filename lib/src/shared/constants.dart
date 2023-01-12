@@ -16,3 +16,6 @@ const suarmiInfo = {
   'Beneficiario': 'Bctech Solutions SAPI de CV',
   'CLABE': '646180204200011681'
 };
+
+const cryptopayFee = 1;
+const suarmiFee = 2;
