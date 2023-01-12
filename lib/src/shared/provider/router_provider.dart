@@ -1,3 +1,5 @@
+import 'package:alcancia/main.dart';
+import 'package:alcancia/src/screens/dashboard/dashboard_screen.dart';
 import 'package:alcancia/src/features/registration/presentation/phone_registration_screen.dart';
 import 'package:alcancia/src/features/login/presentation/login_screen.dart';
 import 'package:alcancia/src/features/registration/model/GraphQLConfig.dart';
@@ -15,6 +17,7 @@ import 'package:alcancia/src/shared/models/login_data_model.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
 import 'package:alcancia/src/shared/models/transaction_model.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:alcancia/src/features/transaction-detail/presentation/transaction_detail.dart';
@@ -33,6 +36,7 @@ Future<bool> isUserAuthenticated() async {
 final routerProvider = Provider<GoRouter>(
   (ref) {
     return GoRouter(
+      navigatorKey: navigatorKey,
       // debugLogDiagnostics: true,
       routes: [
         GoRoute(
@@ -67,7 +71,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "phone-registration",
           path: "/phone-registration",
-          builder: (context, state) => PhoneRegistrationScreen(userRegistrationData: state.extra as UserRegistrationModel),
+          builder: (context, state) => PhoneRegistrationScreen(
+              userRegistrationData: state.extra as UserRegistrationModel),
         ),
         GoRoute(
           name: "swap",
@@ -90,7 +95,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "mfa",
           path: "/mfa",
-          builder: (context, state) => MFAScreen(data: state.extra as LoginDataModel),
+          builder: (context, state) =>
+              MFAScreen(data: state.extra as LoginDataModel),
         )
       ],
       redirect: (context, state) async {

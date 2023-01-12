@@ -51,6 +51,8 @@ dependencies:
   flutter_dotenv: ^5.0.2
   url_launcher: ^6.1.5
   http: ^0.13.5
+  firebase_core:
+  firebase_messaging: ^14.1.1
   metamap_plugin_flutter: 3.0.0
   fluttertoast: ^8.1.2
 
