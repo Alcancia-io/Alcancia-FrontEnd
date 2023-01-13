@@ -165,7 +165,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                       }
                       return "Necesitas ser mayor de 18 años de edad";
                     }
-                    return null;
+                    return "Selecciona una fecha";
                   },
                 ),
                 const SizedBox(
