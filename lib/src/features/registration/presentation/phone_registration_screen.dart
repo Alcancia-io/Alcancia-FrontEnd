@@ -1,11 +1,14 @@
+import 'package:alcancia/src/features/registration/presentation/registration_screen.dart';
 import 'package:alcancia/src/features/registration/provider/timer_provider.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
+import 'package:alcancia/src/shared/services/exception_service.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:go_router/go_router.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
@@ -29,7 +32,8 @@ class _OTPMethodScreenState extends ConsumerState<PhoneRegistrationScreen> {
       StateProvider.autoDispose<Country>((ref) => countries[0]);
   TextEditingController phoneController = TextEditingController();
   bool acceptTerms = false;
-  String error = "";
+  String _error = "";
+  final exceptionService = ExceptionService();
 
   @override
   Widget build(BuildContext context) {
@@ -170,31 +174,38 @@ class _OTPMethodScreenState extends ConsumerState<PhoneRegistrationScreen> {
                             timer.onStartTimer();
                             final email = widget.userRegistrationData.user.email;
                             context.push("/otp", extra: OTPDataModel(email: email, phoneNumber: phoneNumber));
-                          } catch (e) {
-                            setState(() {
-                              error =
-                              e.toString();
-                            });
+                          } on OperationException catch (e) {
+                            final error = exceptionService.handleException(e)!;
+                            if (error.contains("UsernameExistsException")) {
+                              ref.read(emailsInUseProvider.notifier).state.add(widget.userRegistrationData.user.email);
+                              ref.refresh(emailsInUseProvider);
+                              context.pop();
+                            } else {
+                              setState(() {
+                                _error =
+                                    error;
+                              });
+                            }
                           }
                         } else {
                           setState(() {
-                            error =
+                            _error =
                             "Ingresa un número de teléfono válido";
                           });
                         }
                       } else {
                         setState(() {
-                          error =
+                          _error =
                           "Acepta la Política de Privacidad";
                         });
                       }
                     },
                   ),
-                  if (error.isNotEmpty) ... [
+                  if (_error.isNotEmpty) ... [
                     Padding(
                       padding: const EdgeInsets.only(top: 16.0),
                       child: Text(
-                        error,
+                        _error,
                         style: const TextStyle(color: Colors.red),
                       ),
                     ),

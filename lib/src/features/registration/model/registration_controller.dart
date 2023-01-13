@@ -89,7 +89,7 @@ class RegistrationController {
 
       if (result.hasException) {
         print("Exception");
-        final e = result.exception?.graphqlErrors[0].message;
+        final e = result.exception;
         return Future.error(e!);
       } else if (result.data != null) {
         print("data");
