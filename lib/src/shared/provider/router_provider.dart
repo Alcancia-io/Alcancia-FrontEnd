@@ -1,5 +1,4 @@
 import 'package:alcancia/main.dart';
-import 'package:alcancia/src/screens/dashboard/dashboard_screen.dart';
 import 'package:alcancia/src/features/registration/presentation/phone_registration_screen.dart';
 import 'package:alcancia/src/features/login/presentation/login_screen.dart';
 import 'package:alcancia/src/features/registration/model/GraphQLConfig.dart';
@@ -17,7 +16,6 @@ import 'package:alcancia/src/shared/models/login_data_model.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
 import 'package:alcancia/src/shared/models/transaction_model.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:alcancia/src/features/transaction-detail/presentation/transaction_detail.dart';
@@ -104,12 +102,14 @@ final routerProvider = Provider<GoRouter>(
         final loggingIn = state.subloc == loginLoc;
         final createAccountLoc = state.namedLocation("registration");
         final welcomeLoc = state.namedLocation("welcome");
+        final mfaLoc = state.namedLocation("mfa");
+        final isMfa = state.subloc == mfaLoc;
         final isStartup = state.subloc == welcomeLoc;
         final creatingAccount = state.subloc == createAccountLoc;
         final loggedIn = await isUserAuthenticated();
         final home = state.namedLocation("homescreen", params: {"id": "0"});
 
-        if (!loggedIn && !loggingIn && !creatingAccount && !isStartup) return welcomeLoc;
+        if (!loggedIn && !loggingIn && !creatingAccount && !isStartup && !isMfa) return welcomeLoc;
         if (loggedIn && (loggingIn || creatingAccount || isStartup)) return home;
         return null;
       },
