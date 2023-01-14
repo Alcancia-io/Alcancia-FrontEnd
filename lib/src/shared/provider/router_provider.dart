@@ -1,5 +1,4 @@
 import 'package:alcancia/main.dart';
-import 'package:alcancia/src/screens/dashboard/dashboard_screen.dart';
 import 'package:alcancia/src/features/registration/presentation/phone_registration_screen.dart';
 import 'package:alcancia/src/features/login/presentation/login_screen.dart';
 import 'package:alcancia/src/features/registration/model/GraphQLConfig.dart';
@@ -17,7 +16,6 @@ import 'package:alcancia/src/shared/models/login_data_model.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
 import 'package:alcancia/src/shared/models/transaction_model.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:alcancia/src/features/transaction-detail/presentation/transaction_detail.dart';
@@ -34,7 +32,7 @@ Future<bool> isUserAuthenticated() async {
 }
 
 final routerProvider = Provider<GoRouter>(
-  (ref) {
+      (ref) {
     return GoRouter(
       navigatorKey: navigatorKey,
       // debugLogDiagnostics: true,
@@ -100,59 +98,19 @@ final routerProvider = Provider<GoRouter>(
         )
       ],
       redirect: (context, state) async {
-        print(state.location);
-        // if (await fetchToken() && state.location != "/dashboard") {
-        final isUserInDashboard = state.location == "/homescreen/0";
-        final isTransactions = state.location == "/homescreen/1";
-        final isProfile = state.location == "/homescreen/2";
-        final isSwap = state.location == "/swap";
-        final isTransactionDetail = state.location == "/transaction_detail";
-        // final isUserInSwapScreen = state.location == "/homescreen/0";
-        final isWelcome = state.location == "/";
-        final isLogin = state.location == "/login";
-        final isRegister = state.location == "/registration";
-        final isPhoneRegistration = state.location == "/phone-registration";
-        final isOTP = state.location == "/otp";
-        final isAccount = state.location == "/account";
-        final isMFA = state.location == "/mfa";
+        final loginLoc = state.namedLocation("login");
+        final loggingIn = state.subloc == loginLoc;
+        final createAccountLoc = state.namedLocation("registration");
+        final welcomeLoc = state.namedLocation("welcome");
+        final mfaLoc = state.namedLocation("mfa");
+        final isMfa = state.subloc == mfaLoc;
+        final isStartup = state.subloc == welcomeLoc;
+        final creatingAccount = state.subloc == createAccountLoc;
+        final loggedIn = await isUserAuthenticated();
+        final home = state.namedLocation("homescreen", params: {"id": "0"});
 
-        if (await isUserAuthenticated()) {
-          if (isUserInDashboard) {
-            return null;
-          } else if (isTransactions) {
-            return null;
-          } else if (isSwap) {
-            return null;
-          } else if (isTransactionDetail) {
-            return null;
-          } else if (isProfile) {
-            return null;
-          } else if (isAccount) {
-            return null;
-          } else {
-            // return "/homescreen/0";
-            return "/homescreen/0";
-          }
-          // return "/dashboard";
-        } else {
-          print("NOT AUTHE");
-          if (isWelcome) {
-            return null;
-          } else if (isLogin) {
-            return null;
-          } else if (isRegister) {
-            return null;
-          } else if (isOTP) {
-            return null;
-          } else if (isPhoneRegistration) {
-            return null;
-          } else if (isMFA) {
-            return null;
-          } else {
-            // return "/homescreen/0";
-            return "/";
-          }
-        }
+        if (!loggedIn && !loggingIn && !creatingAccount && !isStartup && !isMfa) return welcomeLoc;
+        if (loggedIn && (loggingIn || creatingAccount || isStartup)) return home;
         return null;
       },
     );
