@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class ExceptionService {
@@ -5,6 +7,7 @@ class ExceptionService {
     if (linkException is NetworkException) return linkException.message;
     if (linkException is HttpLinkServerException) return linkException.parsedResponse!.response.toString();
     if (linkException is ServerException) return linkException.originalException.message;
+    if (linkException is OperationException) return linkException?.originalException.toString();
   }
 
   String? handleException(OperationException? exception) {
