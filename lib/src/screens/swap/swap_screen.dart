@@ -90,7 +90,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     if (_isLoading) {
-      return const SafeArea(child: Center(child: CircularProgressIndicator()));
+      return const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator())));
     }
 
     if (_error != "") return Scaffold(body: SafeArea(child: Center(child: Text(_error))));
