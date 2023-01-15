@@ -6,6 +6,7 @@ import 'package:alcancia/src/shared/components/alcancia_container.dart';
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_link.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
+import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/provider/user_provider.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:flutter/material.dart';
@@ -236,42 +237,52 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                         padding: const EdgeInsets.only(top: 10, bottom: 12),
                         child: AlcanciaButton(
                           buttonText: "Transferencia",
-                          onPressed: () async {
-                            //Temporary Variables
-                            var verified = user!.kycStatus;
-                            var resident = false;
+                          onPressed: sourceAmount.isEmpty
+                              ? null
+                              : () async {
+                                  //Temporary Variables
+                                  var verified = user!.kycStatus;
+                                  var resident = false;
 
-                            if (verified == "VERIFIED") {
-                              context.push('/');
-                              // go to checkout form
-                            } else if (verified == "PENDING") {
-                              Fluttertoast.showToast(
-                                  msg: "Revisión en proceso, espera un momento...",
-                                  toastLength: Toast.LENGTH_LONG,
-                                  gravity: ToastGravity.BOTTOM);
-                            } else if (verified == "FAILED" || verified == null) {
-                              if (sourceCurrency == 'MXN') {
-                                final UserStatus status = await showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return const UserStatusDialog();
-                                  },
-                                );
-                                resident = status == UserStatus.resident;
-                              }
-                              if (sourceCurrency == 'MXN' && resident) {
-                                metaMapController.showMatiFlow(metamapMexicanResidentId, user.id);
-                              }
+                                  if (verified == "VERIFIED") {
+                                    final method =
+                                        sourceAmount == 'MXN' ? TransactionMethod.suarmi : TransactionMethod.cryptopay;
+                                    final txnInput = TransactionInput(
+                                      txnMethod: method,
+                                      txnType: TransactionType.deposit,
+                                      sourceAmount: double.parse(sourceAmount),
+                                      targetAmount: (double.parse(sourceAmountController.text) / suarmiExchage),
+                                    );
+                                    context.pushNamed("checkout", extra: txnInput);
+                                    // go to checkout form
+                                  } else if (verified == "PENDING") {
+                                    Fluttertoast.showToast(
+                                        msg: "Revisión en proceso, espera un momento...",
+                                        toastLength: Toast.LENGTH_LONG,
+                                        gravity: ToastGravity.BOTTOM);
+                                  } else if (verified == "FAILED" || verified == null) {
+                                    if (sourceCurrency == 'MXN') {
+                                      final UserStatus status = await showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return const UserStatusDialog();
+                                        },
+                                      );
+                                      resident = status == UserStatus.resident;
+                                    }
+                                    if (sourceCurrency == 'MXN' && resident) {
+                                      metaMapController.showMatiFlow(metamapMexicanResidentId, user.id);
+                                    }
 
-                              if (sourceCurrency == 'MXN' && !resident) {
-                                metaMapController.showMatiFlow(metamapMexicanINEId, user.id);
-                              }
+                                    if (sourceCurrency == 'MXN' && !resident) {
+                                      metaMapController.showMatiFlow(metamapMexicanINEId, user.id);
+                                    }
 
-                              if (sourceCurrency == "DOP") {
-                                metaMapController.showMatiFlow(metamapDomicanFlowId, user.id);
-                              }
-                            }
-                          },
+                                    if (sourceCurrency == "DOP") {
+                                      metaMapController.showMatiFlow(metamapDomicanFlowId, user.id);
+                                    }
+                                  }
+                                },
                           color: alcanciaLightBlue,
                           width: double.infinity,
                           height: responsiveService.getHeightPixels(64, screenHeight),

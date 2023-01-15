@@ -6,12 +6,14 @@ class TransactionInput {
   TransactionInput({
     required this.txnMethod,
     required this.txnType,
-    required this.quantity,
+    required this.sourceAmount,
+    required this.targetAmount,
+    this.concept,
   });
 
   final TransactionMethod txnMethod;
-
   final TransactionType txnType;
-
-  final double quantity;
+  final double sourceAmount;
+  final double targetAmount;
+  final String? concept;
 }
