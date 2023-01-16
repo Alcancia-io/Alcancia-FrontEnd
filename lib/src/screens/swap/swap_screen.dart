@@ -246,7 +246,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
 
                                   if (verified == "VERIFIED") {
                                     final method =
-                                        sourceAmount == 'MXN' ? TransactionMethod.suarmi : TransactionMethod.cryptopay;
+                                        sourceCurrency == 'MXN' ? TransactionMethod.suarmi : TransactionMethod.cryptopay;
                                     final txnInput = TransactionInput(
                                       txnMethod: method,
                                       txnType: TransactionType.deposit,
