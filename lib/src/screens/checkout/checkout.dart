@@ -102,8 +102,7 @@ class OrderInformation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).textTheme.bodyLarge;
-    var fee = txnInput.txnMethod == TransactionMethod.cryptopay ? cryptopayFee : suarmiFee;
-    final total = txnInput.sourceAmount + (txnInput.sourceAmount * (fee / 100));
+    final total = txnInput.sourceAmount;
 
     if (txnInput.txnMethod == TransactionMethod.cryptopay) {
       bankInfo = cryptopayInfo;
@@ -163,20 +162,6 @@ class OrderInformation extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Cantidad:", style: textStyle?.copyWith(fontWeight: FontWeight.bold)),
-                Text("${txnInput.sourceAmount}", style: textStyle),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Comisión:", style: textStyle?.copyWith(fontWeight: FontWeight.bold)),
-                Text("$fee %", style: textStyle),
-              ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
