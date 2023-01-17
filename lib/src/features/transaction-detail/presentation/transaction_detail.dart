@@ -11,6 +11,7 @@ import '../../../shared/models/transaction_model.dart';
 class TransactionDetail extends StatelessWidget {
   const TransactionDetail({Key? key, required this.txn}) : super(key: key);
   final Transaction txn;
+
   @override
   Widget build(BuildContext context) {
     var ctx = Theme.of(context);
@@ -21,7 +22,7 @@ class TransactionDetail extends StatelessWidget {
             padding: const EdgeInsets.all(24),
             child: Container(
               padding: EdgeInsets.all(18),
-              height: 400,
+              height: 430,
               decoration: BoxDecoration(
                 color: ctx.brightness == Brightness.dark
                     ? alcanciaCardDark2
@@ -63,6 +64,10 @@ class TransactionDetail extends StatelessWidget {
                   TransactionDetailItem(
                     leftText: 'Tipo de TXN',
                     rightText: '${txn.type.isDepositOrWithdraw()}',
+                  ),
+                  TransactionDetailItem(
+                    leftText: 'Estatus',
+                    rightIcon: txn.iconForTxnStatus,
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 20),
