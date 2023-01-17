@@ -35,7 +35,7 @@ class Checkout extends StatelessWidget {
         "from_currency": "MXN",
         "network": "MATIC",
         "to_amount": txnInput.targetAmount.toString(),
-        "to_currency": "USDC"
+        "to_currency": "aPolUSDC"
       }
     };
 
@@ -47,7 +47,6 @@ class Checkout extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.hasError) return Text("${snapshot.error}");
             if (snapshot.connectionState != ConnectionState.done) return Center(child: CircularProgressIndicator());
-
             var suarmiOrder = SuarmiOrder.fromJson(snapshot.data?.data?["sendSuarmiOrder"]);
             return Padding(
               padding: const EdgeInsets.all(16.0),
