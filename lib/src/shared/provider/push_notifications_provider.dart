@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:alcancia/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 @pragma('vm:entry-point')
@@ -20,8 +21,9 @@ void handleInitialMessage(RemoteMessage message) {
 }
 
 class PushNotificationProvider {
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
   Future<void> initNotifications() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
     messaging.requestPermission();
 
     messaging.getToken().then((token) {
@@ -52,3 +54,5 @@ class PushNotificationProvider {
     });
   }
 }
+
+final pushNotificationProvider = Provider((ref) => PushNotificationProvider());
