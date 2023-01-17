@@ -71,8 +71,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "phone-registration",
           path: "/phone-registration",
-          builder: (context, state) =>
-              PhoneRegistrationScreen(userRegistrationData: state.extra as UserRegistrationModel),
+          builder: (context, state) => PhoneRegistrationScreen(
+              userRegistrationData: state.extra as UserRegistrationModel),
         ),
         GoRoute(
           name: "swap",
@@ -82,7 +82,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "transaction_detail",
           path: "/transaction_detail",
-          builder: (context, state) => TransactionDetail(txn: state.extra as Transaction),
+          builder: (context, state) =>
+              TransactionDetail(txn: state.extra as Transaction),
         ),
         GoRoute(
           name: "otp",
@@ -94,7 +95,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "mfa",
           path: "/mfa",
-          builder: (context, state) => MFAScreen(data: state.extra as LoginDataModel),
+          builder: (context, state) =>
+              MFAScreen(data: state.extra as LoginDataModel),
         ),
         GoRoute(
           name: "checkout",
@@ -111,13 +113,25 @@ final routerProvider = Provider<GoRouter>(
         final welcomeLoc = state.namedLocation("welcome");
         final mfaLoc = state.namedLocation("mfa");
         final isMfa = state.subloc == mfaLoc;
+        final otp = state.namedLocation("otp");
+        final isOtp = state.subloc == otp;
+        final phoneRegistration = state.namedLocation("phone-registration");
+        final isPhoneRegistration = state.subloc == phoneRegistration;
         final isStartup = state.subloc == welcomeLoc;
         final creatingAccount = state.subloc == createAccountLoc;
         final loggedIn = await isUserAuthenticated();
         final home = state.namedLocation("homescreen", params: {"id": "0"});
 
-        if (!loggedIn && !loggingIn && !creatingAccount && !isStartup && !isMfa) return welcomeLoc;
-        if (loggedIn && (loggingIn || creatingAccount || isStartup)) return home;
+        if (!loggedIn &&
+            !loggingIn &&
+            !creatingAccount &&
+            !isStartup &&
+            !isMfa &&
+            !isPhoneRegistration &&
+            !isOtp
+        ) return welcomeLoc;
+        if (loggedIn && (loggingIn || creatingAccount || isStartup))
+          return home;
         return null;
       },
     );
