@@ -1,5 +1,4 @@
 import 'package:alcancia/src/features/registration/model/user_registration_model.dart';
-import 'package:alcancia/src/features/registration/provider/registration_controller_provider.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +11,8 @@ import '../../../shared/models/user_model.dart';
 import '../data/gender.dart';
 import 'gender_picker.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
+
+final emailsInUseProvider = StateProvider((ref) => [""]);
 
 class RegistrationScreen extends ConsumerStatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
@@ -36,6 +37,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
       StateProvider.autoDispose<Gender?>((ref) => null);
 
   var signupInput;
+
+  final _formKey = GlobalKey<FormState>();
 
   bool validDate(DateTime date) {
     DateTime adultDate = DateTime(
@@ -77,7 +80,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
     final appLocalization = AppLocalizations.of(context)!;
     final selectedDate = ref.watch(selectedDateProvider);
     final selectedGender = ref.watch(selectedGenderProvider);
-    final registrationController = ref.watch(registrationControllerProvider);
+    final unavailableEmails = ref.watch(emailsInUseProvider);
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -85,7 +88,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
         body: SafeArea(
           bottom: false,
           child: Form(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
+            key: _formKey,
+            autovalidateMode: AutovalidateMode.always,
             child: ListView(
               padding:
                   const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
@@ -161,7 +165,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                       }
                       return "Necesitas ser mayor de 18 años de edad";
                     }
-                    return null;
+                    return "Selecciona una fecha";
                   },
                 ),
                 const SizedBox(
@@ -184,6 +188,9 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   autofillHints: [AutofillHints.email],
                   textInputAction: TextInputAction.next,
                   validator: (value) {
+                    if (unavailableEmails.contains(value)) {
+                      return "Este correo ya esta en uso.";
+                    }
                     if (value == null || value.isEmpty) {
                       return appLocalization.errorRequiredField;
                     } else {

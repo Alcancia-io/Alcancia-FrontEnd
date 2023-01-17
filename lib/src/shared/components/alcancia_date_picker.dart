@@ -29,7 +29,7 @@ class AlcanciaDatePicker extends ConsumerWidget {
             Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).inputDecorationTheme.fillColor,
-                border: state.isValid ? null : Border.all(color: Colors.red),
+                border: !state.hasError ? null : Border.all(color: Colors.red),
                 borderRadius: BorderRadius.circular(7),
               ),
               child: CupertinoButton(

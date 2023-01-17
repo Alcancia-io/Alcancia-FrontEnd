@@ -19,7 +19,6 @@ class GenderPicker extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedGender = ref.watch(selectedGenderProvider);
     return FormField(
-      autovalidateMode: AutovalidateMode.onUserInteraction,
       builder: (state) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,6 +76,7 @@ class GenderPicker extends ConsumerWidget {
                           },
                         );
                       });
+                  Form.of(context)?.validate();
                 },
               ),
             ),
