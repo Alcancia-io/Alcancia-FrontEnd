@@ -237,7 +237,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                         padding: const EdgeInsets.only(top: 10, bottom: 12),
                         child: AlcanciaButton(
                           buttonText: "Transferencia",
-                          onPressed: sourceAmount.isEmpty
+                          onPressed: sourceAmount.isEmpty || int.parse(sourceAmount) < 200
                               ? null
                               : () async {
                                   //Temporary Variables
@@ -288,6 +288,12 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                           height: responsiveService.getHeightPixels(64, screenHeight),
                         ),
                       ),
+                      if (sourceAmount.isNotEmpty && int.parse(sourceAmount) < 200) ... [
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text("Cantidad mínima de \$200", style: TextStyle(color: Colors.red),),
+                        ),
+                      ],
                       AlcanciaContainer(
                         top: 20,
                         child: Row(
