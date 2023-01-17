@@ -32,9 +32,7 @@ class AlcanciaTransactionItem extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  SvgPicture.asset(
-                    getImageType(txn.type),
-                  ),
+                  txn.iconForTxnStatus,
                   Padding(
                     padding: const EdgeInsets.only(left: 6),
                     child: Column(
