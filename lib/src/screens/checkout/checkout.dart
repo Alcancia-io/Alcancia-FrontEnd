@@ -6,6 +6,7 @@ import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
 import 'package:alcancia/src/shared/constants.dart';
 import 'package:alcancia/src/shared/models/suarmi_order_model.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
+import 'package:alcancia/src/shared/services/exception_service.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:alcancia/src/shared/services/suarmi_service.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ class Checkout extends StatelessWidget {
   final TransactionInput txnInput;
   late TransactionMethod txnMethod = txnInput.txnMethod;
   final ResponsiveService responsiveService = ResponsiveService();
+  final ExceptionService exceptionService = ExceptionService();
 
   final SuarmiService suarmiService = SuarmiService();
 
@@ -47,6 +49,10 @@ class Checkout extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.hasError) return Text("${snapshot.error}");
             if (snapshot.connectionState != ConnectionState.done) return Center(child: CircularProgressIndicator());
+            if (snapshot.hasData && snapshot.data!.hasException) {
+              final e = exceptionService.handleException(snapshot.data?.exception);
+              return Center(child: Text(e.toString()),);
+            }
             var suarmiOrder = SuarmiOrder.fromJson(snapshot.data?.data?["sendSuarmiOrder"]);
             return Padding(
               padding: const EdgeInsets.all(16.0),
