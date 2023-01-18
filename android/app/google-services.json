@@ -29,6 +29,13 @@
             {
               "client_id": "770633131725-nsr0l8hrbpela99k3o08ud58ifb2mtps.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "770633131725-67qaehh9dt27ega8eueptnm58udm00v5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.alcancia.alcanciatest"
+              }
             }
           ]
         }
