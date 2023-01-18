@@ -72,7 +72,7 @@ class Checkout extends StatelessWidget {
                           "Gracias! Te notificaremos cuando la transacción sea confirmada",
                         ),
                       );
-                      context.push('/');
+                      context.go('/');
                     },
                   )
                 ],
