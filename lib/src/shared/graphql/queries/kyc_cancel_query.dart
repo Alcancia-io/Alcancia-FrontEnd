@@ -1,5 +1,5 @@
 const String kycCancelQuery = """
-query {
-cancelKycStatus
-}
+  query {
+    cancelKycStatus
+  }
 """;

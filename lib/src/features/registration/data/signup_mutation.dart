@@ -10,6 +10,7 @@ const String signupMutation = """
       gender,
       dob,
       country,
+      profession,
     }
   }
 """;

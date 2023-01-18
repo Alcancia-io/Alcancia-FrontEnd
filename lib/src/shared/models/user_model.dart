@@ -16,6 +16,7 @@ class User {
   List<Transaction>? transactions;
   double userProfit;
   String? kycStatus;
+  String? profession;
 
   User({
     required this.id,
@@ -31,6 +32,7 @@ class User {
     required this.walletAddress,
     this.userProfit = 0,
     this.kycStatus = null,
+    required this.profession,
   });
 
   static final sampleUser = User(
@@ -46,6 +48,7 @@ class User {
     balance: 0.0,
     walletAddress: "",
     kycStatus: null,
+    profession: ""
   );
 
   factory User.fromJSON(Map<String, dynamic> map) {
@@ -61,6 +64,10 @@ class User {
         email: map["email"],
         balance: map['balance'].toDouble(),
         walletAddress: map['walletAddress'],
-        kycStatus: map['kycStatus']);
+        kycStatus: map['kycStatus'],
+      profession: map["profession"],
+    );
   }
+
+
 }

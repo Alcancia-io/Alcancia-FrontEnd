@@ -8,6 +8,7 @@ import 'package:alcancia/src/shared/components/alcancia_link.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/provider/user_provider.dart';
+import 'package:alcancia/src/shared/services/metamap_service.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -46,7 +47,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
   final ResponsiveService responsiveService = ResponsiveService();
 
   // metamap
-  final MetaMapController metaMapController = MetaMapController();
+  final MetamapService metaMapService = MetamapService();
   final metamapDomicanFlowId = dotenv.env['DOMINICAN_FLOW_ID'] as String;
   final metamapMexicanResidentId = dotenv.env['MEXICO_RESIDENTS_FLOW_ID'] as String;
   final metamapMexicanINEId = dotenv.env['MEXICO_INE_FLOW_ID'] as String;
@@ -271,15 +272,15 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                       resident = status == UserStatus.resident;
                                     }
                                     if (sourceCurrency == 'MXN' && resident) {
-                                      metaMapController.showMatiFlow(metamapMexicanResidentId, user.id);
+                                      metaMapService.showMatiFlow(metamapMexicanResidentId, user.id);
                                     }
 
                                     if (sourceCurrency == 'MXN' && !resident) {
-                                      metaMapController.showMatiFlow(metamapMexicanINEId, user.id);
+                                      metaMapService.showMatiFlow(metamapMexicanINEId, user.id);
                                     }
 
                                     if (sourceCurrency == "DOP") {
-                                      metaMapController.showMatiFlow(metamapDomicanFlowId, user.id);
+                                      metaMapService.showMatiFlow(metamapDomicanFlowId, user.id);
                                     }
                                   }
                                 },
