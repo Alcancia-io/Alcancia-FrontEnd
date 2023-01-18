@@ -1,7 +1,9 @@
 import 'dart:developer';
 import 'package:alcancia/main.dart';
+import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 
 @pragma('vm:entry-point')
@@ -42,8 +44,9 @@ class PushNotificationProvider {
 
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Got a message whilst in the foreground!');
+      print('Got a message in the foreground!');
       print('Message data: ${message.data}');
+      Fluttertoast.showToast(msg: message.notification!.body!, toastLength: Toast.LENGTH_LONG, backgroundColor: alcanciaLightBlue, timeInSecForIosWeb: 5);
       inspect(message);
 
       if (message.notification != null) {
