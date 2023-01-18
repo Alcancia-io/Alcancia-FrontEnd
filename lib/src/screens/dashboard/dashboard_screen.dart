@@ -117,31 +117,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ],
                     ],
                   ),
-                  if (user.kycStatus == null) ...[
-                    GestureDetector(
-                      onTap: () async {
-                        var resident = false;
-                        final String flowId;
-                        if (user.country == "MX") {
-                          final UserStatus status =
-                          await showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return const UserStatusDialog();
-                            });
-                          resident = status == UserStatus.resident;
-                          resident ? flowId = metamapService.metamapMexicanResidentId : flowId = metamapService.metamapMexicanINEId;
-                        } else {
-                          flowId = metamapService.metamapDomicanFlowId;
-                        }
-                        metamapService.showMatiFlow(flowId, user.id);
-                      },
-                      child: const Text(
-                        'Verificar',
-                        style: TextStyle(color: alcanciaLightBlue),
-                      ),
-                    )
-                  ],
                 ],
               ),
               Container(
