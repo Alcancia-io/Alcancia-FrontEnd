@@ -170,8 +170,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                   ),
                                   // this is the input field where user enters source amount
                                   AlcanciaContainer(
-                                    height: 45,
-                                    width: 150,
+                                    height: responsiveService.getHeightPixels(45, screenHeight),
+                                    width: responsiveService.getWidthPixels(150, screenWidth),
                                     child: TextField(
                                       style: const TextStyle(fontSize: 15),
                                       decoration: InputDecoration(
