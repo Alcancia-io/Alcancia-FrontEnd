@@ -163,7 +163,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     AlcanciaButton(
                       buttonText: "Ver más",
                       onPressed: () {
-                        context.push("/homescreen/1");
+                        context.go("/homescreen/1");
                       },
                       color: const Color(0x00FFFFFF),
                       rounded: true,
