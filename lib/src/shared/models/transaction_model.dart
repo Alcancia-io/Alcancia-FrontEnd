@@ -6,7 +6,7 @@ class Transaction {
   int sourceAmount;
   String sourceAsset;
   String targetAsset;
-  int amount;
+  double amount;
   String type;
   String status;
 
@@ -30,7 +30,7 @@ class Transaction {
       sourceAmount: json["sourceAmount"] as int,
       sourceAsset: json["sourceAsset"] as String,
       targetAsset: targetAsset,
-      amount: json["amount"] as int,
+      amount: double.parse(json["amount"].toString()),
       type: json["type"] as String,
       status: json["status"] as String
     );
