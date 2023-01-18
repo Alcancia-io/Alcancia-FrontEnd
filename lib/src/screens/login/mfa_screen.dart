@@ -71,6 +71,7 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                         padding: const EdgeInsets.all(8.0),
                         child: LabeledTextFormField(
                             controller: codeController,
+                            inputType: TextInputType.number,
                             autofillHints: [AutofillHints.oneTimeCode],
                             labelText: "Código"),
                       ),
