@@ -71,7 +71,8 @@ class RegistrationController {
       "gender": user.gender,
       "password": password,
       "dob": DateFormat('yyyy-MM-dd').format(user.dob),
-      "country": user.country
+      "country": user.country,
+      "deviceToken": ""
     };
     try {
       print(signupInput.toString());
