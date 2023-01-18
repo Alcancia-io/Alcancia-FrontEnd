@@ -1,3 +1,4 @@
+import 'package:alcancia/src/shared/graphql/mutations/update_user_mutation.dart';
 import 'package:alcancia/src/shared/graphql/queries/me_query.dart';
 import 'package:alcancia/src/shared/graphql/queries/walletbalance_query.dart';
 import 'package:alcancia/src/shared/services/graphql_service.dart';
@@ -26,6 +27,16 @@ class UserService {
     return await clientResponse.query(
       QueryOptions(
         document: gql(balanceQuery),
+      ),
+    );
+  }
+
+  Future<QueryResult> updateUser({required Map<String, dynamic> info}) async {
+    final clientResponse = await client;
+    return await clientResponse.query(
+      QueryOptions(
+        document: gql(updateUserMutation),
+        variables: {"updateUserInput": info},
       ),
     );
   }

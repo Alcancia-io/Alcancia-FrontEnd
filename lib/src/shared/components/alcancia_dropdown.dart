@@ -9,6 +9,7 @@ class AlcanciaDropdown extends StatefulWidget {
     this.onChanged,
     required this.dropdownItems,
     this.itemsAlignment,
+    this.itemsFontSize = 18,
   }) : super(key: key);
 
   final double? dropdownWidth;
@@ -16,6 +17,7 @@ class AlcanciaDropdown extends StatefulWidget {
   final List<Map> dropdownItems;
   final Function? onChanged;
   final MainAxisAlignment? itemsAlignment;
+  final double itemsFontSize;
 
   @override
   State<AlcanciaDropdown> createState() => _AlcanciaDropdownState();
@@ -61,7 +63,9 @@ class _AlcanciaDropdownState extends State<AlcanciaDropdown> {
             return DropdownMenuItem(
               value: item['name'],
               child: AlcanciaDropdownItem(
+                itemsAlignment: widget.itemsAlignment,
                 item: item,
+                fontSize: widget.itemsFontSize,
               ),
             );
           }).toList(),
@@ -75,11 +79,13 @@ class AlcanciaDropdownItem extends StatelessWidget {
   final Map item;
   final MainAxisAlignment? itemsAlignment;
   final ResponsiveService _responsiveService = ResponsiveService();
+  final double fontSize;
 
   AlcanciaDropdownItem({
     super.key,
     required this.item,
     this.itemsAlignment,
+    required this.fontSize,
   });
 
   @override
@@ -103,7 +109,7 @@ class AlcanciaDropdownItem extends StatelessWidget {
           Text(
             item['name'],
             style: TextStyle(
-              fontSize: _responsiveService.getHeightPixels(18, screenHeight),
+              fontSize: _responsiveService.getHeightPixels(fontSize, screenHeight),
             ),
           )
         ],
