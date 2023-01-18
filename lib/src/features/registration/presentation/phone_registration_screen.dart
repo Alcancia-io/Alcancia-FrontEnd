@@ -42,177 +42,180 @@ class _OTPMethodScreenState extends ConsumerState<PhoneRegistrationScreen> {
     final selectedCountry = ref.watch(selectedCountryProvider);
     final registrationController = ref.watch(registrationControllerProvider);
     final timer = ref.watch(timerProvider);
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: AlcanciaToolbar(
-                  state: StateToolbar.logoLetters,
-                  logoHeight: size.height / 12,
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    "Número de teléfono",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: AlcanciaToolbar(
+                    state: StateToolbar.logoLetters,
+                    logoHeight: size.height / 12,
                   ),
-                  Text(
-                      "Ingresa tu número de teléfono para recibir tu código de verificación.",
-                      style: TextStyle(fontSize: 15)),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 32.0, bottom: 32.0),
-                child: Column(
+                ),
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Celular"),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: CountryPicker(
-                            selectedCountryProvider: selectedCountryProvider,
-                          ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: TextFormField(
-                              style: Theme.of(context).textTheme.bodyText1,
-                              controller: phoneController,
-                              keyboardType: TextInputType.phone,
-                              autofillHints: [AutofillHints.telephoneNumber],
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return appLocalization.errorRequiredField;
-                                }
-                                return null;
-                              },
+                  children: const [
+                    Text(
+                      "Número de teléfono",
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
+                    ),
+                    Text(
+                        "Ingresa tu número de teléfono para recibir tu código de verificación.",
+                        style: TextStyle(fontSize: 15)),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 32.0, bottom: 32.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Celular"),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: CountryPicker(
+                              selectedCountryProvider: selectedCountryProvider,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 25,
-                      child: Checkbox(
-                          value: acceptTerms,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4),
+                          Expanded(
+                            flex: 2,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: TextFormField(
+                                style: Theme.of(context).textTheme.bodyText1,
+                                controller: phoneController,
+                                keyboardType: TextInputType.phone,
+                                autofillHints: [AutofillHints.telephoneNumber],
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return appLocalization.errorRequiredField;
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
                           ),
-                          onChanged: (value) {
-                            if (value != null) {
-                              setState(() {
-                                acceptTerms = value;
-                              });
-                            }
-                          }),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 8.0),
-                        child: RichText(
-                          text: TextSpan(
-                              text: "He leído y acepto la ",
-                              style: Theme.of(context).textTheme.bodyText2,
-                              children: [
-                                TextSpan(
-                                  text:
-                                      "Política de Privacidad y Tratamiento de Datos",
-                                  style: TextStyle(color: alcanciaLightBlue),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      _launchUrl();
-                                    },
-                                )
-                              ]),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 25,
+                        child: Checkbox(
+                            value: acceptTerms,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() {
+                                  acceptTerms = value;
+                                });
+                              }
+                            }),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 8.0),
+                          child: RichText(
+                            text: TextSpan(
+                                text: "He leído y acepto la ",
+                                style: Theme.of(context).textTheme.bodyText2,
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        "Política de Privacidad y Tratamiento de Datos",
+                                    style: TextStyle(color: alcanciaLightBlue),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        _launchUrl();
+                                      },
+                                  )
+                                ]),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              Text(
-                  "Podrían aplicar tarifas de mensajes y transmisión de datos. Para la autenticación multifactor recibirás un código en cada intento de inicio de sesión.",
-              ),
-              Spacer(),
-              Column(
-                children: [
-                  AlcanciaButton(
-                    buttonText: "Crear mi cuenta",
-                    color: alcanciaLightBlue,
-                    width: double.infinity,
-                    height: 64,
-                    onPressed: () async {
-                      if (acceptTerms) {
-                        if (phoneController.text.isNotEmpty) {
-                          try {
-                            final phoneNumber =
-                                "+${selectedCountry.dialCode}${phoneController.text}";
-                            widget.userRegistrationData.user.phoneNumber = phoneNumber;
-                            widget.userRegistrationData.user.country = selectedCountry.code;
-                            await registrationController.signUp(widget.userRegistrationData.user, widget.userRegistrationData.password);
-                            timer.setPresetMinuteTime(1, add: false);
-                            timer.onResetTimer();
-                            timer.onStartTimer();
-                            final email = widget.userRegistrationData.user.email;
-                            context.push("/otp", extra: OTPDataModel(email: email, phoneNumber: phoneNumber));
-                          } on OperationException catch (e) {
-                            final error = exceptionService.handleException(e)!;
-                            if (error.contains("UsernameExistsException")) {
-                              ref.read(emailsInUseProvider.notifier).state.add(widget.userRegistrationData.user.email);
-                              ref.refresh(emailsInUseProvider);
-                              context.pop();
-                            } else {
-                              setState(() {
-                                _error =
-                                    error;
-                              });
+                Text(
+                    "Podrían aplicar tarifas de mensajes y transmisión de datos. Para la autenticación multifactor recibirás un código en cada intento de inicio de sesión.",
+                ),
+                Spacer(),
+                Column(
+                  children: [
+                    AlcanciaButton(
+                      buttonText: "Crear mi cuenta",
+                      color: alcanciaLightBlue,
+                      width: double.infinity,
+                      height: 64,
+                      onPressed: () async {
+                        if (acceptTerms) {
+                          if (phoneController.text.isNotEmpty) {
+                            try {
+                              final phoneNumber =
+                                  "+${selectedCountry.dialCode}${phoneController.text}";
+                              widget.userRegistrationData.user.phoneNumber = phoneNumber;
+                              widget.userRegistrationData.user.country = selectedCountry.code;
+                              await registrationController.signUp(widget.userRegistrationData.user, widget.userRegistrationData.password);
+                              timer.setPresetMinuteTime(1, add: false);
+                              timer.onResetTimer();
+                              timer.onStartTimer();
+                              final email = widget.userRegistrationData.user.email;
+                              context.push("/otp", extra: OTPDataModel(email: email, phoneNumber: phoneNumber));
+                            } on OperationException catch (e) {
+                              final error = exceptionService.handleException(e)!;
+                              if (error.contains("UsernameExistsException")) {
+                                ref.read(emailsInUseProvider.notifier).state.add(widget.userRegistrationData.user.email);
+                                ref.refresh(emailsInUseProvider);
+                                context.pop();
+                              } else {
+                                setState(() {
+                                  _error =
+                                      error;
+                                });
+                              }
                             }
+                          } else {
+                            setState(() {
+                              _error =
+                              "Ingresa un número de teléfono válido";
+                            });
                           }
                         } else {
                           setState(() {
                             _error =
-                            "Ingresa un número de teléfono válido";
+                            "Acepta la Política de Privacidad";
                           });
                         }
-                      } else {
-                        setState(() {
-                          _error =
-                          "Acepta la Política de Privacidad";
-                        });
-                      }
-                    },
-                  ),
-                  if (_error.isNotEmpty) ... [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16.0),
-                      child: Text(
-                        _error,
-                        style: const TextStyle(color: Colors.red),
-                      ),
+                      },
                     ),
-                  ]
-                ],
-              ),
-            ],
+                    if (_error.isNotEmpty) ... [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16.0),
+                        child: Text(
+                          _error,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    ]
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
