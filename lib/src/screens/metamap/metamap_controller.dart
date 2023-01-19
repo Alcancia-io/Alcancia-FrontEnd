@@ -25,6 +25,7 @@ class MetaMapController {
       "phoneNumber": user.phoneNumber,
       "profession": user.profession,
       "surname": user.surname,
+      "address": user.address,
       "walletAddress": user.walletAddress,
     };
     try {

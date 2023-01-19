@@ -17,6 +17,7 @@ class User {
   double userProfit;
   String? kycStatus;
   String? profession;
+  String? address;
 
   User({
     required this.id,
@@ -33,6 +34,7 @@ class User {
     this.userProfit = 0,
     this.kycStatus = null,
     required this.profession,
+    this.address,
   });
 
   static final sampleUser = User(
@@ -48,26 +50,25 @@ class User {
     balance: 0.0,
     walletAddress: "",
     kycStatus: null,
-    profession: ""
+    profession: "",
   );
 
   factory User.fromJSON(Map<String, dynamic> map) {
     return User(
-        id: map["id"],
-        authId: map["authId"],
-        surname: map["surname"],
-        gender: map["gender"],
-        country: map["country"],
-        phoneNumber: map["phoneNumber"],
-        dob: DateFormat('yyyy-MM-dd').parse(map["dob"]),
-        name: map["name"],
-        email: map["email"],
-        balance: map['balance'].toDouble(),
-        walletAddress: map['walletAddress'],
-        kycStatus: map['kycStatus'],
+      id: map["id"],
+      authId: map["authId"],
+      surname: map["surname"],
+      gender: map["gender"],
+      country: map["country"],
+      phoneNumber: map["phoneNumber"],
+      dob: DateFormat('yyyy-MM-dd').parse(map["dob"]),
+      name: map["name"],
+      email: map["email"],
+      balance: map['balance'].toDouble(),
+      walletAddress: map['walletAddress'],
+      kycStatus: map['kycStatus'],
       profession: map["profession"],
+      address: map["address"],
     );
   }
-
-
 }

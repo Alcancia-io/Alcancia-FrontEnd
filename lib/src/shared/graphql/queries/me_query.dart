@@ -14,6 +14,7 @@ const String meQuery = """
       walletAddress,
       kycStatus,
       profession,
+      address,
     }
   }
 """;

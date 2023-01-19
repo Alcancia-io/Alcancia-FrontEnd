@@ -11,6 +11,7 @@ const String signupMutation = """
       dob,
       country,
       profession,
+      address,
     }
   }
 """;
