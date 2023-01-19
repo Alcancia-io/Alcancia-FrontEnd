@@ -33,14 +33,12 @@ class MetamapService {
     }
   }
 
-  void showMatiFlow(String flowId, String uid) async {
+  Future<void> showMatiFlow(String flowId, String uid) async {
     print(flowId);
     await MetaMapFlutter.showMetaMapFlow(metamapClientId, flowId, {"uid": uid, "buttonColor": "4E76E5"});
     final result = await MetaMapFlutter.resultCompleter.future;
     await Fluttertoast.showToast(
-        msg: result is ResultSuccess
-            ? "Verificación completada, revisión en proceso..."
-            : "Cancelada",
+        msg: result is ResultSuccess ? "Verificación completada, revisión en proceso..." : "Cancelada",
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM);
     if (result is ResultCancelled) {
