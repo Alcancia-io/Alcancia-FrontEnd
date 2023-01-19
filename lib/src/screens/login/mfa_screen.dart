@@ -2,6 +2,7 @@ import 'package:alcancia/src/features/registration/provider/timer_provider.dart'
 import 'package:alcancia/src/screens/login/login_controller.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:alcancia/src/shared/models/login_data_model.dart';
+import 'package:alcancia/src/shared/provider/push_notifications_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
@@ -35,6 +36,7 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final pushNotifications = ref.watch(pushNotificationProvider);
     final timer = ref.watch(timerProvider);
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -58,8 +60,7 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                         padding: EdgeInsets.all(0.0),
                         child: Text(
                           "Comprobemos \ntu identidad,",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 35),
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
                         ),
                       ),
                       Padding(
@@ -78,13 +79,9 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                       StreamBuilder<int>(
                         stream: timer.rawTime,
                         initialData: 0,
-                        builder:
-                            (BuildContext context, AsyncSnapshot snapshot) {
+                        builder: (BuildContext context, AsyncSnapshot snapshot) {
                           final value = snapshot.data;
-                          final displayTime = StopWatchTimer.getDisplayTime(
-                              value,
-                              hours: false,
-                              milliSecond: false);
+                          final displayTime = StopWatchTimer.getDisplayTime(value, hours: false, milliSecond: false);
                           return Column(
                             children: [
                               Center(
@@ -92,8 +89,7 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                                   decoration: ShapeDecoration(
                                       shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(100),
-                                          side: BorderSide(
-                                              color: alcanciaLightBlue))),
+                                          side: BorderSide(color: alcanciaLightBlue))),
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Row(
@@ -105,8 +101,7 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                                         ),
                                         Text(
                                           displayTime,
-                                          style:
-                                              TextStyle(color: alcanciaLightBlue),
+                                          style: TextStyle(color: alcanciaLightBlue),
                                         ),
                                       ],
                                     ),
@@ -118,17 +113,18 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                                 children: [
                                   const Text("¿No recibiste el código?"),
                                   TextButton(
-                                    onPressed: value <= 0 ? () async {
-                                      final token = await loginController
-                                          .login(widget.data.email, widget.data.password);
-                                      print(token);
-                                      saveToken(token);
-                                      timer.onResetTimer();
-                                      timer.onStartTimer();
-                                    } : null,
-                                    style: TextButton.styleFrom(
-                                        foregroundColor: alcanciaLightBlue
-                                    ),
+                                    onPressed: value <= 0
+                                        ? () async {
+                                            final deviceToken = await pushNotifications.messaging.getToken();
+                                            final token = await loginController.login(
+                                                widget.data.email, widget.data.password, deviceToken ?? "");
+                                            print(token);
+                                            saveToken(token);
+                                            timer.onResetTimer();
+                                            timer.onStartTimer();
+                                          }
+                                        : null,
+                                    style: TextButton.styleFrom(foregroundColor: alcanciaLightBlue),
                                     child: const Text(
                                       "Reenviar",
                                       style: TextStyle(
@@ -157,8 +153,7 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                                 onPressed: () async {
                                   _setLoading(true);
                                   try {
-                                    final completed = await loginController
-                                        .completeSignIn(codeController.text);
+                                    final completed = await loginController.completeSignIn(codeController.text);
                                     if (completed) context.go("/homescreen/0");
                                   } catch (err) {
                                     setState(() {

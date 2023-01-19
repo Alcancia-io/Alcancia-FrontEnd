@@ -72,23 +72,21 @@ class AuthService {
   }
 
   Future<QueryResult> completeSignIn(String verificationCode) async {
-      final clientResponse = await client;
-      return await clientResponse.query(
-        QueryOptions(
-            document: gql(completeSignInQuery),
-            variables: {"verificationCode": verificationCode}),
-      );
+    final clientResponse = await client;
+    return await clientResponse.query(
+      QueryOptions(document: gql(completeSignInQuery), variables: {"verificationCode": verificationCode}),
+    );
   }
 
-  Future<QueryResult> login(String email, String password) async {
-      final clientResponse = await client;
-      return await clientResponse.mutate(
-        MutationOptions(
-          document: gql(loginMutation),
-          variables: {
-            "loginUserInput": {"email": email, "password": password}
-          },
-        ),
-      );
+  Future<QueryResult> login(String email, String password, String deviceToken) async {
+    final clientResponse = await client;
+    return await clientResponse.mutate(
+      MutationOptions(
+        document: gql(loginMutation),
+        variables: {
+          "loginUserInput": {"email": email, "password": password, "token": deviceToken}
+        },
+      ),
+    );
   }
 }
