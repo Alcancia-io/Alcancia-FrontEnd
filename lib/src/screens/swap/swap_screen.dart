@@ -48,9 +48,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
 
   // metamap
   final MetamapService metaMapService = MetamapService();
-  final metamapDomicanFlowId = dotenv.env['DOMINICAN_FLOW_ID'] as String;
-  final metamapMexicanResidentId = dotenv.env['MEXICO_RESIDENTS_FLOW_ID'] as String;
   final metamapMexicanINEId = dotenv.env['MEXICO_INE_FLOW_ID'] as String;
+  final metamapDomicanFlowId = dotenv.env['DOMINICAN_FLOW_ID'] as String;
 
   final SwapController swapController = SwapController();
   var suarmiExchage = 1.0;
@@ -246,8 +245,15 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                   var resident = false;
 
                                   if (verified == "VERIFIED") {
-                                    final method =
-                                        sourceCurrency == 'MXN' ? TransactionMethod.suarmi : TransactionMethod.cryptopay;
+                                    if (!(user.address != null &&
+                                        user.address!.isNotEmpty &&
+                                        user.profession != null &&
+                                        user.profession!.isNotEmpty)) {
+                                      context.push("/user-address", extra: true);
+                                    }
+                                    final method = sourceCurrency == 'MXN'
+                                        ? TransactionMethod.suarmi
+                                        : TransactionMethod.cryptopay;
                                     final txnInput = TransactionInput(
                                       txnMethod: method,
                                       txnType: TransactionType.deposit,
@@ -263,24 +269,19 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                         gravity: ToastGravity.BOTTOM);
                                   } else if (verified == "FAILED" || verified == null) {
                                     if (sourceCurrency == 'MXN') {
-                                      final UserStatus status = await showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return const UserStatusDialog();
-                                        },
-                                      );
-                                      resident = status == UserStatus.resident;
-                                    }
-                                    if (sourceCurrency == 'MXN' && resident) {
-                                      metaMapService.showMatiFlow(metamapMexicanResidentId, user.id);
-                                    }
-
-                                    if (sourceCurrency == 'MXN' && !resident) {
-                                      metaMapService.showMatiFlow(metamapMexicanINEId, user.id);
+                                      if (user.address != null &&
+                                          user.address!.isNotEmpty &&
+                                          user.profession != null &&
+                                          user.profession!.isNotEmpty) {
+                                        await metaMapService.showMatiFlow(metamapMexicanINEId, user.id);
+                                      } else {
+                                        context.push("/user-address", extra: false);
+                                      }
                                     }
 
                                     if (sourceCurrency == "DOP") {
-                                      metaMapService.showMatiFlow(metamapDomicanFlowId, user.id);
+                                      await metaMapService.showMatiFlow(metamapDomicanFlowId, user.id);
+                                      context.go("/");
                                     }
                                   }
                                 },
@@ -289,10 +290,13 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                           height: responsiveService.getHeightPixels(64, screenHeight),
                         ),
                       ),
-                      if (sourceAmount.isNotEmpty && int.parse(sourceAmount) < 200) ... [
+                      if (sourceAmount.isNotEmpty && int.parse(sourceAmount) < 200) ...[
                         const Padding(
                           padding: EdgeInsets.all(8.0),
-                          child: Text("Cantidad mínima de \$200", style: TextStyle(color: Colors.red),),
+                          child: Text(
+                            "Cantidad mínima de \$200",
+                            style: TextStyle(color: Colors.red),
+                          ),
                         ),
                       ],
                       AlcanciaContainer(
