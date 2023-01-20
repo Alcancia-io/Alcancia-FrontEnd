@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/screens/metamap/metamap_controller.dart';
@@ -7,6 +8,7 @@ import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/models/address_model.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
+import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import 'package:alcancia/src/shared/services/metamap_service.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
@@ -19,8 +21,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 
 class AddressScreen extends ConsumerStatefulWidget {
-  const AddressScreen({Key? key, required this.verified}) : super(key: key);
-  final bool verified;
+  const AddressScreen({
+    Key? key,
+    required this.wrapper,
+  }) : super(key: key);
+  final Map wrapper;
 
   @override
   ConsumerState<AddressScreen> createState() => _AddressScreenState();
@@ -50,6 +55,7 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
   final jsonEncoder = JsonEncoder();
   @override
   Widget build(BuildContext context) {
+    print('adress screeen');
     final screenHeight = MediaQuery.of(context).size.height;
     final appLocalization = AppLocalizations.of(context)!;
     final user = ref.watch(userProvider);
@@ -61,25 +67,20 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
           child: Form(
             autovalidateMode: AutovalidateMode.always,
             child: ListView(
-              padding:
-                  const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
+              padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
               children: [
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: AlcanciaToolbar(
                     state: StateToolbar.logoNoletters,
-                    logoHeight:
-                        responsiveService.getHeightPixels(40, screenHeight),
+                    logoHeight: responsiveService.getHeightPixels(40, screenHeight),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 32.0, top: 8),
                   child: Center(
                     child: Text("Necesitamos saber más de ti 🤔",
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge
-                            ?.copyWith(fontWeight: FontWeight.bold)),
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
                   ),
                 ),
                 LabeledTextFormField(
@@ -153,8 +154,7 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                     borderRadius: BorderRadius.circular(7),
                   ),
                   onChanged: (newValue) {
-                    final selected = states
-                        .firstWhere((element) => element["name"] == newValue);
+                    final selected = states.firstWhere((element) => element["name"] == newValue);
                     final state = selected["value"];
                     setState(() {
                       _selectedState = newValue;
@@ -214,22 +214,34 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                       state: _selectedState,
                       zip: _zipController.text,
                     );
+
                     final User newUser = user!;
+                    var jsonAddress = jsonEncode(address.toJson());
+
                     newUser.profession = selectedProfession;
-                    newUser.address = jsonEncoder.convert(address);
-                    print(newUser.address);
+                    newUser.address = jsonAddress;
                     ref.read(userProvider.notifier).setUser(newUser);
-                    if (!widget.verified) {
+                    try {
+                      await metaMapController.updateUser(user: newUser);
+                      print('sucess');
+                    } catch (e) {
+                      print('error!!!');
+                      print(e);
+                      Fluttertoast.showToast(msg: e.toString());
+                      context.go('/');
+                    }
+
+                    if (!widget.wrapper['verified']) {
                       try {
-                        await metaMapController.updateUser(user: newUser);
                         // Metamap flow
-                        await metamapService.showMatiFlow(
-                            metamapMexicanINEId, user.id);
+                        await metamapService.showMatiFlow(metamapMexicanINEId, user.id);
                       } catch (e) {
                         Fluttertoast.showToast(msg: e.toString());
                       }
+                      context.go('/');
+                    } else {
+                      context.pushNamed('checkout', extra: widget.wrapper['txnInput']);
                     }
-                    context.go("/");
                   },
                 ),
               ],

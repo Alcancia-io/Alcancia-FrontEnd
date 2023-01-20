@@ -245,12 +245,6 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                   var resident = false;
 
                                   if (verified == "VERIFIED") {
-                                    if (!(user.address != null &&
-                                        user.address!.isNotEmpty &&
-                                        user.profession != null &&
-                                        user.profession!.isNotEmpty)) {
-                                      context.push("/user-address", extra: true);
-                                    }
                                     final method = sourceCurrency == 'MXN'
                                         ? TransactionMethod.suarmi
                                         : TransactionMethod.cryptopay;
@@ -260,8 +254,15 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                       sourceAmount: double.parse(sourceAmount),
                                       targetAmount: (double.parse(sourceAmountController.text) / suarmiExchage),
                                     );
-                                    context.pushNamed("checkout", extra: txnInput);
-                                    // go to checkout form
+                                    Map wrapper = {
+                                      "verified": true,
+                                      "txnInput": txnInput,
+                                    };
+                                    if (user.address == null || user.profession == null) {
+                                      context.pushNamed('user-address', extra: wrapper);
+                                    } else {
+                                      context.pushNamed("checkout", extra: txnInput);
+                                    }
                                   } else if (verified == "PENDING") {
                                     Fluttertoast.showToast(
                                         msg: "Revisión en proceso, espera un momento...",
@@ -279,10 +280,10 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                       }
                                     }
 
-                                    if (sourceCurrency == "DOP") {
-                                      await metaMapService.showMatiFlow(metamapDomicanFlowId, user.id);
-                                      context.go("/");
-                                    }
+                                    // if (sourceCurrency == "DOP") {
+                                    //   await metaMapService.showMatiFlow(metamapDomicanFlowId, user.id);
+                                    //   context.go("/");
+                                    // }
                                   }
                                 },
                           color: alcanciaLightBlue,

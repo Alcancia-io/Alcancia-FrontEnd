@@ -109,7 +109,7 @@ final routerProvider = Provider<GoRouter>(
           name: "user-address",
           path: "/user-address",
           builder: (context, state) => AddressScreen(
-            verified: state.extra as bool,
+            wrapper: state.extra as Map,
           ),
         ),
       ],
