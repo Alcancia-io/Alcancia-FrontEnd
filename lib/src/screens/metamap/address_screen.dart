@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/screens/metamap/metamap_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
@@ -45,7 +47,7 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
   late String _selectedState = states.first["value"]!;
 
   final metamapMexicanINEId = dotenv.env['MEXICO_INE_FLOW_ID'] as String;
-
+  final jsonEncoder = JsonEncoder();
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -59,20 +61,25 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
           child: Form(
             autovalidateMode: AutovalidateMode.always,
             child: ListView(
-              padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
+              padding:
+                  const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
               children: [
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: AlcanciaToolbar(
                     state: StateToolbar.logoNoletters,
-                    logoHeight: responsiveService.getHeightPixels(40, screenHeight),
+                    logoHeight:
+                        responsiveService.getHeightPixels(40, screenHeight),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 32.0, top: 8),
                   child: Center(
                     child: Text("Necesitamos saber más de ti 🤔",
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleLarge
+                            ?.copyWith(fontWeight: FontWeight.bold)),
                   ),
                 ),
                 LabeledTextFormField(
@@ -146,7 +153,8 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                     borderRadius: BorderRadius.circular(7),
                   ),
                   onChanged: (newValue) {
-                    final selected = states.firstWhere((element) => element["name"] == newValue);
+                    final selected = states
+                        .firstWhere((element) => element["name"] == newValue);
                     final state = selected["value"];
                     setState(() {
                       _selectedState = newValue;
@@ -208,13 +216,15 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                     );
                     final User newUser = user!;
                     newUser.profession = selectedProfession;
-                    newUser.address = address.toJsonString();
+                    newUser.address = jsonEncoder.convert(address);
+                    print(newUser.address);
                     ref.read(userProvider.notifier).setUser(newUser);
                     if (!widget.verified) {
                       try {
                         await metaMapController.updateUser(user: newUser);
                         // Metamap flow
-                        await metamapService.showMatiFlow(metamapMexicanINEId, user.id);
+                        await metamapService.showMatiFlow(
+                            metamapMexicanINEId, user.id);
                       } catch (e) {
                         Fluttertoast.showToast(msg: e.toString());
                       }

@@ -11,7 +11,8 @@ import 'package:alcancia/src/shared/provider/router_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-GlobalKey<NavigatorState> navigatorKey = GlobalKey(debugLabel: "Main Navigator");
+GlobalKey<NavigatorState> navigatorKey =
+    GlobalKey(debugLabel: "Main Navigator");
 
 void main() async {
   await initHiveForFlutter();
@@ -35,7 +36,8 @@ class MyApp extends ConsumerStatefulWidget {
 
 class _MyAppState extends ConsumerState<MyApp> {
   // This widget is the root of your application.
-  final PushNotificationProvider pushNotificationProvider = PushNotificationProvider();
+  final PushNotificationProvider pushNotificationProvider =
+      PushNotificationProvider();
 
   @override
   void initState() {
