@@ -10,6 +10,7 @@ class AlcanciaDropdown extends StatefulWidget {
     required this.dropdownItems,
     this.itemsAlignment,
     this.itemsFontSize = 18,
+    this.decoration,
   }) : super(key: key);
 
   final double? dropdownWidth;
@@ -18,6 +19,7 @@ class AlcanciaDropdown extends StatefulWidget {
   final Function? onChanged;
   final MainAxisAlignment? itemsAlignment;
   final double itemsFontSize;
+  final BoxDecoration? decoration;
 
   @override
   State<AlcanciaDropdown> createState() => _AlcanciaDropdownState();
@@ -46,7 +48,7 @@ class _AlcanciaDropdownState extends State<AlcanciaDropdown> {
     return Container(
       width: widget.dropdownWidth,
       height: widget.dropdownHeight,
-      decoration: dropdownDecoration(context),
+      decoration: widget.decoration ?? dropdownDecoration(context),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           isExpanded: true,
@@ -92,7 +94,7 @@ class AlcanciaDropdownItem extends StatelessWidget {
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
     return Padding(
-      padding: const EdgeInsets.all(0),
+      padding: const EdgeInsets.all(10),
       child: Row(
         mainAxisAlignment: itemsAlignment ?? MainAxisAlignment.spaceAround,
         children: [
