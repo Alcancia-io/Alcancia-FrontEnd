@@ -20,6 +20,7 @@ class Address {
         'colonia': colonia,
         'extNum': extNum,
         'intNum': intNum,
-        'state': zip,
+        'zip': zip,
+        'state': state,
       };
 }

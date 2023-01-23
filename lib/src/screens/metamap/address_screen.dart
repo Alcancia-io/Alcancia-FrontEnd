@@ -45,8 +45,38 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
   late String selectedProfession = metaMapController.professions[0]["name"]!;
 
   final List<Map<String, String>> states = [
-    {"name": "Nuevo León", "value": "NuevoLeon"},
-    {"name": "Estado de México", "value": "EdoMex"},
+    {"value": "Aguascalientes", "name": "Aguascalientes"},
+    {"value": "BajaCalifornia", "name": "Baja California"},
+    {"value": "BajaCaliforniaSur", "name": "Baja California Sur"},
+    {"value": "Campeche", "name": "Campeche"},
+    {"value": "CDMX", "name": "CDMX"},
+    {"value": "Chiapas", "name": "Chiapas"},
+    {"value": "Chihuahua", "name": "Chihuahua"},
+    {"value": "Coahuila", "name": "Coahuila"},
+    {"value": "Colima", "name": "Colima"},
+    {"value": "Durango", "name": "Durango"},
+    {"value": "EdoMex", "name": "Estado de México"},
+    {"value": "Guanajuato", "name": "Guanajuato"},
+    {"value": "Guerrero", "name": "Guerrero"},
+    {"value": "Hidalgo", "name": "Hidalgo"},
+    {"value": "Jalisco", "name": "Jalisco"},
+    {"value": "Michoacan", "name": "Michoacán"},
+    {"value": "Morelos", "name": "Morelos"},
+    {"value": "Nayarit", "name": "Nayarit"},
+    {"value": "NuevoLeon", "name": "Nuevo León"},
+    {"value": "Oaxaca", "name": "Oaxaca"},
+    {"value": "Puebla", "name": "Puebla"},
+    {"value": "Queretaro", "name": "Querétaro"},
+    {"value": "QuintanaRoo", "name": "Quintana Roo"},
+    {"value": "SanLuisPotosi", "name": "San Luis Potosí"},
+    {"value": "Sinaloa", "name": "Sinaloa"},
+    {"value": "Sonora", "name": "Sonora"},
+    {"value": "Tabasco", "name": "Tabasco"},
+    {"value": "Tamaulipas", "name": "Tamaulipas"},
+    {"value": "Tlaxcala", "name": "Tlaxcala"},
+    {"value": "Veracruz", "name": "Veracruz"},
+    {"value": "Yucatan", "name": "Yucatán"},
+    {"value": "Zacatecas", "name": "Zacatecas"}
   ];
 
   late String _selectedState = states.first["value"]!;
@@ -67,20 +97,25 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
           child: Form(
             autovalidateMode: AutovalidateMode.always,
             child: ListView(
-              padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
+              padding:
+                  const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
               children: [
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: AlcanciaToolbar(
                     state: StateToolbar.logoNoletters,
-                    logoHeight: responsiveService.getHeightPixels(40, screenHeight),
+                    logoHeight:
+                        responsiveService.getHeightPixels(40, screenHeight),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 32.0, top: 8),
                   child: Center(
                     child: Text("Necesitamos saber más de ti 🤔",
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleLarge
+                            ?.copyWith(fontWeight: FontWeight.bold)),
                   ),
                 ),
                 LabeledTextFormField(
@@ -154,7 +189,8 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                     borderRadius: BorderRadius.circular(7),
                   ),
                   onChanged: (newValue) {
-                    final selected = states.firstWhere((element) => element["name"] == newValue);
+                    final selected = states
+                        .firstWhere((element) => element["name"] == newValue);
                     final state = selected["value"];
                     setState(() {
                       _selectedState = newValue;
@@ -234,13 +270,15 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                     if (!widget.wrapper['verified']) {
                       try {
                         // Metamap flow
-                        await metamapService.showMatiFlow(metamapMexicanINEId, user.id);
+                        await metamapService.showMatiFlow(
+                            metamapMexicanINEId, user.id);
                       } catch (e) {
                         Fluttertoast.showToast(msg: e.toString());
                       }
                       context.go('/');
                     } else {
-                      context.pushNamed('checkout', extra: widget.wrapper['txnInput']);
+                      context.pushNamed('checkout',
+                          extra: widget.wrapper['txnInput']);
                     }
                   },
                 ),
