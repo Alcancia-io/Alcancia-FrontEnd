@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class LabeledTextFormField extends StatelessWidget {
   const LabeledTextFormField({
@@ -11,6 +12,7 @@ class LabeledTextFormField extends StatelessWidget {
     this.textInputAction,
     this.inputType,
     this.validator,
+    this.inputFormatters,
   }) : super(key: key);
 
   final TextEditingController controller;
@@ -21,6 +23,7 @@ class LabeledTextFormField extends StatelessWidget {
   final TextInputType? inputType;
   final Iterable<String>? autofillHints;
   final TextInputAction? textInputAction;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +36,7 @@ class LabeledTextFormField extends StatelessWidget {
           keyboardType: inputType,
           autofillHints: autofillHints,
           textInputAction: textInputAction,
+          inputFormatters: inputFormatters,
           obscureText: obscure,
           decoration: InputDecoration(
             suffixIcon: suffixIcon,

@@ -59,11 +59,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCLrh1vb-OSUvE0r9ZKFirL7V3HFdNCxBo',
-    appId: '1:770633131725:ios:eafafdb0b188db6dd9eb84',
+    appId: '1:770633131725:ios:73ff66246934b727d9eb84',
     messagingSenderId: '770633131725',
     projectId: 'alcancia-b4b3f',
     storageBucket: 'alcancia-b4b3f.appspot.com',
-    iosClientId: '770633131725-f3mamiim97pita160i2jpmrlf7qhobbc.apps.googleusercontent.com',
-    iosBundleId: 'com.alcancialabs.alcancia',
+    iosClientId: '770633131725-67qaehh9dt27ega8eueptnm58udm00v5.apps.googleusercontent.com',
+    iosBundleId: 'com.alcancia.alcanciatest',
   );
 }

@@ -20,7 +20,7 @@ class AlcanciaButton extends StatelessWidget {
     required this.onPressed,
     this.height,
     this.width,
-    this.color,
+    this.color = const Color(0xFF4E76E5),
     this.foregroundColor = const Color(0xFF4E76E5),
     this.rounded,
     this.side,

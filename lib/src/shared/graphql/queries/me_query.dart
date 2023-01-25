@@ -13,7 +13,8 @@ const String meQuery = """
       balance,
       walletAddress,
       kycStatus,
-      id
+      profession,
+      address,
     }
   }
 """;

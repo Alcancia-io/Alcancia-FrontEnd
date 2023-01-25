@@ -19,6 +19,7 @@ class UserState extends StateNotifier<User?> {
       dob: DateTime.now(),
       balance: 0,
       walletAddress: "",
+      profession: '',
     );
   }
 

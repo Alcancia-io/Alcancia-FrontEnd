@@ -278,6 +278,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                       balance: 0.0,
                       walletAddress: "",
                       country: '',
+                      profession: '',
                     );
                     if (isValid(selectedGender, selectedDate)) {
                       context.push("/phone-registration",

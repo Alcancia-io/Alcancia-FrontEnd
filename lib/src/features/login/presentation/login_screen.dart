@@ -6,6 +6,7 @@ import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/models/login_data_model.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
 import 'package:alcancia/src/shared/models/storage_item.dart';
+import 'package:alcancia/src/shared/provider/push_notifications_provider.dart';
 import 'package:alcancia/src/shared/services/exception_service.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
@@ -77,8 +78,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     await _storageService.writeSecureData(storageItem);
   }
 
-  setLoginInputFields() {
-    loginUserInput = {"email": emailController.text, "password": passwordController.text};
+  setLoginInputFields({required String deviceToken}) {
+    loginUserInput = {"email": emailController.text, "password": passwordController.text, "deviceToken": deviceToken};
   }
 
   @override
@@ -90,6 +91,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final rememberMe = ref.watch(rememberEmailProvider);
     final appLocalization = AppLocalizations.of(context)!;
     final obscurePassword = ref.watch(obscurePasswordProvider);
+    final pushNotifications = ref.watch(pushNotificationProvider);
     final timer = ref.watch(timerProvider);
 
     // for unverified users
@@ -283,8 +285,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                             width: responsiveService.getWidthPixels(304, screenWidth),
                                             height: responsiveService.getHeightPixels(64, screenHeight),
                                             buttonText: "Iniciar sesión",
-                                            onPressed: () {
-                                              setLoginInputFields();
+                                            onPressed: () async {
+                                              final token = await pushNotifications.messaging.getToken();
+                                              setLoginInputFields(deviceToken: token ?? "");
                                               runMutation(
                                                 {"loginUserInput": loginUserInput},
                                               );
@@ -311,8 +314,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         width: responsiveService.getWidthPixels(304, screenWidth),
                                         height: responsiveService.getHeightPixels(64, screenHeight),
                                         buttonText: "Iniciar sesión",
-                                        onPressed: () {
-                                          setLoginInputFields();
+                                        onPressed: () async {
+                                          final token = await pushNotifications.messaging.getToken();
+                                          setLoginInputFields(deviceToken: token ?? "");
                                           runMutation(
                                             {"loginUserInput": loginUserInput},
                                           );
