@@ -223,6 +223,28 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                           ],
                         ),
                       ),
+                      if (targetCurrency == "USDC") ...[
+                        AlcanciaContainer(
+                          top: 16,
+                          child: CurrencyRiskCard(
+                            riskLevel: RiskLevel.bajo,
+                            targetCurrency: "USDC",
+                            percentage: 1.3,
+                            color: cardColor,
+                          ),
+                        ),
+                      ],
+                      if (targetCurrency == "CUSD") ...[
+                        AlcanciaContainer(
+                          top: 16,
+                          child: CurrencyRiskCard(
+                            riskLevel: RiskLevel.medio,
+                            targetCurrency: "CUSD",
+                            percentage: 8.3,
+                            color: cardColor,
+                          ),
+                        ),
+                      ],
                       Container(
                         alignment: Alignment.topLeft,
                         padding: const EdgeInsets.only(
