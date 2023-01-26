@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
+import 'package:alcancia/src/shared/components/alcancia_copy_clipboard.dart';
 import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
 import 'package:alcancia/src/shared/constants.dart';
 import 'package:alcancia/src/shared/models/suarmi_order_model.dart';
@@ -51,7 +52,7 @@ class Checkout extends StatelessWidget {
             if (snapshot.connectionState != ConnectionState.done) return Center(child: CircularProgressIndicator());
             if (snapshot.hasData && snapshot.data!.hasException) {
               final e = exceptionService.handleException(snapshot.data?.exception);
-              return Center(child: Text(e.toString()),);
+              return Center(child: Text(e.toString()));
             }
             var suarmiOrder = SuarmiOrder.fromJson(snapshot.data?.data?["sendSuarmiOrder"]);
             return Padding(
@@ -136,7 +137,13 @@ class OrderInformation extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('$key:', style: textStyle?.copyWith(fontWeight: FontWeight.bold)),
-                    Text('${bankInfo[key]}', style: textStyle),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('${bankInfo[key]}', style: textStyle),
+                        AlcanciaCopyToClipboard(displayText: key, textToCopy: bankInfo[key] as String)
+                      ],
+                    )
                   ],
                 ),
               )
@@ -151,18 +158,7 @@ class OrderInformation extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text("$suarmiConcept", style: textStyle),
-                      InkWell(
-                        child: const Icon(Icons.copy, size: 20, color: Colors.blue),
-                        onTap: () async {
-                          Clipboard.setData(ClipboardData(text: suarmiConcept));
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            AlcanciaSnackBar(
-                              context,
-                              "Concepto copiado",
-                            ),
-                          );
-                        },
-                      )
+                      AlcanciaCopyToClipboard(displayText: "Concepto copiado", textToCopy: suarmiConcept as String),
                     ],
                   ),
                 ],
