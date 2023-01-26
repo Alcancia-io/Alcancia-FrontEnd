@@ -8,7 +8,9 @@ class AlcanciaContainer extends StatelessWidget {
   final double? right;
   final double? width;
   final double? height;
+  final Color? color;
   final Widget child;
+
   final ResponsiveService responsiveService = ResponsiveService();
 
   AlcanciaContainer({
@@ -19,6 +21,7 @@ class AlcanciaContainer extends StatelessWidget {
     this.right,
     this.width,
     this.height,
+    this.color,
     required this.child,
   });
 
@@ -28,6 +31,7 @@ class AlcanciaContainer extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Container(
+      color: color,
       height: height,
       width: width,
       padding: EdgeInsets.only(
