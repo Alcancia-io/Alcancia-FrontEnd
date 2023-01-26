@@ -84,7 +84,7 @@ class AuthService {
       MutationOptions(
         document: gql(loginMutation),
         variables: {
-          "loginUserInput": {"email": email, "password": password, "token": deviceToken}
+          "loginUserInput": {"email": email, "password": password, "deviceToken": deviceToken}
         },
       ),
     );
