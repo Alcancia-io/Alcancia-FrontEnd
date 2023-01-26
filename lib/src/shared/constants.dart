@@ -19,3 +19,5 @@ const suarmiInfo = {
 
 const cryptopayFee = 1;
 const suarmiFee = 2;
+
+enum RiskLevel { alto, medio, bajo }
