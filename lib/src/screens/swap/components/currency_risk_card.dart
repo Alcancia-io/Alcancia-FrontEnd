@@ -24,6 +24,8 @@ class CurrencyRiskCard extends StatelessWidget {
       left: 16,
       right: 16,
       color: color,
+      width: double.infinity,
+      borderRadius: 7,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
