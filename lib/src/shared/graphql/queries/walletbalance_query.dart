@@ -1,5 +1,11 @@
 const String balanceQuery = """
   query {
-    getWalletBalance 
+    getWalletBalance {
+      total,
+      aPolUSDC,
+      mcUSD,
+      cUSD,
+      etherscan
+    }
   }
 """;

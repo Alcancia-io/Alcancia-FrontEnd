@@ -1,3 +1,4 @@
+import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:alcancia/src/shared/services/services.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
 
@@ -24,13 +25,13 @@ class DashboardController {
     return Future.error('Error getting user');
   }
 
-  Future<double> fetchUserBalance() async {
+  Future<Balance> fetchUserBalance() async {
     UserService userService = UserService();
     try {
       var response = await userService.getUserBalance();
       if (response.data != null) {
-        final balance = response.data!["getWalletBalance"].toDouble();
-
+        final balanceData = response.data!["getWalletBalance"];
+        final balance = Balance.fromMap(balanceData);
         return balance;
       }
     } catch (error) {

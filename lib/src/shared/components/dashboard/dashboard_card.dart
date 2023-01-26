@@ -10,21 +10,13 @@ class DashboardCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var ctx = Theme.of(context);
-    var userBalance = ref.watch(balanceProvider);
-    Object? balance = 0.0;
-    if (userBalance?.balance != null) {
-      balance = userBalance?.balance == 0.0
-          ? 0
-          : userBalance?.balance.toStringAsFixed(6);
-    }
+    final ctx = Theme.of(context);
+    final userBalance = ref.watch(balanceProvider);
 
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: ctx.brightness == Brightness.dark
-            ? alcanciaCardDark2
-            : alcanciaCardLight2,
+        color: ctx.brightness == Brightness.dark ? alcanciaCardDark2 : alcanciaCardLight2,
         borderRadius: BorderRadius.all(
           Radius.circular(8),
         ),
@@ -47,7 +39,7 @@ class DashboardCard extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.only(top: 16, bottom: 24),
             child: Text(
-              "\$${balance} USDC",
+              "\$${userBalance.total} USDC",
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 30,

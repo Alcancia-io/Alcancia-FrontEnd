@@ -31,7 +31,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   bool _isLoading = false;
   String _error = "";
 
-
   void setUserInformation() async {
     setState(() {
       _isLoading = true;
@@ -41,9 +40,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       inspect(userInfo);
       txns = userInfo.txns;
       ref.watch(userProvider.notifier).setUser(userInfo.user);
-      ref
-          .watch(balanceProvider.notifier)
-          .setBalance(Balance(balance: userInfo.user.balance));
+      ref.watch(balanceProvider.notifier).setBalance(userInfo.user.balance);
     } catch (err) {
       setState(() {
         _error = err.toString();
@@ -57,13 +54,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   void setUserBalance() async {
     try {
       var balance = await dashboardController.fetchUserBalance();
-      ref.watch(balanceProvider.notifier).setBalance(Balance(balance: balance));
+      ref.watch(balanceProvider.notifier).setBalance(balance);
     } catch (err) {}
   }
 
   void setTimer() {
-    timer = Timer.periodic(
-        const Duration(seconds: 10), (Timer t) => setUserBalance());
+    timer = Timer.periodic(const Duration(seconds: 10), (Timer t) => setUserBalance());
   }
 
   @override
@@ -109,10 +105,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text("Verificación: $kycStatus"),
                       ),
-                      if (user.kycStatus == "VERIFIED") ... [
+                      if (user.kycStatus == "VERIFIED") ...[
                         SvgPicture.asset("lib/src/resources/images/icon_check.svg", height: 20),
                       ],
-                      if (user.kycStatus == "FAILED" || user.kycStatus == null) ... [
+                      if (user.kycStatus == "FAILED" || user.kycStatus == null) ...[
                         SvgPicture.asset("lib/src/resources/images/icon_cross.svg", height: 20),
                       ],
                     ],
