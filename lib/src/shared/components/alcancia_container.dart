@@ -8,6 +8,7 @@ class AlcanciaContainer extends StatelessWidget {
   final double? right;
   final double? width;
   final double? height;
+  final double? borderRadius;
   final Color? color;
   final Widget child;
 
@@ -21,6 +22,7 @@ class AlcanciaContainer extends StatelessWidget {
     this.right,
     this.width,
     this.height,
+    this.borderRadius,
     this.color,
     required this.child,
   });
@@ -31,9 +33,9 @@ class AlcanciaContainer extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Container(
-      color: color,
       height: height,
       width: width,
+      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(borderRadius ?? 0)), color: color),
       padding: EdgeInsets.only(
         top: top != null ? responsiveService.getHeightPixels(top!, screenHeight) : 0,
         bottom: bottom != null ? responsiveService.getHeightPixels(bottom!, screenHeight) : 0,
