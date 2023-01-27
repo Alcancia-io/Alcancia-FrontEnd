@@ -21,7 +21,6 @@ class Checkout extends StatelessWidget {
   Checkout({super.key, required this.txnInput});
 
   final TransactionInput txnInput;
-  late TransactionMethod txnMethod = txnInput.txnMethod;
   final ResponsiveService responsiveService = ResponsiveService();
   final ExceptionService exceptionService = ExceptionService();
 
@@ -38,7 +37,7 @@ class Checkout extends StatelessWidget {
         "from_currency": "MXN",
         "network": "MATIC",
         "to_amount": txnInput.targetAmount.toString(),
-        "to_currency": "aPolUSDC"
+        "to_currency": txnInput.targetCurrency
       }
     };
 
