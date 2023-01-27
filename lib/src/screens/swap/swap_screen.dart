@@ -286,6 +286,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                       txnType: TransactionType.deposit,
                                       sourceAmount: double.parse(sourceAmount),
                                       targetAmount: (double.parse(sourceAmountController.text) / suarmiExchage),
+                                      targetCurrency: targetCurrency == 'USDC' ? 'aPolUSDC' : 'mcUSD',
                                     );
                                     Map wrapper = {
                                       "verified": true,
@@ -309,11 +310,6 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                         context.pushNamed("user-address", extra: {"verified": false});
                                       }
                                     }
-
-                                    // if (sourceCurrency == "DOP") {
-                                    //   await metaMapService.showMatiFlow(metamapDomicanFlowId, user.id);
-                                    //   context.go("/");
-                                    // }
                                   }
                                 },
                           color: alcanciaLightBlue,
