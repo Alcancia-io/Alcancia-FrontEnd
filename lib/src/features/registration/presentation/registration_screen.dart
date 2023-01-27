@@ -82,7 +82,9 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
     final selectedGender = ref.watch(selectedGenderProvider);
     final unavailableEmails = ref.watch(emailsInUseProvider);
     setState(() {
-      _disableButton = _formKey.currentState?.validate() == false;
+      if (_formKey.currentState != null) {
+        _disableButton = !_formKey.currentState!.validate();
+      }
     });
 
     return GestureDetector(
