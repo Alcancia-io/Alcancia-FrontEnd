@@ -55,6 +55,7 @@ dependencies:
   firebase_messaging: ^14.1.1
   metamap_plugin_flutter: 3.0.0
   fluttertoast: ^8.1.2
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:

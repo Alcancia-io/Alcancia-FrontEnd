@@ -1,4 +1,5 @@
 import 'package:alcancia/src/shared/models/transaction_model.dart';
+import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:intl/intl.dart';
 
 class User {
@@ -11,7 +12,7 @@ class User {
   String country;
   String phoneNumber;
   final DateTime dob;
-  double balance;
+  Balance balance;
   String walletAddress;
   List<Transaction>? transactions;
   double userProfit;
@@ -47,7 +48,7 @@ class User {
     dob: DateTime.now(),
     name: "",
     email: "",
-    balance: 0.0,
+    balance: Balance(total: 0, aPolUSDC: 0, cUSD: 0, etherscan: 0, mcUSD: 0),
     walletAddress: "",
     kycStatus: null,
     profession: "",
@@ -64,7 +65,7 @@ class User {
       dob: DateFormat('yyyy-MM-dd').parse(map["dob"]),
       name: map["name"],
       email: map["email"],
-      balance: map['balance'].toDouble(),
+      balance: Balance.fromMap(map['balance']),
       walletAddress: map['walletAddress'],
       kycStatus: map['kycStatus'],
       profession: map["profession"],
