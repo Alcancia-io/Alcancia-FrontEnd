@@ -35,7 +35,7 @@ class Checkout extends StatelessWidget {
         "from_amount": txnInput.sourceAmount.toString(),
         "type": txnInput.txnType.name.toUpperCase(),
         "from_currency": "MXN",
-        "network": "MATIC",
+        "network": txnInput.network,
         "to_amount": txnInput.targetAmount.toString(),
         "to_currency": txnInput.targetCurrency
       }
@@ -48,15 +48,12 @@ class Checkout extends StatelessWidget {
           future: suarmiService.sendSuarmiOrder(orderInput),
           builder: (context, snapshot) {
             if (snapshot.hasError) return Text("${snapshot.error}");
-            if (snapshot.connectionState != ConnectionState.done)
-              return Center(child: CircularProgressIndicator());
+            if (snapshot.connectionState != ConnectionState.done) return Center(child: CircularProgressIndicator());
             if (snapshot.hasData && snapshot.data!.hasException) {
-              final e =
-                  exceptionService.handleException(snapshot.data?.exception);
+              final e = exceptionService.handleException(snapshot.data?.exception);
               return Center(child: Text(e.toString()));
             }
-            var suarmiOrder =
-                SuarmiOrder.fromJson(snapshot.data?.data?["sendSuarmiOrder"]);
+            var suarmiOrder = SuarmiOrder.fromJson(snapshot.data?.data?["sendSuarmiOrder"]);
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -68,8 +65,7 @@ class Checkout extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 32.0),
-                    child: OrderInformation(
-                        txnInput: txnInput, suarmiConcept: suarmiOrder.concept),
+                    child: OrderInformation(txnInput: txnInput, suarmiConcept: suarmiOrder.concept),
                   ),
                   AlcanciaButton(
                     height: responsiveService.getHeightPixels(64, screenHeight),
@@ -123,9 +119,7 @@ class OrderInformation extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark
-            ? alcanciaCardDark
-            : alcanciaFieldLight,
+        color: Theme.of(context).brightness == Brightness.dark ? alcanciaCardDark : alcanciaFieldLight,
         borderRadius: const BorderRadius.all(
           Radius.circular(7),
         ),
@@ -141,16 +135,12 @@ class OrderInformation extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('$key:',
-                        style:
-                            textStyle?.copyWith(fontWeight: FontWeight.bold)),
+                    Text('$key:', style: textStyle?.copyWith(fontWeight: FontWeight.bold)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('${bankInfo[key]}', style: textStyle),
-                        AlcanciaCopyToClipboard(
-                            displayText: '$key copiad@',
-                            textToCopy: bankInfo[key] as String)
+                        AlcanciaCopyToClipboard(displayText: '$key copiad@', textToCopy: bankInfo[key] as String)
                       ],
                     )
                   ],
@@ -162,15 +152,12 @@ class OrderInformation extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Concepto:",
-                      style: textStyle?.copyWith(fontWeight: FontWeight.bold)),
+                  Text("Concepto:", style: textStyle?.copyWith(fontWeight: FontWeight.bold)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text("$suarmiConcept", style: textStyle),
-                      AlcanciaCopyToClipboard(
-                          displayText: "Concepto copiad@",
-                          textToCopy: suarmiConcept as String),
+                      AlcanciaCopyToClipboard(displayText: "Concepto copiad@", textToCopy: suarmiConcept as String),
                     ],
                   ),
                 ],
@@ -179,8 +166,7 @@ class OrderInformation extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("\nTotal:",
-                    style: textStyle?.copyWith(fontWeight: FontWeight.bold)),
+                Text("\nTotal:", style: textStyle?.copyWith(fontWeight: FontWeight.bold)),
                 Text("\n\$ $total", style: textStyle),
               ],
             ),
