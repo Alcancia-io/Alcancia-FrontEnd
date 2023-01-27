@@ -32,6 +32,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   String _error = "";
 
   Future<void> setUserInformation() async {
+
     setState(() {
       _isLoading = true;
     });
@@ -40,7 +41,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       inspect(userInfo);
       txns = userInfo.txns;
       ref.watch(userProvider.notifier).setUser(userInfo.user);
-      ref.watch(balanceProvider.notifier).setBalance(Balance(balance: userInfo.user.balance));
+      ref.watch(balanceProvider.notifier).setBalance(userInfo.user.balance);
     } catch (err) {
       setState(() {
         _error = err.toString();
@@ -54,7 +55,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   void setUserBalance() async {
     try {
       var balance = await dashboardController.fetchUserBalance();
-      ref.watch(balanceProvider.notifier).setBalance(Balance(balance: balance));
+      ref.watch(balanceProvider.notifier).setBalance(balance);
     } catch (err) {}
   }
 
