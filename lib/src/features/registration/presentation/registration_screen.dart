@@ -31,14 +31,14 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
   bool obscurePassword = true;
   bool obscureConfirmPassword = true;
 
-  final selectedDateProvider =
-      StateProvider.autoDispose<DateTime>((ref) => DateTime.now());
-  final selectedGenderProvider =
-      StateProvider.autoDispose<Gender?>((ref) => null);
+  final selectedDateProvider = StateProvider.autoDispose<DateTime>((ref) => DateTime.now());
+  final selectedGenderProvider = StateProvider.autoDispose<Gender?>((ref) => null);
 
   var signupInput;
 
   final _formKey = GlobalKey<FormState>();
+
+  bool _disableButton = true;
 
   bool validDate(DateTime date) {
     DateTime adultDate = DateTime(
@@ -81,6 +81,9 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
     final selectedDate = ref.watch(selectedDateProvider);
     final selectedGender = ref.watch(selectedGenderProvider);
     final unavailableEmails = ref.watch(emailsInUseProvider);
+    setState(() {
+      _disableButton = _formKey.currentState?.validate() == false;
+    });
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -89,10 +92,10 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
           bottom: false,
           child: Form(
             key: _formKey,
+            onChanged: () => setState(() => _disableButton = !_formKey.currentState!.validate()),
             autovalidateMode: AutovalidateMode.always,
             child: ListView(
-              padding:
-                  const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
+              padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
               children: [
                 Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -106,12 +109,9 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   children: const [
                     Text(
                       "¡Hola!",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
                     ),
-                    Text(
-                        "Completa la siguiente información para crear tu cuenta",
-                        style: TextStyle(fontSize: 15)),
+                    Text("Completa la siguiente información para crear tu cuenta", style: TextStyle(fontSize: 15)),
                   ],
                 ),
                 const SizedBox(
@@ -194,9 +194,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                     if (value == null || value.isEmpty) {
                       return appLocalization.errorRequiredField;
                     } else {
-                      return value.isValidEmail()
-                          ? null
-                          : appLocalization.errorEmailFormat;
+                      return value.isValidEmail() ? null : appLocalization.errorEmailFormat;
                     }
                   },
                 ),
@@ -215,9 +213,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                         obscurePassword = !obscurePassword;
                       });
                     },
-                    child: Icon(obscurePassword
-                        ? CupertinoIcons.eye
-                        : CupertinoIcons.eye_fill),
+                    child: Icon(obscurePassword ? CupertinoIcons.eye : CupertinoIcons.eye_fill),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -225,8 +221,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                     } else {
                       return value.isValidPassword()
                           ? null
-                          : appLocalization
-                              .errorInvalidPassword; // TODO: Password validation text
+                          : appLocalization.errorInvalidPassword; // TODO: Password validation text
                     }
                   },
                 ),
@@ -244,16 +239,13 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                         obscureConfirmPassword = !obscureConfirmPassword;
                       });
                     },
-                    child: Icon(obscureConfirmPassword
-                        ? CupertinoIcons.eye
-                        : CupertinoIcons.eye_fill),
+                    child: Icon(obscureConfirmPassword ? CupertinoIcons.eye : CupertinoIcons.eye_fill),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return appLocalization.errorRequiredField;
                     } else if (value != passwordController.text) {
-                      return appLocalization
-                          .errorPasswordMatch; // TODO: Confirm password validation text
+                      return appLocalization.errorPasswordMatch; // TODO: Confirm password validation text
                     }
                   },
                 ),
@@ -265,27 +257,28 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   color: alcanciaLightBlue,
                   width: 304,
                   height: 64,
-                  onPressed: () {
-                    final user = User(
-                      id: "",
-                      authId: "",
-                      name: nameController.text,
-                      surname: lastNameController.text,
-                      email: emailController.text,
-                      gender: selectedGender.string,
-                      phoneNumber: "",
-                      dob: selectedDate,
-                      balance: 0.0,
-                      walletAddress: "",
-                      country: '',
-                      profession: '',
-                    );
-                    if (isValid(selectedGender, selectedDate)) {
-                      context.push("/phone-registration",
-                          extra: UserRegistrationModel(
-                              user: user, password: passwordController.text));
-                    }
-                  },
+                  onPressed: _disableButton
+                      ? null
+                      : () {
+                          final user = User(
+                            id: "",
+                            authId: "",
+                            name: nameController.text,
+                            surname: lastNameController.text,
+                            email: emailController.text,
+                            gender: selectedGender.string,
+                            phoneNumber: "",
+                            dob: selectedDate,
+                            balance: 0.0,
+                            walletAddress: "",
+                            country: '',
+                            profession: '',
+                          );
+                          if (isValid(selectedGender, selectedDate)) {
+                            context.push("/phone-registration",
+                                extra: UserRegistrationModel(user: user, password: passwordController.text));
+                          }
+                        },
                 ),
               ],
             ),
