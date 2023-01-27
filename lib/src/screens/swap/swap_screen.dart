@@ -287,6 +287,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                       sourceAmount: double.parse(sourceAmount),
                                       targetAmount: (double.parse(sourceAmountController.text) / suarmiExchage),
                                       targetCurrency: targetCurrency == 'USDC' ? 'aPolUSDC' : 'mcUSD',
+                                      network: targetCurrency == 'USDC' ? 'MATIC' : 'CELO',
                                     );
                                     Map wrapper = {
                                       "verified": true,

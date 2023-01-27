@@ -9,6 +9,7 @@ class TransactionInput {
   final double targetAmount;
   final String? concept;
   final String targetCurrency;
+  final String network;
 
   TransactionInput({
     required this.txnMethod,
@@ -16,6 +17,7 @@ class TransactionInput {
     required this.sourceAmount,
     required this.targetAmount,
     required this.targetCurrency,
+    required this.network,
     this.concept,
   });
 }
