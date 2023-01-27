@@ -6,6 +6,7 @@ import 'GraphQLConfig.dart';
 
 class RegistrationController {
   RegistrationController({required this.token});
+
   String token;
 
   static String verifyOTPQuery = """
@@ -27,9 +28,7 @@ class RegistrationController {
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
       GraphQLClient _client = graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
-        QueryOptions(
-            document: gql(resendVerificationQuery),
-            variables: {"email": email}),
+        QueryOptions(document: gql(resendVerificationQuery), variables: {"email": email}),
       );
       if (result.hasException) {
         print(email);
@@ -48,21 +47,18 @@ class RegistrationController {
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
       GraphQLClient _client = graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
-        QueryOptions(
-            document: gql(verifyOTPQuery),
-            variables: {"verificationCode": otp, "email": email}),
+        QueryOptions(document: gql(verifyOTPQuery), variables: {"verificationCode": otp, "email": email}),
       );
       if (result.hasException) {
         final e = result.exception?.graphqlErrors[0].message;
         return Future.error(e!);
       }
-
     } catch (e) {
       return Future.error(e);
     }
   }
 
-  Future<User?> signUp(User user, String password) async {
+  Future<void> signUp(User user, String password) async {
     final signupInput = {
       "name": user.name,
       "surname": user.surname,
@@ -78,31 +74,21 @@ class RegistrationController {
       print(signupInput.toString());
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
       GraphQLClient _client = graphQLConfiguration.clientToQuery();
-      QueryResult result = await _client.mutate(MutationOptions(
-          document: gql(signupMutation),
-          variables: {"signupUserInput": signupInput}
-          //onCompleted: (resultData) {
-          //  if (resultData != null) {
-          //    context.go("/login");
-          //  }
-          //},
-          ));
+      QueryResult result = await _client
+          .mutate(MutationOptions(document: gql(signupMutation), variables: {"signupUserInput": signupInput}
+              //onCompleted: (resultData) {
+              //  if (resultData != null) {
+              //    context.go("/login");
+              //  }
+              //},
+              ));
 
       if (result.hasException) {
         print("Exception");
         final e = result.exception;
         return Future.error(e!);
-      } else if (result.data != null) {
-        print("data");
-        print(result.data);
-        result.data!["signup"]["balance"] = 0.0;
-        result.data!["signup"]["walletAddress"] = "";
-        final data = result.data!["signup"] as Map<String, dynamic>;
-        final user = User.fromJSON(data);
-        print("Success!");
-        return user;
       }
-      return null;
+      return;
     } catch (e) {
       print("Error");
       print(e);
