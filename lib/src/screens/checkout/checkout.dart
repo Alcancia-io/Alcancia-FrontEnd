@@ -20,7 +20,6 @@ class Checkout extends StatelessWidget {
   Checkout({super.key, required this.txnInput});
 
   final TransactionInput txnInput;
-  late TransactionMethod txnMethod = txnInput.txnMethod;
   final ResponsiveService responsiveService = ResponsiveService();
   final ExceptionService exceptionService = ExceptionService();
 
@@ -37,7 +36,7 @@ class Checkout extends StatelessWidget {
         "from_currency": "MXN",
         "network": "MATIC",
         "to_amount": txnInput.targetAmount.toString(),
-        "to_currency": "aPolUSDC"
+        "to_currency": txnInput.targetCurrency
       }
     };
 
@@ -51,7 +50,9 @@ class Checkout extends StatelessWidget {
             if (snapshot.connectionState != ConnectionState.done) return Center(child: CircularProgressIndicator());
             if (snapshot.hasData && snapshot.data!.hasException) {
               final e = exceptionService.handleException(snapshot.data?.exception);
-              return Center(child: Text(e.toString()),);
+              return Center(
+                child: Text(e.toString()),
+              );
             }
             var suarmiOrder = SuarmiOrder.fromJson(snapshot.data?.data?["sendSuarmiOrder"]);
             return Padding(
