@@ -158,7 +158,7 @@ class OrderInformation extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text("$suarmiConcept", style: textStyle),
-                      AlcanciaCopyToClipboard(displayText: "Concepto copiado", textToCopy: suarmiConcept as String),
+                      AlcanciaCopyToClipboard(displayText: "Concepto copiad@", textToCopy: suarmiConcept as String),
                     ],
                   ),
                 ],
