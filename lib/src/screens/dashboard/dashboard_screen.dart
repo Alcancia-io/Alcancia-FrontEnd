@@ -31,7 +31,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   bool _isLoading = false;
   String _error = "";
 
-  void setUserInformation() async {
+  Future<void> setUserInformation() async {
+
     setState(() {
       _isLoading = true;
     });
@@ -92,62 +93,64 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             bottom: 24,
             top: 10,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AlcanciaNavbar(username: user.name),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("Verificación: $kycStatus"),
-                      ),
-                      if (user.kycStatus == "VERIFIED") ...[
-                        SvgPicture.asset("lib/src/resources/images/icon_check.svg", height: 20),
-                      ],
-                      if (user.kycStatus == "FAILED" || user.kycStatus == null) ...[
-                        SvgPicture.asset("lib/src/resources/images/icon_cross.svg", height: 20),
-                      ],
-                    ],
-                  ),
-                ],
-              ),
-              Container(
-                padding: const EdgeInsets.only(bottom: 16, top: 10),
-                child: DashboardCard(),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 22, top: 22),
-                child: Row(
+          child: RefreshIndicator(
+            onRefresh: () => setUserInformation(),
+            child: ListView(
+              children: [
+                AlcanciaNavbar(username: user.name),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      "Actividad",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    AlcanciaButton(
-                      buttonText: "Ver más",
-                      onPressed: () {
-                        context.go("/homescreen/1");
-                      },
-                      color: const Color(0x00FFFFFF),
-                      rounded: true,
-                      height: 24,
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("Verificación: $kycStatus"),
+                        ),
+                        if (user.kycStatus == "VERIFIED") ...[
+                          SvgPicture.asset("lib/src/resources/images/icon_check.svg", height: 20),
+                        ],
+                        if (user.kycStatus == "FAILED" || user.kycStatus == null) ...[
+                          SvgPicture.asset("lib/src/resources/images/icon_cross.svg", height: 20),
+                        ],
+                      ],
                     ),
                   ],
                 ),
-              ),
-              AlcanciaTransactions(
-                txns: txns,
-                height: 200,
-              )
-            ],
+                Container(
+                  padding: const EdgeInsets.only(bottom: 16, top: 10),
+                  child: DashboardCard(),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 22, top: 22),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Actividad",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      AlcanciaButton(
+                        buttonText: "Ver más",
+                        onPressed: () {
+                          context.go("/homescreen/1");
+                        },
+                        color: const Color(0x00FFFFFF),
+                        rounded: true,
+                        height: 24,
+                      ),
+                    ],
+                  ),
+                ),
+                AlcanciaTransactions(
+                  txns: txns,
+                  height: 200,
+                )
+              ],
+            ),
           ),
         ),
       ),
