@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
+import 'package:alcancia/src/shared/components/alcancia_copy_clipboard.dart';
 import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
 import 'package:alcancia/src/shared/constants.dart';
 import 'package:alcancia/src/shared/models/suarmi_order_model.dart';
@@ -47,14 +48,15 @@ class Checkout extends StatelessWidget {
           future: suarmiService.sendSuarmiOrder(orderInput),
           builder: (context, snapshot) {
             if (snapshot.hasError) return Text("${snapshot.error}");
-            if (snapshot.connectionState != ConnectionState.done) return Center(child: CircularProgressIndicator());
+            if (snapshot.connectionState != ConnectionState.done)
+              return Center(child: CircularProgressIndicator());
             if (snapshot.hasData && snapshot.data!.hasException) {
-              final e = exceptionService.handleException(snapshot.data?.exception);
-              return Center(
-                child: Text(e.toString()),
-              );
+              final e =
+                  exceptionService.handleException(snapshot.data?.exception);
+              return Center(child: Text(e.toString()));
             }
-            var suarmiOrder = SuarmiOrder.fromJson(snapshot.data?.data?["sendSuarmiOrder"]);
+            var suarmiOrder =
+                SuarmiOrder.fromJson(snapshot.data?.data?["sendSuarmiOrder"]);
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -66,7 +68,8 @@ class Checkout extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 32.0),
-                    child: OrderInformation(txnInput: txnInput, suarmiConcept: suarmiOrder.concept),
+                    child: OrderInformation(
+                        txnInput: txnInput, suarmiConcept: suarmiOrder.concept),
                   ),
                   AlcanciaButton(
                     height: responsiveService.getHeightPixels(64, screenHeight),
@@ -120,7 +123,9 @@ class OrderInformation extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark ? alcanciaCardDark : alcanciaFieldLight,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? alcanciaCardDark
+            : alcanciaFieldLight,
         borderRadius: const BorderRadius.all(
           Radius.circular(7),
         ),
@@ -136,8 +141,18 @@ class OrderInformation extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('$key:', style: textStyle?.copyWith(fontWeight: FontWeight.bold)),
-                    Text('${bankInfo[key]}', style: textStyle),
+                    Text('$key:',
+                        style:
+                            textStyle?.copyWith(fontWeight: FontWeight.bold)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('${bankInfo[key]}', style: textStyle),
+                        AlcanciaCopyToClipboard(
+                            displayText: '$key copiad@',
+                            textToCopy: bankInfo[key] as String)
+                      ],
+                    )
                   ],
                 ),
               )
@@ -147,23 +162,15 @@ class OrderInformation extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Concepto:", style: textStyle?.copyWith(fontWeight: FontWeight.bold)),
+                  Text("Concepto:",
+                      style: textStyle?.copyWith(fontWeight: FontWeight.bold)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text("$suarmiConcept", style: textStyle),
-                      InkWell(
-                        child: const Icon(Icons.copy, size: 20, color: Colors.blue),
-                        onTap: () async {
-                          Clipboard.setData(ClipboardData(text: suarmiConcept));
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            AlcanciaSnackBar(
-                              context,
-                              "Concepto copiado",
-                            ),
-                          );
-                        },
-                      )
+                      AlcanciaCopyToClipboard(
+                          displayText: "Concepto copiad@",
+                          textToCopy: suarmiConcept as String),
                     ],
                   ),
                 ],
@@ -172,7 +179,8 @@ class OrderInformation extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("\nTotal:", style: textStyle?.copyWith(fontWeight: FontWeight.bold)),
+                Text("\nTotal:",
+                    style: textStyle?.copyWith(fontWeight: FontWeight.bold)),
                 Text("\n\$ $total", style: textStyle),
               ],
             ),
