@@ -1,11 +1,13 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/screens/metamap/metamap_controller.dart';
+import 'package:alcancia/src/screens/swap/components/currency_risk_card.dart';
 import 'package:alcancia/src/screens/swap/swap_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_container.dart';
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_link.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
+import 'package:alcancia/src/shared/constants.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/provider/user_provider.dart';
 import 'package:alcancia/src/shared/services/metamap_service.dart';
@@ -39,8 +41,12 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
 
   // target amount icons
   final List<Map> targetCurrencies = [
+    {"name": "CUSD", "icon": "lib/src/resources/images/icon_celo_usd.png"},
     {"name": "USDC", "icon": "lib/src/resources/images/icon_usdc.png"},
   ];
+
+  // dropdown value for target currency, it can be CUSD or USDC
+  late String targetCurrency = targetCurrencies.first['name'];
 
   // dropdown value for source currency, it can be MXN or DOP
   late String sourceCurrency = sourceCurrencyCodes.first['name'];
@@ -200,6 +206,11 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                   dropdownWidth: responsiveService.getWidthPixels(150, screenWidth),
                                   dropdownHeight: responsiveService.getHeightPixels(45, screenHeight),
                                   dropdownItems: targetCurrencies,
+                                  onChanged: (newTargetCurrency) {
+                                    setState(() {
+                                      targetCurrency = newTargetCurrency;
+                                    });
+                                  },
                                 ),
                                 // here is where target amount is display
                                 Container(
