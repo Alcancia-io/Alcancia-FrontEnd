@@ -28,17 +28,13 @@ class CountryPicker extends ConsumerWidget {
               style: Theme.of(context)
                   .textTheme
                   .bodyText1
-                  ?.copyWith(
-                  color: Theme.of(context)
-                      .textTheme
-                      .subtitle2
-                      ?.color
-                      ?.withOpacity(0.6)),
+                  ?.copyWith(color: Theme.of(context).textTheme.subtitle2?.color?.withOpacity(0.6)),
             ),
             const Spacer(),
             Icon(
               CupertinoIcons.chevron_down,
               color: Theme.of(context).iconTheme.color,
+              size: MediaQuery.of(context).size.height / 35,
             ),
           ],
         ),
@@ -53,9 +49,14 @@ class CountryPicker extends ConsumerWidget {
                     final country = countries[index];
                     return GestureDetector(
                       onTap: () => ref.read(selectedCountryProvider.notifier).state = country,
-                      child: AlcanciaListTile(title: country.displayCC, value: country, groupValueProvider: selectedCountryProvider, onChanged: (newValue) {
-                        ref.read(selectedCountryProvider.notifier).state = newValue;
-                      },),
+                      child: AlcanciaListTile(
+                        title: country.displayCC,
+                        value: country,
+                        groupValueProvider: selectedCountryProvider,
+                        onChanged: (newValue) {
+                          ref.read(selectedCountryProvider.notifier).state = newValue;
+                        },
+                      ),
                     );
                   },
                 );
