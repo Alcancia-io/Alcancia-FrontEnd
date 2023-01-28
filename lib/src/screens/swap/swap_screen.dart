@@ -58,7 +58,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
   final metamapDomicanFlowId = dotenv.env['DOMINICAN_FLOW_ID'] as String;
 
   final SwapController swapController = SwapController();
-  var suarmiExchage = 1.0;
+  var suarmiUSDCExchage = 1.0;
+  var suarmiCeloExchange = 1.0;
 
   // state
   bool _isLoading = false;
@@ -69,9 +70,11 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
       _isLoading = true;
     });
     try {
-      var exchageRate = await swapController.getSuarmiExchange();
+      var exchageRate = await swapController.getSuarmiExchange("USDC");
+      var celoRate = await swapController.getSuarmiExchange("cUSD");
       setState(() {
-        suarmiExchage = 1.0 / double.parse(exchageRate);
+        suarmiUSDCExchage = 1.0 / double.parse(exchageRate);
+        suarmiCeloExchange = 1.0 / double.parse(celoRate);
       });
     } catch (err) {
       // print(err);
@@ -225,7 +228,9 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                   child: Text(
                                     sourceAmount == ""
                                         ? ""
-                                        : (int.parse(sourceAmountController.text) / suarmiExchage).toStringAsFixed(4),
+                                        : (int.parse(sourceAmountController.text) /
+                                                (targetCurrency == "USDC" ? suarmiUSDCExchage : suarmiCeloExchange))
+                                            .toStringAsFixed(4),
                                     style: txtTheme.bodyText1,
                                   ),
                                 ),
@@ -285,7 +290,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                       txnMethod: method,
                                       txnType: TransactionType.deposit,
                                       sourceAmount: double.parse(sourceAmount),
-                                      targetAmount: (double.parse(sourceAmountController.text) / suarmiExchage),
+                                      targetAmount: (double.parse(sourceAmountController.text) /
+                                          (targetCurrency == "USDC" ? suarmiUSDCExchage : suarmiCeloExchange)),
                                       targetCurrency: targetCurrency == 'USDC' ? 'aPolUSDC' : 'mcUSD',
                                       network: targetCurrency == 'USDC' ? 'MATIC' : 'CELO',
                                     );

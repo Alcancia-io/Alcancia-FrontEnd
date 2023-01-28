@@ -8,17 +8,19 @@ class SwapController {
   final _exceptionHandler = ExceptionService();
   final _suarmiService = SuarmiService();
 
-  final suarmiQuoteInput = {
-    "quoteInput": {
-      "from_amount": "1",
-      "from_currency": "MXN",
-      "network": "MATIC",
-      "to_currency": "USDC",
-    }
-  };
+  Map<String, Map<String, String>> suarmiQuoteInput({required String targetCurrency}) {
+    return {
+      "quoteInput": {
+        "from_amount": "1",
+        "from_currency": "MXN",
+        "network": targetCurrency == "USDC" ? "MATIC" : "CELO",
+        "to_currency": targetCurrency == 'USDC' ? 'USDC' : 'mcUSD',
+      }
+    };
+  }
 
-  getSuarmiExchange() async {
-    var response = await _suarmiService.getSuarmiQuote(suarmiQuoteInput);
+  getSuarmiExchange(String targetCurrency) async {
+    var response = await _suarmiService.getSuarmiQuote(suarmiQuoteInput(targetCurrency: targetCurrency));
     if (response.hasException) {
       print('exception:');
       var exception = _exceptionHandler.handleException(response.exception);
