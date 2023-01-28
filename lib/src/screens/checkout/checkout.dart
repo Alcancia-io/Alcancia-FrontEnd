@@ -140,7 +140,9 @@ class OrderInformation extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('${bankInfo[key]}', style: textStyle),
-                        AlcanciaCopyToClipboard(displayText: '$key copiad@', textToCopy: bankInfo[key] as String)
+                        if (key != "Cuenta") ...[
+                          AlcanciaCopyToClipboard(displayText: '$key copiad@', textToCopy: bankInfo[key] as String),
+                        ]
                       ],
                     )
                   ],
