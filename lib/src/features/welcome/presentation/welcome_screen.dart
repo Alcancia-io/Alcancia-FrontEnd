@@ -16,68 +16,51 @@ class WelcomeScreen extends StatelessWidget {
     final screenWidth = size.width;
     var pattern = getPattern(context);
     final ResponsiveService responsiveService = ResponsiveService();
-    //print(result.data);
     return Container(
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.center,
-              colors: pattern)),
+      decoration:
+          BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.center, colors: pattern)),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: SafeArea(
           bottom: false,
-          child: SingleChildScrollView(
-            physics: ClampingScrollPhysics(),
-            child: Column(
-              children: [
-                AlcanciaToolbar(
-                    state: StateToolbar.logoNoletters,
-                    logoHeight: size.height / 12),
-
-                //AlcanciaLogo(height: size.height / 12),
-                Transform(
-                  transform: Matrix4.translationValues(0, 30, 0),
-                  child: Image(
-                      image: const AssetImage(
-                          "lib/src/resources/images/welcome_image.png"),
-                      width: size.width),
-                ),
-                Container(
+          child: Stack(
+            children: [
+              Positioned(
+                  bottom: screenHeight * 0.45,
+                  child:
+                      Image(image: const AssetImage("lib/src/resources/images/welcome_image.png"), width: size.width)),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
                   width: size.width,
                   height: size.height * 0.5,
                   decoration: BoxDecoration(
                       color: Theme.of(context).primaryColor,
-                      borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(33),
-                          topRight: Radius.circular(33))),
+                      borderRadius:
+                          const BorderRadius.only(topLeft: Radius.circular(33), topRight: Radius.circular(33))),
                   child: Center(
                       child: Padding(
-                    padding: const EdgeInsets.all(32.0),
+                    padding: const EdgeInsets.only(top: 32.0, left: 32.0, right: 32.0, bottom: 16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
+                        Text(
                           "Descubre una nueva forma de ahorrar",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 35),
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: screenHeight / 23),
                         ),
                         const Padding(
                           padding: EdgeInsets.only(top: 16.0),
                           child: Text(
                             "Construye tu portafolio de ahorro basado en crypto",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400, fontSize: 16),
+                            style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
                           ),
                         ),
                         const Spacer(),
                         AlcanciaButton(
                           color: alcanciaLightBlue,
-                          width: responsiveService.getWidthPixels(
-                              304, screenWidth),
-                          height: responsiveService.getHeightPixels(
-                              64, screenHeight),
+                          width: responsiveService.getWidthPixels(304, screenWidth),
+                          height: responsiveService.getHeightPixels(64, screenHeight),
                           buttonText: "Registrate",
                           onPressed: () {
                             context.push('/registration');
@@ -100,9 +83,7 @@ class WelcomeScreen extends StatelessWidget {
                               CupertinoButton(
                                   child: const Text(
                                     "Inicia sesión",
-                                    style: TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        fontWeight: FontWeight.bold),
+                                    style: TextStyle(decoration: TextDecoration.underline, fontWeight: FontWeight.bold),
                                   ),
                                   onPressed: () => context.push("/login")),
                             ],
@@ -111,9 +92,10 @@ class WelcomeScreen extends StatelessWidget {
                       ],
                     ),
                   )),
-                )
-              ],
-            ),
+                ),
+              ),
+              AlcanciaToolbar(state: StateToolbar.logoNoletters, logoHeight: size.height / 12),
+            ],
           ),
         ),
       ),

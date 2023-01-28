@@ -39,6 +39,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
 
   final _formKey = GlobalKey<FormState>();
 
+  bool _disableButton = true;
+
   bool validDate(DateTime date) {
     DateTime adultDate = DateTime(
       date.year + 18,
@@ -80,6 +82,11 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
     final selectedDate = ref.watch(selectedDateProvider);
     final selectedGender = ref.watch(selectedGenderProvider);
     final unavailableEmails = ref.watch(emailsInUseProvider);
+    setState(() {
+      if (_formKey.currentState != null) {
+        _disableButton = !_formKey.currentState!.validate();
+      }
+    });
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -88,6 +95,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
           bottom: false,
           child: Form(
             key: _formKey,
+            onChanged: () => setState(() => _disableButton = !_formKey.currentState!.validate()),
             autovalidateMode: AutovalidateMode.always,
             child: ListView(
               padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
@@ -252,26 +260,28 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   color: alcanciaLightBlue,
                   width: 304,
                   height: 64,
-                  onPressed: () {
-                    final user = User(
-                      id: "",
-                      authId: "",
-                      name: nameController.text,
-                      surname: lastNameController.text,
-                      email: emailController.text,
-                      gender: selectedGender.string,
-                      phoneNumber: "",
-                      dob: selectedDate,
-                      balance: Balance(total: 0, aPolUSDC: 0, cUSD: 0, etherscan: 0, mcUSD: 0),
-                      walletAddress: "",
-                      country: '',
-                      profession: '',
-                    );
-                    if (isValid(selectedGender, selectedDate)) {
-                      context.push("/phone-registration",
-                          extra: UserRegistrationModel(user: user, password: passwordController.text));
-                    }
-                  },
+                  onPressed: _disableButton
+                      ? null
+                      : () {
+                          final user = User(
+                            id: "",
+                            authId: "",
+                            name: nameController.text,
+                            surname: lastNameController.text,
+                            email: emailController.text,
+                            gender: selectedGender.string,
+                            phoneNumber: "",
+                            dob: selectedDate,
+                            balance: 0.0,
+                            walletAddress: "",
+                            country: '',
+                            profession: '',
+                          );
+                          if (isValid(selectedGender, selectedDate)) {
+                            context.push("/phone-registration",
+                                extra: UserRegistrationModel(user: user, password: passwordController.text));
+                          }
+                        },
                 ),
               ],
             ),

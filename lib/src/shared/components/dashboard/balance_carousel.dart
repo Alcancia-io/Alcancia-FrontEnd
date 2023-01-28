@@ -52,7 +52,7 @@ class _BalanceCarouselState extends State<BalanceCarousel> {
                   Container(
                     padding: const EdgeInsets.only(top: 16),
                     child: Text(
-                      "\$${balance.value.toStringAsFixed(6)} ${balance.currency}",
+                      "\$${balance.value == 0 ? 0 : balance.value.toStringAsFixed(6)} ${balance.currency}",
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 30,
