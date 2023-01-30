@@ -9,6 +9,7 @@ import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/constants.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/provider/user_provider.dart';
+import 'package:alcancia/src/shared/services/exception_service.dart';
 import 'package:alcancia/src/shared/services/metamap_service.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:flutter/material.dart';
@@ -56,12 +57,21 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
   final metamapDomicanFlowId = dotenv.env['DOMINICAN_FLOW_ID'] as String;
 
   final SwapController swapController = SwapController();
+
+  // suarmi exchanges
   var suarmiUSDCExchage = 1.0;
   var suarmiCeloExchange = 1.0;
 
   // state
   bool _isLoading = false;
   String _error = "";
+
+  // Anual Percentage Yields
+  String currentCeloAPY = "";
+  String? celoAPYError;
+
+  String currentUsdcAPY = "";
+  String? usdcAPYError;
 
   getExchange() async {
     setState(() {
@@ -83,10 +93,34 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     });
   }
 
+  getCeloAPY() async {
+    try {
+      var currentCeloAPYResponse = await swapController.getCurrentAPY("mcUSD");
+      setState(() {
+        currentCeloAPY = currentCeloAPYResponse;
+      });
+    } on CustomException catch (err) {
+      celoAPYError = err.message;
+    }
+  }
+
+  getUsdcAPY() async {
+    try {
+      var currentUsdcAPYResponse = await swapController.getCurrentAPY("aPolUSDC");
+      setState(() {
+        currentUsdcAPY = currentUsdcAPYResponse;
+      });
+    } on CustomException catch (err) {
+      usdcAPYError = err.message;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     getExchange();
+    getCeloAPY();
+    getUsdcAPY();
   }
 
   @override
@@ -237,24 +271,28 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                           ],
                         ),
                       ),
-                      if (targetCurrency == "USDC") ...[
-                        AlcanciaContainer(
-                          top: 16,
-                          child: CurrencyRiskCard(
-                            riskLevel: RiskLevel.bajo,
-                            targetCurrency: "USDC",
-                            percentage: 1.3,
-                            color: cardColor,
-                          ),
-                        ),
-                      ],
-                      if (targetCurrency == "CUSD") ...[
+                      if (celoAPYError != null) ...[
+                        Text(celoAPYError as String)
+                      ] else if (targetCurrency == "CUSD") ...[
                         AlcanciaContainer(
                           top: 16,
                           child: CurrencyRiskCard(
                             riskLevel: RiskLevel.medio,
                             targetCurrency: "CUSD",
-                            percentage: 8.3,
+                            percentage: currentCeloAPY,
+                            color: cardColor,
+                          ),
+                        ),
+                      ],
+                      if (usdcAPYError != null) ...[
+                        Text(usdcAPYError as String)
+                      ] else if (targetCurrency == "USDC") ...[
+                        AlcanciaContainer(
+                          top: 16,
+                          child: CurrencyRiskCard(
+                            riskLevel: RiskLevel.bajo,
+                            targetCurrency: "USDC",
+                            percentage: currentUsdcAPY,
                             color: cardColor,
                           ),
                         ),
