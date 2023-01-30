@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:alcancia/src/shared/services/exception_service.dart';
 import 'package:alcancia/src/shared/services/suarmi_service.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 
 class SwapController {
   final _exceptionHandler = ExceptionService();
