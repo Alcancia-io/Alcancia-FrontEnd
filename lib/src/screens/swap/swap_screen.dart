@@ -1,5 +1,4 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
-import 'package:alcancia/src/screens/metamap/metamap_controller.dart';
 import 'package:alcancia/src/screens/swap/components/currency_risk_card.dart';
 import 'package:alcancia/src/screens/swap/swap_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
@@ -19,7 +18,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
-import 'package:alcancia/src/screens/metamap/metamap_dialog.dart';
 
 class SwapScreen extends ConsumerStatefulWidget {
   const SwapScreen({Key? key}) : super(key: key);
