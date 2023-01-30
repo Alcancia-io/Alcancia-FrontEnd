@@ -6,7 +6,7 @@ class CurrencyRiskCard extends StatelessWidget {
   final RiskLevel riskLevel;
   final String targetCurrency;
   final Color color;
-  final double percentage;
+  final String percentage;
 
   const CurrencyRiskCard({
     super.key,
@@ -18,6 +18,7 @@ class CurrencyRiskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var riskLevelColor = riskLevel == RiskLevel.bajo ? const Color(0xff00FF98) : const Color(0xffA0FF26);
     return AlcanciaContainer(
       top: 16,
       bottom: 16,
@@ -29,8 +30,15 @@ class CurrencyRiskCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Nivel de riesgo: ${riskLevel.name}'),
-          Text('El rendimiento anual de $targetCurrency es de $percentage%')
+          RichText(
+            text: TextSpan(
+              children: [
+                const TextSpan(text: 'Nivel de riesgo: '),
+                TextSpan(text: riskLevel.name, style: TextStyle(color: riskLevelColor)),
+              ],
+            ),
+          ),
+          Text('El rendimiento anual de $targetCurrency es de $percentage')
         ],
       ),
     );
