@@ -19,12 +19,18 @@ class SwapController {
   getSuarmiExchange(String targetCurrency) async {
     var response = await _suarmiService.getSuarmiQuote(suarmiQuoteInput(targetCurrency: targetCurrency));
     if (response.hasException) {
-      print('exception:');
       var exception = _exceptionHandler.handleException(response.exception);
-      print(exception);
       throw Exception(exception);
     }
-    print(response.data);
     return response.data?['getSuarmiQuote']['to_amount'];
+  }
+
+  getCurrentAPY(String cryptoToken) async {
+    var response = await _suarmiService.getCurrentAPY(cryptoToken);
+    if (response.hasException) {
+      var exception = _exceptionHandler.handleException(response.exception);
+      throw CustomException(exception as String);
+    }
+    return response.data?['getCurrentAPY'];
   }
 }
