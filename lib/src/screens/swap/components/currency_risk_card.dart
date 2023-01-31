@@ -1,3 +1,4 @@
+import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_container.dart';
 import 'package:alcancia/src/shared/constants.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,12 @@ class CurrencyRiskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var riskLevelColor = riskLevel == RiskLevel.bajo ? const Color(0xff00FF98) : const Color(0xffA0FF26);
+    final txtTheme = Theme.of(context).textTheme;
+    var theme = Theme.of(context).brightness.name;
+    var lowRisk = {"light": alcanciaLowRiskLight, "dark": alcanciaLowRiskDark};
+    var mediumRisk = {"light": alcanciaMediumRiskLight, "dark": alcanciaMediumRiskDark};
+
+    var riskLevelColor = riskLevel == RiskLevel.bajo ? lowRisk[theme] : mediumRisk[theme];
     return AlcanciaContainer(
       top: 16,
       bottom: 16,
@@ -33,7 +39,7 @@ class CurrencyRiskCard extends StatelessWidget {
           RichText(
             text: TextSpan(
               children: [
-                const TextSpan(text: 'Nivel de riesgo: '),
+                TextSpan(text: 'Nivel de riesgo: ', style: txtTheme.bodyMedium),
                 TextSpan(text: riskLevel.name, style: TextStyle(color: riskLevelColor)),
               ],
             ),

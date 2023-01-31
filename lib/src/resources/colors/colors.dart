@@ -13,12 +13,15 @@ const Color alcanciaFieldLight = Color(0xFFF5F5F5);
 const Color alcanciaCardDark2 = Color.fromRGBO(15, 35, 70, 0.47);
 const Color alcanciaCardLight2 = Color.fromRGBO(245, 245, 245, 1);
 
-const CupertinoDynamicColor alcanciaWhiteBlack = CupertinoDynamicColor.withBrightness(color: CupertinoColors.white, darkColor: CupertinoColors.black);
+const Color alcanciaLowRiskLight = Color(0xff227353);
+const Color alcanciaLowRiskDark = Color(0xff00C476);
+const Color alcanciaMediumRiskLight = Color(0xff7BC458);
+const Color alcanciaMediumRiskDark = Color(0xffA0FF26);
 
-const alcanciaWelcomeGradient = [
-  Color(0xffffffff),
-  Color(0xff4E76E5)
-];
+const CupertinoDynamicColor alcanciaWhiteBlack =
+    CupertinoDynamicColor.withBrightness(color: CupertinoColors.white, darkColor: CupertinoColors.black);
+
+const alcanciaWelcomeGradient = [Color(0xffffffff), Color(0xff4E76E5)];
 const alcanciaWelcomeGradientDark = [
   Color(0xff0F2346),
   Color(0xff1C3466),
