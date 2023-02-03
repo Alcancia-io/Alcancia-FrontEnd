@@ -3,21 +3,22 @@ import 'package:alcancia/src/screens/withdraw/withdraw_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
+import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import 'package:alcancia/src/shared/services/suarmi_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class WithdrawScreen extends StatefulWidget {
+class WithdrawScreen extends ConsumerStatefulWidget {
   WithdrawScreen({Key? key}) : super(key: key);
 
   @override
-  State<WithdrawScreen> createState() => _WithdrawScreenState();
+  ConsumerState<WithdrawScreen> createState() => _WithdrawScreenState();
 }
 
-class _WithdrawScreenState extends State<WithdrawScreen> {
+class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
   final controller = WithdrawController();
   final suarmiService = SuarmiService();
 
@@ -34,6 +35,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
 
   final _clabeTextController = TextEditingController();
   final _amountTextController = TextEditingController();
+  final _targetTextController = TextEditingController();
 
   bool _isLoading = false;
   bool _loadingButton = false;
@@ -42,6 +44,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
 
   double suarmiUSDCExchange = 0;
   double suarmiCELOExchange = 0;
+  double targetAmount = 0;
 
   Future<void> getExchange() async {
     _isLoading = true;
@@ -71,10 +74,8 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
   Widget build(BuildContext context) {
     var txtTheme = Theme.of(context).textTheme;
     final appLoc = AppLocalizations.of(context)!;
-    final targetAmount = _amountTextController.text.isEmpty
-        ? 0
-        : double.parse(_amountTextController.text) /
-            (sourceCurrency == "USDC" ? suarmiUSDCExchange : suarmiCELOExchange);
+    final userBalance = ref.watch(userProvider)!.balance;
+    final balance = sourceCurrency == "USDC" ? userBalance.usdcBalance : userBalance.celoBalance;
 
     if (_isLoading) {
       return const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator())));
@@ -181,17 +182,33 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return appLoc.errorRequiredField;
+                  } else if (balance < double.parse(value)) {
+                    return "No cuentas con el balance necesario";
                   }
                   return null;
                 },
-                onChanged: (_) => setState(() {}),
+                onChanged: (value) => setState(() {
+                  targetAmount = value.isNotEmpty
+                      ? double.parse(_amountTextController.text) /
+                          (sourceCurrency == "USDC" ? suarmiUSDCExchange : suarmiCELOExchange)
+                      : 0;
+                  _targetTextController.text = targetAmount.toStringAsFixed(3);
+                }),
               ),
               const SizedBox(
                 height: 10,
               ),
-              if (_amountTextController.text.isNotEmpty) ...[
-                Text("Monto en MXN: \$$targetAmount"),
-              ],
+              Text("Balance disponible: \$$balance"),
+              const SizedBox(
+                height: 10,
+              ),
+              LabeledTextFormField(
+                controller: _targetTextController,
+                labelText: "Monto en MXN",
+                inputType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                enabled: false,
+              ),
               const SizedBox(
                 height: 10,
               ),
