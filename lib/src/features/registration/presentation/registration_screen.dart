@@ -272,7 +272,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                             gender: selectedGender.string,
                             phoneNumber: "",
                             dob: selectedDate,
-                            balance: 0.0,
+                            balance: Balance(total: 0.0, aPolUSDC: 0.0, cUSD: 0.0, etherscan: 0.0, mcUSD: 0.0),
                             walletAddress: "",
                             country: '',
                             profession: '',

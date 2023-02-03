@@ -24,9 +24,7 @@ class TransactionDetail extends StatelessWidget {
               padding: EdgeInsets.all(18),
               height: 430,
               decoration: BoxDecoration(
-                color: ctx.brightness == Brightness.dark
-                    ? alcanciaCardDark2
-                    : alcanciaCardLight2,
+                color: ctx.brightness == Brightness.dark ? alcanciaCardDark2 : alcanciaCardLight2,
                 borderRadius: BorderRadius.all(
                   Radius.circular(11),
                 ),
@@ -50,15 +48,14 @@ class TransactionDetail extends StatelessWidget {
                   ),
                   TransactionDetailItem(
                     leftText: 'Id transacción',
-                    rightText:
-                        '${txn.transactionID.substring(0, txn.transactionID.indexOf('-'))}',
+                    rightText: '${txn.transactionID.substring(0, txn.transactionID.indexOf('-'))}',
                   ),
                   TransactionDetailItem(
                     leftText: 'Valor depósito',
                     rightText: '\$${txn.sourceAmount.toStringAsFixed(2)}',
                   ),
                   TransactionDetailItem(
-                    leftText: 'Valor USDC',
+                    leftText: 'Valor ${txn.targetAsset}',
                     rightText: '\$${txn.amount.toStringAsFixed(2)}',
                   ),
                   TransactionDetailItem(

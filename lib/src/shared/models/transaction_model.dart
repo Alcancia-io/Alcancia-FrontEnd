@@ -24,24 +24,30 @@ class Transaction {
   factory Transaction.fromJson(Map<String, dynamic> json) {
     var targetAsset = json["targetAsset"] as String;
     if (targetAsset == "aPolUSDC") targetAsset = "USDC";
+    if (targetAsset == "mcUSD") targetAsset = "cUSD";
     return Transaction(
-      transactionID: json["id"] as String,
-      createdAt: json["createdAt"] as String,
-      sourceAmount: json["sourceAmount"] as int,
-      sourceAsset: json["sourceAsset"] as String,
-      targetAsset: targetAsset,
-      amount: double.parse(json["amount"].toString()),
-      type: json["type"] as String,
-      status: json["status"] as String
-    );
+        transactionID: json["id"] as String,
+        createdAt: json["createdAt"] as String,
+        sourceAmount: json["sourceAmount"] as int,
+        sourceAsset: json["sourceAsset"] as String,
+        targetAsset: targetAsset,
+        amount: double.parse(json["amount"].toString()),
+        type: json["type"] as String,
+        status: json["status"] as String);
   }
 }
-
 
 extension StatusIcon on Transaction {
   Icon get iconForTxnStatus {
     if (status == "PENDING") return const Icon(Icons.hourglass_bottom_rounded);
-    if (status == "COMPLETED") return const Icon(Icons.check, color: Colors.green,);
-    return const Icon(Icons.close, color: Colors.red,);
+    if (status == "COMPLETED")
+      return const Icon(
+        Icons.check,
+        color: Colors.green,
+      );
+    return const Icon(
+      Icons.close,
+      color: Colors.red,
+    );
   }
 }

@@ -30,8 +30,6 @@ class PushNotificationProvider {
 
     messaging.getToken().then((token) {
       // device token
-      print('this is the token: ');
-      print(token);
     });
 
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
@@ -42,11 +40,14 @@ class PushNotificationProvider {
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessageOpenedApp.listen(firebaseMessagingOpenAppHandler);
 
-
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Got a message in the foreground!');
       print('Message data: ${message.data}');
-      Fluttertoast.showToast(msg: message.notification!.body!, toastLength: Toast.LENGTH_LONG, backgroundColor: alcanciaLightBlue, timeInSecForIosWeb: 5);
+      Fluttertoast.showToast(
+          msg: message.notification!.body!,
+          toastLength: Toast.LENGTH_LONG,
+          backgroundColor: alcanciaLightBlue,
+          timeInSecForIosWeb: 5);
       inspect(message);
 
       if (message.notification != null) {

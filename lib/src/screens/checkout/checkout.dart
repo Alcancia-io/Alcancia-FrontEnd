@@ -21,7 +21,6 @@ class Checkout extends StatelessWidget {
   Checkout({super.key, required this.txnInput});
 
   final TransactionInput txnInput;
-  late TransactionMethod txnMethod = txnInput.txnMethod;
   final ResponsiveService responsiveService = ResponsiveService();
   final ExceptionService exceptionService = ExceptionService();
 
@@ -36,9 +35,9 @@ class Checkout extends StatelessWidget {
         "from_amount": txnInput.sourceAmount.toString(),
         "type": txnInput.txnType.name.toUpperCase(),
         "from_currency": "MXN",
-        "network": "MATIC",
+        "network": txnInput.network,
         "to_amount": txnInput.targetAmount.toString(),
-        "to_currency": "aPolUSDC"
+        "to_currency": txnInput.targetCurrency
       }
     };
 
@@ -141,7 +140,9 @@ class OrderInformation extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('${bankInfo[key]}', style: textStyle),
-                        AlcanciaCopyToClipboard(displayText: '$key copiad@', textToCopy: bankInfo[key] as String)
+                        if (key != "Cuenta") ...[
+                          AlcanciaCopyToClipboard(displayText: '$key copiad@', textToCopy: bankInfo[key] as String),
+                        ]
                       ],
                     )
                   ],
