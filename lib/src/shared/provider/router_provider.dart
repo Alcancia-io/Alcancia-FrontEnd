@@ -10,6 +10,7 @@ import 'package:alcancia/src/features/registration/model/user_registration_model
 import 'package:alcancia/src/screens/checkout/checkout.dart';
 import 'package:alcancia/src/screens/login/mfa_screen.dart';
 import 'package:alcancia/src/screens/metamap/address_screen.dart';
+import 'package:alcancia/src/screens/success/success_screen.dart';
 import 'package:alcancia/src/screens/swap/swap_screen.dart';
 import 'package:alcancia/src/screens/withdraw/withdraw_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
@@ -117,6 +118,11 @@ final routerProvider = Provider<GoRouter>(
           name: "withdraw",
           path: "/withdraw",
           builder: (context, state) => WithdrawScreen(),
+        ),
+        GoRoute(
+          name: "success",
+          path: "/success",
+          builder: (context, state) => SuccessScreen(message: state.extra as String),
         ),
       ],
       redirect: (context, state) async {

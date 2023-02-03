@@ -13,6 +13,7 @@ class LabeledTextFormField extends StatelessWidget {
     this.inputType,
     this.validator,
     this.inputFormatters,
+    this.onChanged,
   }) : super(key: key);
 
   final TextEditingController controller;
@@ -24,6 +25,7 @@ class LabeledTextFormField extends StatelessWidget {
   final Iterable<String>? autofillHints;
   final TextInputAction? textInputAction;
   final List<TextInputFormatter>? inputFormatters;
+  final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +45,7 @@ class LabeledTextFormField extends StatelessWidget {
           ),
           validator: validator,
           style: Theme.of(context).textTheme.bodyText1,
+          onChanged: onChanged,
         ),
       ],
     );
