@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:alcancia/src/features/registration/provider/timer_provider.dart';
+import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
 import 'package:alcancia/src/shared/components/alcancia_container.dart';
@@ -13,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class ForgotPassword extends ConsumerStatefulWidget {
   const ForgotPassword({super.key});
@@ -105,6 +108,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
 
   @override
   Widget build(BuildContext context) {
+    final timer = ref.watch(timerProvider);
     if (_state.loading) return const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator())));
     if (_state.error != null) return Scaffold(body: SafeArea(child: Text(_state.error as String)));
 
@@ -122,15 +126,79 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const AlcanciaToolbar(state: StateToolbar.logoLetters, logoHeight: 60),
-                AlcanciaContainer(top: 40, child: const Text('Hola!')),
-                AlcanciaContainer(top: 8, child: const Text('Vamos a recuperar tu contraseña')),
+                AlcanciaContainer(top: 40, child: const Text('Hola!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),)),
+                AlcanciaContainer(top: 8, child: const Text('Vamos a recuperar tu contraseña', style: TextStyle(fontSize: 15))),
                 AlcanciaContainer(top: 16, child: const Text('Ingresa el código que enviamos a tu celular 1234')),
                 LabeledTextFormField(
                   controller: _verificationCodeControler,
                   labelText: "Codigo secreto",
                   validator: (value) => value == null || value == "" ? 'Field cannot be empty' : null,
                 ),
-                AlcanciaContainer(top: 24, child: const Text('Timer')),
+                StreamBuilder<int>( //TODO: Hacer reusable
+                    stream: timer.rawTime,
+                    initialData: 0,
+                    builder: (BuildContext ctx, AsyncSnapshot snapshot) {
+                      final value = snapshot.data;
+                      final displayTime = StopWatchTimer.getDisplayTime(
+                          value,
+                          hours: false,
+                          milliSecond: false);
+                      return Column(
+                        children: [
+                          Center(
+                            child: Container(
+                              decoration: ShapeDecoration(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                      BorderRadius.circular(100),
+                                      side: BorderSide(
+                                          color: alcanciaLightBlue))),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.timer_sharp,
+                                      color: alcanciaLightBlue,
+                                    ),
+                                    Text(
+                                      displayTime,
+                                      style: TextStyle(
+                                          color: alcanciaLightBlue),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text("¿No recibiste el código?"),
+                              TextButton(
+                                onPressed: value <= 0
+                                    ? () async {
+                                  // TODO: Reenviar codigo
+                                  timer.onResetTimer();
+                                  timer.onStartTimer();
+                                }
+                                    : null,
+                                style: TextButton.styleFrom(
+                                    foregroundColor: alcanciaLightBlue),
+                                child: const Text(
+                                  "Reenviar",
+                                  style: TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    }),
                 AlcanciaContainer(top: 24, child: const Text('no recibiste el codigo ')),
                 Column(
                   children: [
