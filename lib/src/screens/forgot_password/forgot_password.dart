@@ -36,6 +36,11 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
   final CompletePasswordInput _completeForgotPasswordInput = CompletePasswordInput();
   final _formKey = GlobalKey<FormState>();
 
+  final timer = StopWatchTimer(
+    mode: StopWatchMode.countDown,
+    presetMillisecond: 60000
+  );
+
   String? _email;
   String _newPassword = '';
   bool _isButtonEnabled = true;
@@ -96,6 +101,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
   void initState() {
     super.initState();
     wrapper();
+    timer.onStartTimer();
   }
 
   @override
@@ -108,7 +114,6 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
 
   @override
   Widget build(BuildContext context) {
-    final timer = ref.watch(timerProvider);
     if (_state.loading) return const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator())));
     if (_state.error != null) return Scaffold(body: SafeArea(child: Text(_state.error as String)));
 
@@ -127,8 +132,14 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
             ),
             children: [
               const AlcanciaToolbar(state: StateToolbar.logoLetters, logoHeight: 60),
-              AlcanciaContainer(top: 40, child: const Text('¡Hola!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),)),
-              AlcanciaContainer(top: 8, child: const Text('Vamos a recuperar tu contraseña', style: TextStyle(fontSize: 25))),
+              AlcanciaContainer(
+                  top: 40,
+                  child: const Text(
+                    '¡Hola!',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
+                  )),
+              AlcanciaContainer(
+                  top: 8, child: const Text('Vamos a recuperar tu contraseña', style: TextStyle(fontSize: 25))),
               AlcanciaContainer(top: 16, child: const Text('Ingresa el código que enviamos a tu celular 1234')),
               AlcanciaContainer(
                 top: 16,
@@ -140,25 +151,21 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
               ),
               AlcanciaContainer(
                 top: 16,
-                child: StreamBuilder<int>( //TODO: Hacer reusable
+                child: StreamBuilder<int>(
+                    //TODO: Hacer reusable
                     stream: timer.rawTime,
                     initialData: 0,
                     builder: (BuildContext ctx, AsyncSnapshot snapshot) {
                       final value = snapshot.data;
-                      final displayTime = StopWatchTimer.getDisplayTime(
-                          value,
-                          hours: false,
-                          milliSecond: false);
+                      final displayTime = StopWatchTimer.getDisplayTime(value, hours: false, milliSecond: false);
                       return Column(
                         children: [
                           Center(
                             child: Container(
                               decoration: ShapeDecoration(
                                   shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                      BorderRadius.circular(100),
-                                      side: BorderSide(
-                                          color: alcanciaLightBlue))),
+                                      borderRadius: BorderRadius.circular(100),
+                                      side: BorderSide(color: alcanciaLightBlue))),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
@@ -170,8 +177,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                                     ),
                                     Text(
                                       displayTime,
-                                      style: TextStyle(
-                                          color: alcanciaLightBlue),
+                                      style: TextStyle(color: alcanciaLightBlue),
                                     ),
                                   ],
                                 ),
@@ -185,13 +191,12 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                               TextButton(
                                 onPressed: value <= 0
                                     ? () async {
-                                  // TODO: Reenviar codigo
-                                  timer.onResetTimer();
-                                  timer.onStartTimer();
-                                }
+                                        // TODO: Reenviar codigo
+                                        timer.onResetTimer();
+                                        timer.onStartTimer();
+                                      }
                                     : null,
-                                style: TextButton.styleFrom(
-                                    foregroundColor: alcanciaLightBlue),
+                                style: TextButton.styleFrom(foregroundColor: alcanciaLightBlue),
                                 child: const Text(
                                   "Reenviar",
                                   style: TextStyle(
