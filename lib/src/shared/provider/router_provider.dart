@@ -8,6 +8,7 @@ import 'package:alcancia/src/features/welcome/presentation/welcome_screen.dart';
 import 'package:alcancia/src/features/registration/presentation/registration_screen.dart';
 import 'package:alcancia/src/features/registration/model/user_registration_model.dart';
 import 'package:alcancia/src/screens/checkout/checkout.dart';
+import 'package:alcancia/src/screens/forgot_password/forgot_password.dart';
 import 'package:alcancia/src/screens/login/mfa_screen.dart';
 import 'package:alcancia/src/screens/metamap/address_screen.dart';
 import 'package:alcancia/src/screens/swap/swap_screen.dart';
@@ -111,6 +112,11 @@ final routerProvider = Provider<GoRouter>(
             wrapper: state.extra as Map,
           ),
         ),
+        GoRoute(
+          name: 'forgot-password',
+          path: '/forgot-password',
+          builder: (context, state) => const ForgotPassword(),
+        )
       ],
       redirect: (context, state) async {
         final loginLoc = state.namedLocation("login");
@@ -127,9 +133,17 @@ final routerProvider = Provider<GoRouter>(
         final creatingAccount = state.subloc == createAccountLoc;
         final loggedIn = await isUserAuthenticated();
         final home = state.namedLocation("homescreen", params: {"id": "0"});
+        final forgotPassword = state.namedLocation('forgot-password');
+        final isForgotPassword = state.subloc == forgotPassword;
 
-        if (!loggedIn && !loggingIn && !creatingAccount && !isStartup && !isMfa && !isPhoneRegistration && !isOtp)
-          return welcomeLoc;
+        if (!loggedIn &&
+            !loggingIn &&
+            !creatingAccount &&
+            !isStartup &&
+            !isMfa &&
+            !isPhoneRegistration &&
+            !isOtp &&
+            !isForgotPassword) return welcomeLoc;
         if (loggedIn && (loggingIn || creatingAccount || isStartup)) return home;
         return null;
       },

@@ -6,8 +6,7 @@ extension StringExtension on String {
   }
 
   bool isValidPassword() {
-    return RegExp(
-            r'(^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@_\-$!%*?&./#^*])[A-Za-z\d@_\-$!%*?&./#^*]{8,}$)')
+    return RegExp(r'(^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@_\-$!%*?&./#^*])[A-Za-z\d@_\-$!%*?&./#^*]{8,}$)')
         .hasMatch(this);
   }
 
@@ -21,5 +20,21 @@ extension StringExtension on String {
         return 'RENDIMIENTO';
     }
     return '';
+  }
+
+  bool hasUpperCase() {
+    return contains(RegExp(r'[A-Z]'));
+  }
+
+  bool hasLowerCase() {
+    return contains(RegExp(r'[a-z]'));
+  }
+
+  bool hasDigits() {
+    return contains(RegExp(r'[0-9]'));
+  }
+
+  bool hasSpecialChar() {
+    return contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
   }
 }

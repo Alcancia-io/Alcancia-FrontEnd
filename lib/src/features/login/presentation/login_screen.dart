@@ -216,7 +216,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                               ],
                                             ),
                                             onPressed: () {
-                                              // TODO: Forgot Password navigation
+                                              context.pushNamed('forgot-password');
                                             }),
                                       ],
                                     ),
