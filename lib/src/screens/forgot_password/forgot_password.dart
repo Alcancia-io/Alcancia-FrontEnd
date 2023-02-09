@@ -114,27 +114,33 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
 
     return Scaffold(
       body: SafeArea(
-        child: AlcanciaContainer(
-          top: 20,
-          left: 38,
-          right: 38,
-          bottom: 28,
-          child: Form(
-            key: _formKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const AlcanciaToolbar(state: StateToolbar.logoLetters, logoHeight: 60),
-                AlcanciaContainer(top: 40, child: const Text('Hola!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),)),
-                AlcanciaContainer(top: 8, child: const Text('Vamos a recuperar tu contraseña', style: TextStyle(fontSize: 15))),
-                AlcanciaContainer(top: 16, child: const Text('Ingresa el código que enviamos a tu celular 1234')),
-                LabeledTextFormField(
+        bottom: false,
+        child: Form(
+          key: _formKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          child: ListView(
+            padding: const EdgeInsets.only(
+              top: 20,
+              left: 38,
+              right: 38,
+              bottom: 28,
+            ),
+            children: [
+              const AlcanciaToolbar(state: StateToolbar.logoLetters, logoHeight: 60),
+              AlcanciaContainer(top: 40, child: const Text('¡Hola!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),)),
+              AlcanciaContainer(top: 8, child: const Text('Vamos a recuperar tu contraseña', style: TextStyle(fontSize: 25))),
+              AlcanciaContainer(top: 16, child: const Text('Ingresa el código que enviamos a tu celular 1234')),
+              AlcanciaContainer(
+                top: 16,
+                child: LabeledTextFormField(
                   controller: _verificationCodeControler,
                   labelText: "Codigo secreto",
                   validator: (value) => value == null || value == "" ? 'Field cannot be empty' : null,
                 ),
-                StreamBuilder<int>( //TODO: Hacer reusable
+              ),
+              AlcanciaContainer(
+                top: 16,
+                child: StreamBuilder<int>( //TODO: Hacer reusable
                     stream: timer.rawTime,
                     initialData: 0,
                     builder: (BuildContext ctx, AsyncSnapshot snapshot) {
@@ -199,51 +205,51 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                         ],
                       );
                     }),
-                AlcanciaContainer(top: 24, child: const Text('no recibiste el codigo ')),
-                Column(
+              ),
+              AlcanciaContainer(
+                top: 16,
+                child: LabeledTextFormField(
+                  controller: _newPasswordController,
+                  labelText: "Nueva contraseña",
+                  validator: (value) => value == null || value == "" ? 'Field cannot be empty' : null,
+                  onChange: (value) => setState(() {
+                    _newPassword = value ??= '';
+                  }),
+                ),
+              ),
+              AlcanciaContainer(
+                top: 16,
+                child: LabeledTextFormField(
+                  controller: _confirmPasswordController,
+                  labelText: "Confirma tu nueva contraseña",
+                  validator: (value) {
+                    if (value == null || value.isEmpty) return 'Field should not empty';
+                    if (value != _newPassword) return 'Password do not match';
+                    return null;
+                  },
+                ),
+              ),
+              AlcanciaContainer(
+                top: 10,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    LabeledTextFormField(
-                      controller: _newPasswordController,
-                      labelText: "Nueva contraseña",
-                      validator: (value) => value == null || value == "" ? 'Field cannot be empty' : null,
-                      onChange: (value) => setState(() {
-                        _newPassword = value ??= '';
-                      }),
-                    ),
-                    LabeledTextFormField(
-                      controller: _confirmPasswordController,
-                      labelText: "Confirma tu nueva contraseña",
-                      validator: (value) {
-                        if (value == null || value.isEmpty) return 'Field should not empty';
-                        if (value != _newPassword) return 'Password do not match';
-                        return null;
-                      },
-                    ),
+                    if (!_newPassword.hasUpperCase()) const Text('Missing upper'),
+                    if (!_newPassword.hasLowerCase()) const Text('Missing lower'),
+                    if (!_newPassword.hasDigits()) const Text('Missing number'),
+                    if (!_newPassword.hasSpecialChar()) const Text('Missing special char'),
                   ],
                 ),
-                AlcanciaContainer(
-                  top: 10,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (!_newPassword.hasUpperCase()) const Text('Missing upper'),
-                      if (!_newPassword.hasLowerCase()) const Text('Missing lower'),
-                      if (!_newPassword.hasDigits()) const Text('Missing number'),
-                      if (!_newPassword.hasSpecialChar()) const Text('Missing special char'),
-                    ],
-                  ),
-                ),
-                const Spacer(),
-                AlcanciaButton(
-                  width: double.infinity,
-                  height: 64,
-                  buttonText: "Siguiente",
-                  onPressed: completeForgotPassword,
-                ),
-                if (_state.loading) const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator()))),
-                if (_completePassState.error != null) Text(_completePassState.error as String)
-              ],
-            ),
+              ),
+              AlcanciaButton(
+                width: double.infinity,
+                height: 64,
+                buttonText: "Siguiente",
+                onPressed: completeForgotPassword,
+              ),
+              if (_state.loading) const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator()))),
+              if (_completePassState.error != null) Text(_completePassState.error as String)
+            ],
           ),
         ),
       ),
