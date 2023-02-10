@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Transaction {
   String transactionID;
   String createdAt;
-  int sourceAmount;
+  double sourceAmount;
   String sourceAsset;
   String targetAsset;
   double amount;
@@ -26,14 +26,15 @@ class Transaction {
     if (targetAsset == "aPolUSDC") targetAsset = "USDC";
     if (targetAsset == "mcUSD") targetAsset = "cUSD";
     return Transaction(
-        transactionID: json["id"] as String,
-        createdAt: json["createdAt"] as String,
-        sourceAmount: json["sourceAmount"] as int,
-        sourceAsset: json["sourceAsset"] as String,
-        targetAsset: targetAsset,
-        amount: double.parse(json["amount"].toString()),
-        type: json["type"] as String,
-        status: json["status"] as String);
+      transactionID: json["id"] as String,
+      createdAt: json["createdAt"] as String,
+      sourceAmount: double.parse(json["sourceAmount"].toString()),
+      sourceAsset: json["sourceAsset"] as String,
+      targetAsset: targetAsset,
+      amount: double.parse(json["amount"].toString()),
+      type: json["type"] as String,
+      status: json["status"] as String
+    );
   }
 }
 
