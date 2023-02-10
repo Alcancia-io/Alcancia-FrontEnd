@@ -11,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
@@ -37,11 +38,12 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
   String? _email;
   String _phoneNumEnding = "";
   String _newPassword = '';
+  String _verificationCode = '';
   bool _isButtonEnabled = true;
   bool obscurePassword = true;
   bool obscureConfirmPassword = true;
 
-  voidreadEmail() async {
+  Future<void> readEmail() async {
     _email = await _storageService.readSecureData("userEmail");
   }
 
@@ -59,15 +61,19 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
     return result;
   }
 
-  void forgotPassword() async {
+  Future<void> forgotPassword() async {
     setState(() {
       _state.loading = true;
     });
-
-    var response = await _authService.forgotPassword("yafte@alcancia.io");
+    if (_email == null) {
+      _state.error = "No user email";
+      return;
+    }
+    var response = await _authService.forgotPassword(_email!);
     if (response.hasException) {
       _state.error = _exceptionService.handleException(response.exception);
     } else {
+      print(response.data);
       _phoneNumEnding = (response.data?['forgotPassword'] as String).substring(6);
     }
 
@@ -77,20 +83,23 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
   }
 
   void completeForgotPassword() async {
-    if (_formKey.currentState!.validate()) return null;
+    if (!_formKey.currentState!.validate()) return null;
     if (!validatePassword()) return null;
-
-    var response = await _authService.completeForgotPassword(_completeForgotPasswordInput);
+    print(_email);
+    final forgotPasswordInput = CompletePasswordInput(email: _email, newPassword: _newPassword, verificationCode: _verificationCode);
+    var response = await _authService.completeForgotPassword(forgotPasswordInput);
+    print(response);
     if (response.hasException) {
       _completePassState.error = _exceptionService.handleException(response.exception);
     } else {
-      context.pushNamed('/success');
+      context.go('/login');
+      Fluttertoast.showToast(msg: "Contraseña cambiada exitosamente");
     }
   }
 
   void wrapper() async {
-    // await readEmail();
-    // forgotPassword();
+    await readEmail();
+    forgotPassword();
   }
 
   @override
@@ -145,6 +154,11 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                   controller: _verificationCodeControler,
                   labelText: "Codigo secreto",
                   validator: (value) => value == null || value == "" ? 'Field cannot be empty' : null,
+                  onChange: (value) {
+                    setState(() {
+                      _verificationCode = value ??= '';
+                    });
+                  },
                 ),
               ),
               AlcanciaContainer(
@@ -191,7 +205,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                               TextButton(
                                 onPressed: value <= 0
                                     ? () async {
-                                        // TODO: Reenviar codigo
+                                        await forgotPassword();
                                         timer.onResetTimer();
                                         timer.onStartTimer();
                                       }
@@ -312,7 +326,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                 ),
               ),
               if (_state.loading) const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator()))),
-              if (_completePassState.error != null) Text(_completePassState.error as String)
+              if (_completePassState.error != null) AlcanciaContainer(top: 16, child: Text(_completePassState.error as String, style: TextStyle(color: Colors.red),))
             ],
           ),
         ),
