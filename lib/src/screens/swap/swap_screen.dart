@@ -1,13 +1,15 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
-import 'package:alcancia/src/screens/metamap/metamap_controller.dart';
+import 'package:alcancia/src/screens/swap/components/currency_risk_card.dart';
 import 'package:alcancia/src/screens/swap/swap_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_container.dart';
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_link.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
+import 'package:alcancia/src/shared/constants.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/provider/user_provider.dart';
+import 'package:alcancia/src/shared/services/exception_service.dart';
 import 'package:alcancia/src/shared/services/metamap_service.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +19,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
-import 'package:alcancia/src/screens/metamap/metamap_dialog.dart';
 
 class SwapScreen extends ConsumerStatefulWidget {
   const SwapScreen({Key? key}) : super(key: key);
@@ -39,8 +40,12 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
 
   // target amount icons
   final List<Map> targetCurrencies = [
+    {"name": "CUSD", "icon": "lib/src/resources/images/icon_celo_usd.png"},
     {"name": "USDC", "icon": "lib/src/resources/images/icon_usdc.png"},
   ];
+
+  // dropdown value for target currency, it can be CUSD or USDC
+  late String targetCurrency = targetCurrencies.first['name'];
 
   // dropdown value for source currency, it can be MXN or DOP
   late String sourceCurrency = sourceCurrencyCodes.first['name'];
@@ -52,20 +57,32 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
   final metamapDomicanFlowId = dotenv.env['DOMINICAN_FLOW_ID'] as String;
 
   final SwapController swapController = SwapController();
-  var suarmiExchage = 1.0;
+
+  // suarmi exchanges
+  var suarmiUSDCExchage = 1.0;
+  var suarmiCeloExchange = 1.0;
 
   // state
   bool _isLoading = false;
   String _error = "";
+
+  // Anual Percentage Yields
+  String currentCeloAPY = "";
+  String? celoAPYError;
+
+  String currentUsdcAPY = "";
+  String? usdcAPYError;
 
   getExchange() async {
     setState(() {
       _isLoading = true;
     });
     try {
-      var exchageRate = await swapController.getSuarmiExchange();
+      var exchageRate = await swapController.getSuarmiExchange("USDC");
+      var celoRate = await swapController.getSuarmiExchange("cUSD");
       setState(() {
-        suarmiExchage = 1.0 / double.parse(exchageRate);
+        suarmiUSDCExchage = 1.0 / double.parse(exchageRate);
+        suarmiCeloExchange = 1.0 / double.parse(celoRate);
       });
     } catch (err) {
       // print(err);
@@ -76,10 +93,34 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     });
   }
 
+  getCeloAPY() async {
+    try {
+      var currentCeloAPYResponse = await swapController.getCurrentAPY("mcUSD");
+      setState(() {
+        currentCeloAPY = currentCeloAPYResponse;
+      });
+    } on CustomException catch (err) {
+      celoAPYError = err.message;
+    }
+  }
+
+  getUsdcAPY() async {
+    try {
+      var currentUsdcAPYResponse = await swapController.getCurrentAPY("aPolUSDC");
+      setState(() {
+        currentUsdcAPY = currentUsdcAPYResponse;
+      });
+    } on CustomException catch (err) {
+      usdcAPYError = err.message;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     getExchange();
+    getCeloAPY();
+    getUsdcAPY();
   }
 
   @override
@@ -91,12 +132,12 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     if (_isLoading) {
-      return const Scaffold(
-          body: SafeArea(child: Center(child: CircularProgressIndicator())));
+      return const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator())));
     }
 
-    if (_error != "")
-      return Scaffold(body: SafeArea(child: Center(child: Text(_error))));
+    if (_error != "") return Scaffold(body: SafeArea(child: Center(child: Text(_error))));
+
+    Color cardColor = Theme.of(context).brightness == Brightness.dark ? alcanciaCardDark : alcanciaFieldLight;
 
     return GestureDetector(
       onTap: () {
@@ -109,8 +150,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
               children: [
                 AlcanciaToolbar(
                   state: StateToolbar.logoNoletters,
-                  logoHeight:
-                      responsiveService.getHeightPixels(40, screenHeight),
+                  logoHeight: responsiveService.getHeightPixels(40, screenHeight),
                 ),
 
                 // general container, sets padding
@@ -124,8 +164,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                       AlcanciaContainer(
                         top: 4,
                         bottom: 32,
-                        child: Text("Deposita a tu cuenta",
-                            style: txtTheme.subtitle1),
+                        child: Text("Deposita a tu cuenta", style: txtTheme.subtitle1),
                       ),
                       AlcanciaContainer(
                         bottom: 32,
@@ -140,62 +179,45 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                       ),
                       Container(
                         padding: EdgeInsets.only(
-                          top: responsiveService.getHeightPixels(
-                              20, screenHeight),
-                          bottom: responsiveService.getHeightPixels(
-                              20, screenHeight),
-                          left:
-                              responsiveService.getWidthPixels(12, screenWidth),
-                          right:
-                              responsiveService.getWidthPixels(12, screenWidth),
+                          top: responsiveService.getHeightPixels(20, screenHeight),
+                          bottom: responsiveService.getHeightPixels(20, screenHeight),
+                          left: responsiveService.getWidthPixels(12, screenWidth),
+                          right: responsiveService.getWidthPixels(12, screenWidth),
                         ),
                         decoration: BoxDecoration(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? alcanciaCardDark
-                              : alcanciaFieldLight,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(7)),
+                          color: cardColor,
+                          borderRadius: const BorderRadius.all(Radius.circular(7)),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("¿Cuánto deseas convertir?",
-                                style: txtTheme.bodyText1),
+                            Text("¿Cuánto deseas convertir?", style: txtTheme.bodyText1),
                             AlcanciaContainer(
                               top: 8,
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   AlcanciaDropdown(
-                                    dropdownWidth: responsiveService
-                                        .getWidthPixels(150, screenWidth),
-                                    dropdownHeight: responsiveService
-                                        .getHeightPixels(45, screenHeight),
+                                    dropdownWidth: responsiveService.getWidthPixels(150, screenWidth),
+                                    dropdownHeight: responsiveService.getHeightPixels(45, screenHeight),
                                     dropdownItems: sourceCurrencyCodes,
                                     onChanged: (newValue) {
                                       setState(() {
                                         sourceCurrency = newValue;
-                                        print(sourceCurrency);
                                         // when this components intis, we will exchange rate from suarmi and cryptopay
                                       });
                                     },
                                   ),
                                   // this is the input field where user enters source amount
                                   AlcanciaContainer(
-                                    height: responsiveService.getHeightPixels(
-                                        45, screenHeight),
-                                    width: responsiveService.getWidthPixels(
-                                        150, screenWidth),
+                                    height: responsiveService.getHeightPixels(45, screenHeight),
+                                    width: responsiveService.getWidthPixels(150, screenWidth),
                                     child: TextField(
                                       style: const TextStyle(fontSize: 15),
                                       decoration: InputDecoration(
-                                        fillColor:
-                                            Theme.of(context).primaryColor,
+                                        fillColor: Theme.of(context).primaryColor,
                                       ),
-                                      inputFormatters: <TextInputFormatter>[
-                                        FilteringTextInputFormatter.digitsOnly
-                                      ],
+                                      inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
                                       keyboardType: TextInputType.number,
                                       controller: sourceAmountController,
                                       onChanged: (text) {
@@ -210,19 +232,20 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 8, bottom: 8),
-                              child: Center(
-                                  child: SvgPicture.asset(
-                                      "lib/src/resources/images/arrow_down_purple.svg")),
+                              child: Center(child: SvgPicture.asset("lib/src/resources/images/arrow_down_purple.svg")),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 AlcanciaDropdown(
-                                  dropdownWidth: responsiveService
-                                      .getWidthPixels(150, screenWidth),
-                                  dropdownHeight: responsiveService
-                                      .getHeightPixels(45, screenHeight),
+                                  dropdownWidth: responsiveService.getWidthPixels(150, screenWidth),
+                                  dropdownHeight: responsiveService.getHeightPixels(45, screenHeight),
                                   dropdownItems: targetCurrencies,
+                                  onChanged: (newTargetCurrency) {
+                                    setState(() {
+                                      targetCurrency = newTargetCurrency;
+                                    });
+                                  },
                                 ),
                                 // here is where target amount is display
                                 Container(
@@ -231,17 +254,14 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                     borderRadius: BorderRadius.circular(8),
                                     color: Theme.of(context).primaryColor,
                                   ),
-                                  height: responsiveService.getHeightPixels(
-                                      45, screenHeight),
-                                  width: responsiveService.getWidthPixels(
-                                      150, screenWidth),
+                                  height: responsiveService.getHeightPixels(45, screenHeight),
+                                  width: responsiveService.getWidthPixels(150, screenWidth),
                                   alignment: Alignment.centerLeft,
                                   child: Text(
                                     sourceAmount == ""
                                         ? ""
-                                        : (int.parse(sourceAmountController
-                                                    .text) /
-                                                suarmiExchage)
+                                        : (int.parse(sourceAmountController.text) /
+                                                (targetCurrency == "USDC" ? suarmiUSDCExchage : suarmiCeloExchange))
                                             .toStringAsFixed(4),
                                     style: txtTheme.bodyText1,
                                   ),
@@ -251,6 +271,32 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                           ],
                         ),
                       ),
+                      if (celoAPYError != null) ...[
+                        Text(celoAPYError as String)
+                      ] else if (targetCurrency == "CUSD") ...[
+                        AlcanciaContainer(
+                          top: 16,
+                          child: CurrencyRiskCard(
+                            riskLevel: RiskLevel.medio,
+                            targetCurrency: "CUSD",
+                            percentage: currentCeloAPY,
+                            color: cardColor,
+                          ),
+                        ),
+                      ],
+                      if (usdcAPYError != null) ...[
+                        Text(usdcAPYError as String)
+                      ] else if (targetCurrency == "USDC") ...[
+                        AlcanciaContainer(
+                          top: 16,
+                          child: CurrencyRiskCard(
+                            riskLevel: RiskLevel.bajo,
+                            targetCurrency: "USDC",
+                            percentage: currentUsdcAPY,
+                            color: cardColor,
+                          ),
+                        ),
+                      ],
                       Container(
                         alignment: Alignment.topLeft,
                         padding: const EdgeInsets.only(
@@ -265,8 +311,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                         padding: const EdgeInsets.only(top: 10, bottom: 12),
                         child: AlcanciaButton(
                           buttonText: "Transferencia",
-                          onPressed: sourceAmount.isEmpty ||
-                                  int.parse(sourceAmount) < 200
+                          onPressed: sourceAmount.isEmpty || int.parse(sourceAmount) < 200
                               ? null
                               : () async {
                                   //Temporary Variables
@@ -281,55 +326,41 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                       txnMethod: method,
                                       txnType: TransactionType.deposit,
                                       sourceAmount: double.parse(sourceAmount),
-                                      targetAmount: (double.parse(
-                                              sourceAmountController.text) /
-                                          suarmiExchage),
+                                      targetAmount: (double.parse(sourceAmountController.text) /
+                                          (targetCurrency == "USDC" ? suarmiUSDCExchage : suarmiCeloExchange)),
+                                      targetCurrency: targetCurrency == 'USDC' ? 'aPolUSDC' : 'mcUSD',
+                                      network: targetCurrency == 'USDC' ? 'MATIC' : 'CELO',
                                     );
                                     Map wrapper = {
                                       "verified": true,
                                       "txnInput": txnInput,
                                     };
-                                    if (user.address == null ||
-                                        user.profession == null) {
-                                      context.pushNamed('user-address',
-                                          extra: wrapper);
+                                    if (user.address == null || user.profession == null) {
+                                      context.pushNamed('user-address', extra: wrapper);
                                     } else {
-                                      context.pushNamed("checkout",
-                                          extra: txnInput);
+                                      context.pushNamed("checkout", extra: txnInput);
                                     }
                                   } else if (verified == "PENDING") {
                                     Fluttertoast.showToast(
-                                        msg:
-                                            "Revisión en proceso, espera un momento...",
+                                        msg: "Revisión en proceso, espera un momento...",
                                         toastLength: Toast.LENGTH_LONG,
                                         gravity: ToastGravity.BOTTOM);
-                                  } else if (verified == "FAILED" ||
-                                      verified == null) {
+                                  } else if (verified == "FAILED" || verified == null) {
                                     if (sourceCurrency == 'MXN') {
-                                      if (user.address != null &&
-                                          user.profession != null) {
-                                        await metaMapService.showMatiFlow(
-                                            metamapMexicanINEId, user.id);
+                                      if (user.address != null && user.profession != null) {
+                                        await metaMapService.showMatiFlow(metamapMexicanINEId, user.id);
                                       } else {
-                                        context.pushNamed("user-address",
-                                            extra: {"verified": false});
+                                        context.pushNamed("user-address", extra: {"verified": false});
                                       }
                                     }
-
-                                    // if (sourceCurrency == "DOP") {
-                                    //   await metaMapService.showMatiFlow(metamapDomicanFlowId, user.id);
-                                    //   context.go("/");
-                                    // }
                                   }
                                 },
                           color: alcanciaLightBlue,
                           width: double.infinity,
-                          height: responsiveService.getHeightPixels(
-                              64, screenHeight),
+                          height: responsiveService.getHeightPixels(64, screenHeight),
                         ),
                       ),
-                      if (sourceAmount.isNotEmpty &&
-                          int.parse(sourceAmount) < 200) ...[
+                      if (sourceAmount.isNotEmpty && int.parse(sourceAmount) < 200) ...[
                         const Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Text(

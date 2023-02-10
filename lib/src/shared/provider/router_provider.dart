@@ -29,7 +29,6 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 Future<bool> isUserAuthenticated() async {
   StorageService service = StorageService();
   var token = await service.readSecureData("token");
-  print(token);
   GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "${token}");
   GraphQLClient client = graphQLConfiguration.clientToQuery();
   var result = await client.query(QueryOptions(document: gql(isAuthenticated)));

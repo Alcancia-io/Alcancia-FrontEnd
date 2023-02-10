@@ -1,13 +1,16 @@
-import 'dart:developer';
-
 import 'package:graphql_flutter/graphql_flutter.dart';
+
+class CustomException implements Exception {
+  String message;
+
+  CustomException(this.message);
+}
 
 class ExceptionService {
   handleLinkException(LinkException? linkException) {
     if (linkException is NetworkException) return linkException.message;
-    if (linkException is HttpLinkServerException) return linkException.parsedResponse!.response.toString();
+    if (linkException is HttpLinkServerException) return linkException.parsedResponse!.errors![0].message;
     if (linkException is ServerException) return linkException.originalException.message;
-    if (linkException is OperationException) return linkException?.originalException.toString();
   }
 
   String? handleException(OperationException? exception) {

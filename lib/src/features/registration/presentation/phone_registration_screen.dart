@@ -18,8 +18,7 @@ import 'package:alcancia/src/features/registration/model/user_registration_model
 import 'country_picker.dart';
 
 class PhoneRegistrationScreen extends ConsumerStatefulWidget {
-  PhoneRegistrationScreen({Key? key, required this.userRegistrationData})
-      : super(key: key);
+  PhoneRegistrationScreen({Key? key, required this.userRegistrationData}) : super(key: key);
   final UserRegistrationModel userRegistrationData;
   final Uri url = Uri.parse('');
 
@@ -28,8 +27,7 @@ class PhoneRegistrationScreen extends ConsumerStatefulWidget {
 }
 
 class _OTPMethodScreenState extends ConsumerState<PhoneRegistrationScreen> {
-  final selectedCountryProvider =
-      StateProvider.autoDispose<Country>((ref) => countries[0]);
+  final selectedCountryProvider = StateProvider.autoDispose<Country>((ref) => countries[0]);
   TextEditingController phoneController = TextEditingController();
   bool acceptTerms = false;
   String _error = "";
@@ -64,8 +62,7 @@ class _OTPMethodScreenState extends ConsumerState<PhoneRegistrationScreen> {
                       "Número de teléfono",
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
                     ),
-                    Text(
-                        "Ingresa tu número de teléfono para recibir tu código de verificación.",
+                    Text("Ingresa tu número de teléfono para recibir tu código de verificación.",
                         style: TextStyle(fontSize: 15)),
                   ],
                 ),
@@ -136,8 +133,7 @@ class _OTPMethodScreenState extends ConsumerState<PhoneRegistrationScreen> {
                                 style: Theme.of(context).textTheme.bodyText2,
                                 children: [
                                   TextSpan(
-                                    text:
-                                        "Política de Privacidad y Tratamiento de Datos",
+                                    text: "Política de Privacidad y Tratamiento de Datos",
                                     style: TextStyle(color: alcanciaLightBlue),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
@@ -152,7 +148,7 @@ class _OTPMethodScreenState extends ConsumerState<PhoneRegistrationScreen> {
                   ),
                 ),
                 Text(
-                    "Podrían aplicar tarifas de mensajes y transmisión de datos. Para la autenticación multifactor recibirás un código en cada intento de inicio de sesión.",
+                  "Podrían aplicar tarifas de mensajes y transmisión de datos. Para la autenticación multifactor recibirás un código en cada intento de inicio de sesión.",
                 ),
                 Spacer(),
                 Column(
@@ -166,11 +162,11 @@ class _OTPMethodScreenState extends ConsumerState<PhoneRegistrationScreen> {
                         if (acceptTerms) {
                           if (phoneController.text.isNotEmpty) {
                             try {
-                              final phoneNumber =
-                                  "+${selectedCountry.dialCode}${phoneController.text}";
+                              final phoneNumber = "+${selectedCountry.dialCode}${phoneController.text}";
                               widget.userRegistrationData.user.phoneNumber = phoneNumber;
                               widget.userRegistrationData.user.country = selectedCountry.code;
-                              await registrationController.signUp(widget.userRegistrationData.user, widget.userRegistrationData.password);
+                              await registrationController.signUp(
+                                  widget.userRegistrationData.user, widget.userRegistrationData.password);
                               timer.setPresetMinuteTime(1, add: false);
                               timer.onResetTimer();
                               timer.onStartTimer();
@@ -179,31 +175,35 @@ class _OTPMethodScreenState extends ConsumerState<PhoneRegistrationScreen> {
                             } on OperationException catch (e) {
                               final error = exceptionService.handleException(e)!;
                               if (error.contains("UsernameExistsException")) {
-                                ref.read(emailsInUseProvider.notifier).state.add(widget.userRegistrationData.user.email);
+                                ref
+                                    .read(emailsInUseProvider.notifier)
+                                    .state
+                                    .add(widget.userRegistrationData.user.email);
                                 ref.refresh(emailsInUseProvider);
+                                ref
+                                    .read(emailsInUseProvider.notifier)
+                                    .state
+                                    .add(widget.userRegistrationData.user.email);
                                 context.pop();
                               } else {
                                 setState(() {
-                                  _error =
-                                      error;
+                                  _error = error;
                                 });
                               }
                             }
                           } else {
                             setState(() {
-                              _error =
-                              "Ingresa un número de teléfono válido";
+                              _error = "Ingresa un número de teléfono válido";
                             });
                           }
                         } else {
                           setState(() {
-                            _error =
-                            "Acepta la Política de Privacidad";
+                            _error = "Acepta la Política de Privacidad";
                           });
                         }
                       },
                     ),
-                    if (_error.isNotEmpty) ... [
+                    if (_error.isNotEmpty) ...[
                       Padding(
                         padding: const EdgeInsets.only(top: 16.0),
                         child: Text(
