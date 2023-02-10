@@ -57,7 +57,11 @@ dependencies:
   fluttertoast: ^8.1.2
   carousel_slider: ^4.2.1
 
+
 dev_dependencies:
+  test:
+  mockito:
+  build_runner:
   flutter_test:
     sdk: flutter
 

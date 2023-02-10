@@ -215,8 +215,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                                 Text("Olvidé mi contraseña"),
                                               ],
                                             ),
-                                            onPressed: () {
-                                              // TODO: Forgot Password navigation
+                                            onPressed: () async {
+                                              if (emailController.text.isNotEmpty) {
+                                                final StorageItem userEmail = StorageItem("userEmail", emailController.text);
+                                                await _storageService.writeSecureData(userEmail);
+                                                context.pushNamed('forgot-password');
+                                              }
                                             }),
                                       ],
                                     ),
