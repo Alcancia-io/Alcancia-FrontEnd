@@ -6,6 +6,7 @@ import 'package:alcancia/src/shared/services/graphql_service.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class CompletePasswordInput {
+  CompletePasswordInput({this.email, this.newPassword, this.verificationCode});
   String? email = "email";
   String? newPassword = "newPassword";
   String? verificationCode = "123";
