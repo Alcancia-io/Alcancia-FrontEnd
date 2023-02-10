@@ -24,6 +24,14 @@ class Balance {
           etherscan: double.parse(map['etherscan'].toString()),
           mcUSD: double.parse(map['mcUSD'].toString()),
         );
+
+  double get celoBalance {
+    return cUSD + mcUSD;
+  }
+
+  double get usdcBalance {
+    return aPolUSDC + etherscan;
+  }
 }
 
 class BalanceState extends StateNotifier<Balance> {
