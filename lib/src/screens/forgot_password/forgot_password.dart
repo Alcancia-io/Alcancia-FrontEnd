@@ -39,7 +39,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
   String _phoneNumEnding = "";
   String _newPassword = '';
   String _verificationCode = '';
-  bool _isButtonEnabled = true;
+  bool _isButtonEnabled = false;
   bool obscurePassword = true;
   bool obscureConfirmPassword = true;
 
@@ -92,6 +92,8 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
     if (response.hasException) {
       _completePassState.error = _exceptionService.handleException(response.exception);
     } else {
+      await _storageService.deleteSecureData("userName");
+      await _storageService.deleteSecureData("userEmail");
       context.go('/login');
       Fluttertoast.showToast(msg: "Contraseña cambiada exitosamente");
     }
@@ -128,6 +130,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
       body: SafeArea(
         bottom: false,
         child: Form(
+          onChanged: () => setState(() => _isButtonEnabled = _formKey.currentState!.validate()),
           key: _formKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           child: ListView(
@@ -322,7 +325,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                   width: double.infinity,
                   height: 64,
                   buttonText: "Siguiente",
-                  onPressed: completeForgotPassword,
+                  onPressed: _isButtonEnabled ? completeForgotPassword : null,
                 ),
               ),
               if (_state.loading) const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator()))),
