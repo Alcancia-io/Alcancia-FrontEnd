@@ -154,9 +154,9 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                   controller: _verificationCodeControler,
                   labelText: "Codigo secreto",
                   validator: (value) => value == null || value == "" ? 'Field cannot be empty' : null,
-                  onChange: (value) {
+                  onChanged: (value) {
                     setState(() {
-                      _verificationCode = value ??= '';
+                      _verificationCode = value;
                     });
                   },
                 ),
@@ -229,8 +229,8 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                   labelText: "Nueva contraseña",
                   obscure: obscurePassword,
                   validator: (value) => value == null || value == "" ? 'Field cannot be empty' : null,
-                  onChange: (value) => setState(() {
-                    _newPassword = value ??= '';
+                  onChanged: (value) => setState(() {
+                    _newPassword = value;
                   }),
                   suffixIcon: GestureDetector(
                     onTap: () {

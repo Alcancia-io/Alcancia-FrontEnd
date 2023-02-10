@@ -47,7 +47,6 @@ class LabeledTextFormField extends StatelessWidget {
             suffixIcon: suffixIcon,
           ),
           validator: validator,
-          onChanged: onChange,
           style: Theme.of(context).textTheme.bodyText1,
           onChanged: onChanged,
           enabled: enabled,
