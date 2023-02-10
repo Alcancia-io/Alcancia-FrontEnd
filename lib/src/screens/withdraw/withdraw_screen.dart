@@ -6,6 +6,7 @@ import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import 'package:alcancia/src/shared/services/suarmi_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -100,7 +101,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
                 logoHeight: 40,
               ),
               const Text(
-                "!Hola!",
+                "¡Hola!",
                 style: TextStyle(fontSize: 35, fontWeight: FontWeight.w700),
               ),
               Padding(
@@ -178,7 +179,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
                 controller: _amountTextController,
                 labelText: "Monto de retiro",
                 inputType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return appLoc.errorRequiredField;
@@ -198,7 +199,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
               const SizedBox(
                 height: 10,
               ),
-              Text("Balance disponible: \$$balance"),
+              Text("Balance disponible: \$${balance.toStringAsFixed(2)}"),
               const SizedBox(
                 height: 10,
               ),
@@ -234,12 +235,13 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
                                     "from_currency": sourceCurrency == 'USDC' ? 'aPolUSDC' : 'mcUSD',
                                     "network": sourceCurrency == "USDC" ? "MATIC" : "CELO",
                                     "to_amount": targetAmount.toString(),
-                                    "to_currency": "MXN"
+                                    "to_currency": "MXN",
+                                    "bank_account": _clabeTextController.text,
                                   }
                                 };
                                 try {
                                   final order = await controller.sendSuarmiOrder(orderInput);
-                                  context.go("/success", extra: "Orden de retiro abierta");
+                                  context.go("/success", extra: "¡Orden de retiro enviada!");
                                 } catch (e) {
                                   setState(() {
                                     _orderError = e.toString();
@@ -272,5 +274,45 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         ),
       ),
     );
+  }
+}
+
+class DecimalTextInputFormatter extends TextInputFormatter {
+  DecimalTextInputFormatter({required this.decimalRange})
+      : assert(decimalRange == null || decimalRange > 0);
+
+  final int decimalRange;
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, // unused.
+      TextEditingValue newValue,
+      ) {
+    TextSelection newSelection = newValue.selection;
+    String truncated = newValue.text;
+
+    if (decimalRange != null) {
+      String value = newValue.text;
+
+      if (value.contains(".") &&
+          value.substring(value.indexOf(".") + 1).length > decimalRange) {
+        truncated = oldValue.text;
+        newSelection = oldValue.selection;
+      } else if (value == ".") {
+        truncated = "0.";
+
+        newSelection = newValue.selection.copyWith(
+          baseOffset: math.min(truncated.length, truncated.length + 1),
+          extentOffset: math.min(truncated.length, truncated.length + 1),
+        );
+      }
+
+      return TextEditingValue(
+        text: truncated,
+        selection: newSelection,
+        composing: TextRange.empty,
+      );
+    }
+    return newValue;
   }
 }
