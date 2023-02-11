@@ -112,9 +112,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: AlcanciaToolbar(
-                        state: StateToolbar.logoNoletters,
-                        logoHeight: size.height / 8,
+                      child: AlcanciaLogo(
+                        height: size.height / 8,
                       ),
                     ),
                     Column(
