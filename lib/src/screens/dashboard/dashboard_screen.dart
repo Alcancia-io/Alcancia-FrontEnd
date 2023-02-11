@@ -5,6 +5,7 @@ import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/screens/dashboard/dashboard_controller.dart';
 import 'package:alcancia/src/screens/metamap/metamap_dialog.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
+import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/components/alcancia_transactions_list.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
@@ -85,6 +86,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     if (_error != "") return SafeArea(child: Center(child: Text(_error)));
     var kycStatus = dashboardController.displayKycStatus(user!.kycStatus);
     return Scaffold(
+      appBar: AlcanciaToolbar(state: StateToolbar.profileTitleIcon, logoHeight: 38, userName: user.name,),
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.only(
@@ -97,7 +99,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             onRefresh: () => setUserInformation(),
             child: ListView(
               children: [
-                AlcanciaNavbar(username: user.name),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

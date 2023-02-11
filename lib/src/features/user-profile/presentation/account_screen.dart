@@ -20,16 +20,16 @@ class AccountScreen extends ConsumerWidget {
     final user = ref.watch(userProvider) ?? User.sampleUser;
     final authService = ref.watch(authServiceProvider);
     return Scaffold(
+      appBar: const AlcanciaToolbar(
+        state: StateToolbar.titleIcon,
+        logoHeight: 38,
+        title: "Mi Cuenta",
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 10),
           child: Column(
             children: [
-              AlcanciaToolbar(
-                state: StateToolbar.titleIcon,
-                logoHeight: 38,
-                title: "Mi Cuenta",
-              ),
               GestureDetector(
                 onTap: () {
                   // TODO: Change password

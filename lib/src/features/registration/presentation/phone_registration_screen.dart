@@ -1,5 +1,6 @@
 import 'package:alcancia/src/features/registration/presentation/registration_screen.dart';
 import 'package:alcancia/src/features/registration/provider/timer_provider.dart';
+import 'package:alcancia/src/shared/components/alcancia_container.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
 import 'package:alcancia/src/shared/services/exception_service.dart';
 import 'package:flutter/gestures.dart';
@@ -23,10 +24,10 @@ class PhoneRegistrationScreen extends ConsumerStatefulWidget {
   final Uri url = Uri.parse('');
 
   @override
-  ConsumerState<PhoneRegistrationScreen> createState() => _OTPMethodScreenState();
+  ConsumerState<PhoneRegistrationScreen> createState() => _PhoneRegistrationScreenState();
 }
 
-class _OTPMethodScreenState extends ConsumerState<PhoneRegistrationScreen> {
+class _PhoneRegistrationScreenState extends ConsumerState<PhoneRegistrationScreen> {
   final selectedCountryProvider = StateProvider.autoDispose<Country>((ref) => countries[0]);
   TextEditingController phoneController = TextEditingController();
   bool acceptTerms = false;
@@ -43,28 +44,29 @@ class _OTPMethodScreenState extends ConsumerState<PhoneRegistrationScreen> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
+        appBar: AlcanciaToolbar(
+          toolbarHeight: size.height / 12,
+          state: StateToolbar.logoLetters,
+          logoHeight: size.height / 12,
+        ),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: AlcanciaToolbar(
-                    state: StateToolbar.logoLetters,
-                    logoHeight: size.height / 12,
+                AlcanciaContainer(
+                  top: 16,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        "Número de teléfono",
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
+                      ),
+                      Text("Ingresa tu número de teléfono para recibir tu código de verificación.",
+                          style: TextStyle(fontSize: 15)),
+                    ],
                   ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      "Número de teléfono",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
-                    ),
-                    Text("Ingresa tu número de teléfono para recibir tu código de verificación.",
-                        style: TextStyle(fontSize: 15)),
-                  ],
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 32.0, bottom: 32.0),
