@@ -73,7 +73,6 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
     if (response.hasException) {
       _state.error = _exceptionService.handleException(response.exception);
     } else {
-      print(response.data);
       _phoneNumEnding = (response.data?['forgotPassword'] as String).substring(6);
     }
 
@@ -85,10 +84,14 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
   void completeForgotPassword() async {
     if (!_formKey.currentState!.validate()) return null;
     if (!validatePassword()) return null;
-    print(_email);
-    final forgotPasswordInput = CompletePasswordInput(email: _email, newPassword: _newPassword, verificationCode: _verificationCode);
+
+    final forgotPasswordInput = CompletePasswordInput(
+      email: _email,
+      newPassword: _newPassword,
+      verificationCode: _verificationCode,
+    );
     var response = await _authService.completeForgotPassword(forgotPasswordInput);
-    print(response);
+
     if (response.hasException) {
       _completePassState.error = _exceptionService.handleException(response.exception);
     } else {
@@ -330,10 +333,14 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                     onPressed: _isButtonEnabled ? completeForgotPassword : null,
                   ),
                 ),
-                if (_state.loading) const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator()))),
-                if (_completePassState.error != null) AlcanciaContainer(top: 16, child: Text(_completePassState.error as String, style: TextStyle(color: Colors.red),))
-              ],
-            ),
+              ),
+              if (_state.loading) const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator()))),
+              if (_completePassState.error != null)
+                AlcanciaContainer(
+                  top: 16,
+                  child: Text(_completePassState.error as String, style: const TextStyle(color: Colors.red)),
+                )
+            ],
           ),
         ),
       ),

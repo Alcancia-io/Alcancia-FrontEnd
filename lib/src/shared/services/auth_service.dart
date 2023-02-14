@@ -114,6 +114,7 @@ class AuthService {
       QueryOptions(
         document: gql(forgotPasswordQuery),
         variables: {"email": email},
+        fetchPolicy: FetchPolicy.noCache,
       ),
     );
   }
