@@ -333,14 +333,14 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                     onPressed: _isButtonEnabled ? completeForgotPassword : null,
                   ),
                 ),
-              ),
-              if (_state.loading) const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator()))),
-              if (_completePassState.error != null)
-                AlcanciaContainer(
-                  top: 16,
-                  child: Text(_completePassState.error as String, style: const TextStyle(color: Colors.red)),
-                )
-            ],
+                if (_state.loading) const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator()))),
+                if (_completePassState.error != null)
+                  AlcanciaContainer(
+                    top: 16,
+                    child: Text(_completePassState.error as String, style: const TextStyle(color: Colors.red)),
+                  )
+              ],
+            ),
           ),
         ),
       ),
