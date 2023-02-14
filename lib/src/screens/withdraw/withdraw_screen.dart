@@ -86,190 +86,193 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
       return Scaffold(body: SafeArea(child: Center(child: Text(_error))));
     }
 
-    return Scaffold(
-      appBar: const AlcanciaToolbar(
-        title: "Retiro de dinero",
-        state: StateToolbar.titleIcon,
-        logoHeight: 40,
-      ),
-      body: SafeArea(
-        child: Form(
-          key: _formKey,
-          autovalidateMode: AutovalidateMode.always,
-          onChanged: () => setState(() => _enableButton = _formKey.currentState!.validate()),
-          child: ListView(
-            padding: const EdgeInsets.only(top: 10, left: 40, right: 40),
-            children: [
-              const Text(
-                "¡Hola!",
-                style: TextStyle(fontSize: 35, fontWeight: FontWeight.w700),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 12),
-                child: Text(
-                  "Completa la siguiente información para realizar el retiro de tu dinero:",
-                  style: txtTheme.bodyText1,
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: const AlcanciaToolbar(
+          title: "Retiro de dinero",
+          state: StateToolbar.titleIcon,
+          logoHeight: 40,
+        ),
+        body: SafeArea(
+          child: Form(
+            key: _formKey,
+            autovalidateMode: AutovalidateMode.always,
+            onChanged: () => setState(() => _enableButton = _formKey.currentState!.validate()),
+            child: ListView(
+              padding: const EdgeInsets.only(top: 10, left: 40, right: 40),
+              children: [
+                const Text(
+                  "¡Hola!",
+                  style: TextStyle(fontSize: 35, fontWeight: FontWeight.w700),
                 ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(top: 20),
-                child: Column(
+                Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: Text(
+                    "Completa la siguiente información para realizar el retiro de tu dinero:",
+                    style: txtTheme.bodyText1,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "País",
+                        style: txtTheme.bodyText1,
+                      ),
+                      AlcanciaDropdown(
+                        itemsAlignment: MainAxisAlignment.start,
+                        dropdownItems: countries,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).inputDecorationTheme.fillColor,
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "País",
+                      "Moneda",
                       style: txtTheme.bodyText1,
                     ),
                     AlcanciaDropdown(
                       itemsAlignment: MainAxisAlignment.start,
-                      dropdownItems: countries,
+                      dropdownItems: sourceCurrencies,
                       decoration: BoxDecoration(
                         color: Theme.of(context).inputDecorationTheme.fillColor,
                         borderRadius: BorderRadius.circular(7),
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                          sourceCurrency = value;
+                        });
+                      },
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Moneda",
-                    style: txtTheme.bodyText1,
-                  ),
-                  AlcanciaDropdown(
-                    itemsAlignment: MainAxisAlignment.start,
-                    dropdownItems: sourceCurrencies,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).inputDecorationTheme.fillColor,
-                      borderRadius: BorderRadius.circular(7),
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        sourceCurrency = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              LabeledTextFormField(
-                controller: _clabeTextController,
-                labelText: "Número CLABE",
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                inputType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return appLoc.errorRequiredField;
-                  } else if (value.length != 18) {
-                    return "La CLABE debe consistir de 18 dígitos";
-                  }
-                },
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              LabeledTextFormField(
-                controller: _amountTextController,
-                labelText: "Monto de retiro",
-                inputType: TextInputType.number,
-                inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return appLoc.errorRequiredField;
-                  } else if (balance < double.parse(value)) {
-                    return "No cuentas con el balance necesario";
-                  }
-                  return null;
-                },
-                onChanged: (value) => setState(() {
-                  targetAmount = value.isNotEmpty
-                      ? double.parse(_amountTextController.text) /
-                          (sourceCurrency == "USDC" ? suarmiUSDCExchange : suarmiCELOExchange)
-                      : 0;
-                  _targetTextController.text = targetAmount.toStringAsFixed(3);
-                }),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text("Balance disponible: \$${balance.toStringAsFixed(2)}"),
-              const SizedBox(
-                height: 10,
-              ),
-              LabeledTextFormField(
-                controller: _targetTextController,
-                labelText: "Monto en MXN",
-                inputType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                enabled: false,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (_loadingButton) ...[
-                      const CircularProgressIndicator(),
-                    ] else ...[
-                      AlcanciaButton(
-                        buttonText: "Siguiente",
-                        onPressed: _enableButton
-                            ? () async {
-                                setState(() {
-                                  _loadingButton = true;
-                                });
-                                final orderInput = {
-                                  "orderInput": {
-                                    "from_amount": _amountTextController.text,
-                                    "type": "WITHDRAW",
-                                    "from_currency": sourceCurrency == 'USDC' ? 'aPolUSDC' : 'mcUSD',
-                                    "network": sourceCurrency == "USDC" ? "MATIC" : "CELO",
-                                    "to_amount": targetAmount.toString(),
-                                    "to_currency": "MXN",
-                                    "bank_account": _clabeTextController.text,
-                                  }
-                                };
-                                try {
-                                  final order = await controller.sendSuarmiOrder(orderInput);
-                                  context.go("/success", extra: "¡Orden de retiro enviada!");
-                                } catch (e) {
+                const SizedBox(
+                  height: 10,
+                ),
+                LabeledTextFormField(
+                  controller: _clabeTextController,
+                  labelText: "Número CLABE",
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  inputType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return appLoc.errorRequiredField;
+                    } else if (value.length != 18) {
+                      return "La CLABE debe consistir de 18 dígitos";
+                    }
+                  },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                LabeledTextFormField(
+                  controller: _amountTextController,
+                  labelText: "Monto de retiro",
+                  inputType: TextInputType.number,
+                  inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return appLoc.errorRequiredField;
+                    } else if (balance < double.parse(value)) {
+                      return "No cuentas con el balance necesario";
+                    }
+                    return null;
+                  },
+                  onChanged: (value) => setState(() {
+                    targetAmount = value.isNotEmpty
+                        ? double.parse(_amountTextController.text) /
+                            (sourceCurrency == "USDC" ? suarmiUSDCExchange : suarmiCELOExchange)
+                        : 0;
+                    _targetTextController.text = targetAmount.toStringAsFixed(3);
+                  }),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text("Balance disponible: \$${balance.toStringAsFixed(2)}"),
+                const SizedBox(
+                  height: 10,
+                ),
+                LabeledTextFormField(
+                  controller: _targetTextController,
+                  labelText: "Monto en MXN",
+                  inputType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  enabled: false,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 24),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (_loadingButton) ...[
+                        const CircularProgressIndicator(),
+                      ] else ...[
+                        AlcanciaButton(
+                          buttonText: "Siguiente",
+                          onPressed: _enableButton
+                              ? () async {
                                   setState(() {
-                                    _orderError = e.toString();
+                                    _loadingButton = true;
+                                  });
+                                  final orderInput = {
+                                    "orderInput": {
+                                      "from_amount": _amountTextController.text,
+                                      "type": "WITHDRAW",
+                                      "from_currency": sourceCurrency == 'USDC' ? 'aPolUSDC' : 'mcUSD',
+                                      "network": sourceCurrency == "USDC" ? "MATIC" : "CELO",
+                                      "to_amount": targetAmount.toString(),
+                                      "to_currency": "MXN",
+                                      "bank_account": _clabeTextController.text,
+                                    }
+                                  };
+                                  try {
+                                    final order = await controller.sendSuarmiOrder(orderInput);
+                                    context.go("/success", extra: "¡Orden de retiro enviada!");
+                                  } catch (e) {
+                                    setState(() {
+                                      _orderError = e.toString();
+                                    });
+                                  }
+                                  setState(() {
+                                    _loadingButton = false;
                                   });
                                 }
-                                setState(() {
-                                  _loadingButton = false;
-                                });
-                              }
-                            : null,
-                        color: alcanciaLightBlue,
-                        width: 308,
-                        height: 64,
-                      ),
-                    ],
-                    if (_orderError.isNotEmpty) ...[
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          _orderError,
-                          style: TextStyle(color: Colors.red),
+                              : null,
+                          color: alcanciaLightBlue,
+                          width: 308,
+                          height: 64,
                         ),
-                      ),
-                    ]
-                  ],
+                      ],
+                      if (_orderError.isNotEmpty) ...[
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            _orderError,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ),
+                      ]
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

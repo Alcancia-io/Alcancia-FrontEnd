@@ -126,211 +126,214 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
     if (_state.loading) return const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator())));
     if (_state.error != null) return Scaffold(body: SafeArea(child: Text(_state.error as String)));
 
-    return Scaffold(
-      appBar: const AlcanciaToolbar(state: StateToolbar.logoLetters, logoHeight: 60, toolbarHeight: 70,),
-      body: SafeArea(
-        bottom: false,
-        child: Form(
-          onChanged: () => setState(() => _isButtonEnabled = _formKey.currentState!.validate()),
-          key: _formKey,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          child: ListView(
-            padding: const EdgeInsets.only(
-              top: 20,
-              left: 38,
-              right: 38,
-              bottom: 28,
-            ),
-            children: [
-              AlcanciaContainer(child: Text('¡Hola!', style: txtTheme.headline1)),
-              AlcanciaContainer(top: 8, child: Text('Vamos a recuperar tu contraseña', style: txtTheme.headline2)),
-              AlcanciaContainer(
-                top: 16,
-                child: Text(
-                  'Ingresa el código que enviamos a tu celular que termina en $_phoneNumEnding',
-                  style: txtTheme.bodyText1,
-                ),
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: const AlcanciaToolbar(state: StateToolbar.logoLetters, logoHeight: 60, toolbarHeight: 70,),
+        body: SafeArea(
+          bottom: false,
+          child: Form(
+            onChanged: () => setState(() => _isButtonEnabled = _formKey.currentState!.validate()),
+            key: _formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            child: ListView(
+              padding: const EdgeInsets.only(
+                top: 20,
+                left: 38,
+                right: 38,
+                bottom: 28,
               ),
-              AlcanciaContainer(
-                top: 16,
-                child: LabeledTextFormField(
-                  controller: _verificationCodeControler,
-                  labelText: "Codigo secreto",
-                  validator: (value) => value == null || value == "" ? 'Field cannot be empty' : null,
-                  onChanged: (value) {
-                    setState(() {
-                      _verificationCode = value;
-                    });
-                  },
+              children: [
+                AlcanciaContainer(child: Text('¡Hola!', style: txtTheme.headline1)),
+                AlcanciaContainer(top: 8, child: Text('Vamos a recuperar tu contraseña', style: txtTheme.headline2)),
+                AlcanciaContainer(
+                  top: 16,
+                  child: Text(
+                    'Ingresa el código que enviamos a tu celular que termina en $_phoneNumEnding',
+                    style: txtTheme.bodyText1,
+                  ),
                 ),
-              ),
-              AlcanciaContainer(
-                top: 16,
-                child: StreamBuilder<int>(
-                    //TODO: Hacer reusable
-                    stream: timer.rawTime,
-                    initialData: 0,
-                    builder: (BuildContext ctx, AsyncSnapshot snapshot) {
-                      final value = snapshot.data;
-                      final displayTime = StopWatchTimer.getDisplayTime(value, hours: false, milliSecond: false);
-                      return Column(
-                        children: [
-                          Center(
-                            child: Container(
-                              decoration: ShapeDecoration(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  side: const BorderSide(color: alcanciaLightBlue),
+                AlcanciaContainer(
+                  top: 16,
+                  child: LabeledTextFormField(
+                    controller: _verificationCodeControler,
+                    labelText: "Codigo secreto",
+                    validator: (value) => value == null || value == "" ? 'Field cannot be empty' : null,
+                    onChanged: (value) {
+                      setState(() {
+                        _verificationCode = value;
+                      });
+                    },
+                  ),
+                ),
+                AlcanciaContainer(
+                  top: 16,
+                  child: StreamBuilder<int>(
+                      //TODO: Hacer reusable
+                      stream: timer.rawTime,
+                      initialData: 0,
+                      builder: (BuildContext ctx, AsyncSnapshot snapshot) {
+                        final value = snapshot.data;
+                        final displayTime = StopWatchTimer.getDisplayTime(value, hours: false, milliSecond: false);
+                        return Column(
+                          children: [
+                            Center(
+                              child: Container(
+                                decoration: ShapeDecoration(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(100),
+                                    side: const BorderSide(color: alcanciaLightBlue),
+                                  ),
                                 ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(
-                                      Icons.timer_sharp,
-                                      color: alcanciaLightBlue,
-                                    ),
-                                    Text(
-                                      displayTime,
-                                      style: const TextStyle(color: alcanciaLightBlue),
-                                    ),
-                                  ],
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(
+                                        Icons.timer_sharp,
+                                        color: alcanciaLightBlue,
+                                      ),
+                                      Text(
+                                        displayTime,
+                                        style: const TextStyle(color: alcanciaLightBlue),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text("¿No recibiste el código?"),
-                              TextButton(
-                                onPressed: value <= 0
-                                    ? () async {
-                                        await forgotPassword();
-                                        timer.onResetTimer();
-                                        timer.onStartTimer();
-                                      }
-                                    : null,
-                                style: TextButton.styleFrom(foregroundColor: alcanciaLightBlue),
-                                child: const Text(
-                                  "Reenviar",
-                                  style: TextStyle(decoration: TextDecoration.underline, fontWeight: FontWeight.bold),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text("¿No recibiste el código?"),
+                                TextButton(
+                                  onPressed: value <= 0
+                                      ? () async {
+                                          await forgotPassword();
+                                          timer.onResetTimer();
+                                          timer.onStartTimer();
+                                        }
+                                      : null,
+                                  style: TextButton.styleFrom(foregroundColor: alcanciaLightBlue),
+                                  child: const Text(
+                                    "Reenviar",
+                                    style: TextStyle(decoration: TextDecoration.underline, fontWeight: FontWeight.bold),
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      );
+                              ],
+                            ),
+                          ],
+                        );
+                      }),
+                ),
+                AlcanciaContainer(
+                  top: 16,
+                  child: LabeledTextFormField(
+                    controller: _newPasswordController,
+                    labelText: "Nueva contraseña",
+                    obscure: obscurePassword,
+                    validator: (value) => value == null || value == "" ? 'Field cannot be empty' : null,
+                    onChanged: (value) => setState(() {
+                      _newPassword = value;
                     }),
-              ),
-              AlcanciaContainer(
-                top: 16,
-                child: LabeledTextFormField(
-                  controller: _newPasswordController,
-                  labelText: "Nueva contraseña",
-                  obscure: obscurePassword,
-                  validator: (value) => value == null || value == "" ? 'Field cannot be empty' : null,
-                  onChanged: (value) => setState(() {
-                    _newPassword = value;
-                  }),
-                  suffixIcon: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        obscurePassword = !obscurePassword;
-                      });
-                    },
-                    child: Icon(obscurePassword ? CupertinoIcons.eye : CupertinoIcons.eye_fill),
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          obscurePassword = !obscurePassword;
+                        });
+                      },
+                      child: Icon(obscurePassword ? CupertinoIcons.eye : CupertinoIcons.eye_fill),
+                    ),
                   ),
                 ),
-              ),
-              AlcanciaContainer(
-                top: 16,
-                child: LabeledTextFormField(
-                  controller: _confirmPasswordController,
-                  labelText: "Confirma tu nueva contraseña",
-                  obscure: obscureConfirmPassword,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) return 'Field should not empty';
-                    if (value != _newPassword) return 'Password do not match';
-                    return null;
-                  },
-                  suffixIcon: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        obscureConfirmPassword = !obscureConfirmPassword;
-                      });
+                AlcanciaContainer(
+                  top: 16,
+                  child: LabeledTextFormField(
+                    controller: _confirmPasswordController,
+                    labelText: "Confirma tu nueva contraseña",
+                    obscure: obscureConfirmPassword,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) return 'Field should not empty';
+                      if (value != _newPassword) return 'Password do not match';
+                      return null;
                     },
-                    child: Icon(obscureConfirmPassword ? CupertinoIcons.eye : CupertinoIcons.eye_fill),
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          obscureConfirmPassword = !obscureConfirmPassword;
+                        });
+                      },
+                      child: Icon(obscureConfirmPassword ? CupertinoIcons.eye : CupertinoIcons.eye_fill),
+                    ),
                   ),
                 ),
-              ),
-              AlcanciaContainer(
-                top: 10,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Tu contraseña debe tener al menos:\n', style: txtTheme.bodyText1),
-                    Row(
-                      children: [
-                        _newPassword.hasUpperCase()
-                            ? SvgPicture.asset('lib/src/resources/images/icon_check.svg', height: 20)
-                            : SvgPicture.asset('lib/src/resources/images/icon_cross.svg', height: 20),
-                        const Padding(padding: EdgeInsets.only(left: 10), child: Text('Una letra mayúscula'))
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Row(
+                AlcanciaContainer(
+                  top: 10,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Tu contraseña debe tener al menos:\n', style: txtTheme.bodyText1),
+                      Row(
                         children: [
-                          _newPassword.hasLowerCase()
+                          _newPassword.hasUpperCase()
                               ? SvgPicture.asset('lib/src/resources/images/icon_check.svg', height: 20)
                               : SvgPicture.asset('lib/src/resources/images/icon_cross.svg', height: 20),
-                          const Padding(padding: EdgeInsets.only(left: 10), child: Text('Una letra minuscula'))
+                          const Padding(padding: EdgeInsets.only(left: 10), child: Text('Una letra mayúscula'))
                         ],
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Row(
-                        children: [
-                          _newPassword.hasDigits()
-                              ? SvgPicture.asset('lib/src/resources/images/icon_check.svg', height: 20)
-                              : SvgPicture.asset('lib/src/resources/images/icon_cross.svg', height: 20),
-                          const Padding(padding: EdgeInsets.only(left: 10), child: Text('Un número'))
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Row(
+                          children: [
+                            _newPassword.hasLowerCase()
+                                ? SvgPicture.asset('lib/src/resources/images/icon_check.svg', height: 20)
+                                : SvgPicture.asset('lib/src/resources/images/icon_cross.svg', height: 20),
+                            const Padding(padding: EdgeInsets.only(left: 10), child: Text('Una letra minuscula'))
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Row(
-                        children: [
-                          _newPassword.hasSpecialChar()
-                              ? SvgPicture.asset('lib/src/resources/images/icon_check.svg', height: 20)
-                              : SvgPicture.asset('lib/src/resources/images/icon_cross.svg', height: 20),
-                          const Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: Text('Un caracter especial [!@#\$%^&*(),.?":{}|<>]'),
-                          )
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
+                          children: [
+                            _newPassword.hasDigits()
+                                ? SvgPicture.asset('lib/src/resources/images/icon_check.svg', height: 20)
+                                : SvgPicture.asset('lib/src/resources/images/icon_cross.svg', height: 20),
+                            const Padding(padding: EdgeInsets.only(left: 10), child: Text('Un número'))
+                          ],
+                        ),
                       ),
-                    )
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
+                          children: [
+                            _newPassword.hasSpecialChar()
+                                ? SvgPicture.asset('lib/src/resources/images/icon_check.svg', height: 20)
+                                : SvgPicture.asset('lib/src/resources/images/icon_cross.svg', height: 20),
+                            const Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Text('Un caracter especial [!@#\$%^&*(),.?":{}|<>]'),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              AlcanciaContainer(
-                top: 50,
-                child: AlcanciaButton(
-                  width: double.infinity,
-                  height: 64,
-                  buttonText: "Siguiente",
-                  onPressed: _isButtonEnabled ? completeForgotPassword : null,
+                AlcanciaContainer(
+                  top: 50,
+                  child: AlcanciaButton(
+                    width: double.infinity,
+                    height: 64,
+                    buttonText: "Siguiente",
+                    onPressed: _isButtonEnabled ? completeForgotPassword : null,
+                  ),
                 ),
-              ),
-              if (_state.loading) const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator()))),
-              if (_completePassState.error != null) AlcanciaContainer(top: 16, child: Text(_completePassState.error as String, style: TextStyle(color: Colors.red),))
-            ],
+                if (_state.loading) const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator()))),
+                if (_completePassState.error != null) AlcanciaContainer(top: 16, child: Text(_completePassState.error as String, style: TextStyle(color: Colors.red),))
+              ],
+            ),
           ),
         ),
       ),
