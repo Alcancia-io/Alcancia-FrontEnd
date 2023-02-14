@@ -15,16 +15,19 @@ class SuccessScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      appBar: AlcanciaToolbar(
+        toolbarHeight: responsiveService.getHeightPixels(90, screenHeight),
+        state: StateToolbar.logoLetters,
+        logoHeight: responsiveService.getHeightPixels(80, screenHeight),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(32.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              AlcanciaToolbar(
-                state: StateToolbar.logoLetters,
-                logoHeight: responsiveService.getHeightPixels(80, screenHeight),
-              ),
+              const Spacer(),
               Column(
                 children: [
                   SvgPicture.asset("lib/src/resources/images/confetti.svg"),
@@ -38,13 +41,15 @@ class SuccessScreen extends StatelessWidget {
                   ),
                 ],
               ),
+              const Spacer(),
               AlcanciaButton(
                   width: double.infinity,
                   height: responsiveService.getHeightPixels(64, screenHeight),
                   buttonText: "Entendido",
                   onPressed: () {
                     context.go("/");
-                  }),
+                  },
+              ),
             ],
           ),
         ),

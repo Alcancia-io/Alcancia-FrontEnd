@@ -1,4 +1,5 @@
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
+import 'package:alcancia/src/shared/components/alcancia_logo.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
@@ -94,7 +95,12 @@ class WelcomeScreen extends StatelessWidget {
                   )),
                 ),
               ),
-              AlcanciaToolbar(state: StateToolbar.logoNoletters, logoHeight: size.height / 12),
+              Align(
+                alignment: Alignment.topCenter,
+                child: AlcanciaLogo(
+                  height: size.height / 12,
+                ),
+              ),
             ],
           ),
         ),

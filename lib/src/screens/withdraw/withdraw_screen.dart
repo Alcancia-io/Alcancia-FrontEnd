@@ -87,6 +87,11 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
     }
 
     return Scaffold(
+      appBar: const AlcanciaToolbar(
+        title: "Retiro de dinero",
+        state: StateToolbar.titleIcon,
+        logoHeight: 40,
+      ),
       body: SafeArea(
         child: Form(
           key: _formKey,
@@ -95,11 +100,6 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
           child: ListView(
             padding: const EdgeInsets.only(top: 10, left: 40, right: 40),
             children: [
-              const AlcanciaToolbar(
-                title: "Retiro de dinero",
-                state: StateToolbar.titleIcon,
-                logoHeight: 40,
-              ),
               const Text(
                 "¡Hola!",
                 style: TextStyle(fontSize: 35, fontWeight: FontWeight.w700),

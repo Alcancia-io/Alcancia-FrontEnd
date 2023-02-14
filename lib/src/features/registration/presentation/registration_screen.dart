@@ -91,6 +91,11 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
+        appBar: AlcanciaToolbar(
+          toolbarHeight: size.height / 13,
+          state: StateToolbar.logoLetters,
+          logoHeight: size.height / 16,
+        ),
         body: SafeArea(
           bottom: false,
           child: Form(
@@ -100,13 +105,6 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
             child: ListView(
               padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: AlcanciaToolbar(
-                    state: StateToolbar.logoLetters,
-                    logoHeight: size.height / 12,
-                  ),
-                ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const [

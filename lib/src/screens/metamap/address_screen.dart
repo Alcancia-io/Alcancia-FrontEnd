@@ -92,6 +92,10 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
+        appBar: AlcanciaToolbar(
+          state: StateToolbar.logoNoletters,
+          logoHeight: responsiveService.getHeightPixels(40, screenHeight),
+        ),
         body: SafeArea(
           bottom: false,
           child: Form(
@@ -100,14 +104,7 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
               padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: AlcanciaToolbar(
-                    state: StateToolbar.logoNoletters,
-                    logoHeight: responsiveService.getHeightPixels(40, screenHeight),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 32.0, top: 8),
+                  padding: const EdgeInsets.only(bottom: 32.0, top: 24),
                   child: Center(
                     child: Text("Necesitamos saber más de ti 🤔",
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),

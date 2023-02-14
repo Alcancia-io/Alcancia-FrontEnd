@@ -144,15 +144,15 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
+        appBar: AlcanciaToolbar(
+          showBackButton: true,
+          state: StateToolbar.logoNoletters,
+          logoHeight: responsiveService.getHeightPixels(40, screenHeight),
+        ),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Column(
               children: [
-                AlcanciaToolbar(
-                  state: StateToolbar.logoNoletters,
-                  logoHeight: responsiveService.getHeightPixels(40, screenHeight),
-                ),
-
                 // general container, sets padding
                 AlcanciaContainer(
                   top: 20,

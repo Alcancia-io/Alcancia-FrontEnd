@@ -130,6 +130,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
     if (_state.error != null) return Scaffold(body: SafeArea(child: Text(_state.error as String)));
 
     return Scaffold(
+      appBar: const AlcanciaToolbar(state: StateToolbar.logoLetters, logoHeight: 60, toolbarHeight: 70,),
       body: SafeArea(
         bottom: false,
         child: Form(
@@ -144,8 +145,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
               bottom: 28,
             ),
             children: [
-              const AlcanciaToolbar(state: StateToolbar.logoLetters, logoHeight: 60),
-              AlcanciaContainer(top: 40, child: Text('¡Hola!', style: txtTheme.headline1)),
+              AlcanciaContainer(child: Text('¡Hola!', style: txtTheme.headline1)),
               AlcanciaContainer(top: 8, child: Text('Vamos a recuperar tu contraseña', style: txtTheme.headline2)),
               AlcanciaContainer(
                 top: 16,
