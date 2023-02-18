@@ -21,7 +21,8 @@ import 'country_picker.dart';
 class PhoneRegistrationScreen extends ConsumerStatefulWidget {
   PhoneRegistrationScreen({Key? key, required this.userRegistrationData}) : super(key: key);
   final UserRegistrationModel userRegistrationData;
-  final Uri url = Uri.parse('');
+  final Uri url = Uri.parse('https://landing.alcancia.io/privacypolicy');
+  final Uri url2 = Uri.parse('https://landing.alcancia.io/termsandconditions');
 
   @override
   ConsumerState<PhoneRegistrationScreen> createState() => _PhoneRegistrationScreenState();
@@ -131,15 +132,26 @@ class _PhoneRegistrationScreenState extends ConsumerState<PhoneRegistrationScree
                           padding: EdgeInsets.only(left: 8.0),
                           child: RichText(
                             text: TextSpan(
-                                text: "He leído y acepto la ",
+                                text: "He leído y acepto los ",
                                 style: Theme.of(context).textTheme.bodyText2,
                                 children: [
                                   TextSpan(
-                                    text: "Política de Privacidad y Tratamiento de Datos",
-                                    style: TextStyle(color: alcanciaLightBlue),
+                                    text: "Términos y Condiciones",
+                                    style: const TextStyle(color: alcanciaLightBlue),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        _launchUrl();
+                                        _launchUrl(widget.url2);
+                                      },
+                                  ),
+                                  const TextSpan(
+                                    text: " y la ",
+                                  ),
+                                  TextSpan(
+                                    text: "Política de Privacidad.",
+                                    style: const TextStyle(color: alcanciaLightBlue),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        _launchUrl(widget.url);
                                       },
                                   )
                                 ]),
@@ -230,9 +242,9 @@ class _PhoneRegistrationScreenState extends ConsumerState<PhoneRegistrationScree
     super.dispose();
   }
 
-  Future<void> _launchUrl() async {
-    if (!await launchUrl(widget.url)) {
-      throw 'Could not launch $widget.url';
+  Future<void> _launchUrl(Uri url) async {
+    if (!await launchUrl(url)) {
+      throw 'Could not launch $url';
     }
   }
 }
