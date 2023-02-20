@@ -153,6 +153,11 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
                       onChanged: (value) {
                         setState(() {
                           sourceCurrency = value;
+                          targetAmount = _amountTextController.text.isNotEmpty
+                              ? double.parse(_amountTextController.text) /
+                              (sourceCurrency == "USDC" ? suarmiUSDCExchange : suarmiCELOExchange)
+                              : 0;
+                          _targetTextController.text = targetAmount.toStringAsFixed(3);
                         });
                       },
                     ),
