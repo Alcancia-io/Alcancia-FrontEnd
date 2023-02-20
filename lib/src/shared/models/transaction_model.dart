@@ -23,13 +23,16 @@ class Transaction {
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
     var targetAsset = json["targetAsset"] as String;
+    var sourceAsset = json["sourceAsset"] as String;
     if (targetAsset == "aPolUSDC") targetAsset = "USDC";
     if (targetAsset == "mcUSD") targetAsset = "cUSD";
+    if (sourceAsset == "aPolUSDC") sourceAsset = "USDC";
+    if (sourceAsset == "mcUSD") sourceAsset = "cUSD";
     return Transaction(
       transactionID: json["id"] as String,
       createdAt: json["createdAt"] as String,
       sourceAmount: double.parse(json["sourceAmount"].toString()),
-      sourceAsset: json["sourceAsset"] as String,
+      sourceAsset: sourceAsset,
       targetAsset: targetAsset,
       amount: double.parse(json["amount"].toString()),
       type: json["type"] as String,
