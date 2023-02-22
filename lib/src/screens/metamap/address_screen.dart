@@ -249,7 +249,7 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                     newUser.address = jsonAddress;
                     ref.read(userProvider.notifier).setUser(newUser);
                     try {
-                      await metaMapController.updateUser(user: newUser);
+                      await metaMapController.updateUser(address: jsonAddress, profession: selectedProfession);
                       print('sucess');
                     } catch (e) {
                       print('error!!!');
