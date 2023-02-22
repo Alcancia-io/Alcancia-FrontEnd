@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/screens/dashboard/dashboard_controller.dart';
-import 'package:alcancia/src/screens/metamap/metamap_dialog.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/components/alcancia_transactions_list.dart';
