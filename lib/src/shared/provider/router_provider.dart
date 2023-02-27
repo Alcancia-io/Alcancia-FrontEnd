@@ -11,6 +11,7 @@ import 'package:alcancia/src/screens/checkout/checkout.dart';
 import 'package:alcancia/src/screens/forgot_password/forgot_password.dart';
 import 'package:alcancia/src/screens/login/mfa_screen.dart';
 import 'package:alcancia/src/screens/metamap/address_screen.dart';
+import 'package:alcancia/src/screens/onboarding/onboarding_screens.dart';
 import 'package:alcancia/src/screens/success/success_screen.dart';
 import 'package:alcancia/src/screens/swap/swap_screen.dart';
 import 'package:alcancia/src/screens/withdraw/withdraw_screen.dart';
@@ -26,6 +27,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:alcancia/src/features/transaction-detail/presentation/transaction_detail.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<bool> isUserAuthenticated() async {
   StorageService service = StorageService();
@@ -37,9 +39,16 @@ Future<bool> isUserAuthenticated() async {
   // print(result.hasException);
 }
 
+Future<bool> _finishedOnboarding() async {
+  final preferences = await SharedPreferences.getInstance();
+  final finished = preferences.getBool("finishedOnboarding");
+  return finished == true;
+}
+
 final routerProvider = Provider<GoRouter>(
   (ref) {
     return GoRouter(
+      initialLocation: "/",
       navigatorKey: navigatorKey,
       // debugLogDiagnostics: true,
       routes: [
@@ -129,6 +138,11 @@ final routerProvider = Provider<GoRouter>(
           path: "/success",
           builder: (context, state) => SuccessScreen(message: state.extra as String),
         ),
+        GoRoute(
+          name: "onboarding",
+          path: "/onboarding",
+          builder: (context, state) => OnboardingScreens(),
+        ),
       ],
       redirect: (context, state) async {
         final loginLoc = state.namedLocation("login");
@@ -147,7 +161,10 @@ final routerProvider = Provider<GoRouter>(
         final home = state.namedLocation("homescreen", params: {"id": "0"});
         final forgotPassword = state.namedLocation('forgot-password');
         final isForgotPassword = state.subloc == forgotPassword;
-
+        final finishedOnboarding = await _finishedOnboarding();
+        final onboardingLoc = state.namedLocation('onboarding');
+        final isOnboarding = state.subloc == onboardingLoc;
+        if (!loggedIn && !finishedOnboarding && !isOnboarding) return onboardingLoc;
         if (!loggedIn &&
             !loggingIn &&
             !creatingAccount &&
@@ -155,7 +172,7 @@ final routerProvider = Provider<GoRouter>(
             !isMfa &&
             !isPhoneRegistration &&
             !isOtp &&
-            !isForgotPassword) return welcomeLoc;
+            !isForgotPassword && !isOnboarding) return welcomeLoc;
         if (loggedIn && (loggingIn || creatingAccount || isStartup)) return home;
         return null;
       },
