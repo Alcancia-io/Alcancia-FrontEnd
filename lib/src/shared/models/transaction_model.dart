@@ -1,4 +1,6 @@
+import 'package:alcancia/src/shared/models/currency_asset.dart';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 
 class Transaction {
   String transactionID;
@@ -22,19 +24,19 @@ class Transaction {
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
-    var targetAsset = json["targetAsset"] as String;
-    if (targetAsset == "aPolUSDC") targetAsset = "USDC";
-    if (targetAsset == "mcUSD") targetAsset = "cUSD";
+    final targetAsset = json["targetAsset"] as String;
+    final sourceAsset = json["sourceAsset"] as String;
     return Transaction(
-      transactionID: json["id"] as String,
-      createdAt: json["createdAt"] as String,
-      sourceAmount: double.parse(json["sourceAmount"].toString()),
-      sourceAsset: json["sourceAsset"] as String,
-      targetAsset: targetAsset,
-      amount: double.parse(json["amount"].toString()),
-      type: json["type"] as String,
-      status: json["status"] as String
-    );
+        transactionID: json["id"] as String,
+        createdAt: json["createdAt"] as String,
+        sourceAmount: double.parse(json["sourceAmount"].toString()),
+        sourceAsset:
+            CurrencyAsset.values.firstWhereOrNull((e) => e.actualAsset == sourceAsset)?.shownAsset ?? sourceAsset,
+        targetAsset:
+            CurrencyAsset.values.firstWhereOrNull((e) => e.actualAsset == targetAsset)?.shownAsset ?? sourceAsset,
+        amount: double.parse(json["amount"].toString()),
+        type: json["type"] as String,
+        status: json["status"] as String);
   }
 }
 

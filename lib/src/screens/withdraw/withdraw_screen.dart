@@ -153,6 +153,9 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
                       onChanged: (value) {
                         setState(() {
                           sourceCurrency = value;
+                          if (_amountTextController.text.isNotEmpty) {
+                            updateTargetAmount(value);
+                          }
                         });
                       },
                     ),
@@ -190,13 +193,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
                     }
                     return null;
                   },
-                  onChanged: (value) => setState(() {
-                    targetAmount = value.isNotEmpty
-                        ? double.parse(_amountTextController.text) /
-                            (sourceCurrency == "USDC" ? suarmiUSDCExchange : suarmiCELOExchange)
-                        : 0;
-                    _targetTextController.text = targetAmount.toStringAsFixed(3);
-                  }),
+                  onChanged: updateTargetAmount,
                 ),
                 const SizedBox(
                   height: 10,
@@ -277,6 +274,16 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         ),
       ),
     );
+  }
+
+  void updateTargetAmount(String value) {
+    setState(() {
+      targetAmount = value.isNotEmpty
+          ? double.parse(_amountTextController.text) /
+          (sourceCurrency == "USDC" ? suarmiUSDCExchange : suarmiCELOExchange)
+          : 0;
+      _targetTextController.text = targetAmount.toStringAsFixed(3);
+    });
   }
 }
 
