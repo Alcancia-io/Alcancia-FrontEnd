@@ -249,11 +249,8 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                     newUser.address = jsonAddress;
                     ref.read(userProvider.notifier).setUser(newUser);
                     try {
-                      await metaMapController.updateUser(user: newUser);
-                      print('sucess');
+                      await metaMapController.updateUser(address: jsonAddress, profession: selectedProfession);
                     } catch (e) {
-                      print('error!!!');
-                      print(e);
                       Fluttertoast.showToast(msg: e.toString());
                       context.go('/');
                     }

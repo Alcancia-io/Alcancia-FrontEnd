@@ -15,21 +15,14 @@ class MetaMapController {
     {"name": "Otro"},
   ];
 
-  Future<bool> updateUser({required User user}) async {
+  Future<bool> updateUser({required String address, required String profession}) async {
     UserService userService = UserService();
     final updatedUserInfo = {
-      "dob": DateFormat("yyyy-MM-dd").format(user.dob),
-      "email": user.email,
-      "gender": user.gender,
-      "name": user.name,
-      "phoneNumber": user.phoneNumber,
-      "profession": user.profession,
-      "surname": user.surname,
-      "address": user.address,
-      "walletAddress": user.walletAddress,
+      "profession": profession,
+      "address": address,
     };
     try {
-      var response = await userService.updateUser(info: updatedUserInfo);
+      final response = await userService.updateUser(info: updatedUserInfo);
       if (!response.hasException) return true;
     } catch (error) {
       return Future.error(error);
