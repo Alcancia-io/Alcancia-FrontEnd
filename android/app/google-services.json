@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "770633131725",
+    "project_id": "alcancia-b4b3f",
+    "storage_bucket": "alcancia-b4b3f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:770633131725:android:c04179e206e2aaf3d9eb84",
+        "android_client_info": {
+          "package_name": "com.alcancia.alcancia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "770633131725-nsr0l8hrbpela99k3o08ud58ifb2mtps.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJsVRq5ZUM2BUTIxX5b09uFTY9IM50FqA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "770633131725-nsr0l8hrbpela99k3o08ud58ifb2mtps.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "770633131725-67qaehh9dt27ega8eueptnm58udm00v5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.alcancia.alcanciatest"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

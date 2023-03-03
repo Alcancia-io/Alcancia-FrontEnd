@@ -10,6 +10,7 @@ import '../../../shared/models/transaction_model.dart';
 class TransactionDetail extends StatelessWidget {
   const TransactionDetail({Key? key, required this.txn}) : super(key: key);
   final Transaction txn;
+
   @override
   Widget build(BuildContext context) {
     final ctx = Theme.of(context);
@@ -21,11 +22,9 @@ class TransactionDetail extends StatelessWidget {
             padding: const EdgeInsets.all(24),
             child: Container(
               padding: EdgeInsets.all(18),
-              height: 400,
+              height: 430,
               decoration: BoxDecoration(
-                color: ctx.brightness == Brightness.dark
-                    ? alcanciaCardDark2
-                    : alcanciaCardLight2,
+                color: ctx.brightness == Brightness.dark ? alcanciaCardDark2 : alcanciaCardLight2,
                 borderRadius: BorderRadius.all(
                   Radius.circular(11),
                 ),
@@ -49,20 +48,23 @@ class TransactionDetail extends StatelessWidget {
                   ),
                   TransactionDetailItem(
                     leftText: appLoc.labelTransactionId,
-                    rightText:
-                        '${txn.transactionID.substring(0, txn.transactionID.indexOf('-'))}',
+                    rightText: '${txn.transactionID.substring(0, txn.transactionID.indexOf('-'))}',
                   ),
                   TransactionDetailItem(
                     leftText: appLoc.labelDepositValue,
                     rightText: '\$${txn.sourceAmount.toStringAsFixed(2)}',
                   ),
                   TransactionDetailItem(
-                    leftText: appLoc.labelUSDCValue,
+                    leftText: 'Valor ${txn.targetAsset}', //TODO: LOC
                     rightText: '\$${txn.amount.toStringAsFixed(2)}',
                   ),
                   TransactionDetailItem(
                     leftText: appLoc.labelTransactionType,
                     rightText: '${txn.type.isDepositOrWithdraw()}',
+                  ),
+                  TransactionDetailItem(
+                    leftText: 'Estatus',
+                    rightIcon: txn.iconForTxnStatus,
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 20),

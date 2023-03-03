@@ -6,6 +6,7 @@ import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/provider/auth_service_provider.dart';
 import 'package:alcancia/src/shared/provider/user_provider.dart';
+import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -20,16 +21,16 @@ class AccountScreen extends ConsumerWidget {
     final authService = ref.watch(authServiceProvider);
     final appLoc = AppLocalizations.of(context)!;
     return Scaffold(
+      appBar: const AlcanciaToolbar(
+        state: StateToolbar.titleIcon,
+        logoHeight: 38,
+        title: "Mi Cuenta",
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 10),
           child: Column(
             children: [
-              AlcanciaToolbar(
-                state: StateToolbar.titleIcon,
-                logoHeight: 38,
-                title: appLoc.labelMyAccount,
-              ),
               GestureDetector(
                 onTap: () {
                   // TODO: Change password
@@ -81,6 +82,7 @@ class AccountScreen extends ConsumerWidget {
                               acceptAction: () async {
                                 try {
                                   await authService.deleteAccount();
+                                  await deleteToken();
                                   context.goNamed("welcome");
                                   ref.read(userProvider.notifier).setUser(null);
                                 } catch (e) {
@@ -107,5 +109,10 @@ class AccountScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  deleteToken() async {
+    final StorageService _storageService = StorageService();
+    await _storageService.deleteSecureData("token");
   }
 }

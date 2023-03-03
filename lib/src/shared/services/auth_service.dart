@@ -1,6 +1,24 @@
 import 'package:alcancia/src/features/login/data/login_mutation.dart';
+import 'package:alcancia/src/screens/forgot_password/forgot_password.dart';
+import 'package:alcancia/src/shared/graphql/mutations/complete_forgot_password_mutation.dart';
+import 'package:alcancia/src/shared/graphql/queries/index.dart';
 import 'package:alcancia/src/shared/services/graphql_service.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+
+class CompletePasswordInput {
+  CompletePasswordInput({this.email, this.newPassword, this.verificationCode});
+  String? email = "email";
+  String? newPassword = "newPassword";
+  String? verificationCode = "123";
+
+  Map<String, dynamic> toMap() {
+    return {
+      "email": email,
+      "newPassword": newPassword,
+      "verificationCode": verificationCode,
+    };
+  }
+}
 
 class AuthService {
   late GraphQLConfig graphQLConfig;
@@ -72,23 +90,42 @@ class AuthService {
   }
 
   Future<QueryResult> completeSignIn(String verificationCode) async {
-      final clientResponse = await client;
-      return await clientResponse.query(
-        QueryOptions(
-            document: gql(completeSignInQuery),
-            variables: {"verificationCode": verificationCode}),
-      );
+    final clientResponse = await client;
+    return await clientResponse.query(
+      QueryOptions(document: gql(completeSignInQuery), variables: {"verificationCode": verificationCode}),
+    );
   }
 
-  Future<QueryResult> login(String email, String password) async {
-      final clientResponse = await client;
-      return await clientResponse.mutate(
-        MutationOptions(
-          document: gql(loginMutation),
-          variables: {
-            "loginUserInput": {"email": email, "password": password}
-          },
-        ),
-      );
+  Future<QueryResult> login(String email, String password, String deviceToken) async {
+    final clientResponse = await client;
+    return await clientResponse.mutate(
+      MutationOptions(
+        document: gql(loginMutation),
+        variables: {
+          "loginUserInput": {"email": email, "password": password, "deviceToken": deviceToken}
+        },
+      ),
+    );
+  }
+
+  Future<QueryResult> forgotPassword(String email) async {
+    var clientResponse = await client;
+    return clientResponse.query(
+      QueryOptions(
+        document: gql(forgotPasswordQuery),
+        variables: {"email": email},
+        fetchPolicy: FetchPolicy.noCache,
+      ),
+    );
+  }
+
+  Future<QueryResult> completeForgotPassword(CompletePasswordInput queryVariables) async {
+    var clientResponse = await client;
+    return clientResponse.mutate(
+      MutationOptions(
+        document: gql(completeForgotPasswordMutation),
+        variables: queryVariables.toMap(),
+      ),
+    );
   }
 }

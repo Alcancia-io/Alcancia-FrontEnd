@@ -9,7 +9,8 @@ const String transactionsQuery = """
         sourceAsset,
         targetAsset,
         amount,
-        type
+        type,
+        status,
       }
     }
   }

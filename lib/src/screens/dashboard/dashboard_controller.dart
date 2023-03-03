@@ -1,3 +1,4 @@
+import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:alcancia/src/shared/services/services.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
 
@@ -24,13 +25,13 @@ class DashboardController {
     return Future.error('Error getting user');
   }
 
-  Future<double> fetchUserBalance() async {
+  Future<Balance> fetchUserBalance() async {
     UserService userService = UserService();
     try {
       var response = await userService.getUserBalance();
       if (response.data != null) {
-        final balance = response.data!["getWalletBalance"].toDouble();
-
+        final balanceData = response.data!["getWalletBalance"];
+        final balance = Balance.fromMap(balanceData);
         return balance;
       }
     } catch (error) {
@@ -67,5 +68,15 @@ class DashboardController {
     } catch (error) {
       return Future.error(error);
     }
+  }
+
+  String displayKycStatus(String? status) {
+    // user has completed the process
+    if (status == 'PENDING') return 'En proceso';
+    if (status == 'FAILED') return 'Rechazada';
+    if (status == 'VERIFIED') return 'Exitosa';
+
+    // user hasn't done any verfication
+    return 'No iniciada';
   }
 }

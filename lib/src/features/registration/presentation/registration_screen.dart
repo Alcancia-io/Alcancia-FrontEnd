@@ -1,7 +1,7 @@
 import 'package:alcancia/src/features/registration/model/user_registration_model.dart';
-import 'package:alcancia/src/features/registration/provider/registration_controller_provider.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
+import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
@@ -12,6 +12,8 @@ import '../../../shared/models/user_model.dart';
 import '../data/gender.dart';
 import 'gender_picker.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
+
+final emailsInUseProvider = StateProvider((ref) => [""]);
 
 class RegistrationScreen extends ConsumerStatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
@@ -30,12 +32,14 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
   bool obscurePassword = true;
   bool obscureConfirmPassword = true;
 
-  final selectedDateProvider =
-      StateProvider.autoDispose<DateTime>((ref) => DateTime.now());
-  final selectedGenderProvider =
-      StateProvider.autoDispose<Gender?>((ref) => null);
+  final selectedDateProvider = StateProvider.autoDispose<DateTime>((ref) => DateTime.now());
+  final selectedGenderProvider = StateProvider.autoDispose<Gender?>((ref) => null);
 
   var signupInput;
+
+  final _formKey = GlobalKey<FormState>();
+
+  bool _disableButton = true;
 
   bool validDate(DateTime date) {
     DateTime adultDate = DateTime(
@@ -77,26 +81,30 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
     final appLocalization = AppLocalizations.of(context)!;
     final selectedDate = ref.watch(selectedDateProvider);
     final selectedGender = ref.watch(selectedGenderProvider);
-    final registrationController = ref.watch(registrationControllerProvider);
+    final unavailableEmails = ref.watch(emailsInUseProvider);
+    setState(() {
+      if (_formKey.currentState != null) {
+        _disableButton = !_formKey.currentState!.validate();
+      }
+    });
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
+        appBar: AlcanciaToolbar(
+          toolbarHeight: size.height / 13,
+          state: StateToolbar.logoLetters,
+          logoHeight: size.height / 16,
+        ),
         body: SafeArea(
           bottom: false,
           child: Form(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
+            key: _formKey,
+            onChanged: () => setState(() => _disableButton = !_formKey.currentState!.validate()),
+            autovalidateMode: AutovalidateMode.always,
             child: ListView(
-              padding:
-                  const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
+              padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
               children: [
-                Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: AlcanciaToolbar(
-                      state: StateToolbar.logoLetters,
-                      logoHeight: size.height / 12,
-                    ),
-                ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -161,7 +169,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                       }
                       return appLocalization.errorAge;
                     }
-                    return null;
+                    return "Selecciona una fecha";
                   },
                 ),
                 const SizedBox(
@@ -184,12 +192,13 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   autofillHints: [AutofillHints.email],
                   textInputAction: TextInputAction.next,
                   validator: (value) {
+                    if (unavailableEmails.contains(value)) {
+                      return "Este correo ya esta en uso.";
+                    }
                     if (value == null || value.isEmpty) {
                       return appLocalization.errorRequiredField;
                     } else {
-                      return value.isValidEmail()
-                          ? null
-                          : appLocalization.errorEmailFormat;
+                      return value.isValidEmail() ? null : appLocalization.errorEmailFormat;
                     }
                   },
                 ),
@@ -208,9 +217,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                         obscurePassword = !obscurePassword;
                       });
                     },
-                    child: Icon(obscurePassword
-                        ? CupertinoIcons.eye
-                        : CupertinoIcons.eye_fill),
+                    child: Icon(obscurePassword ? CupertinoIcons.eye : CupertinoIcons.eye_fill),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -218,8 +225,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                     } else {
                       return value.isValidPassword()
                           ? null
-                          : appLocalization
-                              .errorInvalidPassword; // TODO: Password validation text
+                          : appLocalization.errorInvalidPassword; // TODO: Password validation text
                     }
                   },
                 ),
@@ -237,16 +243,13 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                         obscureConfirmPassword = !obscureConfirmPassword;
                       });
                     },
-                    child: Icon(obscureConfirmPassword
-                        ? CupertinoIcons.eye
-                        : CupertinoIcons.eye_fill),
+                    child: Icon(obscureConfirmPassword ? CupertinoIcons.eye : CupertinoIcons.eye_fill),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return appLocalization.errorRequiredField;
                     } else if (value != passwordController.text) {
-                      return appLocalization
-                          .errorPasswordMatch; // TODO: Confirm password validation text
+                      return appLocalization.errorPasswordMatch; // TODO: Confirm password validation text
                     }
                   },
                 ),
@@ -258,23 +261,28 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   color: alcanciaLightBlue,
                   width: 304,
                   height: 64,
-                  onPressed: () {
-                    final user = User(
-                      userId: "",
-                      name: nameController.text,
-                      surname: lastNameController.text,
-                      email: emailController.text,
-                      gender: selectedGender.string,
-                      phoneNumber: "",
-                      dob: selectedDate,
-                      balance: 0.0,
-                      walletAddress: "",
-                      country: '',
-                    );
-                    if (isValid(selectedGender, selectedDate)) {
-                      context.push("/phone-registration", extra: UserRegistrationModel(user: user, password: passwordController.text));
-                    }
-                  },
+                  onPressed: _disableButton
+                      ? null
+                      : () {
+                          final user = User(
+                            id: "",
+                            authId: "",
+                            name: nameController.text,
+                            surname: lastNameController.text,
+                            email: emailController.text,
+                            gender: selectedGender.string,
+                            phoneNumber: "",
+                            dob: selectedDate,
+                            balance: Balance(total: 0.0, aPolUSDC: 0.0, cUSD: 0.0, etherscan: 0.0, mcUSD: 0.0),
+                            walletAddress: "",
+                            country: '',
+                            profession: '',
+                          );
+                          if (isValid(selectedGender, selectedDate)) {
+                            context.push("/phone-registration",
+                                extra: UserRegistrationModel(user: user, password: passwordController.text));
+                          }
+                        },
                 ),
               ],
             ),

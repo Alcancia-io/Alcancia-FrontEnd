@@ -12,9 +12,9 @@ class LoginController {
     return false;
   }
 
-  Future<String> login(String email, String password) async {
+  Future<String> login(String email, String password, String deviceToken) async {
     AuthService authService = AuthService();
-    final response = await authService.login(email, password);
+    final response = await authService.login(email, password, deviceToken);
     if (response.hasException) {
       print(response.exception);
       return Future.error("Exception");
@@ -23,7 +23,7 @@ class LoginController {
       print(data);
       final token = data["login"]["access_token"] as String;
       return token;
-   }
+    }
     return Future.error("Unknown error");
   }
 }

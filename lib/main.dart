@@ -1,12 +1,18 @@
 import 'package:alcancia/src/resources/colors/app_theme.dart';
+import 'package:alcancia/src/shared/provider/push_notifications_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:alcancia/firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:alcancia/src/shared/provider/router_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+GlobalKey<NavigatorState> navigatorKey =
+    GlobalKey(debugLabel: "Main Navigator");
 
 void main() async {
   await initHiveForFlutter();
@@ -15,16 +21,32 @@ void main() async {
   } else {
     await dotenv.load(fileName: ".env.dev");
   }
-
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
+  // This widget is the root of your application.
+  final PushNotificationProvider pushNotificationProvider =
+      PushNotificationProvider();
+
+  @override
+  void initState() {
+    super.initState();
+    pushNotificationProvider.initNotifications();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final router = ref.watch(routerProvider);
     var uri = dotenv.env['API_URL'] as String;
 
@@ -44,6 +66,7 @@ class MyApp extends ConsumerWidget {
     return GraphQLProvider(
       client: client,
       child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,

@@ -192,6 +192,7 @@ class UserProfileScreen extends ConsumerWidget {
                 children: [
                   Text(
                     "${user.name} ${user.surname}",
+                    textAlign: TextAlign.center,
                     style: Theme.of(context)
                         .textTheme
                         .titleLarge

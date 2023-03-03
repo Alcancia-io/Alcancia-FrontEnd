@@ -1,11 +1,16 @@
+import 'package:alcancia/src/shared/models/currency_asset.dart';
+import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
+
 class Transaction {
   String transactionID;
   String createdAt;
-  int sourceAmount;
+  double sourceAmount;
   String sourceAsset;
   String targetAsset;
-  int amount;
+  double amount;
   String type;
+  String status;
 
   Transaction({
     required this.transactionID,
@@ -15,17 +20,37 @@ class Transaction {
     required this.targetAsset,
     required this.amount,
     required this.type,
+    required this.status,
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
+    final targetAsset = json["targetAsset"] as String;
+    final sourceAsset = json["sourceAsset"] as String;
     return Transaction(
-      transactionID: json["id"] as String,
-      createdAt: json["createdAt"] as String,
-      sourceAmount: json["sourceAmount"] as int,
-      sourceAsset: json["sourceAsset"] as String,
-      targetAsset: json["targetAsset"] as String,
-      amount: json["amount"] as int,
-      type: json["type"] as String,
+        transactionID: json["id"] as String,
+        createdAt: json["createdAt"] as String,
+        sourceAmount: double.parse(json["sourceAmount"].toString()),
+        sourceAsset:
+            CurrencyAsset.values.firstWhereOrNull((e) => e.actualAsset == sourceAsset)?.shownAsset ?? sourceAsset,
+        targetAsset:
+            CurrencyAsset.values.firstWhereOrNull((e) => e.actualAsset == targetAsset)?.shownAsset ?? sourceAsset,
+        amount: double.parse(json["amount"].toString()),
+        type: json["type"] as String,
+        status: json["status"] as String);
+  }
+}
+
+extension StatusIcon on Transaction {
+  Icon get iconForTxnStatus {
+    if (status == "PENDING") return const Icon(Icons.hourglass_bottom_rounded);
+    if (status == "COMPLETED")
+      return const Icon(
+        Icons.check,
+        color: Colors.green,
+      );
+    return const Icon(
+      Icons.close,
+      color: Colors.red,
     );
   }
 }

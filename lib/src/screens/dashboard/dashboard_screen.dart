@@ -1,12 +1,18 @@
 import 'dart:async';
+import 'dart:developer';
+
+import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/screens/dashboard/dashboard_controller.dart';
+import 'package:alcancia/src/shared/components/alcancia_components.dart';
+import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/components/alcancia_transactions_list.dart';
+import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
+import 'package:alcancia/src/shared/services/metamap_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:alcancia/src/shared/models/alcancia_models.dart';
-import 'package:alcancia/src/shared/components/alcancia_components.dart';
 
 import '../../shared/provider/user_provider.dart';
 
@@ -20,21 +26,22 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   Timer? timer;
   final DashboardController dashboardController = DashboardController();
+  final MetamapService metamapService = MetamapService();
   late List<Transaction> txns;
   bool _isLoading = false;
   String _error = "";
 
-  void setUserInformation() async {
+  Future<void> setUserInformation() async {
+
     setState(() {
       _isLoading = true;
     });
     try {
       var userInfo = await dashboardController.fetchUserInformation();
+      inspect(userInfo);
       txns = userInfo.txns;
       ref.watch(userProvider.notifier).setUser(userInfo.user);
-      ref
-          .watch(balanceProvider.notifier)
-          .setBalance(Balance(balance: userInfo.user.balance));
+      ref.watch(balanceProvider.notifier).setBalance(userInfo.user.balance);
     } catch (err) {
       setState(() {
         _error = err.toString();
@@ -48,13 +55,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   void setUserBalance() async {
     try {
       var balance = await dashboardController.fetchUserBalance();
-      ref.watch(balanceProvider.notifier).setBalance(Balance(balance: balance));
+      ref.watch(balanceProvider.notifier).setBalance(balance);
     } catch (err) {}
   }
 
   void setTimer() {
-    timer = Timer.periodic(
-        const Duration(seconds: 10), (Timer t) => setUserBalance());
+    timer = Timer.periodic(const Duration(seconds: 10), (Timer t) => setUserBalance());
   }
 
   @override
@@ -77,7 +83,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       return const SafeArea(child: Center(child: CircularProgressIndicator()));
     }
     if (_error != "") return SafeArea(child: Center(child: Text(_error)));
+    var kycStatus = dashboardController.displayKycStatus(user!.kycStatus);
     return Scaffold(
+      appBar: AlcanciaToolbar(state: StateToolbar.profileTitleIcon, logoHeight: 38, userName: user.name,),
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.only(
@@ -86,43 +94,63 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             bottom: 24,
             top: 10,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AlcanciaNavbar(username: user!.name),
-              Container(
-                padding: const EdgeInsets.only(bottom: 16, top: 10),
-                child: DashboardCard(),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 22, top: 22),
-                child: Row(
+          child: RefreshIndicator(
+            onRefresh: () => setUserInformation(),
+            child: ListView(
+              children: [
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      "Actividad",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    AlcanciaButton(
-                      buttonText: "Ver más",
-                      onPressed: () {
-                        context.push("/homescreen/1");
-                      },
-                      color: const Color(0x00FFFFFF),
-                      rounded: true,
-                      height: 24,
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("Verificación: $kycStatus"),
+                        ),
+                        if (user.kycStatus == "VERIFIED") ...[
+                          SvgPicture.asset("lib/src/resources/images/icon_check.svg", height: 20),
+                        ],
+                        if (user.kycStatus == "FAILED" || user.kycStatus == null) ...[
+                          SvgPicture.asset("lib/src/resources/images/icon_cross.svg", height: 20),
+                        ],
+                      ],
                     ),
                   ],
                 ),
-              ),
-              AlcanciaTransactions(
-                txns: txns,
-                height: 200,
-              )
-            ],
+                Container(
+                  padding: const EdgeInsets.only(bottom: 16, top: 10),
+                  child: DashboardCard(),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 22, top: 22),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Actividad",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      AlcanciaButton(
+                        buttonText: "Ver más",
+                        onPressed: () {
+                          context.go("/homescreen/1");
+                        },
+                        color: const Color(0x00FFFFFF),
+                        rounded: true,
+                        height: 24,
+                      ),
+                    ],
+                  ),
+                ),
+                AlcanciaTransactions(
+                  txns: txns,
+                  height: 200,
+                )
+              ],
+            ),
           ),
         ),
       ),

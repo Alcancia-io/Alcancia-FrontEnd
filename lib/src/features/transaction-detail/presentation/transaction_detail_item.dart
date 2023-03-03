@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 class TransactionDetailItem extends StatelessWidget {
   final String leftText;
-  final String rightText;
+  final String? rightText;
+  final Icon? rightIcon;
 
   const TransactionDetailItem(
-      {Key? key, required this.leftText, required this.rightText})
+      {Key? key, required this.leftText, this.rightText, this.rightIcon})
       : super(key: key);
 
   @override
@@ -19,7 +20,11 @@ class TransactionDetailItem extends StatelessWidget {
             leftText,
             style: TextStyle(fontSize: 15),
           ),
-          Text(rightText),
+          if (rightIcon != null) ... [
+            rightIcon!,
+          ] else if (rightText != null)... [
+            Text(rightText!),
+          ],
         ],
       ),
     );

@@ -27,6 +27,11 @@ class TransactionsListScreen extends StatelessWidget {
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return Scaffold(
+            appBar: const AlcanciaToolbar(
+              state: StateToolbar.titleIcon,
+              title: 'Actividad',
+              logoHeight: 38,
+            ),
             body: SafeArea(
               child: GraphQLProvider(
                 client: snapshot.data,
@@ -55,21 +60,9 @@ class TransactionsListScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(
                         left: 24,
                         right: 24,
-                        top: 10,
                       ),
-                      child: Column(
-                        children: [
-                          AlcanciaToolbar(
-                            state: StateToolbar.titleIcon,
-                            title: appLoc.labelActivity,
-                            logoHeight: 38,
-                          ),
-                          Expanded(
-                            child: AlcanciaTransactions(
-                              txns: transactionsList,
-                            ),
-                          ),
-                        ],
+                      child: AlcanciaTransactions(
+                        txns: transactionsList,
                       ),
                     );
                   },
