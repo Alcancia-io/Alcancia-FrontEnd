@@ -44,7 +44,14 @@ class CurrencyRiskCard extends StatelessWidget {
               ],
             ),
           ),
-          Text('El rendimiento anual de $targetCurrency es de $percentage')
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(text: 'El rendimiento anual de $targetCurrency es de '),
+                TextSpan(text: percentage, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
         ],
       ),
     );
