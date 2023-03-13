@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
-
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/screens/metamap/metamap_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
@@ -8,7 +6,6 @@ import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/models/address_model.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
-import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import 'package:alcancia/src/shared/services/metamap_service.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
@@ -106,13 +103,13 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 32.0, top: 24),
                   child: Center(
-                    child: Text("Necesitamos saber más de ti 🤔",
+                    child: Text(appLocalization.labelWeNeedToKnowMore,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
                   ),
                 ),
                 LabeledTextFormField(
                   controller: _streetController,
-                  labelText: "Calle",
+                  labelText: appLocalization.labelStreet,
                   inputType: TextInputType.text,
                   textInputAction: TextInputAction.next,
                   validator: (value) {
@@ -127,14 +124,14 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                 ),
                 LabeledTextFormField(
                   controller: _exNumberController,
-                  labelText: "Número exterior",
+                  labelText: appLocalization.labelExteriorNumber,
                   inputType: TextInputType.text,
                   textInputAction: TextInputAction.next,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return appLocalization.errorRequiredField;
                     } else if (value.length > 25) {
-                      return "El número debe de tener menos de 25 caracteres";
+                      return appLocalization.errorAddressNumberLength;
                     }
                     return null;
                   },
@@ -144,12 +141,12 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                 ),
                 LabeledTextFormField(
                   controller: _inNumberController,
-                  labelText: "Número interior",
+                  labelText: appLocalization.labelInteriorNumber,
                   inputType: TextInputType.text,
                   textInputAction: TextInputAction.next,
                   validator: (newValue) {
                     if (newValue != null && newValue.length > 25)
-                      return "El número debe de tener menos de 25 caracteres";
+                      return appLocalization.errorAddressNumberLength;
                   },
                 ),
                 const SizedBox(
@@ -157,7 +154,7 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                 ),
                 LabeledTextFormField(
                   controller: _neighborhoodController,
-                  labelText: "Colonia",
+                  labelText: appLocalization.labelNeighborhood,
                   inputType: TextInputType.text,
                   textInputAction: TextInputAction.next,
                   validator: (value) {
@@ -169,8 +166,8 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                 const SizedBox(
                   height: 15,
                 ),
-                const Text(
-                  "Estado",
+                Text(
+                  appLocalization.labelState,
                 ),
                 AlcanciaDropdown(
                   dropdownItems: states,
@@ -193,7 +190,7 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                 ),
                 LabeledTextFormField(
                   controller: _zipController,
-                  labelText: "Código Postal",
+                  labelText: appLocalization.labelZipCode,
                   inputType: TextInputType.text,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   textInputAction: TextInputAction.next,
@@ -206,8 +203,8 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                 const SizedBox(
                   height: 15,
                 ),
-                const Text(
-                  "¿Cuál es tu profesión?",
+                Text(
+                  appLocalization.labelYourProfession,
                 ),
                 AlcanciaDropdown(
                   dropdownItems: metaMapController.professions,
@@ -228,7 +225,7 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                   height: 30,
                 ),
                 AlcanciaButton(
-                  buttonText: "Siguiente",
+                  buttonText: appLocalization.buttonNext,
                   color: alcanciaLightBlue,
                   width: 304,
                   height: 64,

@@ -55,7 +55,7 @@ class TransactionDetail extends StatelessWidget {
                     rightText: '\$${txn.sourceAmount.toStringAsFixed(2)}',
                   ),
                   TransactionDetailItem(
-                    leftText: 'Valor ${txn.targetAsset}', //TODO: LOC
+                    leftText: appLoc.labelValueAsset(txn.targetAsset),
                     rightText: '\$${txn.amount.toStringAsFixed(2)}',
                   ),
                   TransactionDetailItem(
@@ -63,7 +63,7 @@ class TransactionDetail extends StatelessWidget {
                     rightText: '${txn.type.isDepositOrWithdraw()}',
                   ),
                   TransactionDetailItem(
-                    leftText: 'Estatus',
+                    leftText: appLoc.labelStatus,
                     rightIcon: txn.iconForTxnStatus,
                   ),
                   Padding(
@@ -78,7 +78,7 @@ class TransactionDetail extends StatelessWidget {
                         onPressed: () {
                           context.pop();
                         },
-                        child: Text(appLoc.labelClose),
+                        child: Text(appLoc.buttonClose),
                       ),
                     ),
                   )

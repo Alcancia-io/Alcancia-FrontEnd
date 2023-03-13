@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-
-import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/screens/dashboard/dashboard_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
@@ -13,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../shared/provider/user_provider.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -79,6 +77,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     var user = ref.watch(userProvider);
+    final appLoc = AppLocalizations.of(context)!;
     if (_isLoading) {
       return const SafeArea(child: Center(child: CircularProgressIndicator()));
     }
@@ -126,15 +125,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        "Actividad",
+                      Text(
+                        appLoc.labelActivity,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       AlcanciaButton(
-                        buttonText: "Ver más",
+                        buttonText: appLoc.buttonSeeMore,
                         onPressed: () {
                           context.go("/homescreen/1");
                         },

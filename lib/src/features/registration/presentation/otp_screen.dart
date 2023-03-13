@@ -67,7 +67,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                       Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                            appLocalization.labelEnterCodePhone(widget.userRegistrationData.user.phoneNumber)),
+                            appLocalization.labelEnterCodePhone(widget.otpDataModel.phoneNumber ?? "")),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -131,7 +131,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                           : null,
                                       style: TextButton.styleFrom(foregroundColor: alcanciaLightBlue),
                                       child: Text(
-                                        appLocalization.labelResend,
+                                        appLocalization.buttonResend,
                                         style: TextStyle(
                                           decoration: TextDecoration.underline,
                                           fontWeight: FontWeight.bold,
@@ -153,7 +153,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                 color: alcanciaLightBlue,
                                 width: 308,
                                 height: 64,
-                                buttonText: appLocalization.labelNext,
+                                buttonText: appLocalization.buttonNext,
                                 onPressed: () async {
                                   _setLoading(true);
                                   try {

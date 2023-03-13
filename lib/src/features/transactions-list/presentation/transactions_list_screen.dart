@@ -27,9 +27,9 @@ class TransactionsListScreen extends StatelessWidget {
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return Scaffold(
-            appBar: const AlcanciaToolbar(
+            appBar: AlcanciaToolbar(
               state: StateToolbar.titleIcon,
-              title: 'Actividad',
+              title: appLoc.labelActivity,
               logoHeight: 38,
             ),
             body: SafeArea(

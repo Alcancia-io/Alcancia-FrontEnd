@@ -124,9 +124,9 @@ class UserProfileScreen extends ConsumerWidget {
                                   appLoc.labelSignOutConfirmation,
                                   style: Theme.of(context).textTheme.titleLarge,
                                 ),
-                                acceptText: appLoc.labelConfirm,
+                                acceptText: appLoc.buttonConfirm,
                                 acceptColor: Colors.red,
-                                cancelText: appLoc.labelCancel,
+                                cancelText: appLoc.buttonCancel,
                                 acceptAction: () async {
                                   try {
                                     await authService.logout();

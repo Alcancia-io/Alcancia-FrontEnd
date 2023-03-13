@@ -209,7 +209,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       children: [
                                         CupertinoButton(
                                             child: Row(
-                                              children: const [
+                                              children: [
                                                 Padding(
                                                   padding: EdgeInsets.only(right: 4.0),
                                                   child: Icon(CupertinoIcons.question_circle),
@@ -290,7 +290,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                           AlcanciaButton(
                                             width: responsiveService.getWidthPixels(304, screenWidth),
                                             height: responsiveService.getHeightPixels(64, screenHeight),
-                                            buttonText: appLocalization.labelLogIn,
+                                            buttonText: appLocalization.buttonLogIn,
                                             onPressed: () async {
                                               final token = await pushNotifications.messaging.getToken();
                                               setLoginInputFields(deviceToken: token ?? "");
@@ -319,7 +319,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         color: alcanciaLightBlue,
                                         width: responsiveService.getWidthPixels(304, screenWidth),
                                         height: responsiveService.getHeightPixels(64, screenHeight),
-                                        buttonText: appLocalization.labelLogIn,
+                                        buttonText: appLocalization.buttonLogIn,
                                         onPressed: () async {
                                           final token = await pushNotifications.messaging.getToken();
                                           setLoginInputFields(deviceToken: token ?? "");
@@ -344,11 +344,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 Text(
-                                                  "Iniciar sesión con ",
+                                                  appLocalization.labelLogInWith,
                                                   style: txtTheme.bodyText1,
                                                 ),
-                                                const AlcanciaLink(
-                                                  text: "otra cuenta",
+                                                AlcanciaLink(
+                                                  text: appLocalization.buttonAnotherAccount,
                                                 ),
                                               ],
                                             ),
@@ -361,7 +361,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                             Text(appLocalization.labelNeedAccount),
                                             CupertinoButton(
                                               child: Text(
-                                                appLocalization.labelRegister,
+                                                appLocalization.buttonRegister,
                                                 style: const TextStyle(
                                                   decoration:
                                                       TextDecoration.underline,

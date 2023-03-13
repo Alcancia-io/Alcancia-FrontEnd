@@ -1,10 +1,10 @@
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
+import 'package:alcancia/src/shared/components/alcancia_logo.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -63,7 +63,7 @@ class WelcomeScreen extends StatelessWidget {
                           color: alcanciaLightBlue,
                           width: responsiveService.getWidthPixels(304, screenWidth),
                           height: responsiveService.getHeightPixels(64, screenHeight),
-                          buttonText: appLocalization.labelRegister,
+                          buttonText: appLocalization.buttonRegister,
                           onPressed: () {
                             context.push('/registration');
                           },
@@ -84,7 +84,7 @@ class WelcomeScreen extends StatelessWidget {
                               ),
                               CupertinoButton(
                                   child: Text(
-                                    appLocalization.labelLogIn,
+                                    appLocalization.buttonLogIn,
                                     style: TextStyle(decoration: TextDecoration.underline, fontWeight: FontWeight.bold),
                                   ),
                                   onPressed: () => context.push("/login")),

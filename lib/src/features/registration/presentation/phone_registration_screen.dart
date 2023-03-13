@@ -74,7 +74,7 @@ class _PhoneRegistrationScreenState extends ConsumerState<PhoneRegistrationScree
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Celular"),
+                      Text(appLocalization.labelPhone),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -132,11 +132,11 @@ class _PhoneRegistrationScreenState extends ConsumerState<PhoneRegistrationScree
                           padding: EdgeInsets.only(left: 8.0),
                           child: RichText(
                             text: TextSpan(
-                                text: "He leído y acepto los ",
+                                text: appLocalization.labelReadAndAccepted,
                                 style: Theme.of(context).textTheme.bodyText2,
                                 children: [
                                   TextSpan(
-                                    text: "Términos y Condiciones",
+                                    text: appLocalization.labelTermsAndConditions,
                                     style: const TextStyle(color: alcanciaLightBlue),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
@@ -147,7 +147,7 @@ class _PhoneRegistrationScreenState extends ConsumerState<PhoneRegistrationScree
                                     text: " y la ",
                                   ),
                                   TextSpan(
-                                    text: "Política de Privacidad.",
+                                    text: appLocalization.labelPrivacyPolicy,
                                     style: const TextStyle(color: alcanciaLightBlue),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
@@ -162,13 +162,13 @@ class _PhoneRegistrationScreenState extends ConsumerState<PhoneRegistrationScree
                   ),
                 ),
                 Text(
-                  "Podrían aplicar tarifas de mensajes y transmisión de datos. Para la autenticación multifactor recibirás un código en cada intento de inicio de sesión.",
+                  appLocalization.labelFeeDisclaimer
                 ),
                 Spacer(),
                 Column(
                   children: [
                     AlcanciaButton(
-                      buttonText: "Crear mi cuenta",
+                      buttonText: appLocalization.buttonCreateAccount,
                       color: alcanciaLightBlue,
                       width: double.infinity,
                       height: 64,
@@ -207,12 +207,12 @@ class _PhoneRegistrationScreenState extends ConsumerState<PhoneRegistrationScree
                             }
                           } else {
                             setState(() {
-                              _error = "Ingresa un número de teléfono válido";
+                              _error = appLocalization.errorInvalidPhoneNumber;
                             });
                           }
                         } else {
                           setState(() {
-                            _error = "Acepta la Política de Privacidad";
+                            _error = appLocalization.errorAcceptPrivacyPolicy;
                           });
                         }
                       },

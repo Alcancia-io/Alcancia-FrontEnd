@@ -21,10 +21,10 @@ class AccountScreen extends ConsumerWidget {
     final authService = ref.watch(authServiceProvider);
     final appLoc = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: const AlcanciaToolbar(
+      appBar: AlcanciaToolbar(
         state: StateToolbar.titleIcon,
         logoHeight: 38,
-        title: "Mi Cuenta",
+        title: appLoc.labelMyAccount,
       ),
       body: SafeArea(
         child: Padding(
@@ -67,7 +67,7 @@ class AccountScreen extends ConsumerWidget {
                   child: AlcanciaButton(
                     foregroundColor: Colors.red,
                     side: BorderSide(color: Colors.red),
-                    buttonText: appLoc.labelDeleteAccount,
+                    buttonText: appLoc.buttonDeleteAccount,
                     fontSize: 18,
                     padding: const EdgeInsets.only(
                         left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
@@ -76,9 +76,9 @@ class AccountScreen extends ConsumerWidget {
                           context: context,
                           builder: (BuildContext ctx) {
                             return AlcanciaActionDialog(
-                              acceptText: appLoc.labelConfirm,
+                              acceptText: appLoc.buttonConfirm,
                               acceptColor: Colors.red,
-                              cancelText: appLoc.labelCancel,
+                              cancelText: appLoc.buttonCancel,
                               acceptAction: () async {
                                 try {
                                   await authService.deleteAccount();

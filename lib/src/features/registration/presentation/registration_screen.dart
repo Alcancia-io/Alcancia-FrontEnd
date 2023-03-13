@@ -169,7 +169,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                       }
                       return appLocalization.errorAge;
                     }
-                    return "Selecciona una fecha";
+                    return appLocalization.labelSelectDate;
                   },
                 ),
                 const SizedBox(
@@ -193,7 +193,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   textInputAction: TextInputAction.next,
                   validator: (value) {
                     if (unavailableEmails.contains(value)) {
-                      return "Este correo ya esta en uso.";
+                      return appLocalization.errorEmailInUse;
                     }
                     if (value == null || value.isEmpty) {
                       return appLocalization.errorRequiredField;
@@ -257,7 +257,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   height: 15,
                 ),
                 AlcanciaButton(
-                  buttonText: appLocalization.labelNext,
+                  buttonText: appLocalization.buttonNext,
                   color: alcanciaLightBlue,
                   width: 304,
                   height: 64,
