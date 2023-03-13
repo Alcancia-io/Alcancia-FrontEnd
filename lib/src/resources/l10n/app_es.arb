@@ -214,7 +214,7 @@
 	"labelDeposit": "Depositar",
 	"labelWithdraw": "Retirar",
 	"labelNoTransactions": "Sin registros aún...",
-	"labelHelloName": "Hola, $username",
+	"labelHelloName": "Hola, {username}",
 	"@labelHelloName": {
 		"placeholders": {
 			"username": {
@@ -231,7 +231,7 @@
 	"labelTotalBalance": "Balance Total",
 	"labelCELOBalance": "Balance Celo USD",
 	"labelUSDCBalance": "Balance USD Coin",
-	"labelVerificationStatus": "Verificación: $status",
+	"labelVerificationStatus": "Verificación: {status}",
 	"@labelVerificationStatus": {
 		"placeholders": {
 			"status": {
