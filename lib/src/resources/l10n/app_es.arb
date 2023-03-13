@@ -193,13 +193,10 @@
 	"alertVerificationInProgress": "Revisión en proceso, espera un momento...",
 	"errorMinimumDepositAmount": "Cantidad mínima de \\$200",
 	"labelRiskLevel": "Nivel de riesgo: ",
-	"labelAPY": "El rendimiento anual de $targetCurrency es de $percentage",
+	"labelAPY": "El rendimiento anual de $targetCurrency es de ",
 	"@labelAPY": {
 		"placeholders": {
 			"targetCurrency": {
-				"type": "String"
-			},
-			"percentage": {
 				"type": "String"
 			}
 		}
