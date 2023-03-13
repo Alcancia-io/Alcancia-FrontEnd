@@ -80,7 +80,7 @@
 	"labelInteriorNumber": "Interior Number",
 	"labelLogInWith": "Login with ",
 	"labelNewPassword": "New Password",
-	"labelPasswordRequirements": "Your password must contain:\\n",
+	"labelPasswordRequirements": "Your password must contain:\n",
 	"labelRecoverPassword": "Let''s recover your password",
 	"labelRequirementLowercase": "One lowercase letter",
 	"labelRequirementNumber": "One number",
@@ -90,7 +90,7 @@
 	"labelStatus": "Status",
 	"labelStreet": "Street",
 	"labelValueAsset": "Value {asset}",
-	"labelVerifyIdentity": "Let''s verify\\nyour identity,",
+	"labelVerifyIdentity": "Let''s verify\nyour identity,",
 	"errorAddressNumberLength": "Number must be less than 25 characters long",
 	"labelWeNeedToKnowMore": "We need to know more about you 🤔",
 	"labelNeighborhood": "Neighborhood",
@@ -140,7 +140,7 @@
 	"labelOnboardingTitle3": "Open your account",
 	"labelOnboardingText3": "Do not worry, at Alcancía we take care of everything so that your money grows while you focus on what is important",
 	"labelOnboardingTitle4": "Get Ready",
-	"labelOnboardingText4": "You only need your identification document and a selfie.\\nIt''s that easy!",
+	"labelOnboardingText4": "You only need your identification document and a selfie.\nIt''s that easy!",
 	"errorSomethingWentWrong": "Oops! Something went wrong, try again later",
 	"errorMinimumWithdrawAmount": "Minimum withdrawal of \\$10"
 }
