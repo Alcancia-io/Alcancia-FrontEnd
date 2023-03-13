@@ -13,7 +13,6 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class UserProfileScreen extends ConsumerWidget {
   UserProfileScreen({Key? key}) : super(key: key);
 
@@ -113,8 +112,7 @@ class UserProfileScreen extends ConsumerWidget {
                     side: BorderSide(color: alcanciaLightBlue),
                     buttonText: appLoc.labelSignOut,
                     fontSize: 18,
-                    padding: const EdgeInsets.only(
-                        left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
+                    padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
                     onPressed: () async {
                       await showDialog(
                           context: context,
@@ -131,9 +129,7 @@ class UserProfileScreen extends ConsumerWidget {
                                   try {
                                     await authService.logout();
                                     await deleteToken();
-                                    ref
-                                        .read(userProvider.notifier)
-                                        .setUser(null);
+                                    ref.read(userProvider.notifier).setUser(null);
 
                                     context.go("/");
                                   } catch (e) {
@@ -164,9 +160,7 @@ class UserProfileScreen extends ConsumerWidget {
       child: Container(
         padding: EdgeInsets.all(16.0),
         decoration: BoxDecoration(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? alcanciaCardDark2
-              : alcanciaCardLight2,
+          color: Theme.of(context).brightness == Brightness.dark ? alcanciaCardDark2 : alcanciaCardLight2,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Padding(
@@ -193,12 +187,8 @@ class UserProfileScreen extends ConsumerWidget {
                   Text(
                     "${user.name} ${user.surname}",
                     textAlign: TextAlign.center,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                   ),
-                  Text(user.email),
                 ],
               ),
             ],

@@ -24,6 +24,7 @@ class _BalanceCarouselState extends State<BalanceCarousel> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
     final totalBalanceItem = BalanceItem(title: "Balance Total", value: widget.balance.total, currency: "USD");
     final cUSDBalanceItem =
         BalanceItem(title: "Balance Celo USD", value: widget.balance.mcUSD + widget.balance.cUSD, currency: "CUSD");
@@ -53,9 +54,9 @@ class _BalanceCarouselState extends State<BalanceCarousel> {
                     padding: const EdgeInsets.only(top: 16),
                     child: Text(
                       "\$${balance.value == 0 ? 0 : balance.value.toStringAsFixed(6)} ${balance.currency}",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 30,
+                        fontSize: screenSize.width / 14,
                       ),
                     ),
                   ),

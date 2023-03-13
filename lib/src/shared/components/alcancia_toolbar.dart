@@ -42,6 +42,7 @@ class AlcanciaToolbar extends StatelessWidget with PreferredSizeWidget {
           AlcanciaLogo(
             height: logoHeight,
           ),
+          centerTitle: true,
         );
       case StateToolbar.logoLetters:
         return AppBar(
@@ -55,6 +56,7 @@ class AlcanciaToolbar extends StatelessWidget with PreferredSizeWidget {
               letters: true,
               height: logoHeight,
             ),
+          centerTitle: true,
         );
       case StateToolbar.titleIcon:
         return AppBar(
@@ -67,6 +69,7 @@ class AlcanciaToolbar extends StatelessWidget with PreferredSizeWidget {
             "$title",
             style: txtTheme.subtitle1,
           ),
+          centerTitle: true,
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 40.0),

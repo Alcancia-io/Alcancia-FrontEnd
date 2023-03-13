@@ -46,7 +46,14 @@ class CurrencyRiskCard extends StatelessWidget {
               ],
             ),
           ),
-          Text(appLoc.labelAPY(targetCurrency, percentage))
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(text: 'El rendimiento anual de $targetCurrency es de '),
+                TextSpan(text: percentage, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
         ],
       ),
     );

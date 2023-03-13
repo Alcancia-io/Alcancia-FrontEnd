@@ -69,8 +69,7 @@ class AccountScreen extends ConsumerWidget {
                     side: BorderSide(color: Colors.red),
                     buttonText: appLoc.buttonDeleteAccount,
                     fontSize: 18,
-                    padding: const EdgeInsets.only(
-                        left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
+                    padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
                     onPressed: () async {
                       await showDialog(
                           context: context,

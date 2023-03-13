@@ -155,7 +155,6 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                 ),
                 AlcanciaDatePicker(
                   dateProvider: selectedDateProvider,
-                  maximumDate: DateTime.now().add(const Duration(days: 1)),
                   validator: (selectedDate) {
                     if (selectedDate != null) {
                       DateTime adultDate = DateTime(
