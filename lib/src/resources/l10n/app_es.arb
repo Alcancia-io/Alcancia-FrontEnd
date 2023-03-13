@@ -210,5 +210,39 @@
 	"labelOnboardingTitle4": "Preparáte",
 	"labelOnboardingText4": "Solo necesitas tu documento de identificación y una selfie.\n¡Así de fácil!",
 	"errorSomethingWentWrong": "Oops! Algo salió mal, intenta más tarde",
-	"errorMinimumWithdrawAmount": "Retiro mínimo de \\$10"
+	"errorMinimumWithdrawAmount": "Retiro mínimo de \\$10",
+	"labelDeposit": "Depositar",
+	"labelWithdraw": "Retirar",
+	"labelNoTransactions": "Sin registros aún...",
+	"labelHelloName": "Hola, $username",
+	"@labelHelloName": {
+		"placeholders": {
+			"username": {
+				"type": "String"
+			}
+		}
+	},
+	"labelTabActivity": "Actividad",
+	"labelTabHome": "Inicio",
+	"labelTabProfile": "Perfil",
+	"labelDetailDeposit": "DEPOSITO",
+	"labelDetailWithdraw": "Retiro",
+	"labelDetailYield": "RENDIMIENTO",
+	"labelTotalBalance": "Balance Total",
+	"labelCELOBalance": "Balance Celo USD",
+	"labelUSDCBalance": "Balance USD Coin",
+	"labelVerificationStatus": "Verificación: $status",
+	"@labelVerificationStatus": {
+		"placeholders": {
+			"status": {
+				"type": "String"
+			}
+		}
+	},
+	"labelStatusProcessing": "En proceso",
+	"labelStatusRejected": "Rechazada",
+	"labelStatusSuccessful": "Exitosa",
+	"labelStatusNotStarted": "No iniciada",
+	"alertVerificationCanceled": "Cancelada",
+	"alertVerificationCompleted": "Verificación completada, revisión en proceso..."
 }

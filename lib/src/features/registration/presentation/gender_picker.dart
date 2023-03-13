@@ -36,7 +36,7 @@ class GenderPicker extends ConsumerWidget {
                 child: Row(
                   children: [
                     Text(
-                      selectedGender.string,
+                      selectedGender.string(appLocalization),
                       style: Theme.of(context).textTheme.bodyText1?.copyWith(
                           color: Theme.of(context)
                               .textTheme
@@ -65,7 +65,7 @@ class GenderPicker extends ConsumerWidget {
                                   .read(selectedGenderProvider.notifier)
                                   .state = gender,
                               child: AlcanciaListTile(
-                                title: gender.string,
+                                title: gender.string(appLocalization),
                                 value: gender,
                                 groupValueProvider: selectedGenderProvider,
                                 onChanged: (newValue) {

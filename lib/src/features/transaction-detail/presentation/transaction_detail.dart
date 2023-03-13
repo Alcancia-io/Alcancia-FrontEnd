@@ -15,6 +15,7 @@ class TransactionDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     final ctx = Theme.of(context);
     final appLoc = AppLocalizations.of(context)!;
+    print(txn.targetAsset);
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -60,7 +61,7 @@ class TransactionDetail extends StatelessWidget {
                   ),
                   TransactionDetailItem(
                     leftText: appLoc.labelTransactionType,
-                    rightText: '${txn.type.isDepositOrWithdraw()}',
+                    rightText: txn.type.isDepositOrWithdraw(appLoc),
                   ),
                   TransactionDetailItem(
                     leftText: appLoc.labelStatus,

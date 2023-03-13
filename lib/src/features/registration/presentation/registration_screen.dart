@@ -269,7 +269,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                             name: nameController.text,
                             surname: lastNameController.text,
                             email: emailController.text,
-                            gender: selectedGender.string,
+                            gender: selectedGender.string(appLocalization),
                             phoneNumber: "",
                             dob: selectedDate,
                             balance: Balance(total: 0.0, aPolUSDC: 0.0, cUSD: 0.0, etherscan: 0.0, mcUSD: 0.0),

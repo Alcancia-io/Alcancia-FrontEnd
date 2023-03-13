@@ -3,6 +3,7 @@ import 'package:alcancia/src/shared/models/transaction_model.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AlcanciaTransactionItem extends StatelessWidget {
   Transaction txn;
@@ -18,6 +19,7 @@ class AlcanciaTransactionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var txtTheme = Theme.of(context).textTheme;
+    final appLoc = AppLocalizations.of(context)!;
     return InkWell(
         customBorder:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -39,7 +41,7 @@ class AlcanciaTransactionItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "${txn.type.isDepositOrWithdraw()} ${txn.sourceAsset}",
+                          "${txn.type.isDepositOrWithdraw(appLoc)} ${txn.sourceAsset}",
                           style: txtTheme.bodyText2,
                         ),
                         Text(

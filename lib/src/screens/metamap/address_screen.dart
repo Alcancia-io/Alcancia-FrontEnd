@@ -255,7 +255,7 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                     if (!widget.wrapper['verified']) {
                       try {
                         // Metamap flow
-                        await metamapService.showMatiFlow(metamapMexicanINEId, user.id);
+                        await metamapService.showMatiFlow(metamapMexicanINEId, user.id, appLocalization);
                       } catch (e) {
                         Fluttertoast.showToast(msg: e.toString());
                       }

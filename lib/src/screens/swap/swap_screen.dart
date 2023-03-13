@@ -343,13 +343,13 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                     }
                                   } else if (verified == "PENDING") {
                                     Fluttertoast.showToast(
-                                        msg: "Revisión en proceso, espera un momento...",
+                                        msg: appLoc.alertVerificationInProgress,
                                         toastLength: Toast.LENGTH_LONG,
                                         gravity: ToastGravity.BOTTOM);
                                   } else if (verified == "FAILED" || verified == null) {
                                     if (sourceCurrency == 'MXN') {
                                       if (user.address != null && user.profession != null) {
-                                        await metaMapService.showMatiFlow(metamapMexicanINEId, user.id);
+                                        await metaMapService.showMatiFlow(metamapMexicanINEId, user.id, appLoc);
                                       } else {
                                         context.pushNamed("user-address", extra: {"verified": false});
                                       }
