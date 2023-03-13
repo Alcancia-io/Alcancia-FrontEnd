@@ -189,7 +189,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
                     if (value == null || value.isEmpty) {
                       return appLoc.errorRequiredField;
                     } else if (double.parse(value) < 10) {
-                      return "Retiro mínimo de \$10";
+                      return appLoc.errorMinimumWithdrawAmount;
                     } else if (balance < double.parse(value)) {
                       return appLoc.errorInsufficientBalance;
                     }

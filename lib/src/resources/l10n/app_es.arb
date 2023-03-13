@@ -208,5 +208,7 @@
 	"labelOnboardingTitle3": "Abre tu cuenta",
 	"labelOnboardingText3": "No te preocupes, en Alcancía nos encargamos de todo para que tu dinero crezca mientras tu te enfocas en lo importante",
 	"labelOnboardingTitle4": "Preparáte",
-	"labelOnboardingText4": "Solo necesitas tu documento de identificación y una selfie.\\n¡Así de fácil!"
+	"labelOnboardingText4": "Solo necesitas tu documento de identificación y una selfie.\\n¡Así de fácil!",
+	"errorSomethingWentWrong": "Oops! Algo salió mal, intenta más tarde",
+	"errorMinimumWithdrawAmount": "Retiro mínimo de \\$10"
 }

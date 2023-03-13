@@ -51,7 +51,7 @@ class Checkout extends StatelessWidget {
             if (snapshot.hasData && snapshot.data!.hasException) {
               final e = exceptionService.handleException(snapshot.data?.exception);
               // TODO: provide useful error message when suarmi returns it
-              return const Center(child: Text("Ooops! Algo salió mal, intenta más tarde"));
+              return Center(child: Text(appLoc.errorSomethingWentWrong));
               // return Center(child: Text(e.toString()));
             }
             var suarmiOrder = SuarmiOrder.fromJson(snapshot.data?.data?["sendSuarmiOrder"]);

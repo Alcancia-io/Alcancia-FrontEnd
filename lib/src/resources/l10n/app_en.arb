@@ -140,5 +140,7 @@
 	"labelOnboardingTitle3": "Open your account",
 	"labelOnboardingText3": "Do not worry, at Alcancía we take care of everything so that your money grows while you focus on what is important",
 	"labelOnboardingTitle4": "Get Ready",
-	"labelOnboardingText4": "You only need your identification document and a selfie.\\nIt''s that easy!"
+	"labelOnboardingText4": "You only need your identification document and a selfie.\\nIt''s that easy!",
+	"errorSomethingWentWrong": "Oops! Something went wrong, try again later",
+	"errorMinimumWithdrawAmount": "Minimum withdrawal of \\$10"
 }
