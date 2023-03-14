@@ -1,9 +1,248 @@
 {
-  "helloWorld": "¡Hola Mundo!",
-  "email": "Correo electrónico",
-  "password": "Contraseña",
-  "errorRequiredField": "Este campo es obligatorio",
-  "errorEmailFormat": "¿Estas seguro?, verifica tu correo",
-  "errorInvalidPassword": "Contraseña inválida.\nMínimo 8 carácteres, una letra mayuscula, una minuscula, un número y un carácter especial",
-  "errorPasswordMatch": "Las contraseñas no coinciden"
+	"labelEmail": "Correo electrónico",
+	"labelPassword": "Contraseña",
+	"errorRequiredField": "Este campo es obligatorio",
+	"errorEmailFormat": "¿Estas seguro?, verifica tu correo",
+	"errorEmailInUse": "Este correo ya esta en uso.",
+	"errorInvalidPassword": "Contraseña inválida.\nMínimo 8 carácteres, un número y un carácter especial",
+	"errorPasswordMatch": "Las contraseñas no coinciden",
+	"labelHello": "¡Hola!",
+	"labelHelloWelcome": "¡Hola!\nBienvenido {username}",
+	"@labelHelloWelcome": {
+		"description": "Welcome user to app",
+		"placeholders": {
+			"username": {
+				"example": "Juan",
+				"type": "String"
+			}
+		}
+	},
+	"labelRegisterSubtitle": "Completa la siguiente información para crear tu cuenta:",
+	"labelName": "Nombre(s)",
+	"labelLastName": "Apellido(s)",
+	"labelPhone": "Número de teléfono",
+	"labelBirthdate": "Fecha de nacimiento",
+	"errorAge": "Necesitas ser mayor de 18 años de edad",
+	"labelGenderIdentification": "¿Con cuál género te sientes identificado?",
+	"errorSelectGender": "Selecciona un género",
+	"labelConfirmPassword": "Confirmar contraseña",
+	"labelSelectOption": "Selecciona una opción",
+	"labelSelectDate": "Selecciona una fecha",
+	"labelSelectDialogTitle": "Selecciona una opción:",
+	"labelGenderWoman": "Mujer",
+	"labelGenderMan": "Hombre",
+	"labelGenderNonbinary": "No Binario",
+	"labelGenderOther": "Otro",
+	"labelWelcomeTitle": "Descubre una nueva forma de ahorrar",
+	"labelWelcomeSubtitle": "Construye tu portafolio de ahorro basado en crypto",
+	"labelExistingAccount": "¿Ya tienes cuenta?",
+	"labelWelcome": "Bienvenido",
+	"labelRememberUser": "Recordar usuario",
+	"labelForgotPassword": "Olvidé mi contraseña",
+	"labelLogInWith": "Iniciar sesión con ",
+	"labelNeedAccount": "¿No tienes cuenta?",
+	"labelAlmostDone": "Ya casi \nterminamos,",
+	"labelEnterPhoneNumber": "Ingresa tu número de teléfono para recibir tu código de verificación.",
+	"errorInvalidPhoneNumber": "Ingresa un número de teléfono válido.",
+	"labelCode": "Código",
+	"labelDidNotReceiveCode": "¿No recibiste el código?",
+	"errorAcceptPrivacyPolicy": "Acepta la Política de Privacidad.",
+	"labelReadAndAccepted": "He leído y acepto la ",
+	"labelEnterCodePhone": "Ingresa el código de 6 dígitos que enviamos a tu celular {phoneNumber}",
+	"@labelEnterCodePhone": {
+		"description": "Ask user to enter code sent to phone number",
+		"placeholders": {
+			"phoneNumber": {
+				"example": "+521234567890",
+				"type": "String"
+			}
+		}
+	},
+	"labelAccountCreated": "Tu cuenta ha sido creada exitosamente.",
+	"labelBalance": "Balance",
+	"labelBalanceValue": "\\${balance} USDC",
+	"@labelBalanceValue": {
+		"description": "User balance",
+		"placeholders": {
+			"balance": {
+				"example": "0",
+				"type": "String"
+			}
+		}
+	},
+	"labelProfits": "Ganancias",
+	"labelProfitsValue": "\\${profits} USDC",
+	"@labelProfitsValue": {
+		"description": "User profits",
+		"placeholders": {
+			"profits": {
+				"example": "0",
+				"type": "String"
+			}
+		}
+	},
+	"labelActivity": "Actividad",
+	"labelDepositToYourAccount": "Deposita a tu cuenta",
+	"labelLetsStart": "¡Empecemos!",
+	"labelInputAmount": "Ingresa el monto que deseas convertir de nuestra opciones. A continuación, se presenta a cuanto equivale en",
+	"labelAmountQuestion": "¿Cuánto deseas convertir?",
+	"labelPaymentMethod": "Medio de pago:",
+	"labelDebitCredit": "Tarjeta de Débito/Crédito",
+	"labelConcern": "¿Tienes alguna inquietud?",
+	"labelActivityDetail": "Detalle de la actividad",
+	"labelDate": "Fecha",
+	"labelTransactionId": "Id transacción",
+	"labelDepositValue": "Valor depósito",
+	"labelTransactionType": "Tipo de TXN",
+	"labelProfile": "Perfil",
+	"labelTermsAndConditions": "Términos y condiciones",
+	"labelPrivacyPolicy": "Políticas de Privacidad",
+	"labelDeleteAccountConfirmation": "¿Seguro que quieres borrar tu cuenta?\nEsta acción no se puede deshacer.",
+	"errorDeleteAccount": "Hubo un problema al borrar tu cuenta.",
+	"labelSignOut": "Cerrar sesión",
+	"labelSignOutConfirmation": "¿Seguro que quieres cerrar sesión?",
+	"errorSignOut": "Hubo un problema al cerrar sesión",
+	"labelUserInfoUpdateTitle": "Actualización de datos",
+	"labelUserInfoUpdateSubtitle": "¡Hola {name}! Te invitamos a que actualices la siguiente información:",
+	"@labelUserInfoUpdateSubtitle": {
+		"description": "User information update subtitle",
+		"placeholders": {
+			"name": {
+				"example": "Juan",
+				"type": "String"
+			}
+		}
+	},
+	"labelMethod": "Método",
+	"labelCallOrSMS": "Elige si deseas recibir el código de verificación por medio de SMS o llamada",
+	"labelSMS": "SMS",
+	"labelCall": "Llamada",
+	"labelFeeDisclaimer": "Podrían aplicar tarifas de mensajes y transmisión de datos. Para la autenticación multifactor recibirás un código en cada intento de inicio de sesión.",
+	"labelMyAccount": "Mi cuenta",
+	"labelValueAsset": "Valor {asset}",
+	"@labelValueAsset": {
+		"description": "Target asset",
+		"placeholders": {
+			"asset": {
+				"example": "MXN",
+				"type": "String"
+			}
+		}
+	},
+	"labelStatus": "Estatus",
+	"labelDepositHere": "Deposita aquí",
+	"alertDepositConfirmed": "¡Gracias! Te notificaremos cuando la transacción sea confirmada",
+	"alertPasswordChanged": "Contraseña cambiada exitosamente",
+	"labelConfirmNewPassword": "Confirma tu nueva contraseña",
+	"labelExteriorNumber": "Número exterior",
+	"labelInteriorNumber": "Número Interior",
+	"labelNewPassword": "Nueva Contraseña",
+	"labelPasswordRequirements": "Tu contraseña debe tener al menos:\n",
+	"labelRecoverPassword": "Vamos a recuperar tu contraseña",
+	"labelRequirementLowercase": "Una letra minúscula",
+	"labelRequirementNumber": "Un número",
+	"labelRequirementSpecialCharacter": "Un carácter especial [!@#\\$%^&*(),.?\":'{}'|<>]",
+	"labelRequirementUppercase": "Una letra mayúscula",
+	"labelStreet": "Calle",
+	"labelVerifyIdentity": "Comprobemos \ntu identidad,",
+	"errorAddressNumberLength": "El número debe de tener menos de 25 caracteres",
+	"labelWeNeedToKnowMore": "Necesitamos saber más de ti 🤔",
+	"labelNeighborhood": "Colonia",
+	"labelState": "Estado",
+	"labelZipCode": "Código Postal",
+	"labelYourProfession": "¿Cuál es tu profesión?",
+	"labelWithdrawInformationPrompt": "Completa la siguiente información para realizar el retiro de tu dinero:",
+	"errorInsufficientBalance": "No cuentas con los fondos suficientes",
+	"labelWithdrawAmount": "Monto de retiro",
+	"buttonAccept": "Aceptar",
+	"buttonAnotherAccount": "otra cuenta",
+	"buttonCancel": "Cancelar",
+	"buttonClickHere": "Haz click aquí",
+	"buttonClose": "Cerrar",
+	"buttonConfirm": "Confirmar",
+	"buttonCreateAccount": "Crear mi cuenta",
+	"buttonDeleteAccount": "Borrar cuenta",
+	"buttonDeposit": "Depositar",
+	"buttonDeposited": "¡Ya deposité!",
+	"buttonLogIn": "Iniciar sesión",
+	"buttonNext": "Siguiente",
+	"buttonRegister": "Registrate",
+	"buttonResend": "Reenviar",
+	"buttonSaveAndUpdate": "Guardar y actualizar",
+	"buttonSeeMore": "Ver más",
+	"buttonUnderstood": "Entendido",
+	"buttonWithdraw": "Retirar",
+	"labelChangePassword": "Cambiar contraseña",
+	"labelWithdrawalSent": "¡Orden de retiro enviada!",
+	"errorCLABELength": "La CLABE debe consistir de 18 dígitos",
+	"labelAmountMXN": "Monto en MXN",
+	"labelAvailableBalance": "Balance disponible: ${balance}",
+	"@labelAvailableBalance": {
+		"placeholders": {
+			"balance": {
+				"type": "String"
+			}
+		}
+	},
+	"labelCLABE": "Número CLABE",
+	"labelCountry": "País",
+	"labelCurrency": "Moneda",
+	"labelMoneyWithdrawal": "Retiro de dinero",
+	"buttonSkip": "Saltar",
+	"buttonTransfer": "Transferencia",
+	"alertVerificationInProgress": "Revisión en proceso, espera un momento...",
+	"errorMinimumDepositAmount": "Cantidad mínima de \\$200",
+	"labelRiskLevel": "Nivel de riesgo: ",
+	"labelAPY": "El rendimiento anual de $targetCurrency es de ",
+	"@labelAPY": {
+		"placeholders": {
+			"targetCurrency": {
+				"type": "String"
+			}
+		}
+	},
+	"labelOnboardingText1": "Sabemos que quieres lograr muchas metas, por eso, en Alcancía nos encargamos de ayudarte a crecer tu capital",
+	"labelOnboardingTitle1": "Bienvenido",
+	"labelOnboardingTitle2": "Ahorra y crece",
+	"labelOnboardingText2": "Ahorra en Alcancía y los diferentes protocolos que utilizamos para diversificar el riesgo y generar rentabilidad",
+	"labelOnboardingTitle3": "Abre tu cuenta",
+	"labelOnboardingText3": "No te preocupes, en Alcancía nos encargamos de todo para que tu dinero crezca mientras tu te enfocas en lo importante",
+	"labelOnboardingTitle4": "Preparáte",
+	"labelOnboardingText4": "Solo necesitas tu documento de identificación y una selfie.\n¡Así de fácil!",
+	"errorSomethingWentWrong": "Oops! Algo salió mal, intenta más tarde",
+	"errorMinimumWithdrawAmount": "Retiro mínimo de \\$10",
+	"labelDeposit": "Depositar",
+	"labelWithdraw": "Retirar",
+	"labelNoTransactions": "Sin registros aún...",
+	"labelHelloName": "Hola, {username}",
+	"@labelHelloName": {
+		"placeholders": {
+			"username": {
+				"type": "String"
+			}
+		}
+	},
+	"labelTabActivity": "Actividad",
+	"labelTabHome": "Inicio",
+	"labelTabProfile": "Perfil",
+	"labelDetailDeposit": "DEPOSITO",
+	"labelDetailWithdraw": "Retiro",
+	"labelDetailYield": "RENDIMIENTO",
+	"labelTotalBalance": "Balance Total",
+	"labelCELOBalance": "Balance Celo USD",
+	"labelUSDCBalance": "Balance USD Coin",
+	"labelVerificationStatus": "Verificación: {status}",
+	"@labelVerificationStatus": {
+		"placeholders": {
+			"status": {
+				"type": "String"
+			}
+		}
+	},
+	"labelStatusProcessing": "En proceso",
+	"labelStatusRejected": "Rechazada",
+	"labelStatusSuccessful": "Exitosa",
+	"labelStatusNotStarted": "No iniciada",
+	"alertVerificationCanceled": "Cancelada",
+	"alertVerificationCompleted": "Verificación completada, revisión en proceso..."
 }

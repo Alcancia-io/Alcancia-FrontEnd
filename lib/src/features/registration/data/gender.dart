@@ -1,22 +1,22 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum Gender {
   woman, man, nonbinary, other
 }
 
 extension GenderString on Gender? {
-  String get string {
+  String string(AppLocalizations appLoc) {
     switch (this) {
       case Gender.man:
-        return "Hombre";
+        return appLoc.labelGenderMan;
       case Gender.woman:
-        return "Mujer";
+        return appLoc.labelGenderWoman;
       case Gender.nonbinary:
-        return "No Binario";
+        return appLoc.labelGenderNonbinary;
       case Gender.other:
-        return "Otro";
+        return appLoc.labelGenderOther;
       case null:
-        return "Selecciona una opción";
+        return appLoc.labelSelectOption;
     }
   }
 }

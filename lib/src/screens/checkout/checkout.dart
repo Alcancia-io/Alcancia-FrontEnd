@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../resources/colors/colors.dart';
 
@@ -29,7 +30,7 @@ class Checkout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-
+    final appLoc = AppLocalizations.of(context)!;
     var orderInput = {
       "orderInput": {
         "from_amount": txnInput.sourceAmount.toString(),
@@ -40,8 +41,6 @@ class Checkout extends StatelessWidget {
         "to_currency": txnInput.targetCurrency
       }
     };
-
-    print(orderInput);
     return Scaffold(
       body: SafeArea(
         child: FutureBuilder<QueryResult>(
@@ -52,7 +51,7 @@ class Checkout extends StatelessWidget {
             if (snapshot.hasData && snapshot.data!.hasException) {
               final e = exceptionService.handleException(snapshot.data?.exception);
               // TODO: provide useful error message when suarmi returns it
-              return const Center(child: Text("Ooops! Algo salió mal, intenta más tarde"));
+              return Center(child: Text(appLoc.errorSomethingWentWrong));
               // return Center(child: Text(e.toString()));
             }
             var suarmiOrder = SuarmiOrder.fromJson(snapshot.data?.data?["sendSuarmiOrder"]);
@@ -62,7 +61,7 @@ class Checkout extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    "Deposita aquí",
+                    appLoc.labelDepositHere,
                     style: Theme.of(context).textTheme.displayMedium,
                   ),
                   Padding(
@@ -72,12 +71,12 @@ class Checkout extends StatelessWidget {
                   AlcanciaButton(
                     height: responsiveService.getHeightPixels(64, screenHeight),
                     width: double.infinity,
-                    buttonText: "¡Ya deposité!",
+                    buttonText: appLoc.buttonDeposited,
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
                         AlcanciaSnackBar(
                           context,
-                          "Gracias! Te notificaremos cuando la transacción sea confirmada",
+                          appLoc.alertDepositConfirmed,
                         ),
                       );
                       context.go('/');

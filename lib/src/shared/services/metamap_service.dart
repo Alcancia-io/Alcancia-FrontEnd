@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:metamap_plugin_flutter/metamap_plugin_flutter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../features/registration/model/GraphQLConfig.dart';
 
@@ -33,12 +34,12 @@ class MetamapService {
     }
   }
 
-  Future<void> showMatiFlow(String flowId, String uid) async {
+  Future<void> showMatiFlow(String flowId, String uid, AppLocalizations appLoc) async {
     print(flowId);
     await MetaMapFlutter.showMetaMapFlow(metamapClientId, flowId, {"uid": uid, "buttonColor": "#4E76E5"});
     final result = await MetaMapFlutter.resultCompleter.future;
     await Fluttertoast.showToast(
-        msg: result is ResultSuccess ? "Verificación completada, revisión en proceso..." : "Cancelada",
+        msg: result is ResultSuccess ? appLoc.alertVerificationCompleted : appLoc.alertVerificationCanceled,
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM);
     if (result is ResultCancelled) {

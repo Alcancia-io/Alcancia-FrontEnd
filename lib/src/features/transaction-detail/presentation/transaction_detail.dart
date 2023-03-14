@@ -1,10 +1,9 @@
-import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:alcancia/src/features/transaction-detail/presentation/transaction_detail_item.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../resources/colors/colors.dart';
 import '../../../shared/models/transaction_model.dart';
 
@@ -14,7 +13,9 @@ class TransactionDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var ctx = Theme.of(context);
+    final ctx = Theme.of(context);
+    final appLoc = AppLocalizations.of(context)!;
+    print(txn.targetAsset);
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -32,10 +33,10 @@ class TransactionDetail extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.only(bottom: 48, top: 8),
                     child: Text(
-                      'Detalle de la actividad',
+                      appLoc.labelActivityDetail,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -43,27 +44,27 @@ class TransactionDetail extends StatelessWidget {
                     ),
                   ),
                   TransactionDetailItem(
-                    leftText: 'Fecha',
+                    leftText: appLoc.labelDate,
                     rightText: '${txn.createdAt}',
                   ),
                   TransactionDetailItem(
-                    leftText: 'Id transacción',
+                    leftText: appLoc.labelTransactionId,
                     rightText: '${txn.transactionID.substring(0, txn.transactionID.indexOf('-'))}',
                   ),
                   TransactionDetailItem(
-                    leftText: 'Valor depósito',
+                    leftText: appLoc.labelDepositValue,
                     rightText: '\$${txn.sourceAmount.toStringAsFixed(2)}',
                   ),
                   TransactionDetailItem(
-                    leftText: 'Valor ${txn.targetAsset}',
+                    leftText: appLoc.labelValueAsset(txn.targetAsset),
                     rightText: '\$${txn.amount.toStringAsFixed(2)}',
                   ),
                   TransactionDetailItem(
-                    leftText: 'Tipo de TXN',
-                    rightText: '${txn.type.isDepositOrWithdraw()}',
+                    leftText: appLoc.labelTransactionType,
+                    rightText: txn.type.isDepositOrWithdraw(appLoc),
                   ),
                   TransactionDetailItem(
-                    leftText: 'Estatus',
+                    leftText: appLoc.labelStatus,
                     rightIcon: txn.iconForTxnStatus,
                   ),
                   Padding(
@@ -78,7 +79,7 @@ class TransactionDetail extends StatelessWidget {
                         onPressed: () {
                           context.pop();
                         },
-                        child: Text("Cerrar"),
+                        child: Text(appLoc.buttonClose),
                       ),
                     ),
                   )

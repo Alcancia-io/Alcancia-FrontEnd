@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OTPScreen extends ConsumerStatefulWidget {
   OTPScreen({Key? key, required this.otpDataModel}) : super(key: key);
@@ -36,6 +37,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
   Widget build(BuildContext context) {
     final timer = ref.watch(timerProvider);
     final registrationController = ref.watch(registrationControllerProvider);
+    final appLocalization = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -54,10 +56,10 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.all(0.0),
                         child: Text(
-                          "Ya casi \nterminamos,",
+                          appLocalization.labelAlmostDone,
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 35),
                         ),
@@ -65,15 +67,14 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                       Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                          _bodyText(),
-                        ),
+                            appLocalization.labelEnterCodePhone(widget.otpDataModel.phoneNumber ?? "")),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: LabeledTextFormField(
                             controller: _codeController,
                             autofillHints: [AutofillHints.oneTimeCode],
-                            labelText: "Código"),
+                            labelText: appLocalization.labelCode),
                       ),
                       StreamBuilder<int>(
                           stream: timer.rawTime,
@@ -116,7 +117,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    const Text("¿No recibiste el código?"),
+                                    Text(appLocalization.labelDidNotReceiveCode),
                                     TextButton(
                                       onPressed: value <= 0
                                           ? () async {
@@ -128,10 +129,9 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                               timer.onStartTimer();
                                             }
                                           : null,
-                                      style: TextButton.styleFrom(
-                                          foregroundColor: alcanciaLightBlue),
-                                      child: const Text(
-                                        "Reenviar",
+                                      style: TextButton.styleFrom(foregroundColor: alcanciaLightBlue),
+                                      child: Text(
+                                        appLocalization.buttonResend,
                                         style: TextStyle(
                                           decoration: TextDecoration.underline,
                                           fontWeight: FontWeight.bold,
@@ -153,7 +153,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                 color: alcanciaLightBlue,
                                 width: 308,
                                 height: 64,
-                                buttonText: "Siguiente",
+                                buttonText: appLocalization.buttonNext,
                                 onPressed: () async {
                                   _setLoading(true);
                                   try {
@@ -162,7 +162,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                         widget.otpDataModel.email);
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         AlcanciaSnackBar(context,
-                                            "Tu cuenta ha sido creada exitosamente."));
+                                            appLocalization.labelAccountCreated));
                                     context.go("/login");
                                   } catch (err) {
                                     setState(() {

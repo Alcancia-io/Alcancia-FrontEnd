@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UserProfileScreen extends ConsumerWidget {
   UserProfileScreen({Key? key}) : super(key: key);
@@ -21,6 +22,7 @@ class UserProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider) ?? User.sampleUser;
     final authService = ref.watch(authServiceProvider);
+    final appLoc = AppLocalizations.of(context)!;
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -30,7 +32,7 @@ class UserProfileScreen extends ConsumerWidget {
               AlcanciaToolbar(
                 state: StateToolbar.titleIcon,
                 logoHeight: 38,
-                title: "Perfil",
+                title: appLoc.labelProfile,
               ),
               _profileCard(context, user),
               GestureDetector(
@@ -47,7 +49,7 @@ class UserProfileScreen extends ConsumerWidget {
                         child: Icon(Icons.person_outline_outlined),
                       ),
                       Text(
-                        "Mi cuenta",
+                        appLoc.labelMyAccount,
                         style: Theme.of(context).textTheme.labelLarge,
                       ),
                       Spacer(),
@@ -70,7 +72,7 @@ class UserProfileScreen extends ConsumerWidget {
                         child: Icon(Icons.info_outline),
                       ),
                       Text(
-                        "Términos y condiciones",
+                        appLoc.labelTermsAndConditions,
                         style: Theme.of(context).textTheme.labelLarge,
                       ),
                       Spacer(),
@@ -93,7 +95,7 @@ class UserProfileScreen extends ConsumerWidget {
                         child: Icon(Icons.info_outline),
                       ),
                       Text(
-                        "Políticas de Privacidad",
+                        appLoc.labelPrivacyPolicy,
                         style: Theme.of(context).textTheme.labelLarge,
                       ),
                       Spacer(),
@@ -108,7 +110,7 @@ class UserProfileScreen extends ConsumerWidget {
                   child: AlcanciaButton(
                     foregroundColor: alcanciaLightBlue,
                     side: BorderSide(color: alcanciaLightBlue),
-                    buttonText: "Cerrar sesión",
+                    buttonText: appLoc.labelSignOut,
                     fontSize: 18,
                     padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
                     onPressed: () async {
@@ -117,12 +119,12 @@ class UserProfileScreen extends ConsumerWidget {
                           builder: (BuildContext ctx) {
                             return AlcanciaActionDialog(
                                 child: Text(
-                                  "¿Seguro que quieres cerrar sesión?",
+                                  appLoc.labelSignOutConfirmation,
                                   style: Theme.of(context).textTheme.titleLarge,
                                 ),
-                                acceptText: "Confirmar",
+                                acceptText: appLoc.buttonConfirm,
                                 acceptColor: Colors.red,
-                                cancelText: "Cancelar",
+                                cancelText: appLoc.buttonCancel,
                                 acceptAction: () async {
                                   try {
                                     await authService.logout();
@@ -131,8 +133,9 @@ class UserProfileScreen extends ConsumerWidget {
 
                                     context.go("/");
                                   } catch (e) {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(AlcanciaSnackBar(context, "Hubo un problema al cerrar sesión"));
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        AlcanciaSnackBar(context,
+                                            appLoc.errorSignOut));
                                   }
                                   ref.read(userProvider.notifier).setUser(null);
                                 });

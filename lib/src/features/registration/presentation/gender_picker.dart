@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/gender.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GenderPicker extends ConsumerWidget {
   const GenderPicker({
@@ -18,12 +19,13 @@ class GenderPicker extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedGender = ref.watch(selectedGenderProvider);
+    final appLocalization = AppLocalizations.of(context)!;
     return FormField(
       builder: (state) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("¿Con cúal género te sientes identificado?"),
+            Text(appLocalization.labelGenderIdentification),
             Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).inputDecorationTheme.fillColor,
@@ -34,7 +36,7 @@ class GenderPicker extends ConsumerWidget {
                 child: Row(
                   children: [
                     Text(
-                      selectedGender.string,
+                      selectedGender.string(appLocalization),
                       style: Theme.of(context).textTheme.bodyText1?.copyWith(
                           color: Theme.of(context)
                               .textTheme
@@ -63,7 +65,7 @@ class GenderPicker extends ConsumerWidget {
                                   .read(selectedGenderProvider.notifier)
                                   .state = gender,
                               child: AlcanciaListTile(
-                                title: gender.string,
+                                title: gender.string(appLocalization),
                                 value: gender,
                                 groupValueProvider: selectedGenderProvider,
                                 onChanged: (newValue) {

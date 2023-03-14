@@ -23,7 +23,7 @@ import 'package:alcancia/src/features/login/data/login_mutation.dart';
 final rememberEmailProvider = StateProvider.autoDispose<bool>((ref) => false);
 
 class LoginScreen extends ConsumerStatefulWidget {
-  LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
@@ -125,8 +125,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               bottom: responsiveService.getHeightPixels(50, screenHeight),
                               top: responsiveService.getHeightPixels(40, screenHeight)),
                           child: Text(
-                            '¡Hola!\nBienvenido ${userName ?? ""}',
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
+                            appLocalization.labelHelloWelcome(userName ?? ""),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 35),
                           ),
                         ),
                         Form(
@@ -140,7 +141,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       children: [
                                         LabeledTextFormField(
                                           controller: emailController,
-                                          labelText: appLocalization.email,
+                                          labelText: appLocalization.labelEmail,
                                           inputType: TextInputType.emailAddress,
                                           validator: (value) {
                                             if (value == null || value.isEmpty) {
@@ -168,9 +169,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                                       ref.read(rememberEmailProvider.notifier).state = value!;
                                                     }),
                                               ),
-                                              const Padding(
-                                                padding: EdgeInsets.only(left: 8.0),
-                                                child: Text("Recordar usuario"),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.only(left: 8.0),
+                                                child: Text(appLocalization.labelRememberUser),
                                               ),
                                             ],
                                           ),
@@ -183,7 +185,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 children: [
                                   LabeledTextFormField(
                                     controller: passwordController,
-                                    labelText: appLocalization.password,
+                                    labelText: appLocalization.labelPassword,
                                     obscure: obscurePassword,
                                     suffixIcon: GestureDetector(
                                       onTap: () {
@@ -195,6 +197,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       if (value == null || value.isEmpty) {
                                         return appLocalization.errorRequiredField;
                                       }
+                                      return null;
                                     },
                                   ),
                                   Padding(
@@ -206,12 +209,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       children: [
                                         CupertinoButton(
                                             child: Row(
-                                              children: const [
+                                              children: [
                                                 Padding(
                                                   padding: EdgeInsets.only(right: 4.0),
                                                   child: Icon(CupertinoIcons.question_circle),
                                                 ),
-                                                Text("Olvidé mi contraseña"),
+                                                Text(appLocalization.labelForgotPassword),
                                               ],
                                             ),
                                             onPressed: () async {
@@ -287,7 +290,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                           AlcanciaButton(
                                             width: responsiveService.getWidthPixels(304, screenWidth),
                                             height: responsiveService.getHeightPixels(64, screenHeight),
-                                            buttonText: "Iniciar sesión",
+                                            buttonText: appLocalization.buttonLogIn,
                                             onPressed: () async {
                                               final token = await pushNotifications.messaging.getToken();
                                               setLoginInputFields(deviceToken: token ?? "");
@@ -316,7 +319,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         color: alcanciaLightBlue,
                                         width: responsiveService.getWidthPixels(304, screenWidth),
                                         height: responsiveService.getHeightPixels(64, screenHeight),
-                                        buttonText: "Iniciar sesión",
+                                        buttonText: appLocalization.buttonLogIn,
                                         onPressed: () async {
                                           final token = await pushNotifications.messaging.getToken();
                                           setLoginInputFields(deviceToken: token ?? "");
@@ -341,11 +344,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 Text(
-                                                  "Iniciar sesión con ",
+                                                  appLocalization.labelLogInWith,
                                                   style: txtTheme.bodyText1,
                                                 ),
-                                                const AlcanciaLink(
-                                                  text: "otra cuenta",
+                                                AlcanciaLink(
+                                                  text: appLocalization.buttonAnotherAccount,
                                                 ),
                                               ],
                                             ),
@@ -355,12 +358,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            const Text("No tengo cuenta."),
+                                            Text(appLocalization.labelNeedAccount),
                                             CupertinoButton(
-                                              child: const Text(
-                                                "Registrarme",
-                                                style: TextStyle(
-                                                  decoration: TextDecoration.underline,
+                                              child: Text(
+                                                appLocalization.buttonRegister,
+                                                style: const TextStyle(
+                                                  decoration:
+                                                      TextDecoration.underline,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),

@@ -5,6 +5,7 @@ import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DashboardCard extends ConsumerWidget {
   DashboardCard({Key? key}) : super(key: key);
@@ -13,6 +14,7 @@ class DashboardCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ctx = Theme.of(context);
     final userBalance = ref.watch(balanceProvider);
+    final appLoc = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
@@ -32,7 +34,7 @@ class DashboardCard extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   AlcanciaButton(
-                    buttonText: "Depositar",
+                    buttonText: appLoc.labelDeposit,
                     onPressed: () {
                       context.push("/swap");
                     },
@@ -41,7 +43,7 @@ class DashboardCard extends ConsumerWidget {
                     color: alcanciaMidBlue,
                   ),
                   AlcanciaButton(
-                    buttonText: "Retirar",
+                    buttonText: appLoc.labelWithdraw,
                     onPressed: () {
                       context.push("/withdraw");
                     },

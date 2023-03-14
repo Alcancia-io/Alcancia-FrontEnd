@@ -19,6 +19,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SwapScreen extends ConsumerStatefulWidget {
   const SwapScreen({Key? key}) : super(key: key);
@@ -126,7 +127,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
   @override
   Widget build(BuildContext context) {
     var user = ref.watch(userProvider);
-
+    final appLoc = AppLocalizations.of(context)!;
     final txtTheme = Theme.of(context).textTheme;
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
@@ -164,16 +165,16 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                       AlcanciaContainer(
                         top: 4,
                         bottom: 32,
-                        child: Text("Deposita a tu cuenta", style: txtTheme.subtitle1),
+                        child: Text(appLoc.labelDepositToYourAccount, style: txtTheme.subtitle1),
                       ),
                       AlcanciaContainer(
                         bottom: 32,
-                        child: Text("¡Empecemos!", style: txtTheme.headline1),
+                        child: Text(appLoc.labelLetsStart, style: txtTheme.headline1),
                       ),
                       AlcanciaContainer(
                         bottom: 30,
                         child: Text(
-                          "Ingresa el monto que deseas convertir de nuestra opciones. A continuación, se presenta a cuanto equivale en",
+                          appLoc.labelInputAmount,
                           style: txtTheme.bodyText1,
                         ),
                       ),
@@ -191,7 +192,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("¿Cuánto deseas convertir?", style: txtTheme.bodyText1),
+                            Text(appLoc.labelAmountQuestion, style: txtTheme.bodyText1),
                             AlcanciaContainer(
                               top: 8,
                               child: Row(
@@ -303,14 +304,14 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                           top: 32,
                         ),
                         child: Text(
-                          "Medio de pago:",
+                          appLoc.labelPaymentMethod,
                           style: txtTheme.bodyText1,
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 10, bottom: 12),
                         child: AlcanciaButton(
-                          buttonText: "Transferencia",
+                          buttonText: appLoc.buttonTransfer,
                           onPressed: sourceAmount.isEmpty || int.parse(sourceAmount) < 200
                               ? null
                               : () async {
@@ -342,13 +343,13 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                     }
                                   } else if (verified == "PENDING") {
                                     Fluttertoast.showToast(
-                                        msg: "Revisión en proceso, espera un momento...",
+                                        msg: appLoc.alertVerificationInProgress,
                                         toastLength: Toast.LENGTH_LONG,
                                         gravity: ToastGravity.BOTTOM);
                                   } else if (verified == "FAILED" || verified == null) {
                                     if (sourceCurrency == 'MXN') {
                                       if (user.address != null && user.profession != null) {
-                                        await metaMapService.showMatiFlow(metamapMexicanINEId, user.id);
+                                        await metaMapService.showMatiFlow(metamapMexicanINEId, user.id, appLoc);
                                       } else {
                                         context.pushNamed("user-address", extra: {"verified": false});
                                       }
@@ -361,11 +362,11 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                         ),
                       ),
                       if (sourceAmount.isNotEmpty && int.parse(sourceAmount) < 200) ...[
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "Cantidad mínima de \$200",
-                            style: TextStyle(color: Colors.red),
+                            appLoc.errorMinimumDepositAmount,
+                            style: const TextStyle(color: Colors.red),
                           ),
                         ),
                       ],
@@ -373,9 +374,9 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                         top: 20,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text("¿Tienes alguna inquietud? "),
-                            AlcanciaLink(text: 'Haz click aquí'),
+                          children: [
+                            Text(appLoc.labelConcern),
+                            AlcanciaLink(text: appLoc.buttonClickHere),
                           ],
                         ),
                       ),
