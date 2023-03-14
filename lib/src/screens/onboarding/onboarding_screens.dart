@@ -52,6 +52,11 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
     ];
   }
 
+  Future<void> finishOnboarding() async {
+    await _controller.finishOnboarding();
+    context.go("/welcome");
+  }
+
   int pageIndex = 0;
 
   @override
@@ -138,8 +143,7 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
             if (pageIndex != items.length - 1) ...[
               TextButton(
                 onPressed: () async {
-                  await _controller.finishOnboarding();
-                  context.push("/registration");
+                  await finishOnboarding();
                 },
                 style: TextButton.styleFrom(foregroundColor: Colors.grey),
                 child: Text(appLoc.buttonSkip),
@@ -172,10 +176,9 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
               color: alcanciaLightBlue,
               width: double.infinity,
               height: _responsiveService.getHeightPixels(64, MediaQuery.of(context).size.height),
-              buttonText: appLoc.buttonRegister,
+              buttonText: appLoc.buttonNext,
               onPressed: () async {
-                await _controller.finishOnboarding();
-                context.push('/registration');
+                await finishOnboarding();
               },
             ),
           ),
