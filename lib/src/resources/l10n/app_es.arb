@@ -141,7 +141,7 @@
 	"labelRecoverPassword": "Vamos a recuperar tu contraseña",
 	"labelRequirementLowercase": "Una letra minúscula",
 	"labelRequirementNumber": "Un número",
-	"labelRequirementSpecialCharacter": "Un carácter especial [!@#\\$%^&*(),.?\":'{}'|<>]",
+	"labelRequirementSpecialCharacter": "Un carácter especial [!@#$%^&*(),.?\":'{}'|<>]",
 	"labelRequirementUppercase": "Una letra mayúscula",
 	"labelStreet": "Calle",
 	"labelVerifyIdentity": "Comprobemos \ntu identidad,",
@@ -191,9 +191,9 @@
 	"buttonSkip": "Saltar",
 	"buttonTransfer": "Transferencia",
 	"alertVerificationInProgress": "Revisión en proceso, espera un momento...",
-	"errorMinimumDepositAmount": "Cantidad mínima de \\$200",
+	"errorMinimumDepositAmount": "Cantidad mínima de $200",
 	"labelRiskLevel": "Nivel de riesgo: ",
-	"labelAPY": "El rendimiento anual de $targetCurrency es de ",
+	"labelAPY": "El rendimiento anual de {targetCurrency} es de ",
 	"@labelAPY": {
 		"placeholders": {
 			"targetCurrency": {
@@ -210,7 +210,7 @@
 	"labelOnboardingTitle4": "Preparáte",
 	"labelOnboardingText4": "Solo necesitas tu documento de identificación y una selfie.\n¡Así de fácil!",
 	"errorSomethingWentWrong": "Oops! Algo salió mal, intenta más tarde",
-	"errorMinimumWithdrawAmount": "Retiro mínimo de \\$10",
+	"errorMinimumWithdrawAmount": "Retiro mínimo de $10",
 	"labelDeposit": "Depositar",
 	"labelWithdraw": "Retirar",
 	"labelNoTransactions": "Sin registros aún...",
