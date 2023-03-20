@@ -1,10 +1,10 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
+import 'package:alcancia/src/screens/investment_info/investment_info.dart';
 import 'package:alcancia/src/screens/swap/components/currency_risk_card.dart';
 import 'package:alcancia/src/screens/swap/swap_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_container.dart';
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
-import 'package:alcancia/src/shared/components/alcancia_link.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/constants.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
@@ -72,6 +72,10 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
 
   String currentUsdcAPY = "";
   String? usdcAPYError;
+
+  // investment info
+  final usdcInfo = [usdcDescription, usdcProtocolDescription];
+  final celoInfo = [celoDescription, celoProtocolDescription];
 
   getExchange() async {
     setState(() {
@@ -297,6 +301,46 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                           ),
                         ),
                       ],
+                      AlcanciaContainer(
+                        top: 20,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              child: OutlinedButton.icon(
+                                style: OutlinedButton.styleFrom(
+                                  side: const BorderSide(color: alcanciaLightBlue),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(26),
+                                  ),
+                                ),
+                                icon: SvgPicture.asset(
+                                  "lib/src/resources/images/icon_lamp.svg",
+                                  color: Theme.of(context).brightness == Brightness.light ? Colors.black : null,
+                                ),
+                                label: Text(
+                                  '¿En que estoy invirtiendo?',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                    color: txtTheme.bodyText2?.color,
+                                    fontSize: txtTheme.bodyText2?.fontSize,
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  await showDialog(
+                                    context: context,
+                                    builder: (BuildContext ctx) {
+                                      return targetCurrency == 'USDC'
+                                          ? InvestmentInfo(items: usdcInfo)
+                                          : InvestmentInfo(items: celoInfo);
+                                    },
+                                  );
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                       Container(
                         alignment: Alignment.topLeft,
                         padding: const EdgeInsets.only(
@@ -369,16 +413,6 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                           ),
                         ),
                       ],
-                      AlcanciaContainer(
-                        top: 20,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text("¿Tienes alguna inquietud? "),
-                            AlcanciaLink(text: 'Haz click aquí'),
-                          ],
-                        ),
-                      ),
                     ],
                   ),
                 ),
