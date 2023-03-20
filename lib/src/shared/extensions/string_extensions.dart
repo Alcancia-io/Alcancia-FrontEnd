@@ -1,3 +1,4 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 extension StringExtension on String {
   bool isValidEmail() {
     return RegExp(
@@ -10,14 +11,14 @@ extension StringExtension on String {
         .hasMatch(this);
   }
 
-  String isDepositOrWithdraw() {
+  String isDepositOrWithdraw(AppLocalizations appLoc) {
     switch (this) {
       case 'DEPOSIT':
-        return 'DEPOSITO';
+        return appLoc.labelDetailDeposit;
       case 'WITHDRAW':
-        return 'RETIRO';
+        return appLoc.labelDetailWithdraw;
       case 'YIELD':
-        return 'RENDIMIENTO';
+        return appLoc.labelDetailYield;
     }
     return '';
   }

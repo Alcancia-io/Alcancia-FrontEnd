@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AlcanciaDatePicker extends ConsumerWidget {
   const AlcanciaDatePicker({
@@ -19,13 +20,14 @@ class AlcanciaDatePicker extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final date = ref.watch(dateProvider);
+    final appLoc = AppLocalizations.of(context)!;
     return FormField<DateTime>(
       autovalidateMode: AutovalidateMode.onUserInteraction,
       builder: (state) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Fecha de nacimiento"),
+            Text(appLoc.labelBirthdate),
             Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).inputDecorationTheme.fillColor,

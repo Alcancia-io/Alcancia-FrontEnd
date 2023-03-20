@@ -1,6 +1,7 @@
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BalanceItem {
   BalanceItem({required this.title, required this.value, required this.currency});
@@ -25,11 +26,12 @@ class _BalanceCarouselState extends State<BalanceCarousel> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final totalBalanceItem = BalanceItem(title: "Balance Total", value: widget.balance.total, currency: "USD");
+    final appLoc = AppLocalizations.of(context)!;
+    final totalBalanceItem = BalanceItem(title: appLoc.labelTotalBalance, value: widget.balance.total, currency: "USD");
     final cUSDBalanceItem =
-        BalanceItem(title: "Balance Celo USD", value: widget.balance.mcUSD + widget.balance.cUSD, currency: "CUSD");
+        BalanceItem(title: appLoc.labelCELOBalance, value: widget.balance.mcUSD + widget.balance.cUSD, currency: "CUSD");
     final usdcBalanceItem = BalanceItem(
-        title: "Balance USD Coin", value: widget.balance.etherscan + widget.balance.aPolUSDC, currency: "USDC");
+        title: appLoc.labelUSDCBalance, value: widget.balance.etherscan + widget.balance.aPolUSDC, currency: "USDC");
     final carouselItems = [totalBalanceItem, usdcBalanceItem, cUSDBalanceItem];
     return Column(
       children: [
