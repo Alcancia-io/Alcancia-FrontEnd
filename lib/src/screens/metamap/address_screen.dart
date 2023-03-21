@@ -241,7 +241,7 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
 
                     final User newUser = user!;
                     var jsonAddress = jsonEncode(address.toJson());
-
+                    selectedProfession = selectedProfession.replaceAll(' ', '');
                     newUser.profession = selectedProfession;
                     newUser.address = jsonAddress;
                     ref.read(userProvider.notifier).setUser(newUser);
