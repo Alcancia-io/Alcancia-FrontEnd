@@ -18,12 +18,12 @@ class InvestmentInfo extends StatefulWidget {
 class _InvestmentInfoState extends State<InvestmentInfo> {
   final PageController _pageController = PageController();
   final ResponsiveService responsiveService = ResponsiveService();
-
   int pageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
+    final txtTheme = Theme.of(context).textTheme;
 
     return Padding(
       padding: const EdgeInsets.only(top: 100, right: 26, bottom: 34, left: 26),
@@ -36,17 +36,45 @@ class _InvestmentInfoState extends State<InvestmentInfo> {
         bottom: 24,
         child: Column(
           children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 24),
+              child: DefaultTextStyle(
+                style: txtTheme.subtitle2 as TextStyle,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(top: 3, bottom: 3, right: 10, left: 10),
+                      decoration: pageIndex == 0 ? _activeBoxDecoration() : null,
+                      child: Text(
+                        'Activos',
+                        style: pageIndex == 0 ? const TextStyle(color: Colors.white) : null,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Container(
+                        padding: const EdgeInsets.only(top: 3, bottom: 3, right: 10, left: 10),
+                        decoration: pageIndex == 1 ? _activeBoxDecoration() : null,
+                        child: Text(
+                          'Protocolo',
+                          style: pageIndex == 1 ? const TextStyle(color: Colors.white) : null,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             SingleChildScrollView(
               child: SizedBox(
-                height: 450,
+                height: 390,
                 child: PageView.builder(
                   controller: _pageController,
                   itemCount: widget.items.length,
                   onPageChanged: (index) => setState(() => pageIndex = index),
                   itemBuilder: (ctx, index) {
-                    return _buildPage(
-                      item: widget.items[index],
-                    );
+                    return widget.items[index];
                   },
                 ),
               ),
@@ -70,46 +98,6 @@ class _InvestmentInfoState extends State<InvestmentInfo> {
     return const BoxDecoration(
       color: Color(0xff4E76E5),
       borderRadius: BorderRadius.all(Radius.circular(24)),
-    );
-  }
-
-  Widget _buildPage({required Widget item}) {
-    final txtTheme = Theme.of(context).textTheme;
-
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 24),
-          child: DefaultTextStyle(
-            style: txtTheme.subtitle2 as TextStyle,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(top: 3, bottom: 3, right: 10, left: 10),
-                  decoration: pageIndex == 0 ? _activeBoxDecoration() : null,
-                  child: Text(
-                    'Activos',
-                    style: pageIndex == 0 ? const TextStyle(color: Colors.white) : null,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Container(
-                    padding: const EdgeInsets.only(top: 3, bottom: 3, right: 10, left: 10),
-                    decoration: pageIndex == 1 ? _activeBoxDecoration() : null,
-                    child: Text(
-                      'Protocolo',
-                      style: pageIndex == 1 ? const TextStyle(color: Colors.white) : null,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        item,
-      ],
     );
   }
 
