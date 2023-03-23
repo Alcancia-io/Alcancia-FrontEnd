@@ -5,9 +5,10 @@ import 'package:alcancia/src/shared/constants.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class InvestmentInfo extends StatefulWidget {
-  final List<AssetDescription> items;
+  final List<Map<String, String>> items;
 
   const InvestmentInfo({Key? key, required this.items}) : super(key: key);
 
@@ -22,6 +23,7 @@ class _InvestmentInfoState extends State<InvestmentInfo> {
 
   @override
   Widget build(BuildContext context) {
+    final appLoc = AppLocalizations.of(context)!;
     final screenHeight = MediaQuery.of(context).size.height;
     final txtTheme = Theme.of(context).textTheme;
 
@@ -47,7 +49,7 @@ class _InvestmentInfoState extends State<InvestmentInfo> {
                       padding: const EdgeInsets.only(top: 3, bottom: 3, right: 10, left: 10),
                       decoration: pageIndex == 0 ? _activeBoxDecoration() : null,
                       child: Text(
-                        'Activos',
+                        appLoc.labelAssets,
                         style: pageIndex == 0 ? const TextStyle(color: Colors.white) : null,
                       ),
                     ),
@@ -57,7 +59,7 @@ class _InvestmentInfoState extends State<InvestmentInfo> {
                         padding: const EdgeInsets.only(top: 3, bottom: 3, right: 10, left: 10),
                         decoration: pageIndex == 1 ? _activeBoxDecoration() : null,
                         child: Text(
-                          'Protocolo',
+                          appLoc.labelProtocol,
                           style: pageIndex == 1 ? const TextStyle(color: Colors.white) : null,
                         ),
                       ),
@@ -74,7 +76,17 @@ class _InvestmentInfoState extends State<InvestmentInfo> {
                   itemCount: widget.items.length,
                   onPageChanged: (index) => setState(() => pageIndex = index),
                   itemBuilder: (ctx, index) {
-                    return widget.items[index];
+                    return RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: widget.items[index]["bold"],
+                            style: TextStyle(fontWeight: FontWeight.bold, color: txtTheme.bodyText1?.color),
+                          ),
+                          TextSpan(text: widget.items[index]['regular'], style: txtTheme.bodyText1),
+                        ],
+                      ),
+                    );
                   },
                 ),
               ),
@@ -82,7 +94,7 @@ class _InvestmentInfoState extends State<InvestmentInfo> {
             _buildBottomRow(),
             const Spacer(),
             AlcanciaButton(
-              buttonText: 'Entendido!',
+              buttonText: appLoc.buttonUnderstood,
               color: alcanciaLightBlue,
               width: double.infinity,
               height: responsiveService.getHeightPixels(64, screenHeight),

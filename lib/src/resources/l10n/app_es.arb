@@ -170,7 +170,7 @@
 	"buttonResend": "Reenviar",
 	"buttonSaveAndUpdate": "Guardar y actualizar",
 	"buttonSeeMore": "Ver más",
-	"buttonUnderstood": "Entendido",
+	"buttonUnderstood": "¡Entendido!",
 	"buttonWithdraw": "Retirar",
 	"labelChangePassword": "Cambiar contraseña",
 	"labelWithdrawalSent": "¡Orden de retiro enviada!",
@@ -244,5 +244,15 @@
 	"labelStatusSuccessful": "Exitosa",
 	"labelStatusNotStarted": "No iniciada",
 	"alertVerificationCanceled": "Cancelada",
-	"alertVerificationCompleted": "Verificación completada, revisión en proceso..."
+	"alertVerificationCompleted": "Verificación completada, revisión en proceso...",
+	"labelUsdcAsset": "USD Coin (USDC)",
+	"labelAave": "Aave",
+	"labelCeloDollar": "Cello Dollar (cUSD)",
+	"labelMoolaMarket": "Moola Market",
+	"descriptionUsdcAsset": " Esta moneda digital es emitida por Circle, una empresa global de tecnología financiera que ayuda a mover el dinero a la velocidad de Internet y que es soportada de continuas auditorias y pruebas de reserva para continuar garantizando su paridad con el dólar estadounidense. Su valor está respaldado por una reserva de activos, como dólares estadounidenses, bonos del Tesoro estadounidense y otros activos estables.  \n\nLa idea detrás de USDC es proporcionar una moneda digital estable y confiable que se pueda usar para transacciones y pagos, sin la volatilidad que a menudo se asocia con otras criptomonedas.",
+	"descriptionUsdcProtocol": " es un protocolo de finanzas descentralizadas que permite a las personas que tienen fondos adicionales pueden conectarse con las personas que necesitan pedir prestado esos fondos.  \n\nLa plataforma utiliza contratos inteligentes para garantizar que todas las transacciones sean seguras y transparentes, y que los prestatarios y prestamistas estén protegidos. \n\nAave permite a los usuarios ganar intereses en sus depósitos, al tiempo que brinda a los prestatarios acceso a términos de préstamo más flexibles y mejores tasas de interés en comparación con las plataformas de préstamos tradicionales.",
+	"descriptionCeloAsset": " es una moneda estable que fue desarrollada por Celo.org, una plataforma de tecnología financiera que busca mejorar la inclusión financiera a través de la tecnología blockchain. cUSD funciona de manera similar a otras monedas estables, como Tether o USDC, que están diseñadas para mantener su valor, esto significa que 1 cUSD siempre tendrá un valor aproximado de 1 dólar estadounidense.  \n\nLa idea detrás de cUSD es proporcionar una moneda digital estable y fácil de usar que se pueda utilizar para transacciones y pagos, sin la volatilidad que a menudo se asocia con otras criptomonedas.",
+	"descriptionCeloProtocol": " es una plataforma descentralizada que permite conectar personas que necesitan pedir dinero prestado con personas que tienen fondos adicionales para prestar.  \n\nLa plataforma utiliza contratos inteligentes para garantizar que todas las transacciones sean seguras y transparentes, y que los prestatarios y prestamistas estén protegidos.  \n\nEn general, Moola Market es una forma en que las personas pueden acceder a la liquidez y ganar intereses sobre sus tenencias de moneda digital, sin tener que pasar por un banco o institución financiera tradicional.",
+	"labelAssets": "Activos",
+	"labelProtocol": "Protocolo"
 }

@@ -49,7 +49,7 @@ class CurrencyRiskCard extends StatelessWidget {
           RichText(
             text: TextSpan(
               children: [
-                TextSpan(text: 'El rendimiento anual de $targetCurrency es de ', style: txtTheme.bodyMedium),
+                TextSpan(text: appLoc.labelAPY(targetCurrency), style: txtTheme.bodyMedium),
                 TextSpan(
                   text: percentage,
                   style: TextStyle(

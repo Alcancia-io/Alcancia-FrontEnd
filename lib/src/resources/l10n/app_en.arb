@@ -162,5 +162,15 @@
 	"labelStatusSuccessful": "Successful",
 	"labelStatusNotStarted": "Not started",
 	"alertVerificationCanceled": "Canceled",
-	"alertVerificationCompleted": "Verification completed, review in process..."
+	"alertVerificationCompleted": "Verification completed, review in process...",
+	"labelUsdcAsset": "USD Coin (USDC)",
+	"labelAave": "Aave",
+	"labelCeloDollar": "Cello Dollar (cUSD)",
+	"labelMoolaMarket": "Moola Market",
+	"descriptionUsdcAsset": " is a digital currency issued by Circle, a global financial technology company that helps move money at Internet speed and is supported by continuous audits and reserve tests to continue guaranteeing its parity with the US dollar. Its value is backed by a reserve of assets, such as US dollars, US Treasury bonds, and other stable assets.\n\nThe idea behind USDC is to provide a stable and reliable digital currency that can be used for transactions and payments, without the volatility that is often associated with other cryptocurrencies.",
+	"descriptionUsdcProtocol": " is a decentralized finance protocol that allows people who have extra funds to lend out to connect with people who need to borrow those funds.\nThe platform uses smart contracts to ensure that all transactions are secure and transparent, and that borrowers and lenders are protected.  \n\nAave allows users to earn interest on their deposits, while also giving borrowers access to more flexible loan terms and better interest rates compared to traditional lending platforms.",
+	"descriptionCeloAsset": " is a stablecoin developed by Celo.org, a financial technology platform that aims to improve financial inclusion through blockchain technology. cUSD works similarly to other stablecoins like Tether or USDC, which are designed to maintain their value, meaning that 1 cUSD will always have a value of approximately 1 US dollar.\n\nThe idea behind cUSD is to provide a stable and easy-to-use digital currency that can be used for transactions and payments, without the volatility often associated with other cryptocurrencies.",
+	"descriptionCeloProtocol": " is a decentralized platform that allows connecting people who need to borrow money with those who have extra funds to lend. \n\nThe platform uses smart contracts to ensure that all transactions are secure and transparent, and that borrowers and lenders are protected.\n\nOverall, Moola Market is a way for people to access liquidity and earn interest on their digital currency holdings, without having to go through a traditional bank or financial institution.",
+	"labelAssets": "Assets",
+	"labelProtocol": "Protocol"
 }

@@ -74,10 +74,6 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
   String currentUsdcAPY = "";
   String? usdcAPYError;
 
-  // investment info
-  final usdcInfo = [usdcDescription, usdcProtocolDescription];
-  final celoInfo = [celoDescription, celoProtocolDescription];
-
   getExchange() async {
     setState(() {
       _isLoading = true;
@@ -135,6 +131,16 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     final txtTheme = Theme.of(context).textTheme;
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+
+    // investment info
+    final usdcInfo = [
+      {"bold": appLoc.labelUsdcAsset, "regular": appLoc.descriptionUsdcAsset},
+      {"bold": appLoc.labelAave, "regular": appLoc.descriptionUsdcProtocol}
+    ];
+    final celoInfo = [
+      {"bold": appLoc.labelCeloDollar, "regular": appLoc.descriptionCeloAsset},
+      {"bold": appLoc.labelMoolaMarket, "regular": appLoc.descriptionCeloProtocol}
+    ];
 
     if (_isLoading) {
       return const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator())));
