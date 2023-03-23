@@ -7,7 +7,7 @@ class DashboardController {
   var userTransactionsInput = {
     "userTransactionsInput": {
       "currentPage": 0,
-      "itemsPerPage": 3,
+      "itemsPerPage": 20,
     },
   };
 
