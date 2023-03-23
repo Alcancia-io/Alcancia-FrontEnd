@@ -40,6 +40,7 @@ class _BalanceCarouselState extends State<BalanceCarousel> {
           itemCount: carouselItems.length,
           itemBuilder: (BuildContext context, int itemIndex, int _) {
             final balance = carouselItems[itemIndex];
+            final balanceString = balance.value.toStringAsFixed(6);
             return SizedBox(
               width: double.infinity,
               child: Column(
@@ -54,11 +55,38 @@ class _BalanceCarouselState extends State<BalanceCarousel> {
                   ),
                   Container(
                     padding: const EdgeInsets.only(top: 16),
-                    child: Text(
-                      "\$${balance.value == 0 ? 0 : balance.value.toStringAsFixed(6)} ${balance.currency}",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: screenSize.width / 14,
+                    child: balance.value == 0 ? Text("\$0 ${balance.currency}", style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: screenSize.width / 14,
+                      color: Theme.of(context).textTheme.bodyMedium?.color,
+                    ),) : Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "\$${balanceString.substring(0, balanceString.lastIndexOf("."))}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: screenSize.width / 14,
+                              color: Theme.of(context).textTheme.bodyMedium?.color,
+                            ),
+                          ),
+                          TextSpan(
+                            text: "${balanceString.substring(balanceString.lastIndexOf("."))} ",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: screenSize.width / 14,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          TextSpan(
+                            text: balance.currency,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: screenSize.width / 14,
+                              color: Theme.of(context).textTheme.bodyMedium?.color,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
