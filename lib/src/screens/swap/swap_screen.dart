@@ -1,10 +1,10 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
+import 'package:alcancia/src/screens/investment_info/investment_info.dart';
 import 'package:alcancia/src/screens/swap/components/currency_risk_card.dart';
 import 'package:alcancia/src/screens/swap/swap_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_container.dart';
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
-import 'package:alcancia/src/shared/components/alcancia_link.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/constants.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
@@ -131,6 +131,16 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     final txtTheme = Theme.of(context).textTheme;
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+
+    // investment info
+    final usdcInfo = [
+      {"bold": appLoc.labelUsdcAsset, "regular": appLoc.descriptionUsdcAsset},
+      {"bold": appLoc.labelAave, "regular": appLoc.descriptionUsdcProtocol}
+    ];
+    final celoInfo = [
+      {"bold": appLoc.labelCeloDollar, "regular": appLoc.descriptionCeloAsset},
+      {"bold": appLoc.labelMoolaMarket, "regular": appLoc.descriptionCeloProtocol}
+    ];
 
     if (_isLoading) {
       return const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator())));
@@ -298,6 +308,46 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                           ),
                         ),
                       ],
+                      AlcanciaContainer(
+                        top: 20,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              child: OutlinedButton.icon(
+                                style: OutlinedButton.styleFrom(
+                                  side: const BorderSide(color: alcanciaLightBlue),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(26),
+                                  ),
+                                ),
+                                icon: SvgPicture.asset(
+                                  "lib/src/resources/images/icon_lamp.svg",
+                                  color: Theme.of(context).brightness == Brightness.light ? Colors.black : null,
+                                ),
+                                label: Text(
+                                  '¿En que estoy invirtiendo?',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                    color: txtTheme.bodyText2?.color,
+                                    fontSize: txtTheme.bodyText2?.fontSize,
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  await showDialog(
+                                    context: context,
+                                    builder: (BuildContext ctx) {
+                                      return targetCurrency == 'USDC'
+                                          ? InvestmentInfo(items: usdcInfo)
+                                          : InvestmentInfo(items: celoInfo);
+                                    },
+                                  );
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                       Container(
                         alignment: Alignment.topLeft,
                         padding: const EdgeInsets.only(
@@ -370,16 +420,6 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                           ),
                         ),
                       ],
-                      AlcanciaContainer(
-                        top: 20,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(appLoc.labelConcern),
-                            AlcanciaLink(text: appLoc.buttonClickHere),
-                          ],
-                        ),
-                      ),
                     ],
                   ),
                 ),

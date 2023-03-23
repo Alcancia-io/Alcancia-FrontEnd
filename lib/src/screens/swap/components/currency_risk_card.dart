@@ -25,8 +25,8 @@ class CurrencyRiskCard extends StatelessWidget {
     var theme = Theme.of(context).brightness.name;
     var lowRisk = {"light": alcanciaLowRiskLight, "dark": alcanciaLowRiskDark};
     var mediumRisk = {"light": alcanciaMediumRiskLight, "dark": alcanciaMediumRiskDark};
-
     var riskLevelColor = riskLevel == RiskLevel.bajo ? lowRisk[theme] : mediumRisk[theme];
+
     return AlcanciaContainer(
       top: 16,
       bottom: 16,
@@ -49,8 +49,15 @@ class CurrencyRiskCard extends StatelessWidget {
           RichText(
             text: TextSpan(
               children: [
-                TextSpan(text: appLoc.labelAPY(targetCurrency)),
-                TextSpan(text: percentage, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                TextSpan(text: appLoc.labelAPY(targetCurrency), style: txtTheme.bodyMedium),
+                TextSpan(
+                  text: percentage,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: txtTheme.bodyMedium?.color,
+                  ),
+                ),
               ],
             ),
           ),
