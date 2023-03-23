@@ -1,4 +1,6 @@
+import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:alcancia/src/shared/services/exception_service.dart';
+import 'package:alcancia/src/shared/services/services.dart';
 import 'package:alcancia/src/shared/services/suarmi_service.dart';
 
 class SwapController {
@@ -32,5 +34,20 @@ class SwapController {
       throw CustomException(exception as String);
     }
     return response.data?['getCurrentAPY'];
+  }
+
+  Future<User> fetchUser() async {
+    UserService userService = UserService();
+    try {
+      var response = await userService.getUser();
+      if (response.data != null) {
+        Map<String, dynamic> data = response.data!["me"];
+        final user = User.fromJSON(data);
+        return user;
+      }
+    } catch (error) {
+      return Future.error(error);
+    }
+    return Future.error('Error getting user');
   }
 }

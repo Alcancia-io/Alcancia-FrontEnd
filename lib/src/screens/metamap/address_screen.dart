@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:alcancia/src/resources/colors/colors.dart';
+import 'package:alcancia/src/screens/metamap/address_controller.dart';
 import 'package:alcancia/src/screens/metamap/metamap_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
@@ -38,6 +39,7 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
   final responsiveService = ResponsiveService();
 
   final MetaMapController metaMapController = MetaMapController();
+  final AddressController addressController = AddressController();
   final MetamapService metamapService = MetamapService();
   late String selectedProfession = metaMapController.professions[0]["name"]!;
 
@@ -259,6 +261,8 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                       } catch (e) {
                         Fluttertoast.showToast(msg: e.toString());
                       }
+                      final updatedUser = await addressController.fetchUser();
+                      ref.read(userProvider.notifier).setUser(updatedUser);
                       context.go('/');
                     } else {
                       context.pushNamed('checkout', extra: widget.wrapper['txnInput']);

@@ -400,6 +400,9 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                     if (sourceCurrency == 'MXN') {
                                       if (user.address != null && user.profession != null) {
                                         await metaMapService.showMatiFlow(metamapMexicanINEId, user.id, appLoc);
+                                        final updatedUser = await swapController.fetchUser();
+                                        ref.read(userProvider.notifier).setUser(updatedUser);
+                                        context.go("/");
                                       } else {
                                         context.pushNamed("user-address", extra: {"verified": false});
                                       }
