@@ -326,7 +326,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                   color: Theme.of(context).brightness == Brightness.light ? Colors.black : null,
                                 ),
                                 label: Text(
-                                  '¿En que estoy invirtiendo?',
+                                  appLoc.buttonWhatAmIInvesting,
                                   style: TextStyle(
                                     fontStyle: FontStyle.italic,
                                     color: txtTheme.bodyText2?.color,

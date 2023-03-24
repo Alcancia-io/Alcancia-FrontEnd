@@ -174,5 +174,6 @@
 	"labelAssets": "Assets",
 	"labelProtocol": "Protocol",
 	"labelStartTransactionDashboard": "Start a new transaction by tapping the \"Deposit\" or \"Withdraw\" buttons above",
-	"labelStartTransactionActivity": "Start a new transaction on the home screen"
+	"labelStartTransactionActivity": "Start a new transaction on the home screen",
+	"buttonWhatAmIInvesting": "What am I investing in?"
 }
