@@ -69,6 +69,10 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
   void initState() {
     super.initState();
     getExchange();
+    final user = ref.read(userProvider);
+    if (user?.lastUsedBankAccount != null) {
+      _clabeTextController.text = user!.lastUsedBankAccount!;
+    }
   }
 
   @override
