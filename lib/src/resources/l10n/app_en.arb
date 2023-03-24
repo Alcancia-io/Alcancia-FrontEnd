@@ -145,7 +145,7 @@
 	"errorMinimumWithdrawAmount": "Minimum withdrawal of $10",
 	"labelDeposit": "Deposit",
 	"labelWithdraw": "Withdraw",
-	"labelNoTransactions": "No transactions yet...",
+	"labelNoTransactions": "No transactions yet",
 	"labelHelloName": "Hello, {username}",
 	"labelTabActivity": "Activity",
 	"labelTabHome": "Home",
@@ -172,5 +172,7 @@
 	"descriptionCeloAsset": " is a stablecoin developed by Celo.org, a financial technology platform that aims to improve financial inclusion through blockchain technology. cUSD works similarly to other stablecoins like Tether or USDC, which are designed to maintain their value, meaning that 1 cUSD will always have a value of approximately 1 US dollar.\n\nThe idea behind cUSD is to provide a stable and easy-to-use digital currency that can be used for transactions and payments, without the volatility often associated with other cryptocurrencies.",
 	"descriptionCeloProtocol": " is a decentralized platform that allows connecting people who need to borrow money with those who have extra funds to lend. \n\nThe platform uses smart contracts to ensure that all transactions are secure and transparent, and that borrowers and lenders are protected.\n\nOverall, Moola Market is a way for people to access liquidity and earn interest on their digital currency holdings, without having to go through a traditional bank or financial institution.",
 	"labelAssets": "Assets",
-	"labelProtocol": "Protocol"
+	"labelProtocol": "Protocol",
+	"labelStartTransactionDashboard": "Start a new transaction by tapping the \"Deposit\" or \"Withdraw\" buttons above",
+	"labelStartTransactionActivity": "Start a new transaction on the home screen"
 }

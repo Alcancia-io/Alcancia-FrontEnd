@@ -77,6 +77,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     var user = ref.watch(userProvider);
+    final screenSize = MediaQuery.of(context).size;
     final appLoc = AppLocalizations.of(context)!;
     if (_isLoading) {
       return const SafeArea(child: Center(child: CircularProgressIndicator()));
@@ -145,8 +146,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                 ),
                 AlcanciaTransactions(
+                  height: screenSize.height / 2.5,
                   txns: txns,
-                  height: 200,
+                  bottomText: appLoc.labelStartTransactionDashboard,
                 )
               ],
             ),

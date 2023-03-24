@@ -63,6 +63,7 @@ class TransactionsListScreen extends StatelessWidget {
                       ),
                       child: AlcanciaTransactions(
                         txns: transactionsList,
+                        bottomText: appLoc.labelStartTransactionActivity,
                       ),
                     );
                   },
