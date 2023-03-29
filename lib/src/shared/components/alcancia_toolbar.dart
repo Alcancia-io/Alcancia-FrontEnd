@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum StateToolbar { logoNoletters, logoLetters, titleIcon, profileTitleIcon }
 
@@ -30,6 +30,7 @@ class AlcanciaToolbar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     var txtTheme = Theme.of(context).textTheme;
+    final appLoc = AppLocalizations.of(context)!;
     switch (state) {
       case StateToolbar.logoNoletters:
         return AppBar(
@@ -42,6 +43,7 @@ class AlcanciaToolbar extends StatelessWidget with PreferredSizeWidget {
           AlcanciaLogo(
             height: logoHeight,
           ),
+          centerTitle: true,
         );
       case StateToolbar.logoLetters:
         return AppBar(
@@ -55,6 +57,7 @@ class AlcanciaToolbar extends StatelessWidget with PreferredSizeWidget {
               letters: true,
               height: logoHeight,
             ),
+          centerTitle: true,
         );
       case StateToolbar.titleIcon:
         return AppBar(
@@ -67,6 +70,7 @@ class AlcanciaToolbar extends StatelessWidget with PreferredSizeWidget {
             "$title",
             style: txtTheme.subtitle1,
           ),
+          centerTitle: true,
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 40.0),
@@ -93,7 +97,7 @@ class AlcanciaToolbar extends StatelessWidget with PreferredSizeWidget {
             ),
           ),
           title: Text(
-            "Hola, $userName",
+            appLoc.labelHelloName(userName ?? ""),
             style: txtTheme.subtitle1,
           ),
           centerTitle: false,

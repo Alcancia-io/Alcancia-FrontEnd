@@ -1,3 +1,4 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_action_dialog.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
@@ -17,92 +18,93 @@ class AccountScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userProvider) ?? User.sampleUser;
     final authService = ref.watch(authServiceProvider);
+    final appLoc = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: const AlcanciaToolbar(
+      appBar: AlcanciaToolbar(
         state: StateToolbar.titleIcon,
         logoHeight: 38,
-        title: "Mi Cuenta",
+        title: appLoc.labelMyAccount,
       ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 10),
           child: Column(
             children: [
-              GestureDetector(
-                onTap: () {
-                  // TODO: Change password
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? alcanciaCardDark2
-                        : alcanciaCardLight2,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(Icons.lock_outlined),
-                        ),
-                        Text(
-                          "Cambiar contraseña",
-                          style: Theme.of(context).textTheme.labelLarge,
-                        ),
-                        Spacer(),
-                        Icon(Icons.chevron_right)
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              // GestureDetector(
+              //   onTap: () {
+              //     // TODO: Change password
+              //   },
+              //   child: Container(
+              //     decoration: BoxDecoration(
+              //       color: Theme.of(context).brightness == Brightness.dark
+              //           ? alcanciaCardDark2
+              //           : alcanciaCardLight2,
+              //       borderRadius: BorderRadius.circular(8),
+              //     ),
+              //     child: Padding(
+              //       padding: const EdgeInsets.all(16.0),
+              //       child: Row(
+              //         children: [
+              //           Padding(
+              //             padding: const EdgeInsets.all(8.0),
+              //             child: Icon(Icons.lock_outlined),
+              //           ),
+              //           Text(
+              //             appLoc.labelChangePassword,
+              //             style: Theme.of(context).textTheme.labelLarge,
+              //           ),
+              //           Spacer(),
+              //           Icon(Icons.chevron_right)
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // ),
               Spacer(),
-              Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: AlcanciaButton(
-                    foregroundColor: Colors.red,
-                    side: BorderSide(color: Colors.red),
-                    buttonText: "Borrar cuenta",
-                    fontSize: 18,
-                    padding: const EdgeInsets.only(
-                        left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
-                    onPressed: () async {
-                      await showDialog(
-                          context: context,
-                          builder: (BuildContext ctx) {
-                            return AlcanciaActionDialog(
-                              child: Text(
-                                "¿Seguro que quieres borrar tu cuenta?\nEsta acción no se puede deshacer.",
-                                style: Theme.of(context).textTheme.titleLarge,
-                              ),
-                              acceptText: "Confirmar",
-                              acceptColor: Colors.red,
-                              cancelText: "Cancelar",
-                              acceptAction: () async {
-                                try {
-                                  await authService.deleteAccount();
-                                  await deleteToken();
-                                  context.goNamed("welcome");
-                                  ref.read(userProvider.notifier).setUser(null);
-                                } catch (e) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      AlcanciaSnackBar(context,
-                                          "Hubo un problema al borrar tu cuenta."));
-                                }
-                              },
-                            );
-                          });
-                    },
-                    rounded: true,
-                    icon: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Icon(Icons.delete_forever),
-                    ),
-                  )),
+              Center(
+                child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: AlcanciaButton(
+                      foregroundColor: Colors.red,
+                      side: BorderSide(color: Colors.red),
+                      buttonText: appLoc.buttonDeleteAccount,
+                      fontSize: 18,
+                      padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
+                      onPressed: () async {
+                        await showDialog(
+                            context: context,
+                            builder: (BuildContext ctx) {
+                              return AlcanciaActionDialog(
+                                acceptText: appLoc.buttonConfirm,
+                                acceptColor: Colors.red,
+                                cancelText: appLoc.buttonCancel,
+                                acceptAction: () async {
+                                  try {
+                                    await authService.deleteAccount();
+                                    await deleteToken();
+                                    context.goNamed("welcome");
+                                    ref.read(userProvider.notifier).setUser(null);
+                                  } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        AlcanciaSnackBar(context,
+                                            appLoc.errorDeleteAccount));
+                                  }
+                                },
+                                child: Text(
+                                  appLoc.labelDeleteAccountConfirmation,
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ),
+                              );
+                            });
+                      },
+                      rounded: true,
+                      icon: const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(Icons.delete_forever),
+                      ),
+                    )),
+              ),
             ],
           ),
         ),

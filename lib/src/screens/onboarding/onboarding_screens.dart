@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OnboardingScreens extends StatefulWidget {
   OnboardingScreens({Key? key}) : super(key: key);
@@ -22,37 +23,46 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
 
   final PageController _pageController = PageController();
 
-  final items = [
-    const OnboardingItem(
-      assetPath: "lib/src/resources/images/welcome.svg",
-      title: "Bienvenido",
-      text:
-          "Sabemos que quieres lograr muchas metas, por eso, en Alcancía nos encargamos de ayudarte a crecer tu capital",
-    ),
-    const OnboardingItem(
-      assetPath: "lib/src/resources/images/save_and_grow.svg",
-      title: "Ahorra y crece",
-      text:
-          "Ahorra en Alcancía y los diferentes protocolos que utilizamos para diversificar el riesgo y generar rentabilidad",
-    ),
-    const OnboardingItem(
-      assetPath: "lib/src/resources/images/open_account.svg",
-      title: "Abre tu cuenta",
-      text:
-          "No te preocupes, en Alcancía nos encargamos de todo para que tu dinero crezca mientras tu te enfocas en lo importante",
-    ),
-    const OnboardingItem(
-      assetPath: "lib/src/resources/images/prepare.svg",
-      title: "Preparáte",
-      text: "Solo necesitas tu documento de identificación y una selfie.\n¡Así de fácil!",
-    ),
-  ];
+  List<OnboardingItem> _items() {
+    final appLoc = AppLocalizations.of(context)!;
+    return [
+      OnboardingItem(
+        assetPath: "lib/src/resources/images/welcome.svg",
+        title: appLoc.labelOnboardingTitle1,
+        text:
+        appLoc.labelOnboardingText1,
+      ),
+      OnboardingItem(
+        assetPath: "lib/src/resources/images/save_and_grow.svg",
+        title: appLoc.labelOnboardingTitle2,
+        text:
+        appLoc.labelOnboardingText2,
+      ),
+      OnboardingItem(
+        assetPath: "lib/src/resources/images/open_account.svg",
+        title: appLoc.labelOnboardingTitle3,
+        text:
+        appLoc.labelOnboardingText3,
+      ),
+      OnboardingItem(
+        assetPath: "lib/src/resources/images/prepare.svg",
+        title: appLoc.labelOnboardingTitle4,
+        text: appLoc.labelOnboardingText4,
+      ),
+    ];
+  }
+
+  Future<void> finishOnboarding() async {
+    await _controller.finishOnboarding();
+    context.go("/welcome");
+  }
 
   int pageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
+    final items = _items();
     return Scaffold(
       appBar: AlcanciaToolbar(
         state: StateToolbar.logoLetters,
@@ -75,7 +85,7 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
                 },
               ),
             ),
-            _buildBottomRow(),
+            _buildBottomRow(items),
           ],
         ),
       ),
@@ -123,7 +133,8 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
     );
   }
 
-  Widget _buildBottomRow() {
+  Widget _buildBottomRow(List<OnboardingItem> items) {
+    final appLoc = AppLocalizations.of(context)!;
     return Column(
       children: [
         Row(
@@ -132,11 +143,10 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
             if (pageIndex != items.length - 1) ...[
               TextButton(
                 onPressed: () async {
-                  await _controller.finishOnboarding();
-                  context.push("/registration");
+                  await finishOnboarding();
                 },
                 style: TextButton.styleFrom(foregroundColor: Colors.grey),
-                child: const Text("Saltar"),
+                child: Text(appLoc.buttonSkip),
               ),
             ],
             SmoothPageIndicator(
@@ -154,7 +164,7 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
                 onPressed: () {
                   _pageController.animateToPage(pageIndex + 1, duration: Duration(milliseconds: 300), curve: Curves.linear);
                 },
-                child: const Text("Siguiente"),
+                child: Text(appLoc.buttonNext),
               ),
             ],
           ],
@@ -166,10 +176,9 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
               color: alcanciaLightBlue,
               width: double.infinity,
               height: _responsiveService.getHeightPixels(64, MediaQuery.of(context).size.height),
-              buttonText: "Registrate",
+              buttonText: appLoc.buttonNext,
               onPressed: () async {
-                await _controller.finishOnboarding();
-                context.push('/registration');
+                await finishOnboarding();
               },
             ),
           ),

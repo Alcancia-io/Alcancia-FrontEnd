@@ -69,6 +69,10 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
   void initState() {
     super.initState();
     getExchange();
+    final user = ref.read(userProvider);
+    if (user?.lastUsedBankAccount != null) {
+      _clabeTextController.text = user!.lastUsedBankAccount!;
+    }
   }
 
   @override
@@ -89,8 +93,8 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        appBar: const AlcanciaToolbar(
-          title: "Retiro de dinero",
+        appBar: AlcanciaToolbar(
+          title: appLoc.labelMoneyWithdrawal,
           state: StateToolbar.titleIcon,
           logoHeight: 40,
         ),
@@ -102,14 +106,14 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
             child: ListView(
               padding: const EdgeInsets.only(top: 10, left: 40, right: 40),
               children: [
-                const Text(
-                  "¡Hola!",
+                Text(
+                  appLoc.labelHello,
                   style: TextStyle(fontSize: 35, fontWeight: FontWeight.w700),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 12),
                   child: Text(
-                    "Completa la siguiente información para realizar el retiro de tu dinero:",
+                    appLoc.labelWithdrawInformationPrompt,
                     style: txtTheme.bodyText1,
                   ),
                 ),
@@ -119,7 +123,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "País",
+                        appLoc.labelCountry,
                         style: txtTheme.bodyText1,
                       ),
                       AlcanciaDropdown(
@@ -140,7 +144,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Moneda",
+                      appLoc.labelCurrency,
                       style: txtTheme.bodyText1,
                     ),
                     AlcanciaDropdown(
@@ -166,14 +170,14 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
                 ),
                 LabeledTextFormField(
                   controller: _clabeTextController,
-                  labelText: "Número CLABE",
+                  labelText: appLoc.labelCLABE,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   inputType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return appLoc.errorRequiredField;
                     } else if (value.length != 18) {
-                      return "La CLABE debe consistir de 18 dígitos";
+                      return appLoc.errorCLABELength;
                     }
                   },
                 ),
@@ -182,14 +186,16 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
                 ),
                 LabeledTextFormField(
                   controller: _amountTextController,
-                  labelText: "Monto de retiro",
+                  labelText: appLoc.labelWithdrawAmount,
                   inputType: TextInputType.number,
                   inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return appLoc.errorRequiredField;
+                    } else if (double.parse(value) < 10) {
+                      return appLoc.errorMinimumWithdrawAmount;
                     } else if (balance < double.parse(value)) {
-                      return "No cuentas con el balance necesario";
+                      return appLoc.errorInsufficientBalance;
                     }
                     return null;
                   },
@@ -198,13 +204,13 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                Text("Balance disponible: \$${balance.toStringAsFixed(2)}"),
+                Text(appLoc.labelAvailableBalance(balance.toStringAsFixed(2))),
                 const SizedBox(
                   height: 10,
                 ),
                 LabeledTextFormField(
                   controller: _targetTextController,
-                  labelText: "Monto en MXN",
+                  labelText: appLoc.labelAmountMXN,
                   inputType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   enabled: false,
@@ -221,7 +227,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
                         const CircularProgressIndicator(),
                       ] else ...[
                         AlcanciaButton(
-                          buttonText: "Siguiente",
+                          buttonText: appLoc.buttonNext,
                           onPressed: _enableButton
                               ? () async {
                                   setState(() {
@@ -240,7 +246,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
                                   };
                                   try {
                                     final order = await controller.sendSuarmiOrder(orderInput);
-                                    context.go("/success", extra: "¡Orden de retiro enviada!");
+                                    context.go("/success", extra: appLoc.labelWithdrawalSent);
                                   } catch (e) {
                                     setState(() {
                                       _orderError = e.toString();

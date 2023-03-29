@@ -1,6 +1,7 @@
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BalanceItem {
   BalanceItem({required this.title, required this.value, required this.currency});
@@ -24,11 +25,13 @@ class _BalanceCarouselState extends State<BalanceCarousel> {
 
   @override
   Widget build(BuildContext context) {
-    final totalBalanceItem = BalanceItem(title: "Balance Total", value: widget.balance.total, currency: "USD");
+    final screenSize = MediaQuery.of(context).size;
+    final appLoc = AppLocalizations.of(context)!;
+    final totalBalanceItem = BalanceItem(title: appLoc.labelTotalBalance, value: widget.balance.total, currency: "USD");
     final cUSDBalanceItem =
-        BalanceItem(title: "Balance Celo USD", value: widget.balance.mcUSD + widget.balance.cUSD, currency: "CUSD");
+        BalanceItem(title: appLoc.labelCELOBalance, value: widget.balance.mcUSD + widget.balance.cUSD, currency: "CUSD");
     final usdcBalanceItem = BalanceItem(
-        title: "Balance USD Coin", value: widget.balance.etherscan + widget.balance.aPolUSDC, currency: "USDC");
+        title: appLoc.labelUSDCBalance, value: widget.balance.etherscan + widget.balance.aPolUSDC, currency: "USDC");
     final carouselItems = [totalBalanceItem, usdcBalanceItem, cUSDBalanceItem];
     return Column(
       children: [
@@ -37,6 +40,7 @@ class _BalanceCarouselState extends State<BalanceCarousel> {
           itemCount: carouselItems.length,
           itemBuilder: (BuildContext context, int itemIndex, int _) {
             final balance = carouselItems[itemIndex];
+            final balanceString = balance.value.toStringAsFixed(6);
             return SizedBox(
               width: double.infinity,
               child: Column(
@@ -51,11 +55,38 @@ class _BalanceCarouselState extends State<BalanceCarousel> {
                   ),
                   Container(
                     padding: const EdgeInsets.only(top: 16),
-                    child: Text(
-                      "\$${balance.value == 0 ? 0 : balance.value.toStringAsFixed(6)} ${balance.currency}",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
+                    child: balance.value == 0 ? Text("\$0 ${balance.currency}", style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: screenSize.width / 14,
+                      color: Theme.of(context).textTheme.bodyMedium?.color,
+                    ),) : Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "\$${balanceString.substring(0, balanceString.lastIndexOf("."))}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: screenSize.width / 14,
+                              color: Theme.of(context).textTheme.bodyMedium?.color,
+                            ),
+                          ),
+                          TextSpan(
+                            text: "${balanceString.substring(balanceString.lastIndexOf("."))} ",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: screenSize.width / 14,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          TextSpan(
+                            text: balance.currency,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: screenSize.width / 14,
+                              color: Theme.of(context).textTheme.bodyMedium?.color,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

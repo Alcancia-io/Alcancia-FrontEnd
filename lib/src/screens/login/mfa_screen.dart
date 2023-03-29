@@ -1,6 +1,5 @@
 import 'package:alcancia/src/features/registration/provider/timer_provider.dart';
 import 'package:alcancia/src/screens/login/login_controller.dart';
-import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:alcancia/src/shared/models/login_data_model.dart';
 import 'package:alcancia/src/shared/provider/push_notifications_provider.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +7,10 @@ import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
-
-import '../../shared/models/storage_item.dart';
-import '../../shared/services/storage_service.dart';
+import 'package:alcancia/src/shared/models/storage_item.dart';
+import 'package:alcancia/src/shared/services/storage_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MFAScreen extends ConsumerStatefulWidget {
   const MFAScreen({Key? key, required this.data}) : super(key: key);
@@ -38,6 +36,7 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
   Widget build(BuildContext context) {
     final pushNotifications = ref.watch(pushNotificationProvider);
     final timer = ref.watch(timerProvider);
+    final appLoc = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -56,17 +55,18 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.all(0.0),
                         child: Text(
-                          "Comprobemos \ntu identidad,",
+                          appLoc.labelVerifyIdentity,
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
                         ),
                       ),
                       Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                            "Ingresa el código de 6 dígitos que enviamos a tu celular que termina en ${widget.data.phoneNumber.substring(widget.data.phoneNumber.length - 4)}"),
+                            appLoc.labelEnterCodePhone(widget.data.phoneNumber.substring(widget.data.phoneNumber.length - 4)),
+                        )
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -74,7 +74,7 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                             controller: codeController,
                             inputType: TextInputType.number,
                             autofillHints: [AutofillHints.oneTimeCode],
-                            labelText: "Código"),
+                            labelText: appLoc.labelCode),
                       ),
                       StreamBuilder<int>(
                         stream: timer.rawTime,
@@ -111,7 +111,7 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Text("¿No recibiste el código?"),
+                                  Text(appLoc.labelDidNotReceiveCode),
                                   TextButton(
                                     onPressed: value <= 0
                                         ? () async {
@@ -125,8 +125,8 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                                           }
                                         : null,
                                     style: TextButton.styleFrom(foregroundColor: alcanciaLightBlue),
-                                    child: const Text(
-                                      "Reenviar",
+                                    child: Text(
+                                      appLoc.buttonResend,
                                       style: TextStyle(
                                         decoration: TextDecoration.underline,
                                         fontWeight: FontWeight.bold,
@@ -149,7 +149,7 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                                 color: alcanciaLightBlue,
                                 width: 308,
                                 height: 64,
-                                buttonText: "Iniciar sesión",
+                                buttonText: appLoc.buttonLogIn,
                                 onPressed: () async {
                                   _setLoading(true);
                                   try {

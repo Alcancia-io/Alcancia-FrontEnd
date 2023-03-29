@@ -11,7 +11,7 @@ class MetaMapController {
     {"name": "Jubilado"},
     {"name": "Desempleado"},
     {"name": "Estudiante"},
-    {"name": "Miembo de ONG"},
+    {"name": "Miembro de ONG"},
     {"name": "Otro"},
   ];
 

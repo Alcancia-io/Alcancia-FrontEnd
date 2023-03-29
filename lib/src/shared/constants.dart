@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 const dominicanBanks = [
   {'name': 'Banco Santa Cruz'},
   {'name': 'Banco Popular'},
@@ -21,3 +24,35 @@ const cryptopayFee = 1;
 const suarmiFee = 2;
 
 enum RiskLevel { alto, medio, bajo }
+
+// investment info
+
+class AssetDescription extends StatelessWidget {
+  final String boldText;
+  final String regularText;
+
+  const AssetDescription({super.key, required this.boldText, required this.regularText});
+
+  @override
+  Widget build(BuildContext context) {
+    final txtTheme = Theme.of(context).textTheme;
+    final appLoc = AppLocalizations.of(context)!;
+
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: boldText,
+            style: TextStyle(fontWeight: FontWeight.bold, color: txtTheme.bodyText1?.color),
+          ),
+          TextSpan(text: regularText, style: txtTheme.bodyText1),
+        ],
+      ),
+    );
+  }
+}
+
+const usdcDescription = AssetDescription(boldText: 'USD Coin (USDC) ', regularText: '');
+const usdcProtocolDescription = AssetDescription(boldText: 'Aave ', regularText: '');
+const celoDescription = AssetDescription(boldText: 'Celo Dollar (cUSD) ', regularText: '');
+const celoProtocolDescription = AssetDescription(boldText: 'Moola Market ', regularText: '');

@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -17,6 +17,7 @@ class WelcomeScreen extends StatelessWidget {
     final screenWidth = size.width;
     var pattern = getPattern(context);
     final ResponsiveService responsiveService = ResponsiveService();
+    final appLocalization = AppLocalizations.of(context)!;
     return Container(
       decoration:
           BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.center, colors: pattern)),
@@ -47,13 +48,13 @@ class WelcomeScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Descubre una nueva forma de ahorrar",
+                          appLocalization.labelWelcomeTitle,
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: screenHeight / 23),
                         ),
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.only(top: 16.0),
                           child: Text(
-                            "Construye tu portafolio de ahorro basado en crypto",
+                            appLocalization.labelWelcomeSubtitle,
                             style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
                           ),
                         ),
@@ -62,7 +63,7 @@ class WelcomeScreen extends StatelessWidget {
                           color: alcanciaLightBlue,
                           width: responsiveService.getWidthPixels(304, screenWidth),
                           height: responsiveService.getHeightPixels(64, screenHeight),
-                          buttonText: "Registrate",
+                          buttonText: appLocalization.buttonRegister,
                           onPressed: () {
                             context.push('/registration');
                           },
@@ -77,13 +78,13 @@ class WelcomeScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Text(
-                                "¿Ya tienes cuenta?",
+                              Text(
+                                appLocalization.labelExistingAccount,
                                 textAlign: TextAlign.center,
                               ),
                               CupertinoButton(
-                                  child: const Text(
-                                    "Inicia sesión",
+                                  child: Text(
+                                    appLocalization.buttonLogIn,
                                     style: TextStyle(decoration: TextDecoration.underline, fontWeight: FontWeight.bold),
                                   ),
                                   onPressed: () => context.push("/login")),

@@ -2,6 +2,7 @@ import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'alcancia_button.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AlcanciaListPickerDialog extends StatelessWidget {
   const AlcanciaListPickerDialog({
@@ -16,6 +17,7 @@ class AlcanciaListPickerDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final appLoc = AppLocalizations.of(context)!;
     return Dialog(
       insetPadding: const EdgeInsets.all(15),
       backgroundColor: Colors.transparent,
@@ -35,7 +37,7 @@ class AlcanciaListPickerDialog extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                "Selecciona una opción",
+                appLoc.labelSelectDialogTitle,
                 style: Theme.of(context).textTheme.bodyText1,
               ),
               SizedBox(
@@ -47,7 +49,7 @@ class AlcanciaListPickerDialog extends StatelessWidget {
                 ),
               ),
               AlcanciaButton(
-                buttonText: "Aceptar",
+                buttonText: appLoc.buttonAccept,
                 color: alcanciaLightBlue,
                 width: 308,
                 height: 64,

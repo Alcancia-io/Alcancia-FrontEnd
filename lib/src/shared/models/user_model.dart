@@ -19,6 +19,7 @@ class User {
   String? kycStatus;
   String? profession;
   String? address;
+  String? lastUsedBankAccount;
 
   User({
     required this.id,
@@ -36,6 +37,7 @@ class User {
     this.kycStatus = null,
     required this.profession,
     this.address,
+    this.lastUsedBankAccount,
   });
 
   static final sampleUser = User(
@@ -70,6 +72,7 @@ class User {
       kycStatus: map['kycStatus'],
       profession: map["profession"],
       address: map["address"],
+      lastUsedBankAccount: map["lastUsedBankAccount"]
     );
   }
 }

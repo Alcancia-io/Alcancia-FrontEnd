@@ -21,6 +21,7 @@ const String meQuery = """
       kycStatus,
       profession,
       address,
+      lastUsedBankAccount,
     }
   }
 """;

@@ -1,12 +1,13 @@
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:alcancia/src/shared/services/services.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DashboardController {
   var userTransactionsInput = {
     "userTransactionsInput": {
       "currentPage": 0,
-      "itemsPerPage": 3,
+      "itemsPerPage": 10,
     },
   };
 
@@ -70,13 +71,13 @@ class DashboardController {
     }
   }
 
-  String displayKycStatus(String? status) {
+  String displayKycStatus(String? status, AppLocalizations appLoc) {
     // user has completed the process
-    if (status == 'PENDING') return 'En proceso';
-    if (status == 'FAILED') return 'Rechazada';
-    if (status == 'VERIFIED') return 'Exitosa';
+    if (status == 'PENDING') return appLoc.labelStatusProcessing;
+    if (status == 'FAILED') return appLoc.labelStatusRejected;
+    if (status == 'VERIFIED') return appLoc.labelStatusSuccessful;
 
     // user hasn't done any verfication
-    return 'No iniciada';
+    return appLoc.labelStatusNotStarted;
   }
 }

@@ -107,12 +107,15 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
-                      "¡Hola!",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
+                      appLocalization.labelHello,
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
                     ),
-                    Text("Completa la siguiente información para crear tu cuenta", style: TextStyle(fontSize: 15)),
+                    Text(
+                    appLocalization.labelRegisterSubtitle,
+                        style: TextStyle(fontSize: 15)),
                   ],
                 ),
                 const SizedBox(
@@ -120,7 +123,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                 ),
                 LabeledTextFormField(
                   controller: nameController,
-                  labelText: "Nombre(s)",
+                  labelText: appLocalization.labelName,
                   inputType: TextInputType.name,
                   autofillHints: [AutofillHints.givenName],
                   textInputAction: TextInputAction.next,
@@ -136,7 +139,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                 ),
                 LabeledTextFormField(
                   controller: lastNameController,
-                  labelText: "Apellido(s)",
+                  labelText: appLocalization.labelLastName,
                   inputType: TextInputType.name,
                   autofillHints: [AutofillHints.familyName],
                   textInputAction: TextInputAction.next,
@@ -152,7 +155,6 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                 ),
                 AlcanciaDatePicker(
                   dateProvider: selectedDateProvider,
-                  maximumDate: DateTime.now().add(const Duration(days: 1)),
                   validator: (selectedDate) {
                     if (selectedDate != null) {
                       DateTime adultDate = DateTime(
@@ -164,9 +166,9 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                       if (adultDate.isBefore(DateTime.now())) {
                         return null;
                       }
-                      return "Necesitas ser mayor de 18 años de edad";
+                      return appLocalization.errorAge;
                     }
-                    return "Selecciona una fecha";
+                    return appLocalization.labelSelectDate;
                   },
                 ),
                 const SizedBox(
@@ -175,7 +177,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                 GenderPicker(
                   selectedGenderProvider: selectedGenderProvider,
                   validator: (Gender? gender) {
-                    if (selectedGender == null) return "Selecciona un género";
+                    if (selectedGender == null) return appLocalization.errorSelectGender;
                     return null;
                   },
                 ),
@@ -184,13 +186,13 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                 ),
                 LabeledTextFormField(
                   controller: emailController,
-                  labelText: "Correo electrónico",
+                  labelText: appLocalization.labelEmail,
                   inputType: TextInputType.emailAddress,
                   autofillHints: [AutofillHints.email],
                   textInputAction: TextInputAction.next,
                   validator: (value) {
                     if (unavailableEmails.contains(value)) {
-                      return "Este correo ya esta en uso.";
+                      return appLocalization.errorEmailInUse;
                     }
                     if (value == null || value.isEmpty) {
                       return appLocalization.errorRequiredField;
@@ -204,7 +206,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                 ),
                 LabeledTextFormField(
                   controller: passwordController,
-                  labelText: "Contraseña",
+                  labelText: appLocalization.labelPassword,
                   obscure: obscurePassword,
                   autofillHints: [AutofillHints.newPassword],
                   textInputAction: TextInputAction.next,
@@ -231,7 +233,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                 ),
                 LabeledTextFormField(
                   controller: confirmPasswordController,
-                  labelText: "Confirmar contraseña",
+                  labelText: appLocalization.labelConfirmPassword,
                   obscure: obscureConfirmPassword,
                   textInputAction: TextInputAction.done,
                   suffixIcon: GestureDetector(
@@ -254,7 +256,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   height: 15,
                 ),
                 AlcanciaButton(
-                  buttonText: "Siguiente",
+                  buttonText: appLocalization.buttonNext,
                   color: alcanciaLightBlue,
                   width: 304,
                   height: 64,
@@ -267,7 +269,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                             name: nameController.text,
                             surname: lastNameController.text,
                             email: emailController.text,
-                            gender: selectedGender.string,
+                            gender: selectedGender.string(appLocalization),
                             phoneNumber: "",
                             dob: selectedDate,
                             balance: Balance(total: 0.0, aPolUSDC: 0.0, cUSD: 0.0, etherscan: 0.0, mcUSD: 0.0),

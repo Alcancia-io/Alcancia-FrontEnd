@@ -4,6 +4,7 @@ import 'package:alcancia/src/features/user-profile/presentation/user_profile_scr
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AlcanciaTabbar extends StatefulWidget {
   late int selectedIndex;
@@ -51,7 +52,7 @@ class _AlcanciaTabbarState extends State<AlcanciaTabbar> {
   @override
   Widget build(BuildContext context) {
     var ctx = Theme.of(context);
-
+    final appLoc = AppLocalizations.of(context)!;
     return Scaffold(
       bottomNavigationBar: SizedBox(
         child: BottomNavigationBar(
@@ -66,17 +67,17 @@ class _AlcanciaTabbarState extends State<AlcanciaTabbar> {
             getTabItem(
               0,
               "lib/src/resources/images/icon_home.svg",
-              "Inicio",
+              appLoc.labelTabHome,
             ),
             getTabItem(
               1,
               "lib/src/resources/images/icon_transactions.svg",
-              "Actividad",
+              appLoc.labelTabActivity,
             ),
             getTabItem(
               2,
               "lib/src/resources/images/user_profile.svg",
-              "Perfil",
+              appLoc.labelTabProfile,
             ),
           ],
         ),
