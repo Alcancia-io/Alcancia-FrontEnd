@@ -60,6 +60,8 @@ class TransactionsListScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(
                         left: 24,
                         right: 24,
+                        top: 8,
+                        bottom: 12,
                       ),
                       child: AlcanciaTransactions(
                         txns: transactionsList,

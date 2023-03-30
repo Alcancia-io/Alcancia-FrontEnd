@@ -16,6 +16,10 @@ class AlcanciaTransactions extends StatelessWidget {
     this.height,
   }) : super(key: key);
 
+  Color emptyTransactionsColor(ThemeData theme) {
+    return theme.brightness == Brightness.dark ? Colors.white70 : Colors.black54;
+  }
+
   @override
   Widget build(BuildContext context) {
     final appTheme = Theme.of(context);
@@ -37,19 +41,23 @@ class AlcanciaTransactions extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Image.asset(
                 "lib/src/resources/images/no_transactions.png",
-                color: Colors.white70,
+                color: emptyTransactionsColor(appTheme),
                 height: 80,
+
               ),
             ),
             Text(
               appLoc.labelNoTransactions,
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white70),
+              style: TextStyle(color: emptyTransactionsColor(appTheme)),
             ),
-            Text(
-              bottomText,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white70),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14.0),
+              child: Text(
+                bottomText,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: emptyTransactionsColor(appTheme)),
+              ),
             ),
           ],
         ),
