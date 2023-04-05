@@ -40,6 +40,42 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:770633131725:android:630ce997080e3458d9eb84",
+        "android_client_info": {
+          "package_name": "io.alcancia.alcancia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "770633131725-nsr0l8hrbpela99k3o08ud58ifb2mtps.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJsVRq5ZUM2BUTIxX5b09uFTY9IM50FqA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "770633131725-nsr0l8hrbpela99k3o08ud58ifb2mtps.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "770633131725-67qaehh9dt27ega8eueptnm58udm00v5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.alcancia.alcanciatest"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
