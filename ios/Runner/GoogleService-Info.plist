@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>770633131725-f3mamiim97pita160i2jpmrlf7qhobbc.apps.googleusercontent.com</string>
+	<string>770633131725-753kmlr5ersml0rkiee1skuqmth16ejj.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.770633131725-f3mamiim97pita160i2jpmrlf7qhobbc</string>
+	<string>com.googleusercontent.apps.770633131725-753kmlr5ersml0rkiee1skuqmth16ejj</string>
 	<key>API_KEY</key>
 	<string>AIzaSyCLrh1vb-OSUvE0r9ZKFirL7V3HFdNCxBo</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.alcancialabs.alcancia</string>
+	<string>io.alcancia.alcancia</string>
 	<key>PROJECT_ID</key>
 	<string>alcancia-b4b3f</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:770633131725:ios:eafafdb0b188db6dd9eb84</string>
+	<string>1:770633131725:ios:e475f46e4cd3f24fd9eb84</string>
 </dict>
 </plist>

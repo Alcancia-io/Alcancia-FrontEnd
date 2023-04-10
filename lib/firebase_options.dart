@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCJsVRq5ZUM2BUTIxX5b09uFTY9IM50FqA',
-    appId: '1:770633131725:android:c04179e206e2aaf3d9eb84',
+    appId: '1:770633131725:android:630ce997080e3458d9eb84',
     messagingSenderId: '770633131725',
     projectId: 'alcancia-b4b3f',
     storageBucket: 'alcancia-b4b3f.appspot.com',
@@ -59,11 +59,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCLrh1vb-OSUvE0r9ZKFirL7V3HFdNCxBo',
-    appId: '1:770633131725:ios:73ff66246934b727d9eb84',
+    appId: '1:770633131725:ios:e475f46e4cd3f24fd9eb84',
     messagingSenderId: '770633131725',
     projectId: 'alcancia-b4b3f',
     storageBucket: 'alcancia-b4b3f.appspot.com',
-    iosClientId: '770633131725-67qaehh9dt27ega8eueptnm58udm00v5.apps.googleusercontent.com',
-    iosBundleId: 'com.alcancia.alcanciatest',
+    iosClientId: '770633131725-753kmlr5ersml0rkiee1skuqmth16ejj.apps.googleusercontent.com',
+    iosBundleId: 'io.alcancia.alcancia',
   );
 }
