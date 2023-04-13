@@ -18,8 +18,10 @@ import 'package:alcancia/src/screens/withdraw/withdraw_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
 import 'package:alcancia/src/shared/graphql/queries.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
+import 'package:alcancia/src/shared/models/checkout_model.dart';
 import 'package:alcancia/src/shared/models/login_data_model.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
+import 'package:alcancia/src/shared/models/suarmi_order_model.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/models/transaction_model.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
@@ -113,7 +115,7 @@ final routerProvider = Provider<GoRouter>(
           name: "checkout",
           path: "/checkout",
           builder: (context, state) => Checkout(
-            txnInput: state.extra as TransactionInput,
+            checkoutData: state.extra as CheckoutModel,
           ),
         ),
         GoRoute(

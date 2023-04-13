@@ -1,4 +1,5 @@
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
+import 'package:alcancia/src/shared/models/suarmi_order_model.dart';
 import 'package:alcancia/src/shared/services/exception_service.dart';
 import 'package:alcancia/src/shared/services/services.dart';
 import 'package:alcancia/src/shared/services/suarmi_service.dart';
@@ -49,5 +50,17 @@ class SwapController {
       return Future.error(error);
     }
     return Future.error('Error getting user');
+  }
+
+  Future<SuarmiOrder> sendSuarmiOrder(Map<String, dynamic> orderInput) async {
+    final response = await _suarmiService.sendSuarmiOrder(orderInput);
+    print(response);
+    if (response.hasException) {
+      var exception = _exceptionHandler.handleException(response.exception);
+      throw Exception(exception);
+    }
+    final data = response.data?['sendSuarmiOrder'];
+    print(data);
+    return SuarmiOrder.fromJson(data);
   }
 }
