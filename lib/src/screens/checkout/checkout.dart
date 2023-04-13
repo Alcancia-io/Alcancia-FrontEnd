@@ -1,91 +1,63 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_copy_clipboard.dart';
 import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
 import 'package:alcancia/src/shared/constants.dart';
+import 'package:alcancia/src/shared/models/checkout_model.dart';
 import 'package:alcancia/src/shared/models/suarmi_order_model.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/services/exception_service.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:alcancia/src/shared/services/suarmi_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import '../../resources/colors/colors.dart';
 
 class Checkout extends StatelessWidget {
-  Checkout({super.key, required this.txnInput});
+  Checkout({super.key, required this.checkoutData});
 
-  final TransactionInput txnInput;
   final ResponsiveService responsiveService = ResponsiveService();
   final ExceptionService exceptionService = ExceptionService();
 
   final SuarmiService suarmiService = SuarmiService();
 
+  final CheckoutModel checkoutData;
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final appLoc = AppLocalizations.of(context)!;
-    var orderInput = {
-      "orderInput": {
-        "from_amount": txnInput.sourceAmount.toString(),
-        "type": txnInput.txnType.name.toUpperCase(),
-        "from_currency": "MXN",
-        "network": txnInput.network,
-        "to_amount": txnInput.targetAmount.toString(),
-        "to_currency": txnInput.targetCurrency
-      }
-    };
     return Scaffold(
       body: SafeArea(
-        child: FutureBuilder<QueryResult>(
-          future: suarmiService.sendSuarmiOrder(orderInput),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) return Text("${snapshot.error}");
-            if (snapshot.connectionState != ConnectionState.done) return Center(child: CircularProgressIndicator());
-            if (snapshot.hasData && snapshot.data!.hasException) {
-              final e = exceptionService.handleException(snapshot.data?.exception);
-              // TODO: provide useful error message when suarmi returns it
-              return Center(child: Text(appLoc.errorSomethingWentWrong));
-              // return Center(child: Text(e.toString()));
-            }
-            var suarmiOrder = SuarmiOrder.fromJson(snapshot.data?.data?["sendSuarmiOrder"]);
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    appLoc.labelDepositHere,
-                    style: Theme.of(context).textTheme.displayMedium,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 32.0),
-                    child: OrderInformation(txnInput: txnInput, suarmiConcept: suarmiOrder.concept),
-                  ),
-                  AlcanciaButton(
-                    height: responsiveService.getHeightPixels(64, screenHeight),
-                    width: double.infinity,
-                    buttonText: appLoc.buttonDeposited,
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        AlcanciaSnackBar(
-                          context,
-                          appLoc.alertDepositConfirmed,
-                        ),
-                      );
-                      context.go('/');
-                    },
-                  )
-                ],
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                appLoc.labelDepositHere,
+                style: Theme.of(context).textTheme.displayMedium,
               ),
-            );
-          },
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 32.0),
+                child: OrderInformation(txnInput: checkoutData.txnInput, suarmiConcept: checkoutData.order.concept),
+              ),
+              AlcanciaButton(
+                height: responsiveService.getHeightPixels(64, screenHeight),
+                width: double.infinity,
+                buttonText: appLoc.buttonDeposited,
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    AlcanciaSnackBar(
+                      context,
+                      appLoc.alertDepositConfirmed,
+                    ),
+                  );
+                  context.go('/');
+                },
+              )
+            ],
+          ),
         ),
       ),
     );

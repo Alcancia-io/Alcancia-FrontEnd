@@ -7,6 +7,7 @@ import 'package:alcancia/src/shared/components/alcancia_container.dart';
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/constants.dart';
+import 'package:alcancia/src/shared/models/checkout_model.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/provider/user_provider.dart';
 import 'package:alcancia/src/shared/services/exception_service.dart';
@@ -65,6 +66,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
 
   // state
   bool _isLoading = false;
+  bool _loadingCheckout = false;
   String _error = "";
 
   // Anual Percentage Yields
@@ -360,55 +362,77 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 10, bottom: 12),
-                        child: AlcanciaButton(
+                        child: _loadingCheckout ? const CircularProgressIndicator() : AlcanciaButton(
                           buttonText: appLoc.buttonTransfer,
                           onPressed: sourceAmount.isEmpty || int.parse(sourceAmount) < 200
                               ? null
                               : () async {
-                                  //Temporary Variables
-                                  var verified = user!.kycStatus;
-                                  var resident = false;
+                            //Temporary Variables
+                            var verified = user!.kycStatus;
+                            var resident = false;
 
-                                  if (verified == "VERIFIED") {
-                                    final method = sourceCurrency == 'MXN'
-                                        ? TransactionMethod.suarmi
-                                        : TransactionMethod.cryptopay;
-                                    final txnInput = TransactionInput(
-                                      txnMethod: method,
-                                      txnType: TransactionType.deposit,
-                                      sourceAmount: double.parse(sourceAmount),
-                                      targetAmount: (double.parse(sourceAmountController.text) /
-                                          (targetCurrency == "USDC" ? suarmiUSDCExchage : suarmiCeloExchange)),
-                                      targetCurrency: targetCurrency == 'USDC' ? 'aPolUSDC' : 'mcUSD',
-                                      network: targetCurrency == 'USDC' ? 'MATIC' : 'CELO',
-                                    );
-                                    Map wrapper = {
-                                      "verified": true,
-                                      "txnInput": txnInput,
-                                    };
-                                    if (user.address == null || user.profession == null) {
-                                      context.pushNamed('user-address', extra: wrapper);
-                                    } else {
-                                      context.pushNamed("checkout", extra: txnInput);
-                                    }
-                                  } else if (verified == "PENDING") {
-                                    Fluttertoast.showToast(
-                                        msg: appLoc.alertVerificationInProgress,
-                                        toastLength: Toast.LENGTH_LONG,
-                                        gravity: ToastGravity.BOTTOM);
-                                  } else if (verified == "FAILED" || verified == null) {
-                                    if (sourceCurrency == 'MXN') {
-                                      if (user.address != null && user.profession != null) {
-                                        await metaMapService.showMatiFlow(metamapMexicanINEId, user.id, appLoc);
-                                        final updatedUser = await swapController.fetchUser();
-                                        ref.read(userProvider.notifier).setUser(updatedUser);
-                                        context.go("/");
-                                      } else {
-                                        context.pushNamed("user-address", extra: {"verified": false});
-                                      }
-                                    }
+                            if (verified == "VERIFIED") {
+                              final method = sourceCurrency == 'MXN'
+                                  ? TransactionMethod.suarmi
+                                  : TransactionMethod.cryptopay;
+                              final txnInput = TransactionInput(
+                                txnMethod: method,
+                                txnType: TransactionType.deposit,
+                                sourceAmount: double.parse(sourceAmount),
+                                targetAmount: (double.parse(sourceAmountController.text) /
+                                    (targetCurrency == "USDC" ? suarmiUSDCExchage : suarmiCeloExchange)),
+                                targetCurrency: targetCurrency == 'USDC' ? 'aPolUSDC' : 'mcUSD',
+                                network: targetCurrency == 'USDC' ? 'MATIC' : 'CELO',
+                              );
+                              Map wrapper = {
+                                "verified": true,
+                                "txnInput": txnInput,
+                              };
+                              if (user.address == null || user.profession == null) {
+                                context.pushNamed('user-address', extra: wrapper);
+                              } else {
+                                final orderInput = {
+                                  "orderInput": {
+                                    "from_amount": txnInput.sourceAmount.toString(),
+                                    "type": txnInput.txnType.name.toUpperCase(),
+                                    "from_currency": "MXN",
+                                    "network": txnInput.network,
+                                    "to_amount": txnInput.targetAmount.toString(),
+                                    "to_currency": txnInput.targetCurrency
                                   }
-                                },
+                                };
+                                try {
+                                  setState(() {
+                                    _loadingCheckout = true;
+                                  });
+                                  final order = await swapController.sendSuarmiOrder(orderInput);
+                                  final checkoutData = CheckoutModel(order: order, txnInput: txnInput);
+                                  context.pushNamed("checkout", extra: checkoutData);
+                                } catch (e) {
+                                  Fluttertoast.showToast(msg: appLoc.errorSomethingWentWrong, backgroundColor: Colors.red, textColor: Colors.white70);
+                                }
+                                setState(() {
+                                  _loadingCheckout = false;
+                                });
+                              }
+                            } else if (verified == "PENDING") {
+                              Fluttertoast.showToast(
+                                  msg: appLoc.alertVerificationInProgress,
+                                  toastLength: Toast.LENGTH_LONG,
+                                  gravity: ToastGravity.BOTTOM);
+                            } else if (verified == "FAILED" || verified == null) {
+                              if (sourceCurrency == 'MXN') {
+                                if (user.address != null && user.profession != null) {
+                                  await metaMapService.showMatiFlow(metamapMexicanINEId, user.id, appLoc);
+                                  final updatedUser = await swapController.fetchUser();
+                                  ref.read(userProvider.notifier).setUser(updatedUser);
+                                  context.go("/");
+                                } else {
+                                  context.pushNamed("user-address", extra: {"verified": false});
+                                }
+                              }
+                            }
+                          },
                           color: alcanciaLightBlue,
                           width: double.infinity,
                           height: responsiveService.getHeightPixels(64, screenHeight),

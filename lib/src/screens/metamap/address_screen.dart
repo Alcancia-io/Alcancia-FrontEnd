@@ -7,6 +7,8 @@ import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/models/address_model.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
+import 'package:alcancia/src/shared/models/checkout_model.dart';
+import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import 'package:alcancia/src/shared/services/metamap_service.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
@@ -79,6 +81,7 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
   ];
 
   late String _selectedState = states.first["value"]!;
+  bool _loadingCheckout = false;
 
   final metamapMexicanINEId = dotenv.env['MEXICO_INE_FLOW_ID'] as String;
   final jsonEncoder = JsonEncoder();
@@ -147,8 +150,7 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                   inputType: TextInputType.text,
                   textInputAction: TextInputAction.next,
                   validator: (newValue) {
-                    if (newValue != null && newValue.length > 25)
-                      return appLocalization.errorAddressNumberLength;
+                    if (newValue != null && newValue.length > 25) return appLocalization.errorAddressNumberLength;
                   },
                 ),
                 const SizedBox(
@@ -226,49 +228,76 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                 const SizedBox(
                   height: 30,
                 ),
-                AlcanciaButton(
-                  buttonText: appLocalization.buttonNext,
-                  color: alcanciaLightBlue,
-                  width: 304,
-                  height: 64,
-                  onPressed: () async {
-                    final address = Address(
-                      street: _streetController.text,
-                      colonia: _neighborhoodController.text,
-                      extNum: _exNumberController.text,
-                      intNum: _inNumberController.text,
-                      state: _selectedState,
-                      zip: _zipController.text,
-                    );
+                if (_loadingCheckout) ...[
+                  const CircularProgressIndicator(),
+                ] else ...[
+                  AlcanciaButton(
+                    buttonText: appLocalization.buttonNext,
+                    color: alcanciaLightBlue,
+                    width: 304,
+                    height: 64,
+                    onPressed: () async {
+                      final address = Address(
+                        street: _streetController.text,
+                        colonia: _neighborhoodController.text,
+                        extNum: _exNumberController.text,
+                        intNum: _inNumberController.text,
+                        state: _selectedState,
+                        zip: _zipController.text,
+                      );
 
-                    final User newUser = user!;
-                    var jsonAddress = jsonEncode(address.toJson());
-                    selectedProfession = selectedProfession.replaceAll(' ', '');
-                    newUser.profession = selectedProfession;
-                    newUser.address = jsonAddress;
-                    ref.read(userProvider.notifier).setUser(newUser);
-                    try {
-                      await metaMapController.updateUser(address: jsonAddress, profession: selectedProfession);
-                    } catch (e) {
-                      Fluttertoast.showToast(msg: e.toString());
-                      context.go('/');
-                    }
-
-                    if (!widget.wrapper['verified']) {
+                      final User newUser = user!;
+                      var jsonAddress = jsonEncode(address.toJson());
+                      selectedProfession = selectedProfession.replaceAll(' ', '');
+                      newUser.profession = selectedProfession;
+                      newUser.address = jsonAddress;
+                      ref.read(userProvider.notifier).setUser(newUser);
                       try {
-                        // Metamap flow
-                        await metamapService.showMatiFlow(metamapMexicanINEId, user.id, appLocalization);
+                        await metaMapController.updateUser(address: jsonAddress, profession: selectedProfession);
                       } catch (e) {
                         Fluttertoast.showToast(msg: e.toString());
+                        context.go('/');
                       }
-                      final updatedUser = await addressController.fetchUser();
-                      ref.read(userProvider.notifier).setUser(updatedUser);
-                      context.go('/');
-                    } else {
-                      context.pushNamed('checkout', extra: widget.wrapper['txnInput']);
-                    }
-                  },
-                ),
+
+                      if (!widget.wrapper['verified']) {
+                        try {
+                          // Metamap flow
+                          await metamapService.showMatiFlow(metamapMexicanINEId, user.id, appLocalization);
+                        } catch (e) {
+                          Fluttertoast.showToast(msg: e.toString());
+                        }
+                        final updatedUser = await addressController.fetchUser();
+                        ref.read(userProvider.notifier).setUser(updatedUser);
+                        context.go('/');
+                      } else {
+                        final txnInput = widget.wrapper['txnInput'] as TransactionInput;
+                        final orderInput = {
+                          "orderInput": {
+                            "from_amount": txnInput.sourceAmount.toString(),
+                            "type": txnInput.txnType.name.toUpperCase(),
+                            "from_currency": "MXN",
+                            "network": txnInput.network,
+                            "to_amount": txnInput.targetAmount.toString(),
+                            "to_currency": txnInput.targetCurrency
+                          }
+                        };
+                        try {
+                          setState(() {
+                            _loadingCheckout = true;
+                          });
+                          final order = await addressController.sendSuarmiOrder(orderInput);
+                          final checkoutData = CheckoutModel(order: order, txnInput: txnInput);
+                          context.pushNamed('checkout', extra: checkoutData);
+                        } catch (e) {
+                          Fluttertoast.showToast(msg: appLocalization.errorSomethingWentWrong, backgroundColor: Colors.red, textColor: Colors.white70);
+                        }
+                        setState(() {
+                          _loadingCheckout = false;
+                        });
+                      }
+                    },
+                  ),
+                ],
               ],
             ),
           ),
