@@ -131,6 +131,7 @@
 	"buttonTransfer": "Transfer",
 	"alertVerificationInProgress": "Review in process, wait a moment...",
 	"errorMinimumDepositAmount": "Minimum amount of $200",
+	"errorMaximumDepositAmount": "Maximum amount of $50,000",
 	"labelRiskLevel": "Risk Level: ",
 	"labelAPY": "The APY of {targetCurrency} is ",
 	"labelOnboardingText1": "We know that you want to achieve many goals, so at Alcancía we take care of helping you grow your capital",
