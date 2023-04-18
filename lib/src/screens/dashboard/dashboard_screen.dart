@@ -30,7 +30,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   String _error = "";
 
   Future<void> setUserInformation() async {
-
     setState(() {
       _isLoading = true;
     });
@@ -85,7 +84,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     if (_error != "") return SafeArea(child: Center(child: Text(_error)));
     var kycStatus = dashboardController.displayKycStatus(user!.kycStatus, appLoc);
     return Scaffold(
-      appBar: AlcanciaToolbar(state: StateToolbar.profileTitleIcon, logoHeight: 38, userName: user.name,),
+      appBar: AlcanciaToolbar(
+        state: StateToolbar.profileTitleIcon,
+        logoHeight: 38,
+        userName: user.name,
+      ),
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.only(
@@ -98,25 +101,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             onRefresh: () => setUserInformation(),
             child: ListView(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(appLoc.labelVerificationStatus(kycStatus)),
-                        ),
-                        if (user.kycStatus == "VERIFIED") ...[
-                          SvgPicture.asset("lib/src/resources/images/icon_check.svg", height: 20),
-                        ],
-                        if (user.kycStatus == "FAILED" || user.kycStatus == null) ...[
-                          SvgPicture.asset("lib/src/resources/images/icon_cross.svg", height: 20),
-                        ],
-                      ],
-                    ),
-                  ],
-                ),
                 Container(
                   padding: const EdgeInsets.only(bottom: 16, top: 10),
                   child: DashboardCard(),
