@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class TransactionDetailItem extends StatelessWidget {
   final String leftText;
   final String? rightText;
-  final Icon? rightIcon;
+  final Widget? rightIcon;
 
   const TransactionDetailItem(
       {Key? key, required this.leftText, this.rightText, this.rightIcon})

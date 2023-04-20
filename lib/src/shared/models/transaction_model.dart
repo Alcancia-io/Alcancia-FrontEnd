@@ -41,16 +41,11 @@ class Transaction {
 }
 
 extension StatusIcon on Transaction {
-  Icon get iconForTxnStatus {
-    if (status == "PENDING") return const Icon(Icons.hourglass_bottom_rounded);
-    if (status == "COMPLETED")
-      return const Icon(
-        Icons.check,
-        color: Colors.green,
-      );
-    return const Icon(
-      Icons.close,
-      color: Colors.red,
-    );
+  Widget get iconForTxnStatus {
+    if (status == "PENDING") return Image.asset("lib/src/resources/images/hourglass_flowing_sand.png", width: 24,);
+    if (status == "COMPLETED") {
+      return Image.asset("lib/src/resources/images/white_check_mark.png", width: 24,);
+    }
+    return Image.asset("lib/src/resources/images/x.png", width: 24,);
   }
 }
