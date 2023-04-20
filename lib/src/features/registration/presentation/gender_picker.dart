@@ -25,7 +25,10 @@ class GenderPicker extends ConsumerWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(appLocalization.labelGenderIdentification),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6.0),
+              child: Text(appLocalization.labelGenderIdentification),
+            ),
             Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).inputDecorationTheme.fillColor,
