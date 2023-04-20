@@ -24,16 +24,16 @@ class UserProfileScreen extends ConsumerWidget {
     final authService = ref.watch(authServiceProvider);
     final appLoc = AppLocalizations.of(context)!;
     return Scaffold(
+      appBar: AlcanciaToolbar(
+        state: StateToolbar.titleIcon,
+        logoHeight: 38,
+        title: appLoc.labelProfile,
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 10),
           child: Column(
             children: [
-              AlcanciaToolbar(
-                state: StateToolbar.titleIcon,
-                logoHeight: 38,
-                title: appLoc.labelProfile,
-              ),
               _profileCard(context, user),
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
