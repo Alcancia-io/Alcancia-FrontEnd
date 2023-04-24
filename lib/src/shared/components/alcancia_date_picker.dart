@@ -27,7 +27,10 @@ class AlcanciaDatePicker extends ConsumerWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(appLoc.labelBirthdate),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6.0),
+              child: Text(appLoc.labelBirthdate),
+            ),
             Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).inputDecorationTheme.fillColor,

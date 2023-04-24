@@ -35,7 +35,10 @@ class LabeledTextFormField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(labelText),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 6.0),
+          child: Text(labelText),
+        ),
         TextFormField(
           controller: controller,
           keyboardType: inputType,
