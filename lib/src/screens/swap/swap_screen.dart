@@ -364,7 +364,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                         padding: const EdgeInsets.only(top: 10, bottom: 12),
                         child: _loadingCheckout ? const CircularProgressIndicator() : AlcanciaButton(
                           buttonText: appLoc.buttonTransfer,
-                          onPressed: sourceAmount.isEmpty || int.parse(sourceAmount) < 200
+                          onPressed: sourceAmount.isEmpty ||
+                              int.parse(sourceAmount) < 200 || int.parse(sourceAmount) > 50000
                               ? null
                               : () async {
                             //Temporary Variables
@@ -438,11 +439,14 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                           height: responsiveService.getHeightPixels(64, screenHeight),
                         ),
                       ),
-                      if (sourceAmount.isNotEmpty && int.parse(sourceAmount) < 200) ...[
+                      if (sourceAmount.isNotEmpty && (int.parse(sourceAmount) < 200 ||
+                          int.parse(sourceAmount) > 50000)) ...[
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            appLoc.errorMinimumDepositAmount,
+                            int.parse(sourceAmount) < 200
+                                ? appLoc.errorMinimumDepositAmount
+                                : appLoc.errorMaximumDepositAmount,
                             style: const TextStyle(color: Colors.red),
                           ),
                         ),

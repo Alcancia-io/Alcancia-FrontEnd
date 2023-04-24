@@ -192,6 +192,7 @@
 	"buttonTransfer": "Transferencia",
 	"alertVerificationInProgress": "Revisión en proceso, espera un momento...",
 	"errorMinimumDepositAmount": "Cantidad mínima de $200",
+	"errorMaximumDepositAmount": "Cantidad máxima de $50,000",
 	"labelRiskLevel": "Nivel de riesgo: ",
 	"labelAPY": "El rendimiento anual de {targetCurrency} es de ",
 	"@labelAPY": {
