@@ -42,8 +42,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
 
   // target amount icons
   final List<Map> targetCurrencies = [
-    {"name": "CUSD", "icon": "lib/src/resources/images/icon_celo_usd.png"},
     {"name": "USDC", "icon": "lib/src/resources/images/icon_usdc.png"},
+    {"name": "CUSD", "icon": "lib/src/resources/images/icon_celo_usd.png"},
   ];
 
   // dropdown value for target currency, it can be CUSD or USDC
