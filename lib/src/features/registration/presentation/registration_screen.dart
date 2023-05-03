@@ -13,7 +13,7 @@ import '../data/gender.dart';
 import 'gender_picker.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 
-final emailsInUseProvider = StateProvider((ref) => [""]);
+final emailsInUseProvider = StateProvider<List<String>>((ref) => []);
 
 class RegistrationScreen extends ConsumerStatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
