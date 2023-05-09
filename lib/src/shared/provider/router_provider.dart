@@ -14,6 +14,7 @@ import 'package:alcancia/src/screens/metamap/address_screen.dart';
 import 'package:alcancia/src/screens/onboarding/onboarding_screens.dart';
 import 'package:alcancia/src/screens/success/success_screen.dart';
 import 'package:alcancia/src/screens/swap/swap_screen.dart';
+import 'package:alcancia/src/screens/transfer/transfer_screen.dart';
 import 'package:alcancia/src/screens/withdraw/withdraw_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
 import 'package:alcancia/src/shared/graphql/queries.dart';
@@ -144,6 +145,11 @@ final routerProvider = Provider<GoRouter>(
           name: "onboarding",
           path: "/onboarding",
           builder: (context, state) => OnboardingScreens(),
+        ),
+        GoRoute(
+          name: "transfer",
+          path: "/transfer",
+          builder: (context, state) => const TransferScreen(),
         ),
       ],
       redirect: (context, state) async {
