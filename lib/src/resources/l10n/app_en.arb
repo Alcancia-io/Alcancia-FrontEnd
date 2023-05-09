@@ -146,6 +146,7 @@
 	"errorMinimumWithdrawAmount": "Minimum withdrawal of $10",
 	"labelDeposit": "Deposit",
 	"labelWithdraw": "Withdraw",
+	"labelTransfer": "Transfer",
 	"labelNoTransactions": "No transactions yet",
 	"labelHelloName": "Hello, {username}",
 	"labelTabActivity": "Activity",
@@ -176,5 +177,7 @@
 	"labelProtocol": "Protocol",
 	"labelStartTransactionDashboard": "Start a new transaction by tapping the \"Deposit\" or \"Withdraw\" buttons above",
 	"labelStartTransactionActivity": "Start a new transaction on the home screen",
-	"buttonWhatAmIInvesting": "What am I investing in?"
+	"buttonWhatAmIInvesting": "What am I investing in?",
+	"labelTransferAmount": "Transfer amount",
+	"labelTransferPrompt": "Transfer to another Alcancía account"
 }

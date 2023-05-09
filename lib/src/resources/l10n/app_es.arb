@@ -214,6 +214,7 @@
 	"errorMinimumWithdrawAmount": "Retiro mínimo de $10",
 	"labelDeposit": "Depositar",
 	"labelWithdraw": "Retirar",
+	"labelTransfer": "Transferir",
 	"labelNoTransactions": "Aún no hay transacciones",
 	"labelHelloName": "Hola, {username}",
 	"@labelHelloName": {
@@ -258,5 +259,7 @@
 	"labelProtocol": "Protocolo",
 	"labelStartTransactionDashboard": "Inicie una nueva transacción tocando los botones \"Depositar\" o \"Retirar\" arriba",
 	"labelStartTransactionActivity": "Inicie una nueva transacción en la pantalla de inicio",
-	"buttonWhatAmIInvesting": "¿En qué estoy invirtiendo?"
+	"buttonWhatAmIInvesting": "¿En qué estoy invirtiendo?",
+	"labelTransferAmount": "Cantidad a transferir",
+	"labelTransferPrompt": "Transferencia entre cuentas Alcancía"
 }
