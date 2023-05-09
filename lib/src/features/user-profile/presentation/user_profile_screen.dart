@@ -110,6 +110,7 @@ class UserProfileScreen extends ConsumerWidget {
                   child: AlcanciaButton(
                     foregroundColor: alcanciaLightBlue,
                     side: BorderSide(color: alcanciaLightBlue),
+                    color: Colors.transparent,
                     buttonText: appLoc.labelSignOut,
                     fontSize: 18,
                     padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
