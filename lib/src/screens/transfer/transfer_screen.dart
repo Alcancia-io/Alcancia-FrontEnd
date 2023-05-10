@@ -67,7 +67,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
   Widget build(BuildContext context) {
     final appLoc = AppLocalizations.of(context)!;
     final txtTheme = Theme.of(context).textTheme;
-    final userBalance = Balance(total: 1000, aPolUSDC: 1000, cUSD: 200, etherscan: 0, mcUSD: 0);
+    final userBalance = ref.watch(balanceProvider);
     final balance = sourceCurrency == "USDC"
         ? userBalance.usdcBalance
         : userBalance.celoBalance;
@@ -232,6 +232,8 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                                         final currency = sourceCurrency;
                                         print(phoneNumber);
                                         print(currency);
+                                        print(balance);
+                                        print(_transferAmountController.text);
                                         // TODO: Get User from Phone Number
                                         // TODO: Show confirmation dialog
                                       } catch (e) {
