@@ -3,7 +3,6 @@ const String transactionsQuery = """
     getUserTransactions(getUserTransactionsInput: \$userTransactionsInput) {
       totalItems,
       items {
-        ... on Transaction {
           createdAt,
           id,
           sourceAmount,
@@ -12,15 +11,8 @@ const String transactionsQuery = """
           amount,
           type,
           status,
-        }
-        ... on P2P {
-          createdAt,
-          id,
           senderId,
           receiverId,
-          amount,
-          status,
-        }
       }
     }
   }
