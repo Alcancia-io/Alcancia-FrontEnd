@@ -1,7 +1,9 @@
 import 'package:alcancia/src/shared/extensions/type_extensions.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/models/transaction_model.dart';
+import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import "package:flutter/material.dart";
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -19,8 +21,6 @@ class AlcanciaTransactionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var txtTheme = Theme.of(context).textTheme;
-    final appLoc = AppLocalizations.of(context)!;
     return InkWell(
         customBorder:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -31,13 +31,14 @@ class AlcanciaTransactionItem extends StatelessWidget {
   }
 }
 
-class TransactionItem extends StatelessWidget {
+class TransactionItem extends ConsumerWidget {
   const TransactionItem({Key? key, required this.txn}) : super(key: key);
 
   final Transaction txn;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider)!;
     final appLoc = AppLocalizations.of(context)!;
     final txtTheme = Theme.of(context).textTheme;
     switch (txn.type) {
@@ -50,7 +51,7 @@ class TransactionItem extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  txn.iconForTxnStatus,
+                  txn.iconForTxnStatus(user.id),
                   Padding(
                     padding: const EdgeInsets.only(left: 6),
                     child: Column(
@@ -98,7 +99,7 @@ class TransactionItem extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  txn.iconForTxnStatus,
+                  txn.iconForTxnStatus(user.id),
                   Padding(
                     padding: const EdgeInsets.only(left: 6),
                     child: Column(
@@ -146,7 +147,7 @@ class TransactionItem extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  txn.iconForTxnStatus,
+                  txn.iconForTxnStatus(user.id),
                   Padding(
                     padding: const EdgeInsets.only(left: 6),
                     child: Column(
@@ -188,7 +189,7 @@ class TransactionItem extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  txn.iconForTxnStatus,
+                  txn.iconForTxnStatus(user.id),
                   Padding(
                     padding: const EdgeInsets.only(left: 6),
                     child: Column(

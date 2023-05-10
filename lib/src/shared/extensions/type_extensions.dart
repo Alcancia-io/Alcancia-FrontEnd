@@ -9,7 +9,7 @@ extension TypeToString on TransactionType {
       case 'WITHDRAW':
         return appLoc.labelDetailWithdraw;
       case 'P2P':
-        return 'P2P';
+        return appLoc.labelDetailTransfer;
     }
     return name;
   }

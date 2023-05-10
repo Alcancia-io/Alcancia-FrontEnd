@@ -2,6 +2,7 @@ import 'package:alcancia/src/shared/models/currency_asset.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Transaction {
   String transactionID;
@@ -49,11 +50,14 @@ class Transaction {
 }
 
 extension StatusIcon on Transaction {
-  Widget get iconForTxnStatus {
-    if (status == "PENDING") return Image.asset("lib/src/resources/images/hourglass_flowing_sand.png", width: 24,);
+  Widget iconForTxnStatus(String currentUserId) {
+    print(currentUserId);
+    if (status == "PENDING") return SvgPicture.asset("lib/src/resources/images/pending.svg", width: 24,);
     if (status == "COMPLETED") {
-      return Image.asset("lib/src/resources/images/white_check_mark.png", width: 24,);
+      if (type == TransactionType.deposit || receiverId == currentUserId) return SvgPicture.asset("lib/src/resources/images/deposit.svg", width: 24,);
+      if (type == TransactionType.withdraw || senderId == currentUserId) return SvgPicture.asset("lib/src/resources/images/withdrawal.svg", width: 24,);
     }
-    return Image.asset("lib/src/resources/images/x.png", width: 24,);
+    // FAILED or EXPIRED
+    return SvgPicture.asset("lib/src/resources/images/failed.svg", width: 24,);
   }
 }

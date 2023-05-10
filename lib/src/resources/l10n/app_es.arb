@@ -229,6 +229,7 @@
 	"labelTabProfile": "Perfil",
 	"labelDetailDeposit": "DEPOSITO",
 	"labelDetailWithdraw": "RETIRO",
+	"labelDetailTransfer": "TRANSFERENCIA",
 	"labelDetailYield": "RENDIMIENTO",
 	"labelTotalBalance": "Balance Total",
 	"labelCELOBalance": "Balance Celo USD",
