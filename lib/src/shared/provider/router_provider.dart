@@ -13,8 +13,10 @@ import 'package:alcancia/src/screens/login/mfa_screen.dart';
 import 'package:alcancia/src/screens/metamap/address_screen.dart';
 import 'package:alcancia/src/screens/onboarding/onboarding_screens.dart';
 import 'package:alcancia/src/screens/success/success_screen.dart';
+import 'package:alcancia/src/screens/successful_transaction/successful_transaction.dart';
 import 'package:alcancia/src/screens/swap/swap_screen.dart';
 import 'package:alcancia/src/screens/withdraw/withdraw_screen.dart';
+import 'package:alcancia/src/shared/components/alcancia_confirmation_dialog.dart';
 import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
 import 'package:alcancia/src/shared/graphql/queries.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
@@ -67,11 +69,12 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "homescreen",
           path: "/homescreen/:id",
-          builder: (context, state) {
-            return AlcanciaTabbar(
-              selectedIndex: int.parse(state.params['id'] as String),
-            );
-          },
+          builder: (context, state) => AlcanciaConfirmationDialog(),
+          // builder: (context, state) {
+          //   return AlcanciaTabbar(
+          //     selectedIndex: int.parse(state.params['id'] as String),
+          //   );
+          // },
         ),
         GoRoute(
           name: "account",
@@ -144,6 +147,11 @@ final routerProvider = Provider<GoRouter>(
           name: "onboarding",
           path: "/onboarding",
           builder: (context, state) => OnboardingScreens(),
+        ),
+        GoRoute(
+          name: "successful-transaction",
+          path: "/successful-transaction",
+          builder: (context, state) => SuccessfulTransaction()
         ),
       ],
       redirect: (context, state) async {

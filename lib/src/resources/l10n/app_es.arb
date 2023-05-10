@@ -258,5 +258,10 @@
 	"labelProtocol": "Protocolo",
 	"labelStartTransactionDashboard": "Inicie una nueva transacción tocando los botones \"Depositar\" o \"Retirar\" arriba",
 	"labelStartTransactionActivity": "Inicie una nueva transacción en la pantalla de inicio",
-	"buttonWhatAmIInvesting": "¿En qué estoy invirtiendo?"
+	"buttonWhatAmIInvesting": "¿En qué estoy invirtiendo?",
+	"buttonWhatAmIInvesting": "What am I investing in?",
+	"isDataCorrect": "¿Los datos son correctos?",
+	"sourceAccount": "Cuenta de origen",
+	"targetPhone": "Celular destino",
+	"amount": "Monto"
 }

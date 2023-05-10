@@ -176,5 +176,9 @@
 	"labelProtocol": "Protocol",
 	"labelStartTransactionDashboard": "Start a new transaction by tapping the \"Deposit\" or \"Withdraw\" buttons above",
 	"labelStartTransactionActivity": "Start a new transaction on the home screen",
-	"buttonWhatAmIInvesting": "What am I investing in?"
+	"buttonWhatAmIInvesting": "What am I investing in?",
+	"isDataCorrect": "Is the data correct",
+	"sourceAccount": "Source account",
+	"targetPhone": "Target phone",
+	"amount": "Amount"
 }
