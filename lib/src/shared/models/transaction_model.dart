@@ -51,7 +51,6 @@ class Transaction {
 
 extension StatusIcon on Transaction {
   Widget iconForTxnStatus(String currentUserId) {
-    print(currentUserId);
     if (status == "PENDING") return SvgPicture.asset("lib/src/resources/images/pending.svg", width: 24,);
     if (status == "COMPLETED") {
       if (type == TransactionType.deposit || receiverId == currentUserId) return SvgPicture.asset("lib/src/resources/images/deposit.svg", width: 24,);
