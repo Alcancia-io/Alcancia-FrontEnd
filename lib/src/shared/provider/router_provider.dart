@@ -69,12 +69,11 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "homescreen",
           path: "/homescreen/:id",
-          builder: (context, state) => AlcanciaConfirmationDialog(),
-          // builder: (context, state) {
-          //   return AlcanciaTabbar(
-          //     selectedIndex: int.parse(state.params['id'] as String),
-          //   );
-          // },
+          builder: (context, state) {
+            return AlcanciaTabbar(
+              selectedIndex: int.parse(state.params['id'] as String),
+            );
+          },
         ),
         GoRoute(
           name: "account",
