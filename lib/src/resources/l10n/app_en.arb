@@ -146,6 +146,7 @@
 	"errorMinimumWithdrawAmount": "Minimum withdrawal of $10",
 	"labelDeposit": "Deposit",
 	"labelWithdraw": "Withdraw",
+	"labelTransfer": "Transfer",
 	"labelNoTransactions": "No transactions yet",
 	"labelHelloName": "Hello, {username}",
 	"labelTabActivity": "Activity",
@@ -180,5 +181,7 @@
 	"isDataCorrect": "Is the data correct",
 	"sourceAccount": "Source account",
 	"targetPhone": "Target phone",
-	"amount": "Amount"
+	"amount": "Amount",
+	"labelTransferAmount": "Transfer amount",
+	"labelTransferPrompt": "Transfer to another Alcancía account"
 }

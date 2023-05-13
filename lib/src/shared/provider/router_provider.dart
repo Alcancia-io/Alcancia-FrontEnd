@@ -15,6 +15,7 @@ import 'package:alcancia/src/screens/onboarding/onboarding_screens.dart';
 import 'package:alcancia/src/screens/success/success_screen.dart';
 import 'package:alcancia/src/screens/successful_transaction/successful_transaction.dart';
 import 'package:alcancia/src/screens/swap/swap_screen.dart';
+import 'package:alcancia/src/screens/transfer/transfer_screen.dart';
 import 'package:alcancia/src/screens/withdraw/withdraw_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_confirmation_dialog.dart';
 import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
@@ -88,8 +89,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "phone-registration",
           path: "/phone-registration",
-          builder: (context, state) =>
-              PhoneRegistrationScreen(userRegistrationData: state.extra as UserRegistrationModel),
+          builder: (context, state) => PhoneRegistrationScreen(
+              userRegistrationData: state.extra as UserRegistrationModel),
         ),
         GoRoute(
           name: "swap",
@@ -99,7 +100,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "transaction_detail",
           path: "/transaction_detail",
-          builder: (context, state) => TransactionDetail(txn: state.extra as Transaction),
+          builder: (context, state) =>
+              TransactionDetail(txn: state.extra as Transaction),
         ),
         GoRoute(
           name: "otp",
@@ -111,7 +113,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "mfa",
           path: "/mfa",
-          builder: (context, state) => MFAScreen(data: state.extra as LoginDataModel),
+          builder: (context, state) =>
+              MFAScreen(data: state.extra as LoginDataModel),
         ),
         GoRoute(
           name: "checkout",
@@ -140,7 +143,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "success",
           path: "/success",
-          builder: (context, state) => SuccessScreen(message: state.extra as String),
+          builder: (context, state) =>
+              SuccessScreen(message: state.extra as String),
         ),
         GoRoute(
           name: "onboarding",
@@ -148,9 +152,13 @@ final routerProvider = Provider<GoRouter>(
           builder: (context, state) => OnboardingScreens(),
         ),
         GoRoute(
-          name: "successful-transaction",
-          path: "/successful-transaction",
-          builder: (context, state) => SuccessfulTransaction()
+            name: "successful-transaction",
+            path: "/successful-transaction",
+            builder: (context, state) => SuccessfulTransaction()),
+        GoRoute(
+          name: "transfer",
+          path: "/transfer",
+          builder: (context, state) => const TransferScreen(),
         ),
       ],
       redirect: (context, state) async {
@@ -173,7 +181,8 @@ final routerProvider = Provider<GoRouter>(
         final finishedOnboarding = await _finishedOnboarding();
         final onboardingLoc = state.namedLocation('onboarding');
         final isOnboarding = state.subloc == onboardingLoc;
-        if (!loggedIn && !finishedOnboarding && !isOnboarding) return onboardingLoc;
+        if (!loggedIn && !finishedOnboarding && !isOnboarding)
+          return onboardingLoc;
         if (!loggedIn &&
             !loggingIn &&
             !creatingAccount &&
@@ -181,8 +190,10 @@ final routerProvider = Provider<GoRouter>(
             !isMfa &&
             !isPhoneRegistration &&
             !isOtp &&
-            !isForgotPassword && !isOnboarding) return welcomeLoc;
-        if (loggedIn && (loggingIn || creatingAccount || isStartup)) return home;
+            !isForgotPassword &&
+            !isOnboarding) return welcomeLoc;
+        if (loggedIn && (loggingIn || creatingAccount || isStartup))
+          return home;
         return null;
       },
     );

@@ -26,7 +26,7 @@ class AlcanciaDropdown extends StatefulWidget {
 }
 
 class _AlcanciaDropdownState extends State<AlcanciaDropdown> {
-  late String dropdownValue = widget.dropdownItems.first['name'];
+  late String dropdownValue = widget.dropdownItems.first['value'] ?? widget.dropdownItems.first['name'];
   final ResponsiveService _responsiveService = ResponsiveService();
 
   @override
@@ -63,7 +63,7 @@ class _AlcanciaDropdownState extends State<AlcanciaDropdown> {
           },
           items: widget.dropdownItems.map<DropdownMenuItem<String>>((item) {
             return DropdownMenuItem(
-              value: item['name'],
+              value: item['value'] ?? item['name'],
               child: AlcanciaDropdownItem(
                 itemsAlignment: widget.itemsAlignment,
                 item: item,
@@ -108,7 +108,8 @@ class AlcanciaDropdownItem extends StatelessWidget {
                 ),
               ),
             ),
-          Text(
+          if (item['name'] != null)
+            Text(
             item['name'],
             style: TextStyle(
               fontSize: _responsiveService.getHeightPixels(fontSize, screenHeight),
