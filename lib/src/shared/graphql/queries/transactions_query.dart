@@ -3,14 +3,16 @@ const String transactionsQuery = """
     getUserTransactions(getUserTransactionsInput: \$userTransactionsInput) {
       totalItems,
       items {
-        createdAt,
-        id,
-        sourceAmount,
-        sourceAsset,
-        targetAsset,
-        amount,
-        type,
-        status,
+          createdAt,
+          id,
+          sourceAmount,
+          sourceAsset,
+          targetAsset,
+          amount,
+          type,
+          status,
+          senderId,
+          receiverId,
       }
     }
   }

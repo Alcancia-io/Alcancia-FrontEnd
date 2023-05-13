@@ -1,5 +1,5 @@
-import 'package:alcancia/src/shared/extensions/string_extensions.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:alcancia/src/shared/extensions/type_extensions.dart';
+import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:flutter/material.dart';
 import 'package:alcancia/src/features/transaction-detail/presentation/transaction_detail_item.dart';
 import 'package:go_router/go_router.dart';
@@ -15,7 +15,6 @@ class TransactionDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     final ctx = Theme.of(context);
     final appLoc = AppLocalizations.of(context)!;
-    print(txn.targetAsset);
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -51,17 +50,24 @@ class TransactionDetail extends StatelessWidget {
                     leftText: appLoc.labelTransactionId,
                     rightText: '${txn.transactionID.substring(0, txn.transactionID.indexOf('-'))}',
                   ),
+                  if (txn.type == TransactionType.deposit) ... [
+                    TransactionDetailItem(
+                      leftText: appLoc.labelDepositValue,
+                      rightText: '\$${txn.sourceAmount?.toStringAsFixed(2)}',
+                    ),
+                  ] else if (txn.type == TransactionType.withdraw) ... [
+                    TransactionDetailItem(
+                      leftText: appLoc.labelWithdrawalValue,
+                      rightText: '\$${txn.sourceAmount?.toStringAsFixed(2)}',
+                    ),
+                  ],
                   TransactionDetailItem(
-                    leftText: appLoc.labelDepositValue,
-                    rightText: '\$${txn.sourceAmount.toStringAsFixed(2)}',
-                  ),
-                  TransactionDetailItem(
-                    leftText: appLoc.labelValueAsset(txn.targetAsset),
+                    leftText: appLoc.labelValueAsset(txn.targetAsset ?? ''),
                     rightText: '\$${txn.amount.toStringAsFixed(2)}',
                   ),
                   TransactionDetailItem(
                     leftText: appLoc.labelTransactionType,
-                    rightText: txn.type.isDepositOrWithdraw(appLoc),
+                    rightText: txn.type.typeToString(appLoc),
                   ),
                   TransactionDetailItem(
                     leftText: appLoc.labelStatus,

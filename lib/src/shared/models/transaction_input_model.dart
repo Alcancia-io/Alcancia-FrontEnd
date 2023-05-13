@@ -1,4 +1,4 @@
-enum TransactionType { deposit, withdrawal }
+enum TransactionType { deposit, withdraw, p2p, unknown }
 
 enum TransactionMethod { cryptopay, suarmi }
 
