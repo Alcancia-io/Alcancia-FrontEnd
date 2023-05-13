@@ -1,4 +1,5 @@
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
+import 'package:alcancia/src/shared/models/minimal_user_model.dart';
 import 'package:alcancia/src/shared/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -7,11 +8,20 @@ import 'package:go_router/go_router.dart';
 import '../../resources/colors/colors.dart';
 
 class AlcanciaConfirmationDialog extends StatelessWidget {
-  const AlcanciaConfirmationDialog({super.key, required this.targetUser, required this.userBalance, required this.amount});
+  const AlcanciaConfirmationDialog(
+      {super.key,
+      required this.targetUser,
+      required this.userBalance,
+      required this.amount,
+      required this.currency,
+      required this.onConfirm});
 
-  final User targetUser;
+  final MinimalUser targetUser;
   final double userBalance;
   final double amount;
+  final String currency;
+
+  final void Function()? onConfirm;
 
   @override
   Widget build(BuildContext context) {
@@ -19,23 +29,18 @@ class AlcanciaConfirmationDialog extends StatelessWidget {
     final txtTheme = Theme.of(context).textTheme;
 
     return Dialog(
+      insetPadding: EdgeInsets.all(20),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      backgroundColor: Theme.of(context).brightness == Brightness.dark
+          ? alcanciaFieldDark
+          : alcanciaFieldLight,
       child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: Theme.of(context).brightness == Brightness.dark
-              ? alcanciaFieldDark
-              : alcanciaFieldLight,
-        ),
-        margin: const EdgeInsets.symmetric(horizontal: 30),
-        height: 437,
         width: double.infinity,
-        padding: const EdgeInsets.only(
-          top: 44,
-          right: 36,
-          bottom: 30,
-          left: 30,
-        ),
+        padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 30),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
@@ -43,6 +48,7 @@ class AlcanciaConfirmationDialog extends StatelessWidget {
               child: Text(
                 appLoc.isDataCorrect,
                 style: txtTheme.subtitle1,
+                textAlign: TextAlign.center,
               ),
             ),
             Padding(
@@ -56,7 +62,9 @@ class AlcanciaConfirmationDialog extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(appLoc.sourceAccount, style: txtTheme.subtitle2),
-                        Text('Balance - ${userBalance.toStringAsFixed(2)}', style: txtTheme.subtitle2),
+                        Text(
+                            'Balance - ${userBalance.toStringAsFixed(2)} $currency',
+                            style: txtTheme.subtitle2),
                       ],
                     ),
                   ),
@@ -77,7 +85,8 @@ class AlcanciaConfirmationDialog extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(appLoc.amount, style: txtTheme.subtitle2),
-                        Text(amount.toString(), style: txtTheme.subtitle2),
+                        Text('${amount.toStringAsFixed(2)} $currency',
+                            style: txtTheme.subtitle2),
                       ],
                     ),
                   ),
@@ -87,11 +96,8 @@ class AlcanciaConfirmationDialog extends StatelessWidget {
             AlcanciaButton(
                 width: double.infinity,
                 height: 64,
-                buttonText: 'Si transferir',
-                onPressed: (){
-                  context.pushNamed('successful-transaction');
-                }
-            ),
+                buttonText: appLoc.buttonConfirm,
+                onPressed: onConfirm),
           ],
         ),
       ),

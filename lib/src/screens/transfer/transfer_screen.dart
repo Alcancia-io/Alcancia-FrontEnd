@@ -1,7 +1,9 @@
 import 'package:alcancia/src/features/registration/data/country.dart';
 import 'package:alcancia/src/features/registration/presentation/country_picker.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
+import 'package:alcancia/src/screens/transfer/transfer_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
+import 'package:alcancia/src/shared/components/alcancia_confirmation_dialog.dart';
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/components/decimal_input_formatter.dart';
@@ -10,6 +12,7 @@ import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../shared/provider/user_provider.dart';
 
@@ -63,11 +66,14 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
   ];
   late String sourceCurrency = sourceCurrencies.first['name'];
 
+  final transferController = TransferController();
+
   @override
   Widget build(BuildContext context) {
     final appLoc = AppLocalizations.of(context)!;
     final txtTheme = Theme.of(context).textTheme;
     final userBalance = ref.watch(balanceProvider);
+    final user = ref.watch(userProvider);
     final balance = sourceCurrency == "USDC"
         ? userBalance.usdcBalance
         : userBalance.celoBalance;
@@ -123,8 +129,11 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                                 ),
                                 onChanged: (value) {
                                   setState(() {
-                                    countryCode = countries.firstWhere((element) => element['value'] == value)['name'];
-                                    _enableButton = _formKey.currentState!.validate();
+                                    countryCode = countries.firstWhere(
+                                        (element) =>
+                                            element['value'] == value)['name'];
+                                    _enableButton =
+                                        _formKey.currentState!.validate();
                                   });
                                 }),
                             Expanded(
@@ -176,7 +185,8 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                               onChanged: (value) {
                                 setState(() {
                                   sourceCurrency = value;
-                                  _enableButton = _formKey.currentState!.validate();
+                                  _enableButton =
+                                      _formKey.currentState!.validate();
                                 });
                               },
                             ),
@@ -234,10 +244,39 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                                         print(currency);
                                         print(balance);
                                         print(_transferAmountController.text);
-                                        // TODO: Get User from Phone Number
-                                        // TODO: Show confirmation dialog
+                                        final amount = double.parse(
+                                            _transferAmountController.text);
+                                        final targetUser =
+                                            await transferController.searchUser(
+                                                phoneNumber: phoneNumber);
+                                        showDialog(
+                                            context: context,
+                                            builder: (ctx) {
+                                              return AlcanciaConfirmationDialog(
+                                                targetUser: targetUser,
+                                                userBalance: balance,
+                                                amount: amount,
+                                                currency: currency,
+                                                onConfirm: () async {
+                                                  // TODO: Call transfer method and pass data to success screen
+                                                  // final transaction =
+                                                  //     await transferController
+                                                  //         .transferFunds(
+                                                  //             amount: amount
+                                                  //                 .toStringAsFixed(
+                                                  //                     2),
+                                                  //             destionationUserId:
+                                                  //                 targetUser.id,
+                                                  //             sourceUserId:
+                                                  //                 user!.id,
+                                                  //             token: currency);
+                                                  context.pushNamed(
+                                                      'successful-transaction');
+                                                },
+                                              );
+                                            });
                                       } catch (e) {
-                                        //TODO: handle error
+                                        _error = e.toString();
                                       }
                                       setState(() {
                                         _loading = false;
