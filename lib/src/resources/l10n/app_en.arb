@@ -54,6 +54,7 @@
 	"labelDate": "Date",
 	"labelTransactionId": "Transaction ID",
 	"labelDepositValue": "Deposit value",
+	"labelWithdrawalValue": "Withdrawal value",
 	"labelTransactionType": "TXN Type",
 	"labelProfile": "Profile",
 	"labelTermsAndConditions": "Terms and conditions",
