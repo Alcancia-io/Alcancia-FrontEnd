@@ -266,5 +266,10 @@
 	"targetPhone": "Celular destino",
 	"amount": "Monto",
 	"labelTransferAmount": "Cantidad a transferir",
-	"labelTransferPrompt": "Transferencia entre cuentas Alcancía"
+	"labelTransferPrompt": "Transferencia entre cuentas Alcancía",
+	"transactionDate": "Fecha y hora de transacción",
+	"idReference": "Id Referencia",
+	"confirmation": "Confirmación",
+	"successfulTransaction": "¡Transferencia exitosa!",
+	"goBackToMainMenu": "Volver al Menú Principal"
 }

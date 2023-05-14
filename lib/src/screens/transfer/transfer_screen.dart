@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:alcancia/src/features/registration/data/country.dart';
 import 'package:alcancia/src/features/registration/presentation/country_picker.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
@@ -7,6 +9,7 @@ import 'package:alcancia/src/shared/components/alcancia_confirmation_dialog.dart
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/components/decimal_input_formatter.dart';
+import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:flutter/material.dart';
@@ -40,17 +43,57 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
   bool _loading = false;
 
   String _error = "";
+  String _transferError = "";
 
   final _phoneController = TextEditingController();
   final _transferAmountController = TextEditingController();
 
   final List<Map> sourceCurrencies = [
-    {"name": "USDC", "icon": "lib/src/resources/images/icon_usdc.png"},
-    {"name": "cUSD", "icon": "lib/src/resources/images/icon_celo_usd.png"},
+    {
+      "name": "USDC",
+      "icon": "lib/src/resources/images/icon_usdc.png",
+      "value": "apolusdc",
+    },
+    {
+      "name": "cUSD",
+      "icon": "lib/src/resources/images/icon_celo_usd.png",
+      "value": "cusd",
+    },
   ];
-  late String sourceCurrency = sourceCurrencies.first['name'];
+  late String sourceCurrency = sourceCurrencies.first['value'];
 
   final transferController = TransferController();
+
+  transferFunds(double amount, MinimalUser targetUser, String currency, User user) async {
+    setState(() {
+      _loading = true;
+    });
+
+    var transferResponse;
+
+    try {
+      transferResponse = await transferController.transferFunds(
+        amount: amount.toStringAsFixed(2),
+        destionationUserId: targetUser.id,
+        sourceUserId: user.id,
+        token: currency,
+      );
+    } catch (transferError) {
+      setState(() {
+        _transferError = transferError.toString();
+      });
+    }
+
+    setState(() {
+      _loading = false;
+    });
+
+    Navigator.pop(context);
+
+    if (_transferError.isEmpty) {
+      context.goNamed('successful-transaction', extra: transferResponse);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,14 +101,16 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
     final txtTheme = Theme.of(context).textTheme;
     final userBalance = ref.watch(balanceProvider);
     final user = ref.watch(userProvider);
-    final balance = sourceCurrency == "USDC" ? userBalance.usdcBalance : userBalance.celoBalance;
+    final balance =
+        sourceCurrency == "apolusdc" ? userBalance.usdcBalance : userBalance.celoBalance;
     final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         appBar: AlcanciaToolbar(
-          title: appLoc.labelMoneyWithdrawal,
+          title: appLoc.labelTransfer,
           state: StateToolbar.titleIcon,
           logoHeight: 40,
         ),
@@ -82,7 +127,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                   Padding(
                     padding: const EdgeInsets.only(top: 12),
                     child: Text(
-                      appLoc.labelWithdrawInformationPrompt,
+                      appLoc.labelTransferPrompt,
                       style: txtTheme.bodyText1,
                     ),
                   ),
@@ -98,7 +143,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                             AlcanciaDropdown(
                               itemsAlignment: MainAxisAlignment.spaceBetween,
                               dropdownItems: countries,
-                              dropdownWidth: _responsiveService.getWidthPixels(50, screenHeight),
+                              dropdownWidth: _responsiveService.getWidthPixels(120, screenWidth),
                               dropdownHeight: _responsiveService.getHeightPixels(55, screenHeight),
                               decoration: BoxDecoration(
                                 color: Theme.of(context).inputDecorationTheme.fillColor,
@@ -135,7 +180,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 32.0, bottom: 10.0),
+                    padding: const EdgeInsets.only(top: 29, bottom: 10.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -146,7 +191,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                             AlcanciaDropdown(
                               itemsAlignment: MainAxisAlignment.spaceBetween,
                               dropdownItems: sourceCurrencies,
-                              dropdownWidth: _responsiveService.getWidthPixels(55, screenHeight),
+                              dropdownWidth: _responsiveService.getWidthPixels(120, screenWidth),
                               dropdownHeight: _responsiveService.getHeightPixels(55, screenHeight),
                               decoration: BoxDecoration(
                                 color: Theme.of(context).inputDecorationTheme.fillColor,
@@ -170,8 +215,6 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return appLoc.errorRequiredField;
-                                    } else if (double.parse(value) < 10) {
-                                      return appLoc.errorMinimumWithdrawAmount;
                                     } else if (balance < double.parse(value)) {
                                       return appLoc.errorInsufficientBalance;
                                     }
@@ -185,7 +228,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                       ],
                     ),
                   ),
-                  Text(appLoc.labelAvailableBalance(balance.toStringAsFixed(2))),
+                  Text(appLoc.labelAvailableBalance(balance.toStringAsFixed(6))),
                   Spacer(),
                   Padding(
                     padding: const EdgeInsets.only(top: 24),
@@ -206,34 +249,30 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                                       try {
                                         final phoneNumber = countryCode + _phoneController.text;
                                         final currency = sourceCurrency;
-                                        print(phoneNumber);
-                                        print(currency);
-                                        print(balance);
+                                        inspect(user);
+                                        print('source user');
                                         print(user!.id);
-                                        print(_transferAmountController.text);
+
                                         final amount = double.parse(_transferAmountController.text);
                                         final targetUser = await transferController.searchUser(
                                             phoneNumber: phoneNumber);
+                                        print('target user');
+                                        print(targetUser.id);
                                         showDialog(
-                                            context: context,
-                                            builder: (ctx) {
-                                              return AlcanciaConfirmationDialog(
-                                                targetUser: targetUser,
-                                                userBalance: balance,
-                                                amount: amount,
-                                                currency: currency,
-                                                onConfirm: () async {
-                                                  // TODO: Call transfer method and pass data to success screen
-                                                  final transaction =
-                                                      await transferController.transferFunds(
-                                                          amount: amount.toStringAsFixed(2),
-                                                          destionationUserId: targetUser.id,
-                                                          sourceUserId: user!.id,
-                                                          token: currency);
-                                                  context.pushNamed('successful-transaction');
-                                                },
-                                              );
-                                            });
+                                          context: context,
+                                          builder: (ctx) {
+                                            return AlcanciaConfirmationDialog(
+                                              targetUser: targetUser,
+                                              userBalance: balance,
+                                              amount: amount,
+                                              currency:
+                                                  sourceCurrency == "apolusdc" ? "USDC" : "CUSD",
+                                              onConfirm: () {
+                                                transferFunds(amount, targetUser, currency, user);
+                                              },
+                                            );
+                                          },
+                                        );
                                       } catch (e) {
                                         _error = e.toString();
                                       }
@@ -252,6 +291,15 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                               padding: EdgeInsets.all(8.0),
                               child: Text(
                                 _error,
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
+                          ],
+                          if (_transferError.isNotEmpty) ...[
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                _transferError,
                                 style: TextStyle(color: Colors.red),
                               ),
                             ),

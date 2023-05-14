@@ -184,5 +184,10 @@
 	"targetPhone": "Target phone",
 	"amount": "Amount",
 	"labelTransferAmount": "Transfer amount",
-	"labelTransferPrompt": "Transfer to another Alcancía account"
+	"labelTransferPrompt": "Transfer to another Alcancía account",
+	"transactionDate": "Transaction date and hour",
+	"idReference": "Id reference",
+	"confirmation": "Confirmation",
+	"successfulTransaction": "Transaction successful",
+	"goBackToMainMenu": "Go back to Main Menu"
 }
