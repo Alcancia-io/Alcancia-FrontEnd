@@ -1,20 +1,23 @@
 import 'package:alcancia/src/shared/extensions/type_extensions.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
+import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:alcancia/src/features/transaction-detail/presentation/transaction_detail_item.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../resources/colors/colors.dart';
 import '../../../shared/models/transaction_model.dart';
 
-class TransactionDetail extends StatelessWidget {
+class TransactionDetail extends ConsumerWidget {
   const TransactionDetail({Key? key, required this.txn}) : super(key: key);
   final Transaction txn;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final ctx = Theme.of(context);
     final appLoc = AppLocalizations.of(context)!;
+    final user = ref.watch(userProvider)!;
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -71,7 +74,7 @@ class TransactionDetail extends StatelessWidget {
                   ),
                   TransactionDetailItem(
                     leftText: appLoc.labelStatus,
-                    rightIcon: txn.iconForTxnStatus,
+                    rightIcon: txn.iconForTxnStatus(user.id),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 20),

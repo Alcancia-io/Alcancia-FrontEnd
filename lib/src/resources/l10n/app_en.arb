@@ -155,6 +155,7 @@
 	"labelTabProfile": "Profile",
 	"labelDetailDeposit": "DEPOSIT",
 	"labelDetailWithdraw": "WITHDRAW",
+	"labelDetailTransfer": "TRANSFER",
 	"labelDetailYield": "YIELD",
 	"labelTotalBalance": "Total Balance",
 	"labelCELOBalance": "Celo USD Balance",
