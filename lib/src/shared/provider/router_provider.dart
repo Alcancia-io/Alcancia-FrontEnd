@@ -13,8 +13,11 @@ import 'package:alcancia/src/screens/login/mfa_screen.dart';
 import 'package:alcancia/src/screens/metamap/address_screen.dart';
 import 'package:alcancia/src/screens/onboarding/onboarding_screens.dart';
 import 'package:alcancia/src/screens/success/success_screen.dart';
+import 'package:alcancia/src/screens/successful_transaction/successful_transaction.dart';
 import 'package:alcancia/src/screens/swap/swap_screen.dart';
+import 'package:alcancia/src/screens/transfer/transfer_screen.dart';
 import 'package:alcancia/src/screens/withdraw/withdraw_screen.dart';
+import 'package:alcancia/src/shared/components/alcancia_confirmation_dialog.dart';
 import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
 import 'package:alcancia/src/shared/graphql/queries.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
@@ -145,6 +148,18 @@ final routerProvider = Provider<GoRouter>(
           path: "/onboarding",
           builder: (context, state) => OnboardingScreens(),
         ),
+        GoRoute(
+          name: "successful-transaction",
+          path: "/successful-transaction",
+          builder: (context, state) => SuccessfulTransaction(
+            transferResponse: state.extra as TransferResponse,
+          ),
+        ),
+        GoRoute(
+          name: "transfer",
+          path: "/transfer",
+          builder: (context, state) => const TransferScreen(),
+        ),
       ],
       redirect: (context, state) async {
         final loginLoc = state.namedLocation("login");
@@ -174,7 +189,8 @@ final routerProvider = Provider<GoRouter>(
             !isMfa &&
             !isPhoneRegistration &&
             !isOtp &&
-            !isForgotPassword && !isOnboarding) return welcomeLoc;
+            !isForgotPassword &&
+            !isOnboarding) return welcomeLoc;
         if (loggedIn && (loggingIn || creatingAccount || isStartup)) return home;
         return null;
       },

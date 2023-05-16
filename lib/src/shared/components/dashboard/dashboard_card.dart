@@ -14,7 +14,6 @@ class DashboardCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ctx = Theme.of(context);
     final userBalance = ref.watch(balanceProvider);
-    final appLoc = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
@@ -23,40 +22,7 @@ class DashboardCard extends ConsumerWidget {
           Radius.circular(8),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          BalanceCarousel(balance: userBalance),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  AlcanciaButton(
-                    buttonText: appLoc.labelDeposit,
-                    onPressed: () {
-                      context.push("/swap");
-                    },
-                    width: 116,
-                    height: 38,
-                    color: alcanciaMidBlue,
-                  ),
-                  AlcanciaButton(
-                    buttonText: appLoc.labelWithdraw,
-                    onPressed: () {
-                      context.push("/withdraw");
-                    },
-                    width: 116,
-                    height: 38,
-                    color: alcanciaMidBlue,
-                  )
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
+      child: BalanceCarousel(balance: userBalance),
     );
   }
 }
