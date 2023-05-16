@@ -39,6 +39,7 @@ class AlcanciaButton extends StatelessWidget {
           style: OutlinedButton.styleFrom(
             side: side,
             foregroundColor: foregroundColor,
+            backgroundColor: color,
             padding: padding,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(26),

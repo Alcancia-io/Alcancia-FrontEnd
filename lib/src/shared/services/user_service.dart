@@ -1,5 +1,6 @@
 import 'package:alcancia/src/shared/graphql/mutations/update_user_mutation.dart';
 import 'package:alcancia/src/shared/graphql/queries/me_query.dart';
+import 'package:alcancia/src/shared/graphql/queries/user_phone_number_search_query.dart';
 import 'package:alcancia/src/shared/graphql/queries/walletbalance_query.dart';
 import 'package:alcancia/src/shared/services/graphql_service.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -37,6 +38,16 @@ class UserService {
       QueryOptions(
         document: gql(updateUserMutation),
         variables: {"updateUserInput": info},
+      ),
+    );
+  }
+
+  Future<QueryResult> searchUserFromPhoneNumber({required String phoneNumber}) async {
+    var clientResponse = await client;
+    return await clientResponse.query(
+      QueryOptions(
+        document: gql(userPhoneNumberSearchQuery),
+        variables: {"phoneNumber": phoneNumber},
       ),
     );
   }
