@@ -21,14 +21,13 @@ class TransferController {
     return Future.error('Error getting user');
   }
 
-  Future<TransferResponse> transferFunds({required String amount, required String destionationUserId, required String sourceUserId, required String token}) async {
+  Future<TransferResponse> transferFunds({required String amount, required String destUserId, required String token}) async {
     TransactionsService transactionService = TransactionsService();
     try {
       final transferInput = {
         "transferData": {
           "amount": amount,
-          "destUserId": destionationUserId,
-          "srcUserId": sourceUserId,
+          "destUserId": destUserId,
           "token": token,
         },
       };
@@ -38,6 +37,7 @@ class TransferController {
         Map<String, dynamic> data = response.data!["transferFunds"];
         print(data);
         final transferResponse = TransferResponse.fromJSON(data);
+        print(transferResponse);
         return transferResponse;
       }
     } catch (error) {

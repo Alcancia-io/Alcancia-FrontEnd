@@ -3,8 +3,11 @@ const String transferFundsQuery = """
     transferFunds(transferData: \$transferData) {
       amount,
       destWallet,
-      srcUserId,
       token,
+      createdAt,
+      destPhoneNumber,
+      destUserName,
+      id
     }
   }
 """;

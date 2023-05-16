@@ -69,8 +69,8 @@ class SuccessfulTransaction extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(appLoc.targetPhone, style: txtTheme.subtitle2),
-                                  Text('+52 4651075213', style: txtTheme.subtitle2),
-                                  Text('David Lerma', style: txtTheme.subtitle2)
+                                  Text(transferResponse.destPhoneNumber, style: txtTheme.subtitle2),
+                                  Text(transferResponse.destUserName, style: txtTheme.subtitle2)
                                 ],
                               ),
                             ),
@@ -80,7 +80,7 @@ class SuccessfulTransaction extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(appLoc.transactionDate, style: txtTheme.subtitle2),
-                                  Text('Mayo 2, 2023 14:30:00', style: txtTheme.subtitle2)
+                                  Text(transferResponse.txnDate, style: txtTheme.subtitle2)
                                 ],
                               ),
                             ),
@@ -90,7 +90,7 @@ class SuccessfulTransaction extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(appLoc.idReference, style: txtTheme.subtitle2),
-                                  Text('ALC123456789', style: txtTheme.subtitle2),
+                                  Text(transferResponse.txnId, style: txtTheme.subtitle2),
                                 ],
                               ),
                             ),
@@ -107,25 +107,27 @@ class SuccessfulTransaction extends StatelessWidget {
                     ],
                   ),
                   // TODO: comment this line since we dont have share feature yet
+                  // Container(
+                  //   margin: const EdgeInsets.symmetric(vertical: 36),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: [
+                  //       SvgPicture.asset('lib/src/resources/images/icon_share.svg'),
+                  //       const Padding(
+                  //         padding: EdgeInsets.only(left: 8.0),
+                  //         child: Text('Compartir'),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   Container(
-                    margin: const EdgeInsets.symmetric(vertical: 36),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset('lib/src/resources/images/icon_share.svg'),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 8.0),
-                          child: Text('Compartir'),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
+                    margin: EdgeInsets.only(top: 86),
                     child: AlcanciaButton(
-                        height: 64,
-                        width: double.infinity,
-                        buttonText: appLoc.goBackToMainMenu,
-                        onPressed: () => context.go('/')),
+                      height: 64,
+                      width: double.infinity,
+                      buttonText: appLoc.goBackToMainMenu,
+                      onPressed: () => context.go('/'),
+                    ),
                   ),
                 ],
               ),

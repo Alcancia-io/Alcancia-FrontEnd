@@ -64,7 +64,9 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
 
   final transferController = TransferController();
 
-  transferFunds(double amount, MinimalUser targetUser, String currency, User user) async {
+  transferFunds(double amount, String currency, String destUserId) async {
+    Navigator.pop(context);
+
     setState(() {
       _loading = true;
     });
@@ -74,8 +76,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
     try {
       transferResponse = await transferController.transferFunds(
         amount: amount.toStringAsFixed(2),
-        destionationUserId: targetUser.id,
-        sourceUserId: user.id,
+        destUserId: destUserId,
         token: currency,
       );
     } catch (transferError) {
@@ -88,7 +89,6 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
       _loading = false;
     });
 
-    Navigator.pop(context);
 
     if (_transferError.isEmpty) {
       context.goNamed('successful-transaction', extra: transferResponse);
@@ -249,14 +249,10 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                                       try {
                                         final phoneNumber = countryCode + _phoneController.text;
                                         final currency = sourceCurrency;
-                                        inspect(user);
-                                        print('source user');
-                                        print(user!.id);
-
                                         final amount = double.parse(_transferAmountController.text);
                                         final targetUser = await transferController.searchUser(
                                             phoneNumber: phoneNumber);
-                                        print('target user');
+                                        print('target user id');
                                         print(targetUser.id);
                                         showDialog(
                                           context: context,
@@ -268,7 +264,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                                               currency:
                                                   sourceCurrency == "apolusdc" ? "USDC" : "CUSD",
                                               onConfirm: () {
-                                                transferFunds(amount, targetUser, currency, user);
+                                                transferFunds(amount, currency, targetUser.id);
                                               },
                                             );
                                           },

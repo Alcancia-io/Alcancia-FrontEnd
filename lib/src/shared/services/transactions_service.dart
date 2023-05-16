@@ -43,6 +43,7 @@ class TransactionsService {
       QueryOptions(
         document: gql(transferFundsQuery),
         variables: transferInput,
+        fetchPolicy: FetchPolicy.noCache,
       ),
     );
   }
