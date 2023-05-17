@@ -64,6 +64,7 @@ class AccountScreen extends ConsumerWidget {
                 child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: AlcanciaButton(
+                      color: Colors.transparent,
                       foregroundColor: Colors.red,
                       side: const BorderSide(color: Colors.red),
                       buttonText: appLoc.buttonDeleteAccount,
