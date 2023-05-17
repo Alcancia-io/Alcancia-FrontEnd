@@ -145,7 +145,7 @@ class UserProfileScreen extends ConsumerWidget {
                     rounded: true,
                     icon: Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Icon(Icons.delete_forever),
+                      child: Icon(Icons.logout_outlined),
                     ),
                   )),
             ],
