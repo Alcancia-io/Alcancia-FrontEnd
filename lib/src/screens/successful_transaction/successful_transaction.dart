@@ -1,12 +1,11 @@
+import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
+import 'package:alcancia/src/shared/extensions/datetime_extensions.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../resources/colors/colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SuccessfulTransaction extends StatelessWidget {
@@ -80,7 +79,7 @@ class SuccessfulTransaction extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(appLoc.transactionDate, style: txtTheme.subtitle2),
-                                  Text(transferResponse.txnDate, style: txtTheme.subtitle2)
+                                  Text(transferResponse.txnDate.formattedLocalString(), style: txtTheme.subtitle2)
                                 ],
                               ),
                             ),

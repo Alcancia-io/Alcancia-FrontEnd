@@ -1,3 +1,4 @@
+import 'package:alcancia/src/shared/extensions/datetime_extensions.dart';
 import 'package:alcancia/src/shared/extensions/type_extensions.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
@@ -47,7 +48,7 @@ class TransactionDetail extends ConsumerWidget {
                   ),
                   TransactionDetailItem(
                     leftText: appLoc.labelDate,
-                    rightText: '${txn.createdAt}',
+                    rightText: txn.createdAt.formattedLocalString(),
                   ),
                   TransactionDetailItem(
                     leftText: appLoc.labelTransactionId,
