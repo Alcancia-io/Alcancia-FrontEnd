@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum StateToolbar { logoNoletters, logoLetters, titleIcon, profileTitleIcon }
 
-class AlcanciaToolbar extends StatelessWidget with PreferredSizeWidget {
+class AlcanciaToolbar extends StatelessWidget implements PreferredSizeWidget {
   const AlcanciaToolbar({
     Key? key,
     this.title,
