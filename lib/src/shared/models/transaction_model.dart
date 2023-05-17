@@ -30,16 +30,16 @@ class Transaction {
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
-    final targetAsset = json["targetAsset"].toString();
-    final sourceAsset = json["sourceAsset"].toString();
+    final targetAsset = json["targetAsset"];
+    final sourceAsset = json["sourceAsset"];
     return Transaction(
         transactionID: json["id"] as String,
         createdAt: json["createdAt"] as String,
         sourceAmount: double.tryParse(json["sourceAmount"].toString()),
         sourceAsset:
-            CurrencyAsset.values.firstWhereOrNull((e) => e.actualAsset.toLowerCase() == sourceAsset.toLowerCase())?.shownAsset ?? sourceAsset,
+            CurrencyAsset.values.firstWhereOrNull((e) => e.actualAsset.toLowerCase() == sourceAsset.toString().toLowerCase())?.shownAsset ?? sourceAsset,
         targetAsset:
-            CurrencyAsset.values.firstWhereOrNull((e) => e.actualAsset.toLowerCase() == targetAsset.toLowerCase())?.shownAsset,
+            CurrencyAsset.values.firstWhereOrNull((e) => e.actualAsset.toLowerCase() == targetAsset.toString().toLowerCase())?.shownAsset ?? targetAsset,
         amount: double.parse(json["amount"].toString()),
         type: TransactionType.values.firstWhere((e) => e.name.toUpperCase() == json["type"], orElse: () => TransactionType.unknown),
         status: json["status"] as String,
