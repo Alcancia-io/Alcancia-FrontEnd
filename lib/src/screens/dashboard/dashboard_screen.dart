@@ -95,7 +95,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           padding: const EdgeInsets.only(
             left: 24,
             right: 24,
-            top: 10,
           ),
           child: RefreshIndicator(
             onRefresh: () => setUserInformation(),
