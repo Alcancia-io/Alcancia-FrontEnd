@@ -54,33 +54,31 @@ class _AlcanciaTabbarState extends State<AlcanciaTabbar> {
     var ctx = Theme.of(context);
     final appLoc = AppLocalizations.of(context)!;
     return Scaffold(
-      bottomNavigationBar: SizedBox(
-        child: BottomNavigationBar(
-          currentIndex: widget.selectedIndex,
-          selectedItemColor: ctx.iconTheme.color,
-          onTap: (newTabIndex) {
-              context.go('/homescreen/$newTabIndex');
-          },
-          // this will be needed when more than 3 items in the bar
-          // type: BottomNavigationBarType.fixed,
-          items: [
-            getTabItem(
-              0,
-              "lib/src/resources/images/icon_home.svg",
-              appLoc.labelTabHome,
-            ),
-            getTabItem(
-              1,
-              "lib/src/resources/images/icon_transactions.svg",
-              appLoc.labelTabActivity,
-            ),
-            getTabItem(
-              2,
-              "lib/src/resources/images/user_profile.svg",
-              appLoc.labelTabProfile,
-            ),
-          ],
-        ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: widget.selectedIndex,
+        selectedItemColor: ctx.iconTheme.color,
+        onTap: (newTabIndex) {
+            context.go('/homescreen/$newTabIndex');
+        },
+        // this will be needed when more than 3 items in the bar
+        // type: BottomNavigationBarType.fixed,
+        items: [
+          getTabItem(
+            0,
+            "lib/src/resources/images/icon_home.svg",
+            appLoc.labelTabHome,
+          ),
+          getTabItem(
+            1,
+            "lib/src/resources/images/icon_transactions.svg",
+            appLoc.labelTabActivity,
+          ),
+          getTabItem(
+            2,
+            "lib/src/resources/images/user_profile.svg",
+            appLoc.labelTabProfile,
+          ),
+        ],
       ),
       body: widget.screens[widget.selectedIndex],
     );
