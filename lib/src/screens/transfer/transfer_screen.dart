@@ -144,7 +144,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                               itemsAlignment: MainAxisAlignment.spaceBetween,
                               dropdownItems: countries,
                               dropdownWidth: _responsiveService.getWidthPixels(120, screenWidth),
-                              dropdownHeight: _responsiveService.getHeightPixels(55, screenHeight),
+                              dropdownHeight: _responsiveService.getHeightPixels(50, screenHeight),
                               decoration: BoxDecoration(
                                 color: Theme.of(context).inputDecorationTheme.fillColor,
                                 borderRadius: BorderRadius.circular(7),
@@ -192,7 +192,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                               itemsAlignment: MainAxisAlignment.spaceBetween,
                               dropdownItems: sourceCurrencies,
                               dropdownWidth: _responsiveService.getWidthPixels(120, screenWidth),
-                              dropdownHeight: _responsiveService.getHeightPixels(55, screenHeight),
+                              dropdownHeight: _responsiveService.getHeightPixels(50, screenHeight),
                               decoration: BoxDecoration(
                                 color: Theme.of(context).inputDecorationTheme.fillColor,
                                 borderRadius: BorderRadius.circular(7),
