@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 const dominicanBanks = [
   {'name': 'Banco Santa Cruz'},
@@ -36,7 +35,6 @@ class AssetDescription extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final txtTheme = Theme.of(context).textTheme;
-    final appLoc = AppLocalizations.of(context)!;
 
     return RichText(
       text: TextSpan(

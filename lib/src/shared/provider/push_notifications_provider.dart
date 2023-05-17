@@ -8,17 +8,14 @@ import 'package:go_router/go_router.dart';
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print("Handling a background message: ${message.messageId}");
   inspect(message);
 }
 
 void firebaseMessagingOpenAppHandler(RemoteMessage message) {
-  print("Handling a opened message: ${message.messageId}");
   navigatorKey.currentContext!.go("/registration");
 }
 
 void handleInitialMessage(RemoteMessage message) {
-  print("Handling initial message: ${message.messageId}");
   navigatorKey.currentContext!.go("/login");
 }
 
@@ -41,8 +38,6 @@ class PushNotificationProvider {
     FirebaseMessaging.onMessageOpenedApp.listen(firebaseMessagingOpenAppHandler);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Got a message in the foreground!');
-      print('Message data: ${message.data}');
       Fluttertoast.showToast(
           msg: message.notification!.body!,
           toastLength: Toast.LENGTH_LONG,

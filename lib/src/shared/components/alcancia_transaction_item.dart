@@ -10,8 +10,9 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AlcanciaTransactionItem extends StatelessWidget {
-  Transaction txn;
-  AlcanciaTransactionItem({Key? key, required this.txn}) : super(key: key);
+  const AlcanciaTransactionItem({Key? key, required this.txn}) : super(key: key);
+
+  final Transaction txn;
 
   String getImageType(String txnType) {
     if (txnType == "WITHDRAW") {

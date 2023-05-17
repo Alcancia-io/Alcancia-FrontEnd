@@ -27,7 +27,6 @@ class AlcanciaDropdown extends StatefulWidget {
 
 class _AlcanciaDropdownState extends State<AlcanciaDropdown> {
   late String dropdownValue = widget.dropdownItems.first['value'] ?? widget.dropdownItems.first['name'];
-  final ResponsiveService _responsiveService = ResponsiveService();
 
   @override
   void initState() {

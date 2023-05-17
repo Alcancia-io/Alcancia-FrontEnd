@@ -5,7 +5,7 @@ class LoginController {
     AuthService authService = AuthService();
     final response = await authService.completeSignIn(verificationCode);
     if (response.hasException) {
-      print(response.exception);
+      return Future.error(response.exception.toString());
     } else if (response.data != null) {
       return response.data!["completeSignIn"] as String == "SUCCESS";
     }
@@ -16,11 +16,9 @@ class LoginController {
     AuthService authService = AuthService();
     final response = await authService.login(email, password, deviceToken);
     if (response.hasException) {
-      print(response.exception);
-      return Future.error("Exception");
+      return Future.error(response.exception.toString());
     } else if (response.data != null) {
       final data = response.data!;
-      print(data);
       final token = data["login"]["access_token"] as String;
       return token;
     }

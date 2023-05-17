@@ -120,7 +120,7 @@ class SuccessfulTransaction extends StatelessWidget {
                   //   ),
                   // ),
                   Container(
-                    margin: EdgeInsets.only(top: 86),
+                    margin: const EdgeInsets.only(top: 86),
                     child: AlcanciaButton(
                       height: 64,
                       width: double.infinity,

@@ -111,11 +111,11 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                     Text(
                       appLocalization.labelHello,
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
+                          const TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
                     ),
                     Text(
                     appLocalization.labelRegisterSubtitle,
-                        style: TextStyle(fontSize: 15)),
+                        style: const TextStyle(fontSize: 15)),
                   ],
                 ),
                 const SizedBox(
@@ -125,7 +125,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   controller: nameController,
                   labelText: appLocalization.labelName,
                   inputType: TextInputType.name,
-                  autofillHints: [AutofillHints.givenName],
+                  autofillHints: const [AutofillHints.givenName],
                   textInputAction: TextInputAction.next,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -141,7 +141,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   controller: lastNameController,
                   labelText: appLocalization.labelLastName,
                   inputType: TextInputType.name,
-                  autofillHints: [AutofillHints.familyName],
+                  autofillHints: const [AutofillHints.familyName],
                   textInputAction: TextInputAction.next,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -188,7 +188,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   controller: emailController,
                   labelText: appLocalization.labelEmail,
                   inputType: TextInputType.emailAddress,
-                  autofillHints: [AutofillHints.email],
+                  autofillHints: const [AutofillHints.email],
                   textInputAction: TextInputAction.next,
                   validator: (value) {
                     if (unavailableEmails.contains(value)) {
@@ -208,7 +208,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                   controller: passwordController,
                   labelText: appLocalization.labelPassword,
                   obscure: obscurePassword,
-                  autofillHints: [AutofillHints.newPassword],
+                  autofillHints: const [AutofillHints.newPassword],
                   textInputAction: TextInputAction.next,
                   suffixIcon: GestureDetector(
                     onTap: () {
@@ -250,6 +250,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                     } else if (value != passwordController.text) {
                       return appLocalization.errorPasswordMatch; // TODO: Confirm password validation text
                     }
+                    return null;
                   },
                 ),
                 const SizedBox(

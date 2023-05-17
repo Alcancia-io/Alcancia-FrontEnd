@@ -2003,13 +2003,13 @@ class Country {
   });
 
   String get fullCountryCode {
-    return this.dialCode + this.regionCode;
+    return dialCode + regionCode;
   }
 
   String get displayCC {
-    if (this.regionCode != "") {
-      return "${this.flag} ${this.dialCode} ${this.regionCode}";
+    if (regionCode != "") {
+      return "$flag $dialCode $regionCode";
     }
-    return "${this.flag} +${this.dialCode}";
+    return "$flag +$dialCode";
   }
 }

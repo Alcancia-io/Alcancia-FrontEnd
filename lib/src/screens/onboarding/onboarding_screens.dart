@@ -11,7 +11,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OnboardingScreens extends StatefulWidget {
-  OnboardingScreens({Key? key}) : super(key: key);
+  const OnboardingScreens({Key? key}) : super(key: key);
 
   @override
   State<OnboardingScreens> createState() => _OnboardingScreensState();
@@ -152,7 +152,7 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
             SmoothPageIndicator(
               controller: _pageController,
               count: items.length,
-              onDotClicked: (index) => _pageController.animateToPage(index, duration: Duration(milliseconds: 300), curve: Curves.linear),
+              onDotClicked: (index) => _pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.linear),
               effect: const ExpandingDotsEffect(
                 dotHeight: 8,
                 dotWidth: 8,
@@ -162,7 +162,7 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
             if (pageIndex != items.length - 1) ...[
               TextButton(
                 onPressed: () {
-                  _pageController.animateToPage(pageIndex + 1, duration: Duration(milliseconds: 300), curve: Curves.linear);
+                  _pageController.animateToPage(pageIndex + 1, duration: const Duration(milliseconds: 300), curve: Curves.linear);
                 },
                 child: Text(appLoc.buttonNext),
               ),

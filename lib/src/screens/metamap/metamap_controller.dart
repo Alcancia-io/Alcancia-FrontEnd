@@ -1,6 +1,4 @@
-import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:alcancia/src/shared/services/services.dart';
-import 'package:intl/intl.dart';
 
 class MetaMapController {
   final List<Map<String, String>> professions = [

@@ -81,13 +81,13 @@ class GenderPicker extends ConsumerWidget {
                           },
                         );
                       });
-                  Form.of(context)?.validate();
+                  Form.of(context).validate();
                 },
               ),
             ),
             if (state.hasError) Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(state.errorText!, style: TextStyle(color: Colors.red, fontSize: 10),),
+              child: Text(state.errorText!, style: const TextStyle(color: Colors.red, fontSize: 10),),
             ),
           ],
         );

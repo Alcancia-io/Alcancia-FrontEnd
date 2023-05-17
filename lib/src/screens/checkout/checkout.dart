@@ -3,7 +3,6 @@ import 'package:alcancia/src/shared/components/alcancia_copy_clipboard.dart';
 import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
 import 'package:alcancia/src/shared/constants.dart';
 import 'package:alcancia/src/shared/models/checkout_model.dart';
-import 'package:alcancia/src/shared/models/suarmi_order_model.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/services/exception_service.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
@@ -48,7 +47,7 @@ class Checkout extends StatelessWidget {
                 buttonText: appLoc.buttonDeposited,
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    AlcanciaSnackBar(
+                    alcanciaSnackBar(
                       context,
                       appLoc.alertDepositConfirmed,
                     ),
@@ -74,8 +73,6 @@ class OrderInformation extends StatelessWidget {
   final TransactionInput txnInput;
   final String? suarmiConcept;
   late Map<String, String> bankInfo;
-
-  List<Widget> list = [];
 
   @override
   Widget build(BuildContext context) {

@@ -84,7 +84,7 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
   bool _loadingCheckout = false;
 
   final metamapMexicanINEId = dotenv.env['MEXICO_INE_FLOW_ID'] as String;
-  final jsonEncoder = JsonEncoder();
+  final jsonEncoder = const JsonEncoder();
 
   @override
   Widget build(BuildContext context) {
@@ -151,6 +151,7 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                   textInputAction: TextInputAction.next,
                   validator: (newValue) {
                     if (newValue != null && newValue.length > 25) return appLocalization.errorAddressNumberLength;
+                    return null;
                   },
                 ),
                 const SizedBox(
@@ -165,6 +166,7 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                     if (value == null || value.isEmpty) {
                       return appLocalization.errorRequiredField;
                     }
+                    return null;
                   },
                 ),
                 const SizedBox(
@@ -202,6 +204,7 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                     if (value == null || value.isEmpty) {
                       return appLocalization.errorRequiredField;
                     }
+                    return null;
                   },
                 ),
                 const SizedBox(
@@ -219,7 +222,6 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                     borderRadius: BorderRadius.circular(7),
                   ),
                   onChanged: (newValue) {
-                    print(newValue);
                     setState(() {
                       selectedProfession = newValue;
                     });

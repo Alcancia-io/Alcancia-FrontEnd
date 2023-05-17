@@ -1,14 +1,11 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
-import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/dashboard/balance_carousel.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DashboardCard extends ConsumerWidget {
-  DashboardCard({Key? key}) : super(key: key);
+  const DashboardCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

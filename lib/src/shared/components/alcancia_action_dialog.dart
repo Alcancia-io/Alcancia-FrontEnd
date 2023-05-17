@@ -20,7 +20,6 @@ class AlcanciaActionDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Dialog(
       insetPadding: const EdgeInsets.all(15),
       backgroundColor: Colors.transparent,

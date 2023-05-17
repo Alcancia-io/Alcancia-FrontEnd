@@ -1,9 +1,7 @@
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/models/minimal_user_model.dart';
-import 'package:alcancia/src/shared/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../resources/colors/colors.dart';
 
@@ -29,7 +27,7 @@ class AlcanciaConfirmationDialog extends StatelessWidget {
     final txtTheme = Theme.of(context).textTheme;
 
     return Dialog(
-      insetPadding: EdgeInsets.all(20),
+      insetPadding: const EdgeInsets.all(20),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
@@ -43,7 +41,7 @@ class AlcanciaConfirmationDialog extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(bottom: 36),
+              padding: const EdgeInsets.only(bottom: 36),
               child: Text(
                 appLoc.isDataCorrect,
                 style: txtTheme.subtitle1,
@@ -51,12 +49,12 @@ class AlcanciaConfirmationDialog extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(bottom: 44),
+              padding: const EdgeInsets.only(bottom: 44),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(bottom: 16),
+                    padding: const EdgeInsets.only(bottom: 16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -67,7 +65,7 @@ class AlcanciaConfirmationDialog extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(bottom: 16),
+                    padding: const EdgeInsets.only(bottom: 16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -78,7 +76,7 @@ class AlcanciaConfirmationDialog extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.only(bottom: 8),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

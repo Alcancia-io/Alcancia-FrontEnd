@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-SnackBar AlcanciaSnackBar(BuildContext context, String string) {
+SnackBar alcanciaSnackBar(BuildContext context, String string) {
   return SnackBar(
     content: Text(
       string,
@@ -8,6 +8,6 @@ SnackBar AlcanciaSnackBar(BuildContext context, String string) {
     ),
     behavior: SnackBarBehavior.floating,
     backgroundColor: Theme.of(context).inputDecorationTheme.fillColor,
-    duration: Duration(seconds: 5),
+    duration: const Duration(seconds: 5),
   );
 }

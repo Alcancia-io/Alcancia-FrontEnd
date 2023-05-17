@@ -6,7 +6,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:metamap_plugin_flutter/metamap_plugin_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../features/registration/model/GraphQLConfig.dart';
+import '../../features/registration/model/graphql_config.dart';
 
 class MetamapService {
   final metamapClientId = dotenv.env['METAMAP_CLIENT_ID'] as String;
@@ -18,14 +18,13 @@ class MetamapService {
     try {
       StorageService service = StorageService();
       var token = await service.readSecureData("token");
-      GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "${token}");
+      GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "$token");
       GraphQLClient client = graphQLConfiguration.clientToQuery();
       QueryResult result = await client.query(QueryOptions(document: gql(kycCancelQuery)));
       if (result.hasException) {
         final error = result.exception;
         return Future.error(error!);
       } else if (result.data != null) {
-        print(result.data);
         return true;
       }
       return false;
@@ -35,7 +34,6 @@ class MetamapService {
   }
 
   Future<void> showMatiFlow(String flowId, String uid, AppLocalizations appLoc) async {
-    print(flowId);
     await MetaMapFlutter.showMetaMapFlow(metamapClientId, flowId, {"uid": uid, "buttonColor": "#4E76E5"});
     final result = await MetaMapFlutter.resultCompleter.future;
     await Fluttertoast.showToast(

@@ -13,7 +13,7 @@ class AlcanciaTabbar extends StatefulWidget {
     required this.selectedIndex,
   }) : super(key: key);
 
-  final screens = [DashboardScreen(), TransactionsListScreen(), UserProfileScreen()];
+  final screens = [const DashboardScreen(), TransactionsListScreen(), UserProfileScreen()];
 
   @override
   State<AlcanciaTabbar> createState() => _AlcanciaTabbarState();
@@ -30,7 +30,7 @@ class _AlcanciaTabbarState extends State<AlcanciaTabbar> {
     String iconPath,
     String label,
   ) {
-    var color;
+    Color? color;
 
     if (widget.selectedIndex == tabIndex) {
       // if item selected change icon color

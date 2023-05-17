@@ -52,10 +52,10 @@ class WelcomeScreen extends StatelessWidget {
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: screenHeight / 23),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 16.0),
+                          padding: const EdgeInsets.only(top: 16.0),
                           child: Text(
                             appLocalization.labelWelcomeSubtitle,
-                            style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
+                            style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
                           ),
                         ),
                         const Spacer(),
@@ -85,7 +85,7 @@ class WelcomeScreen extends StatelessWidget {
                               CupertinoButton(
                                   child: Text(
                                     appLocalization.buttonLogIn,
-                                    style: TextStyle(decoration: TextDecoration.underline, fontWeight: FontWeight.bold),
+                                    style: const TextStyle(decoration: TextDecoration.underline, fontWeight: FontWeight.bold),
                                   ),
                                   onPressed: () => context.push("/login")),
                             ],

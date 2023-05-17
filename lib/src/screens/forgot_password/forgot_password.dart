@@ -32,7 +32,6 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
   final TextEditingController _confirmPasswordController = TextEditingController();
   final FetchState _state = FetchState();
   final FetchState _completePassState = FetchState();
-  final CompletePasswordInput _completeForgotPasswordInput = CompletePasswordInput();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final StopWatchTimer timer = StopWatchTimer(mode: StopWatchMode.countDown, presetMillisecond: 60000);
 

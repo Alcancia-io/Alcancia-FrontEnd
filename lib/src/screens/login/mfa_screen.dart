@@ -56,14 +56,14 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsets.all(0.0),
+                        padding: const EdgeInsets.all(0.0),
                         child: Text(
                           appLoc.labelVerifyIdentity,
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(8.0),
                         child: Text(
                             appLoc.labelEnterCodePhone(widget.data.phoneNumber.substring(widget.data.phoneNumber.length - 4)),
                         )
@@ -73,7 +73,7 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                         child: LabeledTextFormField(
                             controller: codeController,
                             inputType: TextInputType.number,
-                            autofillHints: [AutofillHints.oneTimeCode],
+                            autofillHints: const [AutofillHints.oneTimeCode],
                             labelText: appLoc.labelCode),
                       ),
                       StreamBuilder<int>(
@@ -89,19 +89,19 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                                   decoration: ShapeDecoration(
                                       shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(100),
-                                          side: BorderSide(color: alcanciaLightBlue))),
+                                          side: const BorderSide(color: alcanciaLightBlue))),
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Icon(
+                                        const Icon(
                                           Icons.timer_sharp,
                                           color: alcanciaLightBlue,
                                         ),
                                         Text(
                                           displayTime,
-                                          style: TextStyle(color: alcanciaLightBlue),
+                                          style: const TextStyle(color: alcanciaLightBlue),
                                         ),
                                       ],
                                     ),
@@ -118,7 +118,6 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                                             final deviceToken = await pushNotifications.messaging.getToken();
                                             final token = await loginController.login(
                                                 widget.data.email, widget.data.password, deviceToken ?? "");
-                                            print(token);
                                             saveToken(token);
                                             timer.onResetTimer();
                                             timer.onStartTimer();
@@ -127,7 +126,7 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                                     style: TextButton.styleFrom(foregroundColor: alcanciaLightBlue),
                                     child: Text(
                                       appLoc.buttonResend,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         decoration: TextDecoration.underline,
                                         fontWeight: FontWeight.bold,
                                       ),

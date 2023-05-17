@@ -62,10 +62,10 @@ class _PhoneRegistrationScreenState extends ConsumerState<PhoneRegistrationScree
                     children: [
                       Text(
                         appLocalization.labelPhone,
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
                       ),
                       Text(appLocalization.labelEnterPhoneNumber,
-                          style: TextStyle(fontSize: 15)),
+                          style: const TextStyle(fontSize: 15)),
                     ],
                   ),
                 ),
@@ -92,7 +92,7 @@ class _PhoneRegistrationScreenState extends ConsumerState<PhoneRegistrationScree
                                 style: Theme.of(context).textTheme.bodyText1,
                                 controller: phoneController,
                                 keyboardType: TextInputType.phone,
-                                autofillHints: [AutofillHints.telephoneNumber],
+                                autofillHints: const [AutofillHints.telephoneNumber],
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return appLocalization.errorRequiredField;
@@ -129,7 +129,7 @@ class _PhoneRegistrationScreenState extends ConsumerState<PhoneRegistrationScree
                       ),
                       Expanded(
                         child: Padding(
-                          padding: EdgeInsets.only(left: 8.0),
+                          padding: const EdgeInsets.only(left: 8.0),
                           child: RichText(
                             text: TextSpan(
                                 text: appLocalization.labelReadAndAccepted,
@@ -164,7 +164,7 @@ class _PhoneRegistrationScreenState extends ConsumerState<PhoneRegistrationScree
                 Text(
                   appLocalization.labelFeeDisclaimer
                 ),
-                Spacer(),
+                const Spacer(),
                 Column(
                   children: [
                     AlcanciaButton(

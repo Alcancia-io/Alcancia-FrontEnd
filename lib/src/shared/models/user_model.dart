@@ -34,7 +34,7 @@ class User {
     required this.balance,
     required this.walletAddress,
     this.userProfit = 0,
-    this.kycStatus = null,
+    this.kycStatus,
     required this.profession,
     this.address,
     this.lastUsedBankAccount,
