@@ -94,7 +94,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           padding: const EdgeInsets.only(
             left: 24,
             right: 24,
-            bottom: 24,
             top: 10,
           ),
           child: RefreshIndicator(
@@ -131,7 +130,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                 ),
                 AlcanciaTransactions(
-                  height: screenSize.height / 2.5,
+                  height: screenSize.height * 0.5,
                   txns: txns,
                   bottomText: appLoc.labelStartTransactionDashboard,
                 )
