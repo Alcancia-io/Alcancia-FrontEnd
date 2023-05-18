@@ -49,11 +49,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     });
   }
 
-  void setUserBalance() async {
+  Future<void> setUserBalance() async {
     try {
       var balance = await dashboardController.fetchUserBalance();
       ref.watch(balanceProvider.notifier).setBalance(balance);
-    } catch (err) {}
+    } catch (err) {
+      return Future.error(err);
+    }
   }
 
   void setTimer() {
@@ -82,20 +84,17 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       return const SafeArea(child: Center(child: CircularProgressIndicator()));
     }
     if (_error != "") return SafeArea(child: Center(child: Text(_error)));
-    var kycStatus = dashboardController.displayKycStatus(user!.kycStatus, appLoc);
     return Scaffold(
       appBar: AlcanciaToolbar(
         state: StateToolbar.profileTitleIcon,
         logoHeight: 38,
-        userName: user.name,
+        userName: user!.name,
       ),
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.only(
             left: 24,
             right: 24,
-            bottom: 24,
-            top: 10,
           ),
           child: RefreshIndicator(
             onRefresh: () => setUserInformation(),
@@ -103,7 +102,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               children: [
                 Container(
                   padding: const EdgeInsets.only(bottom: 16, top: 10),
-                  child: DashboardCard(),
+                  child: const DashboardCard(),
                 ),
                 const DashboardActions(),
                 Padding(
@@ -113,7 +112,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     children: [
                       Text(
                         appLoc.labelActivity,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
@@ -131,7 +130,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                 ),
                 AlcanciaTransactions(
-                  height: screenSize.height / 2.5,
+                  height: screenSize.height * 0.5,
                   txns: txns,
                   bottomText: appLoc.labelStartTransactionDashboard,
                 )

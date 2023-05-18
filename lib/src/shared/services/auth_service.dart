@@ -1,5 +1,4 @@
 import 'package:alcancia/src/features/login/data/login_mutation.dart';
-import 'package:alcancia/src/screens/forgot_password/forgot_password.dart';
 import 'package:alcancia/src/shared/graphql/mutations/complete_forgot_password_mutation.dart';
 import 'package:alcancia/src/shared/graphql/queries/index.dart';
 import 'package:alcancia/src/shared/services/graphql_service.dart';
@@ -57,10 +56,7 @@ class AuthService {
       );
 
       if (result.hasException) {
-        print(result.exception?.graphqlErrors[0].message);
-      } else if (result.data != null) {
-        print(result.data);
-        print(result.data!["logout"]);
+        return Future.error(result.exception?.graphqlErrors[0].message ?? "Exception");
       }
     } catch (e) {
       return Future.error(e);
@@ -75,12 +71,10 @@ class AuthService {
           document: gql(deleteAccountQuery),
         ),
       );
-      print("deleting user");
 
       if (result.hasException) {
-        print(result.exception?.graphqlErrors[0].message);
+        return Future.error(result.exception?.graphqlErrors[0].message ?? "Exception");
       } else if (result.data != null) {
-        print(result.data);
         return result.data!["deleteAccount"] as bool;
       }
       return false;

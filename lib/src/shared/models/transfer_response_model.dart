@@ -2,7 +2,7 @@ class TransferResponse {
   final String amount;
   final String destinationWallet;
   final String token;
-  final String txnDate;
+  final DateTime txnDate;
   final String destPhoneNumber;
   final String destUserName;
   final String txnId;
@@ -18,11 +18,12 @@ class TransferResponse {
   });
 
   factory TransferResponse.fromJSON(Map<String, dynamic> map) {
+    final date = DateTime.parse(map["createdAt"]);
     return TransferResponse(
       amount: map["amount"],
       destinationWallet: map["destWallet"],
       token: map["token"],
-      txnDate: map["createdAt"],
+      txnDate: date,
       destPhoneNumber: map["destPhoneNumber"],
       destUserName: map["destUserName"],
       txnId: map["id"],

@@ -87,7 +87,7 @@ class AlcanciaDatePicker extends ConsumerWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   state.errorText!,
-                  style: TextStyle(color: Colors.red, fontSize: 10),
+                  style: const TextStyle(color: Colors.red, fontSize: 10),
                 ),
               ),
           ],

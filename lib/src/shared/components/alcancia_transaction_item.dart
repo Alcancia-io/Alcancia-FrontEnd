@@ -1,3 +1,4 @@
+import 'package:alcancia/src/shared/extensions/datetime_extensions.dart';
 import 'package:alcancia/src/shared/extensions/type_extensions.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/models/transaction_model.dart';
@@ -9,8 +10,9 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AlcanciaTransactionItem extends StatelessWidget {
-  Transaction txn;
-  AlcanciaTransactionItem({Key? key, required this.txn}) : super(key: key);
+  const AlcanciaTransactionItem({Key? key, required this.txn}) : super(key: key);
+
+  final Transaction txn;
 
   String getImageType(String txnType) {
     if (txnType == "WITHDRAW") {
@@ -62,7 +64,7 @@ class TransactionItem extends ConsumerWidget {
                           style: txtTheme.bodyText2,
                         ),
                         Text(
-                          txn.createdAt.substring(0, 10),
+                          txn.createdAt.formattedLocalString(),
                         ),
                       ],
                     ),
@@ -110,7 +112,7 @@ class TransactionItem extends ConsumerWidget {
                           style: txtTheme.bodyText2,
                         ),
                         Text(
-                          txn.createdAt.substring(0, 10),
+                          txn.createdAt.formattedLocalString(),
                         ),
                       ],
                     ),
@@ -158,7 +160,7 @@ class TransactionItem extends ConsumerWidget {
                           style: txtTheme.bodyText2,
                         ),
                         Text(
-                          txn.createdAt.substring(0, 10),
+                          txn.createdAt.formattedLocalString(),
                         ),
                       ],
                     ),
@@ -200,7 +202,7 @@ class TransactionItem extends ConsumerWidget {
                           style: txtTheme.bodyText2,
                         ),
                         Text(
-                          txn.createdAt.substring(0, 10),
+                          txn.createdAt.formattedLocalString(),
                         ),
                       ],
                     ),

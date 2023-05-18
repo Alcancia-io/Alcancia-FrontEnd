@@ -6,10 +6,8 @@ import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OTPScreen extends ConsumerStatefulWidget {
@@ -25,13 +23,6 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
   final _codeController = TextEditingController();
   String _error = "";
   bool _loading = false;
-
-  String _bodyText() {
-    if (widget.otpDataModel.phoneNumber != null) {
-      return "Ingresa el código de 6 dígitos que enviamos a tu celular ${widget.otpDataModel.phoneNumber}";
-    }
-    return "Ingresa el código de 6 dígitos que enviamos a tu celular";
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,15 +48,15 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsets.all(0.0),
+                        padding: const EdgeInsets.all(0.0),
                         child: Text(
                           appLocalization.labelAlmostDone,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 35),
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(8.0),
                         child: Text(
                             appLocalization.labelEnterCodePhone(widget.otpDataModel.phoneNumber ?? "")),
                       ),
@@ -73,7 +64,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                         padding: const EdgeInsets.all(8.0),
                         child: LabeledTextFormField(
                             controller: _codeController,
-                            autofillHints: [AutofillHints.oneTimeCode],
+                            autofillHints: const [AutofillHints.oneTimeCode],
                             labelText: appLocalization.labelCode),
                       ),
                       StreamBuilder<int>(
@@ -93,20 +84,20 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(100),
-                                            side: BorderSide(
+                                            side: const BorderSide(
                                                 color: alcanciaLightBlue))),
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             Icons.timer_sharp,
                                             color: alcanciaLightBlue,
                                           ),
                                           Text(
                                             displayTime,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 color: alcanciaLightBlue),
                                           ),
                                         ],
@@ -132,7 +123,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                       style: TextButton.styleFrom(foregroundColor: alcanciaLightBlue),
                                       child: Text(
                                         appLocalization.buttonResend,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           decoration: TextDecoration.underline,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -161,7 +152,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                         _codeController.text,
                                         widget.otpDataModel.email);
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                        AlcanciaSnackBar(context,
+                                        alcanciaSnackBar(context,
                                             appLocalization.labelAccountCreated));
                                     context.go("/login");
                                   } catch (err) {
@@ -197,11 +188,6 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
     super.dispose();
   }
 
-  Future<void> _launchUrl() async {
-    if (!await launchUrl(widget.url)) {
-      throw 'Could not launch $widget.url';
-    }
-  }
 
   void _setLoading(bool loading) {
     setState(() {

@@ -41,19 +41,19 @@ class UserProfileScreen extends ConsumerWidget {
                   context.push("/account");
                 },
                 child: Container(
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
                         child: Icon(Icons.person_outline_outlined),
                       ),
                       Text(
                         appLoc.labelMyAccount,
                         style: Theme.of(context).textTheme.labelLarge,
                       ),
-                      Spacer(),
-                      Icon(Icons.chevron_right)
+                      const Spacer(),
+                      const Icon(Icons.chevron_right)
                     ],
                   ),
                 ),
@@ -67,16 +67,16 @@ class UserProfileScreen extends ConsumerWidget {
                   padding: const EdgeInsets.all(16.0),
                   child: Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
                         child: Icon(Icons.info_outline),
                       ),
                       Text(
                         appLoc.labelTermsAndConditions,
                         style: Theme.of(context).textTheme.labelLarge,
                       ),
-                      Spacer(),
-                      Icon(Icons.chevron_right)
+                      const Spacer(),
+                      const Icon(Icons.chevron_right)
                     ],
                   ),
                 ),
@@ -90,26 +90,26 @@ class UserProfileScreen extends ConsumerWidget {
                   padding: const EdgeInsets.all(16.0),
                   child: Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
                         child: Icon(Icons.info_outline),
                       ),
                       Text(
                         appLoc.labelPrivacyPolicy,
                         style: Theme.of(context).textTheme.labelLarge,
                       ),
-                      Spacer(),
-                      Icon(Icons.chevron_right)
+                      const Spacer(),
+                      const Icon(Icons.chevron_right)
                     ],
                   ),
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: AlcanciaButton(
                     foregroundColor: alcanciaLightBlue,
-                    side: BorderSide(color: alcanciaLightBlue),
+                    side: const BorderSide(color: alcanciaLightBlue),
                     color: Colors.transparent,
                     buttonText: appLoc.labelSignOut,
                     fontSize: 18,
@@ -119,10 +119,6 @@ class UserProfileScreen extends ConsumerWidget {
                           context: context,
                           builder: (BuildContext ctx) {
                             return AlcanciaActionDialog(
-                                child: Text(
-                                  appLoc.labelSignOutConfirmation,
-                                  style: Theme.of(context).textTheme.titleLarge,
-                                ),
                                 acceptText: appLoc.buttonConfirm,
                                 acceptColor: Colors.red,
                                 cancelText: appLoc.buttonCancel,
@@ -135,17 +131,21 @@ class UserProfileScreen extends ConsumerWidget {
                                     context.go("/");
                                   } catch (e) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                        AlcanciaSnackBar(context,
+                                        alcanciaSnackBar(context,
                                             appLoc.errorSignOut));
                                   }
                                   ref.read(userProvider.notifier).setUser(null);
-                                });
+                                },
+                                child: Text(
+                                  appLoc.labelSignOutConfirmation,
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ));
                           });
                     },
                     rounded: true,
-                    icon: Padding(
+                    icon: const Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Icon(Icons.delete_forever),
+                      child: Icon(Icons.logout_outlined),
                     ),
                   )),
             ],
@@ -159,7 +159,7 @@ class UserProfileScreen extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           color: Theme.of(context).brightness == Brightness.dark ? alcanciaCardDark2 : alcanciaCardLight2,
           borderRadius: BorderRadius.circular(8),
@@ -174,7 +174,7 @@ class UserProfileScreen extends ConsumerWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: ClipOval(
                   child: SizedBox.fromSize(
-                    size: Size.fromRadius(48), // Image radius
+                    size: const Size.fromRadius(48), // Image radius
                     child: Image.asset(
                       "lib/src/resources/images/profile.png",
                       width: 100,
@@ -206,7 +206,7 @@ class UserProfileScreen extends ConsumerWidget {
   }
 
   deleteToken() async {
-    final StorageService _storageService = StorageService();
-    await _storageService.deleteSecureData("token");
+    final StorageService storageService = StorageService();
+    await storageService.deleteSecureData("token");
   }
 }

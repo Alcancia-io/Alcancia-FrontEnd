@@ -1,5 +1,4 @@
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_action_dialog.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
@@ -11,10 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:alcancia/src/shared/models/alcancia_models.dart';
 
 class AccountScreen extends ConsumerWidget {
-  AccountScreen({Key? key}) : super(key: key);
+  const AccountScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -61,13 +59,14 @@ class AccountScreen extends ConsumerWidget {
               //     ),
               //   ),
               // ),
-              Spacer(),
+              const Spacer(),
               Center(
                 child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: AlcanciaButton(
+                      color: Colors.transparent,
                       foregroundColor: Colors.red,
-                      side: BorderSide(color: Colors.red),
+                      side: const BorderSide(color: Colors.red),
                       buttonText: appLoc.buttonDeleteAccount,
                       fontSize: 18,
                       padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
@@ -87,7 +86,7 @@ class AccountScreen extends ConsumerWidget {
                                     ref.read(userProvider.notifier).setUser(null);
                                   } catch (e) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                        AlcanciaSnackBar(context,
+                                        alcanciaSnackBar(context,
                                             appLoc.errorDeleteAccount));
                                   }
                                 },
@@ -113,7 +112,7 @@ class AccountScreen extends ConsumerWidget {
   }
 
   deleteToken() async {
-    final StorageService _storageService = StorageService();
-    await _storageService.deleteSecureData("token");
+    final StorageService storageService = StorageService();
+    await storageService.deleteSecureData("token");
   }
 }

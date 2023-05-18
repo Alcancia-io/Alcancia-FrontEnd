@@ -11,7 +11,6 @@ class TransferController {
       if (response.hasException) return Future.error("${_exceptionHandler.handleException(response.exception!)}");
       if (response.data != null) {
         Map<String, dynamic> data = response.data!["userPhoneNumberSearch"];
-        print(data);
         final user = MinimalUser.fromJSON(data);
         return user;
       }
@@ -35,9 +34,7 @@ class TransferController {
       if (response.hasException) return Future.error("${_exceptionHandler.handleException(response.exception!)}");
       if (response.data != null) {
         Map<String, dynamic> data = response.data!["transferFunds"];
-        print(data);
         final transferResponse = TransferResponse.fromJSON(data);
-        print(transferResponse);
         return transferResponse;
       }
     } catch (error) {

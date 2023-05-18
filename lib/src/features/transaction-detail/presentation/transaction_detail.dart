@@ -1,3 +1,4 @@
+import 'package:alcancia/src/shared/extensions/datetime_extensions.dart';
 import 'package:alcancia/src/shared/extensions/type_extensions.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
@@ -24,11 +25,11 @@ class TransactionDetail extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Container(
-              padding: EdgeInsets.all(18),
+              padding: const EdgeInsets.all(18),
               height: 430,
               decoration: BoxDecoration(
                 color: ctx.brightness == Brightness.dark ? alcanciaCardDark2 : alcanciaCardLight2,
-                borderRadius: BorderRadius.all(
+                borderRadius: const BorderRadius.all(
                   Radius.circular(11),
                 ),
               ),
@@ -36,10 +37,10 @@ class TransactionDetail extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(bottom: 48, top: 8),
+                    padding: const EdgeInsets.only(bottom: 48, top: 8),
                     child: Text(
                       appLoc.labelActivityDetail,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -47,11 +48,11 @@ class TransactionDetail extends ConsumerWidget {
                   ),
                   TransactionDetailItem(
                     leftText: appLoc.labelDate,
-                    rightText: '${txn.createdAt}',
+                    rightText: txn.createdAt.formattedLocalString(),
                   ),
                   TransactionDetailItem(
                     leftText: appLoc.labelTransactionId,
-                    rightText: '${txn.transactionID.substring(0, txn.transactionID.indexOf('-'))}',
+                    rightText: txn.transactionID.substring(0, txn.transactionID.indexOf('-')),
                   ),
                   if (txn.type == TransactionType.deposit) ... [
                     TransactionDetailItem(
@@ -77,7 +78,7 @@ class TransactionDetail extends ConsumerWidget {
                     rightIcon: txn.iconForTxnStatus(user.id),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 20),
+                    padding: const EdgeInsets.only(top: 20),
                     child: SizedBox(
                       width: double.infinity,
                       height: 64,

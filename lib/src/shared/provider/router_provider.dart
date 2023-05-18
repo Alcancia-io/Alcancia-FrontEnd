@@ -1,7 +1,7 @@
 import 'package:alcancia/main.dart';
 import 'package:alcancia/src/features/registration/presentation/phone_registration_screen.dart';
 import 'package:alcancia/src/features/login/presentation/login_screen.dart';
-import 'package:alcancia/src/features/registration/model/GraphQLConfig.dart';
+import 'package:alcancia/src/features/registration/model/graphql_config.dart';
 import 'package:alcancia/src/features/registration/presentation/otp_screen.dart';
 import 'package:alcancia/src/features/user-profile/presentation/account_screen.dart';
 import 'package:alcancia/src/features/welcome/presentation/welcome_screen.dart';
@@ -17,16 +17,12 @@ import 'package:alcancia/src/screens/successful_transaction/successful_transacti
 import 'package:alcancia/src/screens/swap/swap_screen.dart';
 import 'package:alcancia/src/screens/transfer/transfer_screen.dart';
 import 'package:alcancia/src/screens/withdraw/withdraw_screen.dart';
-import 'package:alcancia/src/shared/components/alcancia_confirmation_dialog.dart';
 import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
 import 'package:alcancia/src/shared/graphql/queries.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:alcancia/src/shared/models/checkout_model.dart';
 import 'package:alcancia/src/shared/models/login_data_model.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
-import 'package:alcancia/src/shared/models/suarmi_order_model.dart';
-import 'package:alcancia/src/shared/models/transaction_input_model.dart';
-import 'package:alcancia/src/shared/models/transaction_model.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -37,7 +33,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 Future<bool> isUserAuthenticated() async {
   StorageService service = StorageService();
   var token = await service.readSecureData("token");
-  GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "${token}");
+  GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "$token");
   GraphQLClient client = graphQLConfiguration.clientToQuery();
   var result = await client.query(QueryOptions(document: gql(isAuthenticated)));
   return !result.hasException;
@@ -60,12 +56,12 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "welcome",
           path: "/",
-          builder: (context, state) => WelcomeScreen(),
+          builder: (context, state) => const WelcomeScreen(),
         ),
         GoRoute(
           name: "login",
           path: "/login",
-          builder: (context, state) => LoginScreen(),
+          builder: (context, state) => const LoginScreen(),
         ),
         GoRoute(
           name: "homescreen",
@@ -79,7 +75,7 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "account",
           path: "/account",
-          builder: (context, state) => AccountScreen(),
+          builder: (context, state) => const AccountScreen(),
         ),
         GoRoute(
           name: "registration",
@@ -95,7 +91,7 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "swap",
           path: "/swap",
-          builder: (context, state) => SwapScreen(),
+          builder: (context, state) => const SwapScreen(),
         ),
         GoRoute(
           name: "transaction_detail",
@@ -136,7 +132,7 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "withdraw",
           path: "/withdraw",
-          builder: (context, state) => WithdrawScreen(),
+          builder: (context, state) => const WithdrawScreen(),
         ),
         GoRoute(
           name: "success",
@@ -146,7 +142,7 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "onboarding",
           path: "/onboarding",
-          builder: (context, state) => OnboardingScreens(),
+          builder: (context, state) => const OnboardingScreens(),
         ),
         GoRoute(
           name: "successful-transaction",

@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class Transaction {
   String transactionID;
-  String createdAt;
+  DateTime createdAt;
   double? sourceAmount;
   String sourceAsset;
   String? targetAsset;
@@ -32,14 +32,15 @@ class Transaction {
   factory Transaction.fromJson(Map<String, dynamic> json) {
     final targetAsset = json["targetAsset"];
     final sourceAsset = json["sourceAsset"];
+    final createdAt = DateTime.parse(json["createdAt"]);
     return Transaction(
         transactionID: json["id"] as String,
-        createdAt: json["createdAt"] as String,
+        createdAt: createdAt,
         sourceAmount: double.tryParse(json["sourceAmount"].toString()),
         sourceAsset:
-            CurrencyAsset.values.firstWhereOrNull((e) => e.actualAsset == sourceAsset)?.shownAsset ?? sourceAsset,
+            CurrencyAsset.values.firstWhereOrNull((e) => e.actualAsset.toLowerCase() == sourceAsset.toString().toLowerCase())?.shownAsset ?? sourceAsset,
         targetAsset:
-            CurrencyAsset.values.firstWhereOrNull((e) => e.actualAsset == targetAsset)?.shownAsset,
+            CurrencyAsset.values.firstWhereOrNull((e) => e.actualAsset.toLowerCase() == targetAsset.toString().toLowerCase())?.shownAsset ?? targetAsset,
         amount: double.parse(json["amount"].toString()),
         type: TransactionType.values.firstWhere((e) => e.name.toUpperCase() == json["type"], orElse: () => TransactionType.unknown),
         status: json["status"] as String,

@@ -111,7 +111,7 @@ class _BalanceCarouselState extends State<BalanceCarousel> {
               child: Container(
                 width: 7.0,
                 height: 7.0,
-                margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black)

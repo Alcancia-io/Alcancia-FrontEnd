@@ -13,7 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class WithdrawScreen extends ConsumerStatefulWidget {
-  WithdrawScreen({Key? key}) : super(key: key);
+  const WithdrawScreen({Key? key}) : super(key: key);
 
   @override
   ConsumerState<WithdrawScreen> createState() => _WithdrawScreenState();
@@ -108,7 +108,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
               children: [
                 Text(
                   appLoc.labelHello,
-                  style: TextStyle(fontSize: 35, fontWeight: FontWeight.w700),
+                  style: const TextStyle(fontSize: 35, fontWeight: FontWeight.w700),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 12),
@@ -179,6 +179,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
                     } else if (value.length != 18) {
                       return appLoc.errorCLABELength;
                     }
+                    return null;
                   },
                 ),
                 const SizedBox(
@@ -245,7 +246,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
                                     }
                                   };
                                   try {
-                                    final order = await controller.sendSuarmiOrder(orderInput);
+                                    await controller.sendSuarmiOrder(orderInput);
                                     context.go("/success", extra: appLoc.labelWithdrawalSent);
                                   } catch (e) {
                                     setState(() {
@@ -264,10 +265,10 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
                       ],
                       if (_orderError.isNotEmpty) ...[
                         Padding(
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           child: Text(
                             _orderError,
-                            style: TextStyle(color: Colors.red),
+                            style: const TextStyle(color: Colors.red),
                           ),
                         ),
                       ]

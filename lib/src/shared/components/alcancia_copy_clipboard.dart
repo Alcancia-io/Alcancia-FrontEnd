@@ -23,7 +23,7 @@ class AlcanciaCopyToClipboard extends StatelessWidget {
       onTap: () async {
         Clipboard.setData(ClipboardData(text: textToCopy));
         ScaffoldMessenger.of(context).showSnackBar(
-          AlcanciaSnackBar(context, displayText),
+          alcanciaSnackBar(context, displayText),
         );
       },
     );

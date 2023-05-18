@@ -2,7 +2,6 @@ import 'package:alcancia/src/features/registration/provider/registration_control
 import 'package:alcancia/src/features/registration/provider/timer_provider.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_link.dart';
-import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/models/login_data_model.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
 import 'package:alcancia/src/shared/models/storage_item.dart';
@@ -210,7 +209,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         CupertinoButton(
                                             child: Row(
                                               children: [
-                                                Padding(
+                                                const Padding(
                                                   padding: EdgeInsets.only(right: 4.0),
                                                   child: Icon(CupertinoIcons.question_circle),
                                                 ),

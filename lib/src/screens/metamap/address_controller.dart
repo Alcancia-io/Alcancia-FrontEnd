@@ -25,13 +25,11 @@ class AddressController {
 
   Future<SuarmiOrder> sendSuarmiOrder(Map<String, dynamic> orderInput) async {
     final response = await _suarmiService.sendSuarmiOrder(orderInput);
-    print(response);
     if (response.hasException) {
       var exception = _exceptionHandler.handleException(response.exception);
       throw Exception(exception);
     }
     final data = response.data?['sendSuarmiOrder'];
-    print(data);
     return SuarmiOrder.fromJson(data);
   }
 }

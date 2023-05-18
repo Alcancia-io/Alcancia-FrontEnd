@@ -18,7 +18,7 @@ class TransactionDetailItem extends StatelessWidget {
         children: [
           Text(
             leftText,
-            style: TextStyle(fontSize: 15),
+            style: const TextStyle(fontSize: 15),
           ),
           if (rightIcon != null) ... [
             rightIcon!,

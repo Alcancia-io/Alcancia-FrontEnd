@@ -2,7 +2,7 @@ import 'package:alcancia/src/shared/models/user_model.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:alcancia/src/features/registration/data/signup_mutation.dart';
 import 'package:intl/intl.dart';
-import 'GraphQLConfig.dart';
+import 'graphql_config.dart';
 
 class RegistrationController {
   RegistrationController({required this.token});
@@ -26,18 +26,15 @@ class RegistrationController {
   Future<void> resendVerificationCode(String email) async {
     try {
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
-      GraphQLClient _client = graphQLConfiguration.clientToQuery();
-      QueryResult result = await _client.query(
+      GraphQLClient client = graphQLConfiguration.clientToQuery();
+      QueryResult result = await client.query(
         QueryOptions(document: gql(resendVerificationQuery), variables: {"email": email}),
       );
       if (result.hasException) {
-        print(email);
-        print(result.exception);
         final e = result.exception?.graphqlErrors[0].message;
         return Future.error(e!);
       }
     } catch (e) {
-      print(e);
       return Future.error(e);
     }
   }
@@ -45,8 +42,8 @@ class RegistrationController {
   Future<void> verifyOTP(String otp, String email) async {
     try {
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
-      GraphQLClient _client = graphQLConfiguration.clientToQuery();
-      QueryResult result = await _client.query(
+      GraphQLClient client = graphQLConfiguration.clientToQuery();
+      QueryResult result = await client.query(
         QueryOptions(document: gql(verifyOTPQuery), variables: {"verificationCode": otp, "email": email}),
       );
       if (result.hasException) {
@@ -71,10 +68,9 @@ class RegistrationController {
       "deviceToken": ""
     };
     try {
-      print(signupInput.toString());
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
-      GraphQLClient _client = graphQLConfiguration.clientToQuery();
-      QueryResult result = await _client
+      GraphQLClient client = graphQLConfiguration.clientToQuery();
+      QueryResult result = await client
           .mutate(MutationOptions(document: gql(signupMutation), variables: {"signupUserInput": signupInput}
               //onCompleted: (resultData) {
               //  if (resultData != null) {
@@ -84,14 +80,11 @@ class RegistrationController {
               ));
 
       if (result.hasException) {
-        print("Exception");
         final e = result.exception;
         return Future.error(e!);
       }
       return;
     } catch (e) {
-      print("Error");
-      print(e);
       return Future.error(e);
     }
   }

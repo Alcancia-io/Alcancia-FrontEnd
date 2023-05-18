@@ -370,7 +370,6 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                               : () async {
                             //Temporary Variables
                             var verified = user!.kycStatus;
-                            var resident = false;
 
                             if (verified == "VERIFIED") {
                               final method = sourceCurrency == 'MXN'

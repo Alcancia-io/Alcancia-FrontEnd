@@ -1,6 +1,4 @@
-import 'package:alcancia/src/screens/forgot_password/forgot_password.dart';
 import 'package:alcancia/src/shared/graphql/queries/forgot_password_query.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:mockito/mockito.dart';
@@ -42,7 +40,7 @@ void main() {
         options: QueryOptions(document: gql(forgotPasswordQuery)),
         data: {"message": "hello"},
         exception: OperationException(),
-        context: Context(),
+        context: const Context(),
       );
       try {
         when(client.query(
@@ -51,8 +49,6 @@ void main() {
             variables: const {"email": "email@gmail.com"},
           ),
         )).thenAnswer((hey) async {
-          print('hey!!!!!!!!!!!!!!!!!!!!!!!');
-          print(hey);
           return response;
         });
       } catch (err) {

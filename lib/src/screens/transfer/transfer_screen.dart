@@ -1,7 +1,4 @@
-import 'dart:developer';
 
-import 'package:alcancia/src/features/registration/data/country.dart';
-import 'package:alcancia/src/features/registration/presentation/country_picker.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/screens/transfer/transfer_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
@@ -9,7 +6,6 @@ import 'package:alcancia/src/shared/components/alcancia_confirmation_dialog.dart
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/components/decimal_input_formatter.dart';
-import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +13,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../shared/provider/user_provider.dart';
 
 class TransferScreen extends ConsumerStatefulWidget {
   const TransferScreen({Key? key}) : super(key: key);
@@ -100,7 +95,6 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
     final appLoc = AppLocalizations.of(context)!;
     final txtTheme = Theme.of(context).textTheme;
     final userBalance = ref.watch(balanceProvider);
-    final user = ref.watch(userProvider);
     final balance =
         sourceCurrency == "apolusdc" ? userBalance.usdcBalance : userBalance.celoBalance;
     final screenHeight = MediaQuery.of(context).size.height;
@@ -136,7 +130,10 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(appLoc.labelPhone),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 6.0),
+                          child: Text(appLoc.labelPhone),
+                        ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -144,7 +141,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                               itemsAlignment: MainAxisAlignment.spaceBetween,
                               dropdownItems: countries,
                               dropdownWidth: _responsiveService.getWidthPixels(120, screenWidth),
-                              dropdownHeight: _responsiveService.getHeightPixels(55, screenHeight),
+                              dropdownHeight: _responsiveService.getHeightPixels(50, screenHeight),
                               decoration: BoxDecoration(
                                 color: Theme.of(context).inputDecorationTheme.fillColor,
                                 borderRadius: BorderRadius.circular(7),
@@ -164,7 +161,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                                   style: Theme.of(context).textTheme.bodyText1,
                                   controller: _phoneController,
                                   keyboardType: TextInputType.phone,
-                                  autofillHints: [AutofillHints.telephoneNumber],
+                                  autofillHints: const [AutofillHints.telephoneNumber],
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return appLoc.errorRequiredField;
@@ -184,7 +181,10 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(appLoc.labelTransferAmount),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 6.0),
+                          child: Text(appLoc.labelTransferAmount),
+                        ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -192,7 +192,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                               itemsAlignment: MainAxisAlignment.spaceBetween,
                               dropdownItems: sourceCurrencies,
                               dropdownWidth: _responsiveService.getWidthPixels(120, screenWidth),
-                              dropdownHeight: _responsiveService.getHeightPixels(55, screenHeight),
+                              dropdownHeight: _responsiveService.getHeightPixels(50, screenHeight),
                               decoration: BoxDecoration(
                                 color: Theme.of(context).inputDecorationTheme.fillColor,
                                 borderRadius: BorderRadius.circular(7),
@@ -229,7 +229,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                     ),
                   ),
                   Text(appLoc.labelAvailableBalance(balance.toStringAsFixed(6))),
-                  Spacer(),
+                  const Spacer(),
                   Padding(
                     padding: const EdgeInsets.only(top: 24),
                     child: Center(
@@ -241,7 +241,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                             AlcanciaButton(
                               buttonText: appLoc.buttonNext,
                               // TODO: enableButton again
-                              onPressed: true
+                              onPressed: _enableButton
                                   ? () async {
                                       setState(() {
                                         _loading = true;
@@ -252,8 +252,6 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                                         final amount = double.parse(_transferAmountController.text);
                                         final targetUser = await transferController.searchUser(
                                             phoneNumber: phoneNumber);
-                                        print('target user id');
-                                        print(targetUser.id);
                                         showDialog(
                                           context: context,
                                           builder: (ctx) {
@@ -284,19 +282,19 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                           ],
                           if (_error.isNotEmpty) ...[
                             Padding(
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 _error,
-                                style: TextStyle(color: Colors.red),
+                                style: const TextStyle(color: Colors.red),
                               ),
                             ),
                           ],
                           if (_transferError.isNotEmpty) ...[
                             Padding(
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 _transferError,
-                                style: TextStyle(color: Colors.red),
+                                style: const TextStyle(color: Colors.red),
                               ),
                             ),
                           ]
