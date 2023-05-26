@@ -44,7 +44,7 @@ class DepositOption extends StatelessWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: SvgPicture.asset(
                   imageSrc,
-                  height: 48,
+                  height: 40,
                 ),
               ),
               Column(
