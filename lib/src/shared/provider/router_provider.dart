@@ -8,6 +8,8 @@ import 'package:alcancia/src/features/welcome/presentation/welcome_screen.dart';
 import 'package:alcancia/src/features/registration/presentation/registration_screen.dart';
 import 'package:alcancia/src/features/registration/model/user_registration_model.dart';
 import 'package:alcancia/src/screens/checkout/checkout.dart';
+import 'package:alcancia/src/screens/deposit/crypto_deposit_screen.dart';
+import 'package:alcancia/src/screens/deposit/deposit_screen.dart';
 import 'package:alcancia/src/screens/forgot_password/forgot_password.dart';
 import 'package:alcancia/src/screens/login/mfa_screen.dart';
 import 'package:alcancia/src/screens/metamap/address_screen.dart';
@@ -155,6 +157,16 @@ final routerProvider = Provider<GoRouter>(
           name: "transfer",
           path: "/transfer",
           builder: (context, state) => const TransferScreen(),
+        ),
+        GoRoute(
+          name: "deposit",
+          path: "/deposit",
+          builder: (context, state) => const DepositScreen(),
+        ),
+        GoRoute(
+          name: "crypto-deposit",
+          path: "/crypto-deposit",
+          builder: (context, state) => const CryptoDepositScreen(),
         ),
       ],
       redirect: (context, state) async {
