@@ -19,7 +19,7 @@ class DepositScreen extends StatelessWidget {
       body: Column(
         children: [
           DepositOption(
-            imageSrc: "lib/src/resources/images/icon_bank.png",
+            imageSrc: "lib/src/resources/images/icon_bank.svg",
             title: appLoc.labelPesosDeposits,
             subtitle: appLoc.labelPesosDepositsSubtitle,
             pill1: appLoc.labelNoCommissions,
@@ -29,7 +29,7 @@ class DepositScreen extends StatelessWidget {
             },
           ),
           DepositOption(
-            imageSrc: "lib/src/resources/images/icon_coins.png",
+            imageSrc: "lib/src/resources/images/icon_coins.svg",
             title: appLoc.labelCryptoDeposits,
             subtitle: appLoc.labelCryptoDepositsSubtitle,
             pill1: appLoc.labelNoCommissions,

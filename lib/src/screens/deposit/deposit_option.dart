@@ -1,5 +1,6 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class DepositOption extends StatelessWidget {
   const DepositOption({
@@ -41,7 +42,7 @@ class DepositOption extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Image.asset(
+                child: SvgPicture.asset(
                   imageSrc,
                   height: 48,
                 ),
