@@ -190,5 +190,17 @@
 	"idReference": "Id reference",
 	"confirmation": "Confirmation",
 	"successfulTransaction": "Transaction successful",
-	"goBackToMainMenu": "Go back to Main Menu"
+	"goBackToMainMenu": "Go back to Main Menu",
+	"labelPesosDeposits": "Pesos Deposits",
+	"labelCryptoDeposits": "Crypto Deposits",
+	"labelNoCommissions": "No Commissions",
+	"labelPesosDepositsSubtitle": "By Bank Transfer",
+	"labelCryptoDepositsSubtitle": "By Wallet Address",
+	"labelUnder20Min": "<20 minutes",
+	"labelUnder5Min": "<5 minutes",
+	"labelAddress": "Address",
+	"labelNetwork": "Network",
+	"labelCoin": "Coin",
+	"alertAddressCopied": "Address copied",
+	"alertCopied": "Copied"
 }

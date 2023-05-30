@@ -272,5 +272,18 @@
 	"idReference": "Id Referencia",
 	"confirmation": "Confirmación",
 	"successfulTransaction": "¡Transferencia exitosa!",
-	"goBackToMainMenu": "Volver al Menú Principal"
+	"goBackToMainMenu": "Volver al Menú Principal",
+	"labelPesosDeposits": "Depósitos en pesos",
+	"labelCryptoDeposits": "Depósitos en crypto",
+	"labelNoCommissions": "Sin comisión",
+	"labelPesosDepositsSubtitle": "Por transferencia bancaria",
+	"labelCryptoDepositsSubtitle": "Por Wallet Address",
+	"labelUnder20Min": "<20 minutos",
+	"labelUnder5Min": "<5 minutos",
+	"labelAddress": "Dirección",
+	"labelNetwork": "Red",
+	"labelCoin": "Moneda",
+	"alertAddressCopied": "Dirección copiada",
+	"alertCopied": "Copiad@"
+
 }

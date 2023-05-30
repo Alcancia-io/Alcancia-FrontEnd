@@ -23,7 +23,7 @@ class DashboardActions extends StatelessWidget {
               buttonText: appLoc.labelDeposit,
               foregroundColor: Colors.white,
               onPressed: () {
-                context.push("/swap");
+                context.push("/deposit");
               },
               height: 38,
               color: alcanciaMidBlue,
