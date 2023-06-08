@@ -13,6 +13,12 @@ const String transactionsQuery = """
           status,
           senderId,
           receiverId,
+          clearedDate,
+          newBalance,
+          conversionRate,
+          paymentGatewayID,
+          userID,
+          method,
       }
     }
   }

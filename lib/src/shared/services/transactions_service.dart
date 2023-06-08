@@ -27,6 +27,7 @@ class TransactionsService {
   }
 
   List<Transaction> getTransactionsFromJson(Map<String, dynamic> json) {
+    print(json);
     var items = json['items'];
     if (items == null) {
       return <Transaction>[];

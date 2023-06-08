@@ -284,6 +284,11 @@
 	"labelNetwork": "Red",
 	"labelCoin": "Moneda",
 	"alertAddressCopied": "Dirección copiada",
-	"alertCopied": "Copiad@"
-
+	"alertCopied": "Copiad@",
+	"labelReceiverId": "ID del receptor",
+	"labelClearedDate": "Fecha de liquidación",
+	"labelNewBalance": "Nuevo balance",
+	"labelConversionRate": "Tasa de conversión",
+	"labelpaymentGatewayID": "ID del Payment Gateway",
+	"labelUserID": "User ID"
 }

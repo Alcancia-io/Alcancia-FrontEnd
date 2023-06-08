@@ -26,9 +26,11 @@ class TransactionDetail extends ConsumerWidget {
             padding: const EdgeInsets.all(24),
             child: Container(
               padding: const EdgeInsets.all(18),
-              height: 430,
+              height: 630,
               decoration: BoxDecoration(
-                color: ctx.brightness == Brightness.dark ? alcanciaCardDark2 : alcanciaCardLight2,
+                color: ctx.brightness == Brightness.dark
+                    ? alcanciaCardDark2
+                    : alcanciaCardLight2,
                 borderRadius: const BorderRadius.all(
                   Radius.circular(11),
                 ),
@@ -52,14 +54,15 @@ class TransactionDetail extends ConsumerWidget {
                   ),
                   TransactionDetailItem(
                     leftText: appLoc.labelTransactionId,
-                    rightText: txn.transactionID.substring(0, txn.transactionID.indexOf('-')),
+                    rightText: txn.transactionID
+                        .substring(0, txn.transactionID.indexOf('-')),
                   ),
-                  if (txn.type == TransactionType.deposit) ... [
+                  if (txn.type == TransactionType.deposit) ...[
                     TransactionDetailItem(
                       leftText: appLoc.labelDepositValue,
                       rightText: '\$${txn.sourceAmount?.toStringAsFixed(2)}',
                     ),
-                  ] else if (txn.type == TransactionType.withdraw) ... [
+                  ] else if (txn.type == TransactionType.withdraw) ...[
                     TransactionDetailItem(
                       leftText: appLoc.labelWithdrawalValue,
                       rightText: '\$${txn.sourceAmount?.toStringAsFixed(2)}',
@@ -76,6 +79,28 @@ class TransactionDetail extends ConsumerWidget {
                   TransactionDetailItem(
                     leftText: appLoc.labelStatus,
                     rightIcon: txn.iconForTxnStatus(user.id),
+                  ),
+                  TransactionDetailItem(
+                    leftText: appLoc.labelClearedDate,
+                    rightText: txn.clearedDate?.formattedLocalString(),
+                  ),
+                  TransactionDetailItem(
+                    leftText: appLoc.labelNewBalance,
+                    rightText: (txn.newBalance == null)
+                        ? ''
+                        : '\$${txn.newBalance?.toStringAsFixed(2)}',
+                  ),
+                  TransactionDetailItem(
+                    leftText: appLoc.labelConversionRate,
+                    rightText: txn.conversionRate?.toStringAsFixed(2),
+                  ),
+                  TransactionDetailItem(
+                    leftText: appLoc.labelpaymentGatewayID,
+                    rightText: txn.paymentGatewayID?.toString(),
+                  ),
+                  TransactionDetailItem(
+                    leftText: appLoc.labelUserID,
+                    rightText: txn.userID?.toString(),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 20),

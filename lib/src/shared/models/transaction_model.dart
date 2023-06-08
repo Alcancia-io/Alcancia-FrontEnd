@@ -15,49 +15,98 @@ class Transaction {
   String status;
   String? senderId;
   String? receiverId;
+  DateTime? clearedDate;
+  double? newBalance;
+  double? conversionRate;
+  String? paymentGatewayID;
+  String? userID;
+  String? method;
 
-  Transaction({
-    required this.transactionID,
-    required this.createdAt,
-    required this.sourceAmount,
-    required this.sourceAsset,
-    required this.targetAsset,
-    required this.amount,
-    required this.type,
-    required this.status,
-    required this.senderId,
-    required this.receiverId,
-  });
+  Transaction(
+      {required this.transactionID,
+      required this.createdAt,
+      required this.sourceAmount,
+      required this.sourceAsset,
+      required this.targetAsset,
+      required this.amount,
+      required this.type,
+      required this.status,
+      required this.senderId,
+      required this.receiverId,
+      required this.clearedDate,
+      required this.newBalance,
+      required this.conversionRate,
+      required this.paymentGatewayID,
+      required this.userID,
+      required this.method});
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
     final targetAsset = json["targetAsset"];
     final sourceAsset = json["sourceAsset"];
     final createdAt = DateTime.parse(json["createdAt"]);
+    DateTime? clearedDate = null;
+    String? clearedDateString = json["clearedDate"];
+    if (clearedDateString != null) {
+      clearedDate = DateTime.tryParse(clearedDateString);
+    } else {
+      clearedDate = null;
+    }
+    if (clearedDateString != null) {}
     return Transaction(
         transactionID: json["id"] as String,
         createdAt: createdAt,
         sourceAmount: double.tryParse(json["sourceAmount"].toString()),
-        sourceAsset:
-            CurrencyAsset.values.firstWhereOrNull((e) => e.actualAsset.toLowerCase() == sourceAsset.toString().toLowerCase())?.shownAsset ?? sourceAsset,
-        targetAsset:
-            CurrencyAsset.values.firstWhereOrNull((e) => e.actualAsset.toLowerCase() == targetAsset.toString().toLowerCase())?.shownAsset ?? targetAsset,
+        sourceAsset: CurrencyAsset.values
+                .firstWhereOrNull((e) =>
+                    e.actualAsset.toLowerCase() ==
+                    sourceAsset.toString().toLowerCase())
+                ?.shownAsset ??
+            sourceAsset,
+        targetAsset: CurrencyAsset.values
+                .firstWhereOrNull((e) =>
+                    e.actualAsset.toLowerCase() ==
+                    targetAsset.toString().toLowerCase())
+                ?.shownAsset ??
+            targetAsset,
         amount: double.parse(json["amount"].toString()),
-        type: TransactionType.values.firstWhere((e) => e.name.toUpperCase() == json["type"], orElse: () => TransactionType.unknown),
+        type: TransactionType.values.firstWhere(
+            (e) => e.name.toUpperCase() == json["type"],
+            orElse: () => TransactionType.unknown),
         status: json["status"] as String,
         senderId: json["senderId"],
         receiverId: json["receiverId"],
-    );
+        clearedDate: clearedDate,
+        newBalance: double.tryParse(json["newBalance"].toString()),
+        conversionRate: double.tryParse(json["conversionRate"].toString()),
+        paymentGatewayID: json["paymentGatewayID"],
+        userID: json["userID"],
+        method: json["method"]);
   }
 }
 
 extension StatusIcon on Transaction {
   Widget iconForTxnStatus(String currentUserId) {
-    if (status == "PENDING") return SvgPicture.asset("lib/src/resources/images/pending.svg", width: 24,);
+    if (status == "PENDING")
+      return SvgPicture.asset(
+        "lib/src/resources/images/pending.svg",
+        width: 24,
+      );
     if (status == "COMPLETED") {
-      if (type == TransactionType.deposit || receiverId == currentUserId) return SvgPicture.asset("lib/src/resources/images/deposit.svg", width: 24,);
-      if (type == TransactionType.withdraw || senderId == currentUserId) return SvgPicture.asset("lib/src/resources/images/withdrawal.svg", width: 24,);
+      if (type == TransactionType.deposit || receiverId == currentUserId)
+        return SvgPicture.asset(
+          "lib/src/resources/images/deposit.svg",
+          width: 24,
+        );
+      if (type == TransactionType.withdraw || senderId == currentUserId)
+        return SvgPicture.asset(
+          "lib/src/resources/images/withdrawal.svg",
+          width: 24,
+        );
     }
     // FAILED or EXPIRED
-    return SvgPicture.asset("lib/src/resources/images/failed.svg", width: 24,);
+    return SvgPicture.asset(
+      "lib/src/resources/images/failed.svg",
+      width: 24,
+    );
   }
 }

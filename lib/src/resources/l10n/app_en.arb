@@ -202,5 +202,11 @@
 	"labelNetwork": "Network",
 	"labelCoin": "Coin",
 	"alertAddressCopied": "Address copied",
-	"alertCopied": "Copied"
+	"alertCopied": "Copied",
+	"labelReceiverId": "Receiver ID",
+	"labelClearedDate": "Cleared date",
+	"labelNewBalance": "New Balance",
+	"labelConversionRate": "Conversion Rate",
+	"labelpaymentGatewayID": "Payment Gateway ID",
+	"labelUserID": "User ID"
 }
