@@ -208,5 +208,6 @@
 	"labelNewBalance": "New Balance",
 	"labelConversionRate": "Conversion Rate",
 	"labelpaymentGatewayID": "Payment Gateway ID",
-	"labelUserID": "User ID"
+	"labelUserID": "User ID",
+	"labelTransMethod": "Method"
 }

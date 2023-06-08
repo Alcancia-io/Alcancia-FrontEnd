@@ -16,8 +16,6 @@ const String transactionsQuery = """
           clearedDate,
           newBalance,
           conversionRate,
-          paymentGatewayID,
-          userID,
           method,
       }
     }

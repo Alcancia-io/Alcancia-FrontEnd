@@ -290,5 +290,6 @@
 	"labelNewBalance": "Nuevo balance",
 	"labelConversionRate": "Tasa de conversión",
 	"labelpaymentGatewayID": "ID del Payment Gateway",
-	"labelUserID": "User ID"
+	"labelUserID": "User ID",
+	"labelTransMethod": "Método"
 }

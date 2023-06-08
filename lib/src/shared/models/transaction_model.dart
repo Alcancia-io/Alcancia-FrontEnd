@@ -18,8 +18,6 @@ class Transaction {
   DateTime? clearedDate;
   double? newBalance;
   double? conversionRate;
-  String? paymentGatewayID;
-  String? userID;
   String? method;
 
   Transaction(
@@ -36,8 +34,6 @@ class Transaction {
       required this.clearedDate,
       required this.newBalance,
       required this.conversionRate,
-      required this.paymentGatewayID,
-      required this.userID,
       required this.method});
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
@@ -78,8 +74,6 @@ class Transaction {
         clearedDate: clearedDate,
         newBalance: double.tryParse(json["newBalance"].toString()),
         conversionRate: double.tryParse(json["conversionRate"].toString()),
-        paymentGatewayID: json["paymentGatewayID"],
-        userID: json["userID"],
         method: json["method"]);
   }
 }

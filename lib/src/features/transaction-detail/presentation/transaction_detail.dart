@@ -80,28 +80,28 @@ class TransactionDetail extends ConsumerWidget {
                     leftText: appLoc.labelStatus,
                     rightIcon: txn.iconForTxnStatus(user.id),
                   ),
-                  TransactionDetailItem(
-                    leftText: appLoc.labelClearedDate,
-                    rightText: txn.clearedDate?.formattedLocalString(),
-                  ),
-                  TransactionDetailItem(
-                    leftText: appLoc.labelNewBalance,
-                    rightText: (txn.newBalance == null)
-                        ? ''
-                        : '\$${txn.newBalance?.toStringAsFixed(2)}',
-                  ),
-                  TransactionDetailItem(
-                    leftText: appLoc.labelConversionRate,
-                    rightText: txn.conversionRate?.toStringAsFixed(2),
-                  ),
-                  TransactionDetailItem(
-                    leftText: appLoc.labelpaymentGatewayID,
-                    rightText: txn.paymentGatewayID?.toString(),
-                  ),
-                  TransactionDetailItem(
-                    leftText: appLoc.labelUserID,
-                    rightText: txn.userID?.toString(),
-                  ),
+                  if (txn.status == "PENDING") ...[
+                    TransactionDetailItem(
+                      leftText: appLoc.labelClearedDate,
+                      rightText: txn.clearedDate?.formattedLocalString(),
+                    ),
+                    TransactionDetailItem(
+                      leftText: appLoc.labelNewBalance,
+                      rightText: (txn.newBalance == null)
+                          ? ''
+                          : '\$${txn.newBalance?.toStringAsFixed(2)}',
+                    ),
+                    TransactionDetailItem(
+                      leftText: appLoc.labelConversionRate,
+                      rightText: txn.conversionRate?.toStringAsFixed(2),
+                    ),
+                    TransactionDetailItem(
+                      leftText: appLoc.labelTransMethod,
+                      rightText: (txn.method == "null" || txn.method!.isEmpty)
+                          ? ''
+                          : txn.method.toString(),
+                    ),
+                  ],
                   Padding(
                     padding: const EdgeInsets.only(top: 20),
                     child: SizedBox(
