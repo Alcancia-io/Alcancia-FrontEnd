@@ -16,6 +16,12 @@ class TransactionDetail extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    double height;
+    if (txn.status == "PENDING" && txn.provider == "SUARMI") {
+      height = 610;
+    } else {
+      height = 430;
+    }
     final ctx = Theme.of(context);
     final appLoc = AppLocalizations.of(context)!;
     final user = ref.watch(userProvider)!;
@@ -26,7 +32,7 @@ class TransactionDetail extends ConsumerWidget {
             padding: const EdgeInsets.all(24),
             child: Container(
               padding: const EdgeInsets.all(18),
-              height: 630,
+              height: height,
               decoration: BoxDecoration(
                 color: ctx.brightness == Brightness.dark
                     ? alcanciaCardDark2
