@@ -284,6 +284,10 @@
 	"labelNetwork": "Red",
 	"labelCoin": "Moneda",
 	"alertAddressCopied": "Dirección copiada",
-	"alertCopied": "Copiad@"
-
+	"alertCopied": "Copiad@",
+	"labelBank": "Banco",
+	"labelAccountNumber": "Número de cuenta",
+	"labelCedula": "Número de cédula",
+	"labelAmountDOP": "Monto en DOP",
+	"errorCedulaLength": "El número de cédula debe tener 11 dígitos"
 }

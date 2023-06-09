@@ -1,6 +1,6 @@
 enum TransactionType { deposit, withdraw, p2p, unknown }
 
-enum TransactionMethod { cryptopay, suarmi }
+enum TransactionMethod { alcancia, suarmi }
 
 class TransactionInput {
   final TransactionMethod txnMethod;

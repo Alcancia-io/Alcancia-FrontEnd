@@ -37,17 +37,22 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
   // source amount icons
   final List<Map> sourceCurrencyCodes = [
     {"name": "MXN", "icon": "lib/src/resources/images/icon_mexico_flag.png"},
-    // {"name": "DOP", "icon": "lib/src/resources/images/icon_dominican_flag.png"},
+    {"name": "DOP", "icon": "lib/src/resources/images/icon_dominican_flag.png"},
   ];
 
   // target amount icons
-  final List<Map> targetCurrencies = [
+  final List<Map> targetMXNCurrencies = [
     {"name": "USDC", "icon": "lib/src/resources/images/icon_usdc.png"},
     {"name": "CUSD", "icon": "lib/src/resources/images/icon_celo_usd.png"},
   ];
 
+  final List<Map> targetDOPCurrencies = [
+    {"name": "USDC", "icon": "lib/src/resources/images/icon_usdc.png"},
+  ];
+
+
   // dropdown value for target currency, it can be CUSD or USDC
-  late String targetCurrency = targetCurrencies.first['name'];
+  late String targetCurrency = targetMXNCurrencies.first['name'];
 
   // dropdown value for source currency, it can be MXN or DOP
   late String sourceCurrency = sourceCurrencyCodes.first['name'];
@@ -63,6 +68,9 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
   // suarmi exchanges
   var suarmiUSDCExchage = 1.0;
   var suarmiCeloExchange = 1.0;
+
+  // alcancia exchange
+  var alcanciaUSDCExchange = 1.0;
 
   // state
   bool _isLoading = false;
@@ -81,11 +89,13 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
       _isLoading = true;
     });
     try {
-      var exchageRate = await swapController.getSuarmiExchange("USDC");
-      var celoRate = await swapController.getSuarmiExchange("cUSD");
+      var mxnExchangeRate = await swapController.getSuarmiExchange("USDC");
+      var mxnCeloRate = await swapController.getSuarmiExchange("cUSD");
+      var dopExchangeRate = await swapController.getAlcanciaExchange("aPolUSDC");
       setState(() {
-        suarmiUSDCExchage = 1.0 / double.parse(exchageRate);
-        suarmiCeloExchange = 1.0 / double.parse(celoRate);
+        suarmiUSDCExchage = 1.0 / double.parse(mxnExchangeRate);
+        suarmiCeloExchange = 1.0 / double.parse(mxnCeloRate);
+        alcanciaUSDCExchange = dopExchangeRate;
       });
     } catch (err) {
       // print(err);
@@ -116,6 +126,16 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     } on CustomException catch (err) {
       usdcAPYError = err.message;
     }
+  }
+
+  String getTargetAmount(String sourceAmount, String targetCurrency, String sourceCurrency) {
+    double targetAmount = 0.0;
+    if (sourceCurrency == "DOP") {
+      targetAmount = double.parse(sourceAmount) / alcanciaUSDCExchange;
+    } else {
+      targetAmount = double.parse(sourceAmount) / (targetCurrency == "USDC" ? suarmiUSDCExchage : suarmiCeloExchange);
+    }
+    return targetAmount.toStringAsFixed(4);
   }
 
   @override
@@ -253,7 +273,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                 AlcanciaDropdown(
                                   dropdownWidth: responsiveService.getWidthPixels(150, screenWidth),
                                   dropdownHeight: responsiveService.getHeightPixels(45, screenHeight),
-                                  dropdownItems: targetCurrencies,
+                                  dropdownItems: sourceCurrency == "MXN" ? targetMXNCurrencies : targetDOPCurrencies,
                                   onChanged: (newTargetCurrency) {
                                     setState(() {
                                       targetCurrency = newTargetCurrency;
@@ -273,9 +293,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                   child: Text(
                                     sourceAmount == ""
                                         ? ""
-                                        : (int.parse(sourceAmountController.text) /
-                                                (targetCurrency == "USDC" ? suarmiUSDCExchage : suarmiCeloExchange))
-                                            .toStringAsFixed(4),
+                                        : getTargetAmount(sourceAmount, targetCurrency, sourceCurrency),
                                     style: txtTheme.bodyText1,
                                   ),
                                 ),
@@ -372,49 +390,74 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                             var verified = user!.kycStatus;
 
                             if (verified == "VERIFIED") {
-                              final method = sourceCurrency == 'MXN'
-                                  ? TransactionMethod.suarmi
-                                  : TransactionMethod.cryptopay;
-                              final txnInput = TransactionInput(
-                                txnMethod: method,
-                                txnType: TransactionType.deposit,
-                                sourceAmount: double.parse(sourceAmount),
-                                targetAmount: (double.parse(sourceAmountController.text) /
-                                    (targetCurrency == "USDC" ? suarmiUSDCExchage : suarmiCeloExchange)),
-                                targetCurrency: targetCurrency == 'USDC' ? 'aPolUSDC' : 'mcUSD',
-                                network: targetCurrency == 'USDC' ? 'MATIC' : 'CELO',
-                              );
-                              Map wrapper = {
-                                "verified": true,
-                                "txnInput": txnInput,
-                              };
-                              if (user.address == null || user.profession == null) {
-                                context.pushNamed('user-address', extra: wrapper);
-                              } else {
-                                final orderInput = {
+
+                              Map<String, dynamic> orderInput = {};
+                              TransactionInput? txnInput;
+
+
+                              if (sourceCurrency == 'MXN') {
+                                txnInput = TransactionInput(
+                                  txnMethod: TransactionMethod.suarmi,
+                                  txnType: TransactionType.deposit,
+                                  sourceAmount: double.parse(sourceAmount),
+                                  targetAmount: double.parse(getTargetAmount(sourceAmount, targetCurrency, sourceCurrency)),
+                                  targetCurrency: targetCurrency == 'USDC' ? 'aPolUSDC' : 'mcUSD',
+                                  network: targetCurrency == 'USDC' ? 'MATIC' : 'CELO',
+                                );
+                                Map wrapper = {
+                                  "verified": true,
+                                  "txnInput": txnInput,
+                                };
+                                if (user.address == null || user.profession == null) {
+                                  context.pushNamed('user-address', extra: wrapper);
+                                } else {
+                                  orderInput = {
+                                    "orderInput": {
+                                      "from_amount": txnInput.sourceAmount.toString(),
+                                      "type": txnInput.txnType.name.toUpperCase(),
+                                      "from_currency": sourceCurrency,
+                                      "network": txnInput.network,
+                                      "to_amount": txnInput.targetAmount.toString(),
+                                      "to_currency": txnInput.targetCurrency
+                                    }
+                                  };
+                                }
+                              } else if (sourceCurrency == "DOP") {
+                                txnInput = TransactionInput(
+                                  txnMethod: TransactionMethod.alcancia,
+                                  txnType: TransactionType.deposit,
+                                  sourceAmount: double.parse(sourceAmount),
+                                  targetAmount: (double.parse(sourceAmountController.text) /
+                                      (alcanciaUSDCExchange)),
+                                  targetCurrency: targetCurrency == 'USDC' ? 'aPolUSDC' : 'mcUSD',
+                                  network: 'ALCANCIA',
+                                );
+                                orderInput = {
                                   "orderInput": {
                                     "from_amount": txnInput.sourceAmount.toString(),
                                     "type": txnInput.txnType.name.toUpperCase(),
-                                    "from_currency": "MXN",
+                                    "from_currency": sourceCurrency,
                                     "network": txnInput.network,
                                     "to_amount": txnInput.targetAmount.toString(),
                                     "to_currency": txnInput.targetCurrency
                                   }
                                 };
-                                try {
-                                  setState(() {
-                                    _loadingCheckout = true;
-                                  });
-                                  final order = await swapController.sendSuarmiOrder(orderInput);
-                                  final checkoutData = CheckoutModel(order: order, txnInput: txnInput);
-                                  context.pushNamed("checkout", extra: checkoutData);
-                                } catch (e) {
-                                  Fluttertoast.showToast(msg: appLoc.errorSomethingWentWrong, backgroundColor: Colors.red, textColor: Colors.white70);
-                                }
-                                setState(() {
-                                  _loadingCheckout = false;
-                                });
                               }
+
+                              try {
+                                setState(() {
+                                  _loadingCheckout = true;
+                                });
+                                print(txnInput == null);
+                                final order = await swapController.sendOrder(orderInput);
+                                final checkoutData = CheckoutModel(order: order, txnInput: txnInput!);
+                                context.pushNamed("checkout", extra: checkoutData);
+                              } catch (e) {
+                                Fluttertoast.showToast(msg: appLoc.errorSomethingWentWrong, backgroundColor: Colors.red, textColor: Colors.white70);
+                              }
+                              setState(() {
+                                _loadingCheckout = false;
+                              });
                             } else if (verified == "PENDING") {
                               Fluttertoast.showToast(
                                   msg: appLoc.alertVerificationInProgress,
@@ -430,6 +473,11 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                 } else {
                                   context.pushNamed("user-address", extra: {"verified": false});
                                 }
+                              } else {
+                                await metaMapService.showMatiFlow(metamapMexicanINEId, user.id, appLoc);
+                                final updatedUser = await swapController.fetchUser();
+                                ref.read(userProvider.notifier).setUser(updatedUser);
+                                context.go("/");
                               }
                             }
                           },

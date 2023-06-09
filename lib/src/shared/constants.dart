@@ -11,7 +11,13 @@ const dominicanBanks = [
   {'name': 'Asociación popular'},
 ];
 
-const cryptopayInfo = {'Banco': 'Banco de reservas', 'Beneficiario': 'Cryptopay SLR', 'Cuenta': '9602915498'};
+const alcanciaDOPInfo = {
+  'Banco': 'Banreservas',
+  'Beneficiario': 'BAPLTECH SRL',
+  'RNC': '1-32-75385-2',
+  'No. de cuenta': '9605734495'
+};
+
 
 const suarmiInfo = {
   'Cuenta': 'Sistema de Transferencias y Pagos (STP)',
@@ -30,7 +36,8 @@ class AssetDescription extends StatelessWidget {
   final String boldText;
   final String regularText;
 
-  const AssetDescription({super.key, required this.boldText, required this.regularText});
+  const AssetDescription(
+      {super.key, required this.boldText, required this.regularText});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +48,8 @@ class AssetDescription extends StatelessWidget {
         children: [
           TextSpan(
             text: boldText,
-            style: TextStyle(fontWeight: FontWeight.bold, color: txtTheme.bodyText1?.color),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, color: txtTheme.bodyText1?.color),
           ),
           TextSpan(text: regularText, style: txtTheme.bodyText1),
         ],
@@ -50,7 +58,11 @@ class AssetDescription extends StatelessWidget {
   }
 }
 
-const usdcDescription = AssetDescription(boldText: 'USD Coin (USDC) ', regularText: '');
-const usdcProtocolDescription = AssetDescription(boldText: 'Aave ', regularText: '');
-const celoDescription = AssetDescription(boldText: 'Celo Dollar (cUSD) ', regularText: '');
-const celoProtocolDescription = AssetDescription(boldText: 'Moola Market ', regularText: '');
+const usdcDescription =
+    AssetDescription(boldText: 'USD Coin (USDC) ', regularText: '');
+const usdcProtocolDescription =
+    AssetDescription(boldText: 'Aave ', regularText: '');
+const celoDescription =
+    AssetDescription(boldText: 'Celo Dollar (cUSD) ', regularText: '');
+const celoProtocolDescription =
+    AssetDescription(boldText: 'Moola Market ', regularText: '');

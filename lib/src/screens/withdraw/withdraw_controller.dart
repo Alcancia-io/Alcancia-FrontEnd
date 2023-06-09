@@ -4,7 +4,7 @@ import 'package:alcancia/src/shared/services/suarmi_service.dart';
 
 class WithdrawController {
   final _exceptionHandler = ExceptionService();
-  final _suarmiService = SuarmiService();
+  final _swapService = SwapService();
 
   Map<String, dynamic> suarmiQuoteInput({required String sourceCurrency}) {
     return {
@@ -17,8 +17,28 @@ class WithdrawController {
     };
   }
 
+  Map<String, Map<String, String>> alcanciaQuoteInput({required String targetCurrency}) {
+    return {
+      "quoteInput": {
+        "from_amount": "1",
+        "from_currency": "DOP",
+        "to_currency": targetCurrency,
+      }
+    };
+  }
+
+  Future<double> getAlcanciaExchange(String targetCurrency) async {
+    var response = await _swapService.getAlcanciaQuote(alcanciaQuoteInput(targetCurrency: targetCurrency));
+    if (response.hasException) {
+      var exception = _exceptionHandler.handleException(response.exception);
+      throw Exception(exception);
+    }
+    final exchange = response.data?['getAlcanciaQuote']['buyRate'];
+    return double.parse(exchange);
+  }
+
   Future<String> getSuarmiExchange({required String sourceCurrency}) async {
-    final response = await _suarmiService.getSuarmiQuote(suarmiQuoteInput(sourceCurrency: sourceCurrency));
+    final response = await _swapService.getSuarmiQuote(suarmiQuoteInput(sourceCurrency: sourceCurrency));
     if (response.hasException) {
       var exception = _exceptionHandler.handleException(response.exception);
       throw Exception(exception);
@@ -26,13 +46,13 @@ class WithdrawController {
     return response.data?['getSuarmiQuote']['to_amount'];
   }
 
-  Future<SuarmiOrder> sendSuarmiOrder(Map<String, dynamic> orderInput) async {
-    final response = await _suarmiService.sendSuarmiOrder(orderInput);
+  Future<AlcanciaOrder> sendOrder(Map<String, dynamic> orderInput) async {
+    final response = await _swapService.sendOrder(orderInput);
     if (response.hasException) {
       var exception = _exceptionHandler.handleException(response.exception);
       throw Exception(exception);
     }
-    final data = response.data?['sendSuarmiOrder'];
-    return SuarmiOrder.fromJson(data);
+    final data = response.data?['sendUserTransaction'];
+    return AlcanciaOrder.fromJson(data);
   }
 }

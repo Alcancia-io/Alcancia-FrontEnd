@@ -5,7 +5,7 @@ import 'package:alcancia/src/shared/services/suarmi_service.dart';
 import 'package:alcancia/src/shared/services/user_service.dart';
 
 class AddressController {
-  final _suarmiService = SuarmiService();
+  final _suarmiService = SwapService();
   final _exceptionHandler = ExceptionService();
 
   Future<User> fetchUser() async {
@@ -23,13 +23,13 @@ class AddressController {
     return Future.error('Error getting user');
   }
 
-  Future<SuarmiOrder> sendSuarmiOrder(Map<String, dynamic> orderInput) async {
-    final response = await _suarmiService.sendSuarmiOrder(orderInput);
+  Future<AlcanciaOrder> sendSuarmiOrder(Map<String, dynamic> orderInput) async {
+    final response = await _suarmiService.sendOrder(orderInput);
     if (response.hasException) {
       var exception = _exceptionHandler.handleException(response.exception);
       throw Exception(exception);
     }
     final data = response.data?['sendSuarmiOrder'];
-    return SuarmiOrder.fromJson(data);
+    return AlcanciaOrder.fromJson(data);
   }
 }

@@ -1,6 +1,6 @@
-const String sendSuarmiOrderQuery = """
+const String sendUserTransactionQuery = """
   query(\$orderInput:OrderInput!) {
-    sendSuarmiOrder(orderInput:\$orderInput){
+    sendUserTransaction(orderInput:\$orderInput){
       address,
       concepto,
       from_amount,
