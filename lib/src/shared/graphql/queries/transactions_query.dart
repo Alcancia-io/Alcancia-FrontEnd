@@ -17,6 +17,7 @@ const String transactionsQuery = """
           newBalance,
           conversionRate,
           method,
+          provider,
       }
     }
   }

@@ -80,7 +80,7 @@ class TransactionDetail extends ConsumerWidget {
                     leftText: appLoc.labelStatus,
                     rightIcon: txn.iconForTxnStatus(user.id),
                   ),
-                  if (txn.status == "PENDING") ...[
+                  if (txn.status == "PENDING" && txn.provider == "SUARMI") ...[
                     TransactionDetailItem(
                       leftText: appLoc.labelClearedDate,
                       rightText: txn.clearedDate?.formattedLocalString(),
@@ -100,6 +100,10 @@ class TransactionDetail extends ConsumerWidget {
                       rightText: (txn.method == "null" || txn.method!.isEmpty)
                           ? ''
                           : txn.method.toString(),
+                    ),
+                    TransactionDetailItem(
+                      leftText: appLoc.labelTransProvider,
+                      rightText: txn.provider?.toString(),
                     ),
                   ],
                   Padding(

@@ -291,5 +291,6 @@
 	"labelConversionRate": "Tasa de conversión",
 	"labelpaymentGatewayID": "ID del Payment Gateway",
 	"labelUserID": "User ID",
-	"labelTransMethod": "Método"
+	"labelTransMethod": "Método",
+	"labelTransProvider": "Proveedor transaccional"
 }
