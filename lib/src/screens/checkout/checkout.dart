@@ -18,9 +18,19 @@ class Checkout extends StatelessWidget {
   final ResponsiveService responsiveService = ResponsiveService();
   final ExceptionService exceptionService = ExceptionService();
 
-  final SuarmiService suarmiService = SuarmiService();
+  final SwapService suarmiService = SwapService();
 
   final CheckoutModel checkoutData;
+
+  String get concept {
+    if (checkoutData.txnInput.txnMethod == TransactionMethod.suarmi) {
+      return checkoutData.txnInput.concept!;
+    } else {
+      final uuid = checkoutData.order.uuid;
+      final concept = uuid.split('-')[4].substring(0, 7);
+      return concept;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +49,8 @@ class Checkout extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 32.0),
-                child: OrderInformation(txnInput: checkoutData.txnInput, suarmiConcept: checkoutData.order.concept),
+                child: OrderInformation(
+                    txnInput: checkoutData.txnInput, concept: concept),
               ),
               AlcanciaButton(
                 height: responsiveService.getHeightPixels(64, screenHeight),
@@ -67,29 +78,31 @@ class OrderInformation extends StatelessWidget {
   OrderInformation({
     super.key,
     required this.txnInput,
-    this.suarmiConcept,
+    required this.concept,
   });
 
   final TransactionInput txnInput;
-  final String? suarmiConcept;
-  late Map<String, String> bankInfo;
+  final String concept;
+  late List<BankInfoItem> bankInfo;
 
   @override
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).textTheme.bodyLarge;
     final total = txnInput.sourceAmount;
 
-    if (txnInput.txnMethod == TransactionMethod.cryptopay) {
-      bankInfo = cryptopayInfo;
+    if (txnInput.txnMethod == TransactionMethod.alcancia) {
+      bankInfo = BankInfoItem.DOPInfo;
     } else {
-      bankInfo = suarmiInfo;
+      bankInfo = BankInfoItem.MXNInfo;
     }
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark ? alcanciaCardDark : alcanciaFieldLight,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? alcanciaCardDark
+            : alcanciaFieldLight,
         borderRadius: const BorderRadius.all(
           Radius.circular(7),
         ),
@@ -99,19 +112,23 @@ class OrderInformation extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (var key in bankInfo.keys) ...[
+            for (var item in bankInfo) ...[
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('$key:', style: textStyle?.copyWith(fontWeight: FontWeight.bold)),
+                    Text('${item.label}:',
+                        style:
+                            textStyle?.copyWith(fontWeight: FontWeight.bold)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('${bankInfo[key]}', style: textStyle),
-                        if (key != "Cuenta") ...[
-                          AlcanciaCopyToClipboard(displayText: '$key copiad@', textToCopy: bankInfo[key] as String),
+                        Text('${item.value}', style: textStyle),
+                        if (item.copyable) ...[
+                          AlcanciaCopyToClipboard(
+                              displayText: '${item.label} copiad@',
+                              textToCopy: item.value as String),
                         ]
                       ],
                     )
@@ -124,12 +141,15 @@ class OrderInformation extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Concepto:", style: textStyle?.copyWith(fontWeight: FontWeight.bold)),
+                  Text(txnInput.txnMethod == TransactionMethod.suarmi ? "Concepto:" : "Comentario/Detalle:",
+                      style: textStyle?.copyWith(fontWeight: FontWeight.bold)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("$suarmiConcept", style: textStyle),
-                      AlcanciaCopyToClipboard(displayText: "Concepto copiad@", textToCopy: suarmiConcept as String),
+                      Text(concept, style: textStyle),
+                      AlcanciaCopyToClipboard(
+                          displayText: "Concepto copiad@",
+                          textToCopy: concept as String),
                     ],
                   ),
                 ],
@@ -138,7 +158,8 @@ class OrderInformation extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("\nTotal:", style: textStyle?.copyWith(fontWeight: FontWeight.bold)),
+                Text("\nTotal:",
+                    style: textStyle?.copyWith(fontWeight: FontWeight.bold)),
                 Text("\n\$ $total", style: textStyle),
               ],
             ),
@@ -147,4 +168,25 @@ class OrderInformation extends StatelessWidget {
       ),
     );
   }
+}
+
+class BankInfoItem {
+  final String label;
+  final String value;
+  final bool copyable;
+
+  BankInfoItem({required this.label, required this.value, required this.copyable});
+
+  static List<BankInfoItem> DOPInfo = [
+    BankInfoItem(label: "Banco", value: "Banreservas", copyable: false),
+    BankInfoItem(label: "Beneficiario", value: "BAPLTECH SRL", copyable: false),
+    BankInfoItem(label: "RNC", value: "1-32-75385-2", copyable: true),
+    BankInfoItem(label: "No. de cuenta", value: "9605734495", copyable: true),
+  ];
+
+  static List<BankInfoItem> MXNInfo = [
+    BankInfoItem(label: "Cuenta", value: "Sistema de Transferencias y Pagos (STP)", copyable: false),
+    BankInfoItem(label: "Beneficiario", value: "Bctech Solutions SAPI de CV", copyable: true),
+    BankInfoItem(label: "CLABE", value: "646180204200011681", copyable: true)
+  ];
 }

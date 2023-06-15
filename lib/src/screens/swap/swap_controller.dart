@@ -5,9 +5,10 @@ import 'package:alcancia/src/shared/services/suarmi_service.dart';
 
 class SwapController {
   final _exceptionHandler = ExceptionService();
-  final _suarmiService = SuarmiService();
+  final _swapService = SwapService();
 
-  Map<String, Map<String, String>> suarmiQuoteInput({required String targetCurrency}) {
+  Map<String, Map<String, String>> suarmiQuoteInput(
+      {required String targetCurrency}) {
     return {
       "quoteInput": {
         "from_amount": "1",
@@ -18,8 +19,20 @@ class SwapController {
     };
   }
 
+  Map<String, Map<String, String>> alcanciaQuoteInput(
+      {required String targetCurrency}) {
+    return {
+      "quoteInput": {
+        "from_amount": "1",
+        "from_currency": "DOP",
+        "to_currency": targetCurrency,
+      }
+    };
+  }
+
   getSuarmiExchange(String targetCurrency) async {
-    var response = await _suarmiService.getSuarmiQuote(suarmiQuoteInput(targetCurrency: targetCurrency));
+    var response = await _swapService
+        .getSuarmiQuote(suarmiQuoteInput(targetCurrency: targetCurrency));
     if (response.hasException) {
       var exception = _exceptionHandler.handleException(response.exception);
       throw Exception(exception);
@@ -27,8 +40,19 @@ class SwapController {
     return response.data?['getSuarmiQuote']['to_amount'];
   }
 
+  Future<double> getAlcanciaExchange(String targetCurrency) async {
+    var response = await _swapService
+        .getAlcanciaQuote(alcanciaQuoteInput(targetCurrency: targetCurrency));
+    if (response.hasException) {
+      var exception = _exceptionHandler.handleException(response.exception);
+      throw Exception(exception);
+    }
+    final exchange = response.data?['getAlcanciaQuote']['sellRate'];
+    return double.parse(exchange);
+  }
+
   getCurrentAPY(String cryptoToken) async {
-    var response = await _suarmiService.getCurrentAPY(cryptoToken);
+    var response = await _swapService.getCurrentAPY(cryptoToken);
     if (response.hasException) {
       var exception = _exceptionHandler.handleException(response.exception);
       throw CustomException(exception as String);
@@ -51,13 +75,13 @@ class SwapController {
     return Future.error('Error getting user');
   }
 
-  Future<SuarmiOrder> sendSuarmiOrder(Map<String, dynamic> orderInput) async {
-    final response = await _suarmiService.sendSuarmiOrder(orderInput);
+  Future<AlcanciaOrder> sendOrder(Map<String, dynamic> orderInput) async {
+    var response = await _swapService.sendOrder(orderInput);
     if (response.hasException) {
       var exception = _exceptionHandler.handleException(response.exception);
       throw Exception(exception);
     }
-    final data = response.data?['sendSuarmiOrder'];
-    return SuarmiOrder.fromJson(data);
+    final data = response.data?['sendUserTransaction'];
+    return AlcanciaOrder.fromJson(data);
   }
 }

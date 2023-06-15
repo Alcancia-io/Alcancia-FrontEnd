@@ -1,12 +1,13 @@
+import 'package:alcancia/src/shared/graphql/queries/alcancia_quote_query.dart';
 import 'package:alcancia/src/shared/graphql/queries/index.dart';
 import 'package:alcancia/src/shared/services/graphql_service.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-class SuarmiService {
+class SwapService {
   late GraphQLConfig graphQLConfig;
   late Future<GraphQLClient> client;
 
-  SuarmiService() {
+  SwapService() {
     graphQLConfig = GraphQLConfig();
     client = graphQLConfig.clientToQuery();
   }
@@ -21,12 +22,22 @@ class SuarmiService {
     );
   }
 
-  Future<QueryResult> sendSuarmiOrder(Map<String, dynamic> orderInput) async {
+  Future<QueryResult> sendOrder(Map<String, dynamic> orderInput) async {
     var clientResponse = await client;
     return await clientResponse.query(
       QueryOptions(
-        document: gql(sendSuarmiOrderQuery),
+        document: gql(sendUserTransactionQuery),
         variables: orderInput,
+      ),
+    );
+  }
+
+  Future<QueryResult> getAlcanciaQuote(Map<String, dynamic> quoteInput) async {
+    var clientResponse = await client;
+    return await clientResponse.query(
+      QueryOptions(
+        document: gql(getAlcanciaQuoteQuery),
+        variables: quoteInput,
       ),
     );
   }

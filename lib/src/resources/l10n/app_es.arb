@@ -192,8 +192,9 @@
 	"buttonSkip": "Saltar",
 	"buttonTransfer": "Transferencia",
 	"alertVerificationInProgress": "Revisión en proceso, espera un momento...",
-	"errorMinimumDepositAmount": "Cantidad mínima de $200",
-	"errorMaximumDepositAmount": "Cantidad máxima de $50,000",
+	"errorMinimumDepositAmount": "Deposito mínimo de $200",
+	"errorMaximumDepositAmount": "Deposito máximo de $50,000",
+	"errorMinimumDepositAmountDOP": "Deposito mínimo de $600",
 	"labelRiskLevel": "Nivel de riesgo: ",
 	"labelAPY": "El rendimiento anual de {targetCurrency} es de ",
 	"@labelAPY": {
@@ -284,6 +285,10 @@
 	"labelNetwork": "Red",
 	"labelCoin": "Moneda",
 	"alertAddressCopied": "Dirección copiada",
-	"alertCopied": "Copiad@"
-
+	"alertCopied": "Copiad@",
+	"labelBank": "Banco",
+	"labelAccountNumber": "Número de cuenta",
+	"labelCedula": "Número de cédula",
+	"labelAmountDOP": "Monto en DOP",
+	"errorCedulaLength": "El número de cédula debe tener 11 dígitos"
 }
