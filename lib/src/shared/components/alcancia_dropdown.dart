@@ -11,6 +11,7 @@ class AlcanciaDropdown extends StatefulWidget {
     this.itemsAlignment,
     this.itemsFontSize = 18,
     this.decoration,
+    this.menuMaxHeight,
   }) : super(key: key);
 
   final double? dropdownWidth;
@@ -20,6 +21,7 @@ class AlcanciaDropdown extends StatefulWidget {
   final MainAxisAlignment? itemsAlignment;
   final double itemsFontSize;
   final BoxDecoration? decoration;
+  final double? menuMaxHeight;
 
   @override
   State<AlcanciaDropdown> createState() => _AlcanciaDropdownState();
@@ -52,6 +54,7 @@ class _AlcanciaDropdownState extends State<AlcanciaDropdown> {
         child: DropdownButton<String>(
           isExpanded: true,
           value: dropdownValue,
+          menuMaxHeight: widget.menuMaxHeight,
           onChanged: (newValue) {
             setState(() {
               dropdownValue = newValue!;

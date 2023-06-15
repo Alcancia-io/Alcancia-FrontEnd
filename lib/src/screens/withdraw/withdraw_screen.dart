@@ -458,6 +458,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
             AlcanciaDropdown(
               itemsAlignment: MainAxisAlignment.start,
               dropdownItems: banks,
+              menuMaxHeight: 300,
               decoration: BoxDecoration(
                 color: Theme.of(context).inputDecorationTheme.fillColor,
                 borderRadius: BorderRadius.circular(7),
