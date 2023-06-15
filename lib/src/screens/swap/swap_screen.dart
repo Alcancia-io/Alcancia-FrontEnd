@@ -491,8 +491,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            int.parse(sourceAmount) < 200
-                                ? appLoc.errorMinimumDepositAmount
+                            int.parse(sourceAmount) < (sourceCurrency == 'MXN' ? 200 : 600)
+                                ? (sourceCurrency == 'MXN' ? appLoc.errorMinimumDepositAmount : appLoc.errorMinimumDepositAmountDOP)
                                 : appLoc.errorMaximumDepositAmount,
                             style: const TextStyle(color: Colors.red),
                           ),
