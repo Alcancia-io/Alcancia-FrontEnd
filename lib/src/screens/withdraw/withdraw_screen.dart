@@ -70,7 +70,6 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
   final _accountTextController = TextEditingController();
   final _amountTextController = TextEditingController();
   final _targetTextController = TextEditingController();
-
   bool _isLoading = false;
   bool _loadingButton = false;
   String _error = "";
@@ -482,23 +481,6 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
           validator: (value) {
             if (value == null || value.isEmpty) {
               return appLoc.errorRequiredField;
-            }
-            return null;
-          },
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        LabeledTextFormField(
-          controller: _accountTextController,
-          labelText: appLoc.labelCedula,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          inputType: TextInputType.number,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return appLoc.errorRequiredField;
-            } else if (value.length != 11) {
-              return appLoc.errorCedulaLength;
             }
             return null;
           },
