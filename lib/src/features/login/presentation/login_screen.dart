@@ -15,6 +15,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:alcancia/src/features/login/data/login_mutation.dart';
@@ -221,6 +222,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                                 final StorageItem userEmail = StorageItem("userEmail", emailController.text);
                                                 await _storageService.writeSecureData(userEmail);
                                                 context.pushNamed('forgot-password');
+                                              } else {
+                                                Fluttertoast.showToast(
+                                                    msg: appLocalization.errorEmailRequired,
+                                                    toastLength: Toast.LENGTH_SHORT,
+                                                    gravity: ToastGravity.BOTTOM,
+                                                    timeInSecForIosWeb: 1,
+                                                    backgroundColor: Colors.red,
+                                                    textColor: Colors.white,
+                                                    fontSize: 16.0);
                                               }
                                             }),
                                       ],
