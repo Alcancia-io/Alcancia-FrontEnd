@@ -50,7 +50,6 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     {"name": "USDC", "icon": "lib/src/resources/images/icon_usdc.png"},
   ];
 
-
   // dropdown value for target currency, it can be CUSD or USDC
   late String targetCurrency = targetMXNCurrencies.first['name'];
 
@@ -91,7 +90,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     try {
       var mxnExchangeRate = await swapController.getSuarmiExchange("USDC");
       var mxnCeloRate = await swapController.getSuarmiExchange("cUSD");
-      var dopExchangeRate = await swapController.getAlcanciaExchange("aPolUSDC");
+      var dopExchangeRate =
+          await swapController.getAlcanciaExchange("aPolUSDC");
       setState(() {
         suarmiUSDCExchage = 1.0 / double.parse(mxnExchangeRate);
         suarmiCeloExchange = 1.0 / double.parse(mxnCeloRate);
@@ -119,7 +119,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
 
   getUsdcAPY() async {
     try {
-      var currentUsdcAPYResponse = await swapController.getCurrentAPY("aPolUSDC");
+      var currentUsdcAPYResponse =
+          await swapController.getCurrentAPY("aPolUSDC");
       setState(() {
         currentUsdcAPY = currentUsdcAPYResponse;
       });
@@ -128,12 +129,14 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     }
   }
 
-  String getTargetAmount(String sourceAmount, String targetCurrency, String sourceCurrency) {
+  String getTargetAmount(
+      String sourceAmount, String targetCurrency, String sourceCurrency) {
     double targetAmount = 0.0;
     if (sourceCurrency == "DOP") {
       targetAmount = double.parse(sourceAmount) / alcanciaUSDCExchange;
     } else {
-      targetAmount = double.parse(sourceAmount) / (targetCurrency == "USDC" ? suarmiUSDCExchage : suarmiCeloExchange);
+      targetAmount = double.parse(sourceAmount) /
+          (targetCurrency == "USDC" ? suarmiUSDCExchage : suarmiCeloExchange);
     }
     return targetAmount.toStringAsFixed(4);
   }
@@ -161,16 +164,23 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     ];
     final celoInfo = [
       {"bold": appLoc.labelCeloDollar, "regular": appLoc.descriptionCeloAsset},
-      {"bold": appLoc.labelMoolaMarket, "regular": appLoc.descriptionCeloProtocol}
+      {
+        "bold": appLoc.labelMoolaMarket,
+        "regular": appLoc.descriptionCeloProtocol
+      }
     ];
 
     if (_isLoading) {
-      return const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator())));
+      return const Scaffold(
+          body: SafeArea(child: Center(child: CircularProgressIndicator())));
     }
 
-    if (_error != "") return Scaffold(body: SafeArea(child: Center(child: Text(_error))));
+    if (_error != "")
+      return Scaffold(body: SafeArea(child: Center(child: Text(_error))));
 
-    Color cardColor = Theme.of(context).brightness == Brightness.dark ? alcanciaCardDark : alcanciaFieldLight;
+    Color cardColor = Theme.of(context).brightness == Brightness.dark
+        ? alcanciaCardDark
+        : alcanciaFieldLight;
 
     return GestureDetector(
       onTap: () {
@@ -197,11 +207,13 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                       AlcanciaContainer(
                         top: 4,
                         bottom: 32,
-                        child: Text(appLoc.labelDepositToYourAccount, style: txtTheme.subtitle1),
+                        child: Text(appLoc.labelDepositToYourAccount,
+                            style: txtTheme.subtitle1),
                       ),
                       AlcanciaContainer(
                         bottom: 32,
-                        child: Text(appLoc.labelLetsStart, style: txtTheme.headline1),
+                        child: Text(appLoc.labelLetsStart,
+                            style: txtTheme.headline1),
                       ),
                       AlcanciaContainer(
                         bottom: 30,
@@ -212,27 +224,36 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                       ),
                       Container(
                         padding: EdgeInsets.only(
-                          top: responsiveService.getHeightPixels(20, screenHeight),
-                          bottom: responsiveService.getHeightPixels(20, screenHeight),
-                          left: responsiveService.getWidthPixels(12, screenWidth),
-                          right: responsiveService.getWidthPixels(12, screenWidth),
+                          top: responsiveService.getHeightPixels(
+                              20, screenHeight),
+                          bottom: responsiveService.getHeightPixels(
+                              20, screenHeight),
+                          left:
+                              responsiveService.getWidthPixels(12, screenWidth),
+                          right:
+                              responsiveService.getWidthPixels(12, screenWidth),
                         ),
                         decoration: BoxDecoration(
                           color: cardColor,
-                          borderRadius: const BorderRadius.all(Radius.circular(7)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(7)),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(appLoc.labelAmountQuestion, style: txtTheme.bodyText1),
+                            Text(appLoc.labelAmountQuestion,
+                                style: txtTheme.bodyText1),
                             AlcanciaContainer(
                               top: 8,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   AlcanciaDropdown(
-                                    dropdownWidth: responsiveService.getWidthPixels(150, screenWidth),
-                                    dropdownHeight: responsiveService.getHeightPixels(45, screenHeight),
+                                    dropdownWidth: responsiveService
+                                        .getWidthPixels(150, screenWidth),
+                                    dropdownHeight: responsiveService
+                                        .getHeightPixels(45, screenHeight),
                                     dropdownItems: sourceCurrencyCodes,
                                     onChanged: (newValue) {
                                       setState(() {
@@ -243,14 +264,19 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                   ),
                                   // this is the input field where user enters source amount
                                   AlcanciaContainer(
-                                    height: responsiveService.getHeightPixels(45, screenHeight),
-                                    width: responsiveService.getWidthPixels(150, screenWidth),
+                                    height: responsiveService.getHeightPixels(
+                                        45, screenHeight),
+                                    width: responsiveService.getWidthPixels(
+                                        150, screenWidth),
                                     child: TextField(
                                       style: const TextStyle(fontSize: 15),
                                       decoration: InputDecoration(
-                                        fillColor: Theme.of(context).primaryColor,
+                                        fillColor:
+                                            Theme.of(context).primaryColor,
                                       ),
-                                      inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+                                      inputFormatters: <TextInputFormatter>[
+                                        FilteringTextInputFormatter.digitsOnly
+                                      ],
                                       keyboardType: TextInputType.number,
                                       controller: sourceAmountController,
                                       onChanged: (text) {
@@ -265,15 +291,21 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 8, bottom: 8),
-                              child: Center(child: SvgPicture.asset("lib/src/resources/images/arrow_down_purple.svg")),
+                              child: Center(
+                                  child: SvgPicture.asset(
+                                      "lib/src/resources/images/arrow_down_purple.svg")),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 AlcanciaDropdown(
-                                  dropdownWidth: responsiveService.getWidthPixels(150, screenWidth),
-                                  dropdownHeight: responsiveService.getHeightPixels(45, screenHeight),
-                                  dropdownItems: sourceCurrency == "MXN" ? targetMXNCurrencies : targetDOPCurrencies,
+                                  dropdownWidth: responsiveService
+                                      .getWidthPixels(150, screenWidth),
+                                  dropdownHeight: responsiveService
+                                      .getHeightPixels(45, screenHeight),
+                                  dropdownItems: sourceCurrency == "MXN"
+                                      ? targetMXNCurrencies
+                                      : targetDOPCurrencies,
                                   onChanged: (newTargetCurrency) {
                                     setState(() {
                                       targetCurrency = newTargetCurrency;
@@ -287,13 +319,16 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                     borderRadius: BorderRadius.circular(8),
                                     color: Theme.of(context).primaryColor,
                                   ),
-                                  height: responsiveService.getHeightPixels(45, screenHeight),
-                                  width: responsiveService.getWidthPixels(150, screenWidth),
+                                  height: responsiveService.getHeightPixels(
+                                      45, screenHeight),
+                                  width: responsiveService.getWidthPixels(
+                                      150, screenWidth),
                                   alignment: Alignment.centerLeft,
                                   child: Text(
                                     sourceAmount == ""
                                         ? ""
-                                        : getTargetAmount(sourceAmount, targetCurrency, sourceCurrency),
+                                        : getTargetAmount(sourceAmount,
+                                            targetCurrency, sourceCurrency),
                                     style: txtTheme.bodyText1,
                                   ),
                                 ),
@@ -336,14 +371,18 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                             SizedBox(
                               child: OutlinedButton.icon(
                                 style: OutlinedButton.styleFrom(
-                                  side: const BorderSide(color: alcanciaLightBlue),
+                                  side: const BorderSide(
+                                      color: alcanciaLightBlue),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(26),
                                   ),
                                 ),
                                 icon: SvgPicture.asset(
                                   "lib/src/resources/images/icon_lamp.svg",
-                                  color: Theme.of(context).brightness == Brightness.light ? Colors.black : null,
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.light
+                                      ? Colors.black
+                                      : null,
                                 ),
                                 label: Text(
                                   appLoc.buttonWhatAmIInvesting,
@@ -380,119 +419,184 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 10, bottom: 12),
-                        child: _loadingCheckout ? const CircularProgressIndicator() : AlcanciaButton(
-                          buttonText: appLoc.buttonTransfer,
-                          onPressed: sourceAmount.isEmpty ||
-                              int.parse(sourceAmount) < (sourceCurrency == 'MXN' ? 200 : 600) || int.parse(sourceAmount) > 50000
-                              ? null
-                              : () async {
-                            //Temporary Variables
-                            var verified = user!.kycStatus;
+                        child: _loadingCheckout
+                            ? const CircularProgressIndicator()
+                            : AlcanciaButton(
+                                buttonText: appLoc.buttonTransfer,
+                                onPressed: sourceAmount.isEmpty ||
+                                        int.parse(sourceAmount) < 200 ||
+                                        int.parse(sourceAmount) > 50000
+                                    ? null
+                                    : () async {
+                                        //Temporary Variables
+                                        var verified = user!.kycStatus;
 
-                            if (verified == "VERIFIED") {
+                                        if (verified == "VERIFIED") {
+                                          Map<String, dynamic> orderInput = {};
+                                          TransactionInput? txnInput;
 
-                              Map<String, dynamic> orderInput = {};
-                              TransactionInput? txnInput;
+                                          if (sourceCurrency == 'MXN') {
+                                            txnInput = TransactionInput(
+                                              txnMethod:
+                                                  TransactionMethod.suarmi,
+                                              txnType: TransactionType.deposit,
+                                              sourceAmount:
+                                                  double.parse(sourceAmount),
+                                              targetAmount: double.parse(
+                                                  getTargetAmount(
+                                                      sourceAmount,
+                                                      targetCurrency,
+                                                      sourceCurrency)),
+                                              targetCurrency:
+                                                  targetCurrency == 'USDC'
+                                                      ? 'aPolUSDC'
+                                                      : 'mcUSD',
+                                              network: targetCurrency == 'USDC'
+                                                  ? 'MATIC'
+                                                  : 'CELO',
+                                            );
+                                            Map wrapper = {
+                                              "verified": true,
+                                              "txnInput": txnInput,
+                                            };
+                                            if (user.address == null ||
+                                                user.profession == null) {
+                                              context.pushNamed('user-address',
+                                                  extra: wrapper);
+                                            } else {
+                                              orderInput = {
+                                                "orderInput": {
+                                                  "from_amount": txnInput
+                                                      .sourceAmount
+                                                      .toString(),
+                                                  "type": txnInput.txnType.name
+                                                      .toUpperCase(),
+                                                  "from_currency":
+                                                      sourceCurrency,
+                                                  "network": txnInput.network,
+                                                  "to_amount": txnInput
+                                                      .targetAmount
+                                                      .toString(),
+                                                  "to_currency":
+                                                      txnInput.targetCurrency
+                                                }
+                                              };
+                                            }
+                                          } else if (sourceCurrency == "DOP") {
+                                            txnInput = TransactionInput(
+                                              txnMethod:
+                                                  TransactionMethod.alcancia,
+                                              txnType: TransactionType.deposit,
+                                              sourceAmount:
+                                                  double.parse(sourceAmount),
+                                              targetAmount: (double.parse(
+                                                      sourceAmountController
+                                                          .text) /
+                                                  (alcanciaUSDCExchange)),
+                                              targetCurrency:
+                                                  targetCurrency == 'USDC'
+                                                      ? 'aPolUSDC'
+                                                      : 'mcUSD',
+                                              network: 'ALCANCIA',
+                                            );
+                                            orderInput = {
+                                              "orderInput": {
+                                                "from_amount": txnInput
+                                                    .sourceAmount
+                                                    .toString(),
+                                                "type": txnInput.txnType.name
+                                                    .toUpperCase(),
+                                                "from_currency": sourceCurrency,
+                                                "network": txnInput.network,
+                                                "to_amount": txnInput
+                                                    .targetAmount
+                                                    .toString(),
+                                                "to_currency":
+                                                    txnInput.targetCurrency
+                                              }
+                                            };
+                                          }
 
-
-                              if (sourceCurrency == 'MXN') {
-                                txnInput = TransactionInput(
-                                  txnMethod: TransactionMethod.suarmi,
-                                  txnType: TransactionType.deposit,
-                                  sourceAmount: double.parse(sourceAmount),
-                                  targetAmount: double.parse(getTargetAmount(sourceAmount, targetCurrency, sourceCurrency)),
-                                  targetCurrency: targetCurrency == 'USDC' ? 'aPolUSDC' : 'mcUSD',
-                                  network: targetCurrency == 'USDC' ? 'MATIC' : 'CELO',
-                                );
-                                Map wrapper = {
-                                  "verified": true,
-                                  "txnInput": txnInput,
-                                };
-                                if (user.address == null || user.profession == null) {
-                                  context.pushNamed('user-address', extra: wrapper);
-                                } else {
-                                  orderInput = {
-                                    "orderInput": {
-                                      "from_amount": txnInput.sourceAmount.toString(),
-                                      "type": txnInput.txnType.name.toUpperCase(),
-                                      "from_currency": sourceCurrency,
-                                      "network": txnInput.network,
-                                      "to_amount": txnInput.targetAmount.toString(),
-                                      "to_currency": txnInput.targetCurrency
-                                    }
-                                  };
-                                }
-                              } else if (sourceCurrency == "DOP") {
-                                txnInput = TransactionInput(
-                                  txnMethod: TransactionMethod.alcancia,
-                                  txnType: TransactionType.deposit,
-                                  sourceAmount: double.parse(sourceAmount),
-                                  targetAmount: (double.parse(sourceAmountController.text) /
-                                      (alcanciaUSDCExchange)),
-                                  targetCurrency: targetCurrency == 'USDC' ? 'aPolUSDC' : 'mcUSD',
-                                  network: 'ALCANCIA',
-                                );
-                                orderInput = {
-                                  "orderInput": {
-                                    "from_amount": txnInput.sourceAmount.toString(),
-                                    "type": txnInput.txnType.name.toUpperCase(),
-                                    "from_currency": sourceCurrency,
-                                    "network": txnInput.network,
-                                    "to_amount": txnInput.targetAmount.toString(),
-                                    "to_currency": txnInput.targetCurrency
-                                  }
-                                };
-                              }
-
-                              try {
-                                setState(() {
-                                  _loadingCheckout = true;
-                                });
-                                print(txnInput == null);
-                                final order = await swapController.sendOrder(orderInput);
-                                final checkoutData = CheckoutModel(order: order, txnInput: txnInput!);
-                                context.pushNamed("checkout", extra: checkoutData);
-                              } catch (e) {
-                                Fluttertoast.showToast(msg: appLoc.errorSomethingWentWrong, backgroundColor: Colors.red, textColor: Colors.white70);
-                              }
-                              setState(() {
-                                _loadingCheckout = false;
-                              });
-                            } else if (verified == "PENDING") {
-                              Fluttertoast.showToast(
-                                  msg: appLoc.alertVerificationInProgress,
-                                  toastLength: Toast.LENGTH_LONG,
-                                  gravity: ToastGravity.BOTTOM);
-                            } else if (verified == "FAILED" || verified == null) {
-                              if (sourceCurrency == 'MXN') {
-                                if (user.address != null && user.profession != null) {
-                                  await metaMapService.showMatiFlow(metamapMexicanINEId, user.id, appLoc);
-                                  final updatedUser = await swapController.fetchUser();
-                                  ref.read(userProvider.notifier).setUser(updatedUser);
-                                  context.go("/");
-                                } else {
-                                  context.pushNamed("user-address", extra: {"verified": false});
-                                }
-                              } else {
-                                await metaMapService.showMatiFlow(metamapMexicanINEId, user.id, appLoc);
-                                final updatedUser = await swapController.fetchUser();
-                                ref.read(userProvider.notifier).setUser(updatedUser);
-                                context.go("/");
-                              }
-                            }
-                          },
-                          color: alcanciaLightBlue,
-                          width: double.infinity,
-                          height: responsiveService.getHeightPixels(64, screenHeight),
-                        ),
+                                          try {
+                                            setState(() {
+                                              _loadingCheckout = true;
+                                            });
+                                            print(txnInput == null);
+                                            final order = await swapController
+                                                .sendOrder(orderInput);
+                                            final checkoutData = CheckoutModel(
+                                                order: order,
+                                                txnInput: txnInput!);
+                                            context.pushNamed("checkout",
+                                                extra: checkoutData);
+                                          } catch (e) {
+                                            Fluttertoast.showToast(
+                                                msg: appLoc
+                                                    .errorSomethingWentWrong,
+                                                backgroundColor: Colors.red,
+                                                textColor: Colors.white70);
+                                          }
+                                          setState(() {
+                                            _loadingCheckout = false;
+                                          });
+                                        } else if (verified == "PENDING") {
+                                          Fluttertoast.showToast(
+                                              msg: appLoc
+                                                  .alertVerificationInProgress,
+                                              toastLength: Toast.LENGTH_LONG,
+                                              gravity: ToastGravity.BOTTOM);
+                                        } else if (verified == "FAILED" ||
+                                            verified == null) {
+                                          if (sourceCurrency == 'MXN') {
+                                            if (user.address != null &&
+                                                user.profession != null) {
+                                              await metaMapService.showMatiFlow(
+                                                  metamapMexicanINEId,
+                                                  user.id,
+                                                  appLoc);
+                                              final updatedUser =
+                                                  await swapController
+                                                      .fetchUser();
+                                              ref
+                                                  .read(userProvider.notifier)
+                                                  .setUser(updatedUser);
+                                              context.go("/");
+                                            } else {
+                                              context.pushNamed("user-address",
+                                                  extra: {"verified": false});
+                                            }
+                                          } else {
+                                            await metaMapService.showMatiFlow(
+                                                metamapMexicanINEId,
+                                                user.id,
+                                                appLoc);
+                                            final updatedUser =
+                                                await swapController
+                                                    .fetchUser();
+                                            ref
+                                                .read(userProvider.notifier)
+                                                .setUser(updatedUser);
+                                            context.go("/");
+                                          }
+                                        }
+                                      },
+                                color: alcanciaLightBlue,
+                                width: double.infinity,
+                                height: responsiveService.getHeightPixels(
+                                    64, screenHeight),
+                              ),
                       ),
-                      if (sourceAmount.isNotEmpty && (int.parse(sourceAmount) < (sourceCurrency == 'MXN' ? 200 : 600) ||
-                          int.parse(sourceAmount) > 50000)) ...[
+                      if (sourceAmount.isNotEmpty &&
+                          (int.parse(sourceAmount) < 200 ||
+                              int.parse(sourceAmount) > 50000)) ...[
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            int.parse(sourceAmount) < (sourceCurrency == 'MXN' ? 200 : 600)
-                                ? (sourceCurrency == 'MXN' ? appLoc.errorMinimumDepositAmount : appLoc.errorMinimumDepositAmountDOP)
+                            int.parse(sourceAmount) <
+                                    (sourceCurrency == 'MXN' ? 200 : 600)
+                                ? (sourceCurrency == 'MXN'
+                                    ? appLoc.errorMinimumDepositAmount
+                                    : appLoc.errorMinimumDepositAmountDOP)
                                 : appLoc.errorMaximumDepositAmount,
                             style: const TextStyle(color: Colors.red),
                           ),

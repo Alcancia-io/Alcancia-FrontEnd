@@ -24,7 +24,7 @@ class Checkout extends StatelessWidget {
 
   String get concept {
     if (checkoutData.txnInput.txnMethod == TransactionMethod.suarmi) {
-      return checkoutData.txnInput.concept!;
+      return checkoutData.order.concept!;
     } else {
       final uuid = checkoutData.order.uuid;
       final concept = uuid.split('-')[4].substring(0, 7);
@@ -141,7 +141,10 @@ class OrderInformation extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(txnInput.txnMethod == TransactionMethod.suarmi ? "Concepto:" : "Comentario/Detalle:",
+                  Text(
+                      txnInput.txnMethod == TransactionMethod.suarmi
+                          ? "Concepto:"
+                          : "Comentario/Detalle:",
                       style: textStyle?.copyWith(fontWeight: FontWeight.bold)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -175,7 +178,8 @@ class BankInfoItem {
   final String value;
   final bool copyable;
 
-  BankInfoItem({required this.label, required this.value, required this.copyable});
+  BankInfoItem(
+      {required this.label, required this.value, required this.copyable});
 
   static List<BankInfoItem> DOPInfo = [
     BankInfoItem(label: "Banco", value: "Banreservas", copyable: false),
@@ -185,8 +189,14 @@ class BankInfoItem {
   ];
 
   static List<BankInfoItem> MXNInfo = [
-    BankInfoItem(label: "Cuenta", value: "Sistema de Transferencias y Pagos (STP)", copyable: false),
-    BankInfoItem(label: "Beneficiario", value: "Bctech Solutions SAPI de CV", copyable: true),
+    BankInfoItem(
+        label: "Cuenta",
+        value: "Sistema de Transferencias y Pagos (STP)",
+        copyable: false),
+    BankInfoItem(
+        label: "Beneficiario",
+        value: "Bctech Solutions SAPI de CV",
+        copyable: true),
     BankInfoItem(label: "CLABE", value: "646180204200011681", copyable: true)
   ];
 }
