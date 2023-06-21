@@ -290,5 +290,7 @@
 	"labelAccountNumber": "Número de cuenta",
 	"labelCedula": "Número de cédula",
 	"labelAmountDOP": "Monto en DOP",
-	"errorCedulaLength": "El número de cédula debe tener 11 dígitos"
+	"errorCedulaLength": "El número de cédula debe tener 11 dígitos",
+	"errorEmailRequired": "El correo electrónico es requerido",
+	"alertErrorForgotPasswordCode": "Hubo un error al enviar el código de verificación, por favor verifique su correo electrónico e intente nuevamente"
 }

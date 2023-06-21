@@ -72,6 +72,17 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
     var response = await _authService.forgotPassword(_email!);
     if (response.hasException) {
       _state.error = _exceptionService.handleException(response.exception);
+      context.pop();
+      final appLoc = AppLocalizations.of(context)!;
+      Fluttertoast.showToast(
+          msg: appLoc.alertErrorForgotPasswordCode,
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
     } else {
       _phoneNumEnding = (response.data?['forgotPassword'] as String).substring(6);
     }
