@@ -292,5 +292,6 @@
 	"labelpaymentGatewayID": "ID del Payment Gateway",
 	"labelUserID": "User ID",
 	"labelTransMethod": "Método",
-	"labelTransProvider": "Proveedor transaccional"
+	"labelTransProvider": "Proveedor transaccional",
+	"trxCanceled":"Transacción cancelada correctamente"
 }

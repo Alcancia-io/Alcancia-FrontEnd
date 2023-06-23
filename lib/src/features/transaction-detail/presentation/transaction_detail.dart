@@ -2,13 +2,17 @@ import 'package:alcancia/src/shared/extensions/datetime_extensions.dart';
 import 'package:alcancia/src/shared/extensions/type_extensions.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
+import 'package:alcancia/src/shared/services/transactions_service.dart';
 import 'package:flutter/material.dart';
 import 'package:alcancia/src/features/transaction-detail/presentation/transaction_detail_item.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../resources/colors/colors.dart';
+import '../../../screens/dashboard/dashboard_screen.dart';
 import '../../../shared/models/transaction_model.dart';
+import '../../transactions-list/presentation/transactions_list_screen.dart';
 
 class TransactionDetail extends ConsumerWidget {
   const TransactionDetail({Key? key, required this.txn}) : super(key: key);
@@ -25,6 +29,7 @@ class TransactionDetail extends ConsumerWidget {
     final ctx = Theme.of(context);
     final appLoc = AppLocalizations.of(context)!;
     final user = ref.watch(userProvider)!;
+    final TransactionsService txnsService = TransactionsService();
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -112,7 +117,7 @@ class TransactionDetail extends ConsumerWidget {
                       rightText: txn.provider?.toString(),
                     ),
                   ],
-                  Padding(
+                  /* Padding(
                     padding: const EdgeInsets.only(top: 20),
                     child: SizedBox(
                       width: double.infinity,
@@ -127,7 +132,79 @@ class TransactionDetail extends ConsumerWidget {
                         child: Text(appLoc.buttonClose),
                       ),
                     ),
-                  )
+                  ), */
+
+                  Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 64,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            final currentContext = context;
+                            try {
+                              final mutationResult = await txnsService
+                                  .cancelTransaction(txn.transactionID);
+                              if (mutationResult.hasException) {
+                                Fluttertoast.showToast(
+                                  msg: mutationResult.exception.toString(),
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 2,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0,
+                                );
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg: appLoc.trxCanceled,
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 2,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0);
+                                Navigator.of(currentContext)
+                                    .popUntil((route) => route.isFirst);
+                              }
+                            } catch (ex) {
+                              Fluttertoast.showToast(
+                                  msg: appLoc.errorSomethingWentWrong,
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 2,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.grey[300],
+                            onPrimary: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.cancel,
+                                color: Colors.red,
+                                size: 24,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                appLoc.buttonCancel,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )),
                 ],
               ),
             ),

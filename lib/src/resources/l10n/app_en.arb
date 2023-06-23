@@ -210,5 +210,7 @@
 	"labelpaymentGatewayID": "Payment Gateway ID",
 	"labelUserID": "User ID",
 	"labelTransMethod": "Method",
-	"labelTransProvider": "Transaction provider"
+	"labelTransProvider": "Transaction provider",
+	"trxCanceled":"Transaction canceled successfully"
+
 }

@@ -1,5 +1,6 @@
 import 'package:alcancia/src/shared/graphql/queries/transactions_query.dart';
 import 'package:alcancia/src/shared/graphql/queries/transfer_funds_query.dart';
+import 'package:alcancia/src/shared/graphql/mutations/cancel_transaction_mutation.dart';
 import 'package:alcancia/src/shared/services/graphql_service.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -44,6 +45,16 @@ class TransactionsService {
         document: gql(transferFundsQuery),
         variables: transferInput,
         fetchPolicy: FetchPolicy.noCache,
+      ),
+    );
+  }
+
+  Future<QueryResult> cancelTransaction(String id) async {
+    var clientResponse = await client;
+    return clientResponse.mutate(
+      MutationOptions(
+        document: gql(cancelTransactionMutation),
+        variables: {"id": id},
       ),
     );
   }
