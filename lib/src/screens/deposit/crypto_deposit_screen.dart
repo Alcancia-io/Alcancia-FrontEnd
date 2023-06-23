@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 
 class CryptoDepositScreen extends ConsumerWidget {
   const CryptoDepositScreen({Key? key}) : super(key: key);
@@ -41,11 +42,11 @@ class CryptoDepositScreen extends ConsumerWidget {
                     color:
                         darkMode ? Colors.white.withOpacity(0.9) : Colors.black,
                     eyeShape: QrEyeShape.square),
-                embeddedImage: AssetImage(darkMode
-                    ? "lib/src/resources/images/icon_alcancia_dark_no_letters.png"
-                    : "lib/src/resources/images/icon_alcancia_light_no_letters.png"),
+                embeddedImage: Svg(darkMode
+                    ? "lib/src/resources/images/icon_alcancia_dark_no_letters.svg"
+                    : "lib/src/resources/images/icon_alcancia_light_no_letters.svg"),
                 embeddedImageStyle: QrEmbeddedImageStyle(
-                    size: Size(screenSize.width / 8, screenSize.width / 6.4)),
+                    size: Size(screenSize.width / 6.4, screenSize.width / 6.4)),
               ),
             ),
             DepositInfoItem(
