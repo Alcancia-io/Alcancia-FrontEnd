@@ -1,20 +1,24 @@
-class BankInfoItem {
-  final String label;
-  final String value;
-  final bool copyable;
+class AccountInfo {
+  final String bank;
+  final String beneficiary;
+  final String? rnc;
+  final String? accountNumber;
+  final String? clabe;
 
-  BankInfoItem({required this.label, required this.value, required this.copyable});
+  AccountInfo._({required this.bank, required this.beneficiary, this.rnc, this.accountNumber, this.clabe});
 
-  static List<BankInfoItem> DOPInfo = [
-    BankInfoItem(label: "Banco", value: "Banreservas", copyable: false),
-    BankInfoItem(label: "Beneficiario", value: "BAPLTECH SRL", copyable: false),
-    BankInfoItem(label: "RNC", value: "1-32-75385-2", copyable: true),
-    BankInfoItem(label: "No. de cuenta", value: "9605734495", copyable: true),
-  ];
+  static AccountInfo DOPInfo = AccountInfo._(
+    bank: "Banreservas",
+    beneficiary: "BAPLTECH SRL",
+    rnc: "1-32-75385-2",
+    accountNumber: "9605734495",
+  );
 
-  static List<BankInfoItem> MXNInfo = [
-    BankInfoItem(label: "Cuenta", value: "Sistema de Transferencias y Pagos (STP)", copyable: false),
-    BankInfoItem(label: "Beneficiario", value: "Bctech Solutions SAPI de CV", copyable: true),
-    BankInfoItem(label: "CLABE", value: "646180204200011681", copyable: true)
-  ];
+  static AccountInfo MXNInfo = AccountInfo._(
+    bank: "Sistema de Transferencias y Pagos (STP)",
+    beneficiary: "Bctech Solutions SAPI de CV",
+    clabe: "646180204200011681",
+  );
+
+
 }

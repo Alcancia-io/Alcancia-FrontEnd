@@ -1,5 +1,7 @@
+import 'package:alcancia/src/shared/components/deposit_info_item.dart';
 import 'package:alcancia/src/shared/extensions/datetime_extensions.dart';
 import 'package:alcancia/src/shared/extensions/type_extensions.dart';
+import 'package:alcancia/src/shared/models/bank_info_item.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import 'package:flutter/material.dart';
@@ -26,18 +28,20 @@ class TransactionDetail extends ConsumerWidget {
             padding: const EdgeInsets.all(24),
             child: Container(
               padding: const EdgeInsets.all(18),
-              height: 430,
               decoration: BoxDecoration(
-                color: ctx.brightness == Brightness.dark ? alcanciaCardDark2 : alcanciaCardLight2,
+                color: ctx.brightness == Brightness.dark
+                    ? alcanciaCardDark2
+                    : alcanciaCardLight2,
                 borderRadius: const BorderRadius.all(
                   Radius.circular(11),
                 ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 48, top: 8),
+                    padding: const EdgeInsets.only(bottom: 16, top: 8),
                     child: Text(
                       appLoc.labelActivityDetail,
                       style: const TextStyle(
@@ -52,14 +56,15 @@ class TransactionDetail extends ConsumerWidget {
                   ),
                   TransactionDetailItem(
                     leftText: appLoc.labelTransactionId,
-                    rightText: txn.transactionID.substring(0, txn.transactionID.indexOf('-')),
+                    rightText: txn.transactionID
+                        .substring(0, txn.transactionID.indexOf('-')),
                   ),
-                  if (txn.type == TransactionType.deposit) ... [
+                  if (txn.type == TransactionType.deposit) ...[
                     TransactionDetailItem(
                       leftText: appLoc.labelDepositValue,
                       rightText: '\$${txn.sourceAmount?.toStringAsFixed(2)}',
                     ),
-                  ] else if (txn.type == TransactionType.withdraw) ... [
+                  ] else if (txn.type == TransactionType.withdraw) ...[
                     TransactionDetailItem(
                       leftText: appLoc.labelWithdrawalValue,
                       rightText: '\$${txn.sourceAmount?.toStringAsFixed(2)}',
@@ -77,6 +82,13 @@ class TransactionDetail extends ConsumerWidget {
                     leftText: appLoc.labelStatus,
                     rightIcon: txn.iconForTxnStatus(user.id),
                   ),
+                  if (txn.status == TransactionStatus.pending) ...[
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      child: Divider(thickness: 1,),
+                    ),
+                    BankInfo(appLoc),
+                  ],
                   Padding(
                     padding: const EdgeInsets.only(top: 20),
                     child: SizedBox(
@@ -99,6 +111,51 @@ class TransactionDetail extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget BankInfo(AppLocalizations appLoc) {
+    final info =
+        txn.sourceAsset == 'MXN' ? AccountInfo.MXNInfo : AccountInfo.DOPInfo;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        DepositInfoItem(
+          title: appLoc.labelBank,
+          subtitle: info.bank,
+          padding: EdgeInsets.only(bottom: 18),
+        ),
+        DepositInfoItem(
+          title: appLoc.labelBeneficiary,
+          subtitle: info.beneficiary,
+          supportsClipboard: true,
+          padding: EdgeInsets.only(bottom: 18),
+        ),
+        if (info.rnc != null) ...[
+          DepositInfoItem(
+            title: appLoc.labelRNC,
+            subtitle: info.rnc!,
+            supportsClipboard: true,
+            padding: EdgeInsets.only(bottom: 18),
+          ),
+        ],
+        if (info.accountNumber != null) ...[
+          DepositInfoItem(
+            title: appLoc.labelAccountNumber,
+            subtitle: info.accountNumber!,
+            supportsClipboard: true,
+            padding: EdgeInsets.only(bottom: 18),
+          ),
+        ],
+        if (info.clabe != null) ...[
+          DepositInfoItem(
+            title: appLoc.labelCLABE,
+            subtitle: info.clabe!,
+            supportsClipboard: true,
+            padding: EdgeInsets.only(bottom: 18),
+          ),
+        ],
+      ],
     );
   }
 }
