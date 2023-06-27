@@ -294,5 +294,6 @@
 	"errorEmailRequired": "El correo electrónico es requerido",
 	"alertErrorForgotPasswordCode": "Hubo un error al enviar el código de verificación, por favor verifique su correo electrónico e intente nuevamente",
 	"labelBeneficiary": "Beneficiario",
-	"labelRNC": "RNC"
+	"labelRNC": "RNC",
+	"trxCanceled":"Transacción cancelada correctamente"
 }

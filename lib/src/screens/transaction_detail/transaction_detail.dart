@@ -87,10 +87,13 @@ class TransactionDetail extends ConsumerWidget {
                     leftText: appLoc.labelStatus,
                     rightIcon: txn.iconForTxnStatus(user.id),
                   ),
-                  if (txn.status == TransactionStatus.pending && txn.type == TransactionType.deposit) ...[
+                  if (txn.status == TransactionStatus.pending &&
+                      txn.type == TransactionType.deposit) ...[
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 8.0),
-                      child: Divider(thickness: 1,),
+                      child: Divider(
+                        thickness: 1,
+                      ),
                     ),
                     BankInfo(appLoc),
                     Padding(
@@ -100,18 +103,32 @@ class TransactionDetail extends ConsumerWidget {
                         height: 64,
                         child: OutlinedButton(
                           style: OutlinedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            foregroundColor: Colors.red,
-                            side: BorderSide(color: Colors.red)
-                          ),
+                              backgroundColor: Colors.transparent,
+                              foregroundColor: Colors.red,
+                              side: BorderSide(color: Colors.red)),
                           onPressed: () async {
                             try {
-                              await controller.cancelTransaction(id: txn.transactionID);
-                              var txns = await controller.fetchUserTransactions();
-                              ref.read(transactionsProvider.notifier).state = txns;
+                              await controller.cancelTransaction(
+                                  id: txn.transactionID);
+                              var txns =
+                                  await controller.fetchUserTransactions();
+                              ref.read(transactionsProvider.notifier).state =
+                                  txns;
                               context.pop();
+
+                              Fluttertoast.showToast(
+                                  msg: appLoc.trxCanceled,
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 2,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
                             } catch (e) {
-                              Fluttertoast.showToast(msg: appLoc.errorSomethingWentWrong, backgroundColor: Colors.red, textColor: Colors.white70);
+                              Fluttertoast.showToast(
+                                  msg: appLoc.errorSomethingWentWrong,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white70);
                             }
                           },
                           child: Text(appLoc.buttonCancel),
