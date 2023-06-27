@@ -5,6 +5,7 @@ import 'package:alcancia/src/shared/extensions/type_extensions.dart';
 import 'package:alcancia/src/shared/models/bank_info_item.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
+import 'package:alcancia/src/shared/provider/transactions_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:alcancia/src/screens/transaction_detail/components/transaction_detail_item.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -86,7 +87,7 @@ class TransactionDetail extends ConsumerWidget {
                     leftText: appLoc.labelStatus,
                     rightIcon: txn.iconForTxnStatus(user.id),
                   ),
-                  if (txn.status == TransactionStatus.pending) ...[
+                  if (txn.status == TransactionStatus.pending && txn.type == TransactionType.deposit) ...[
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 8.0),
                       child: Divider(thickness: 1,),
@@ -106,6 +107,8 @@ class TransactionDetail extends ConsumerWidget {
                           onPressed: () async {
                             try {
                               await controller.cancelTransaction(id: txn.transactionID);
+                              var txns = await controller.fetchUserTransactions();
+                              ref.read(transactionsProvider.notifier).state = txns;
                               context.pop();
                             } catch (e) {
                               Fluttertoast.showToast(msg: appLoc.errorSomethingWentWrong, backgroundColor: Colors.red, textColor: Colors.white70);
