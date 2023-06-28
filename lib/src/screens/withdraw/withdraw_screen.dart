@@ -114,6 +114,16 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
     if (user?.lastUsedBankAccount != null) {
       _clabeTextController.text = user!.lastUsedBankAccount!;
     }
+    if (user?.country == "MX") {
+      country = "México";
+    } else if (user?.country == "DO") {
+      country = "República Dominicana";
+    } else {
+      country = countries.first['name'];
+    }
+    final countryIndex = countries.indexWhere((element) => element['name'] == country);
+    final code = countries.removeAt(countryIndex);
+    countries.insert(0, code);
   }
 
   double getBalance(Balance balance, String currency) {

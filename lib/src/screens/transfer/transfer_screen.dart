@@ -6,6 +6,7 @@ import 'package:alcancia/src/shared/components/alcancia_confirmation_dialog.dart
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/components/decimal_input_formatter.dart';
+import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:flutter/material.dart';
@@ -88,6 +89,21 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
     if (_transferError.isEmpty) {
       context.goNamed('successful-transaction', extra: transferResponse);
     }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final user = ref.read(userProvider);
+    if (user?.country != null) {
+      countryCode = countries.firstWhere((element) => element['value'] == user?.country)['name'];
+    } else {
+      countryCode = countries.first['name'];
+    }
+    final countryIndex = countries.indexWhere((element) => element['name'] == countryCode);
+    final code = countries.removeAt(countryIndex);
+    countries.insert(0, code);
   }
 
   @override

@@ -35,7 +35,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
   final sourceAmountController = TextEditingController();
 
   // source amount icons
-  final List<Map> sourceCurrencyCodes = [
+  List<Map> sourceCurrencyCodes = [
     {"name": "MXN", "icon": "lib/src/resources/images/icon_mexico_flag.png"},
     {"name": "DOP", "icon": "lib/src/resources/images/icon_dominican_flag.png"},
   ];
@@ -43,7 +43,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
   // target amount icons
   final List<Map> targetMXNCurrencies = [
     {"name": "USDC", "icon": "lib/src/resources/images/icon_usdc.png"},
-    {"name": "CUSD", "icon": "lib/src/resources/images/icon_celo_usd.png"},
+    //{"name": "CUSD", "icon": "lib/src/resources/images/icon_celo_usd.png"},
   ];
 
   final List<Map> targetDOPCurrencies = [
@@ -54,7 +54,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
   late String targetCurrency = targetMXNCurrencies.first['name'];
 
   // dropdown value for source currency, it can be MXN or DOP
-  late String sourceCurrency = sourceCurrencyCodes.first['name'];
+  late String sourceCurrency;
   final ResponsiveService responsiveService = ResponsiveService();
 
   // metamap
@@ -147,11 +147,23 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     getExchange();
     getCeloAPY();
     getUsdcAPY();
+    final user = ref.read(userProvider);
+    if (user?.country == "MX") {
+      sourceCurrency = "MXN";
+    } else if (user?.country == "DO") {
+      sourceCurrency = "DOP";
+    } else {
+      sourceCurrency = sourceCurrencyCodes.first['name'];
+    }
+    final sourceCurrencyIndex = sourceCurrencyCodes.indexWhere((element) => element['name'] == sourceCurrency);
+    final code = sourceCurrencyCodes.removeAt(sourceCurrencyIndex);
+    sourceCurrencyCodes.insert(0, code);
   }
 
   @override
   Widget build(BuildContext context) {
     var user = ref.watch(userProvider);
+    print(sourceCurrency);
     final appLoc = AppLocalizations.of(context)!;
     final txtTheme = Theme.of(context).textTheme;
     final screenHeight = MediaQuery.of(context).size.height;
