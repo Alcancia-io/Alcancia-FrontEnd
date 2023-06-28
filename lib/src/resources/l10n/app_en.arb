@@ -214,5 +214,6 @@
 	"labelRiskHigh": "High",
 	"labelRiskMedium": "Medium",
 	"labelRiskLow": "Low",
-	"unknown": "Unknown"
+	"unknown": "Unknown",
+	"labelRecipientPhone": "Recipient''s Phone Number"
 }

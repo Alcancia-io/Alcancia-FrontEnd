@@ -119,6 +119,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AlcanciaToolbar(
           title: appLoc.labelTransfer,
           state: StateToolbar.titleIcon,
@@ -148,7 +149,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(bottom: 6.0),
-                          child: Text(appLoc.labelPhone),
+                          child: Text(appLoc.labelRecipientPhone),
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -254,6 +255,20 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                           if (_loading) ...[
                             const CircularProgressIndicator(),
                           ] else ...[
+                            if (balance < (double.tryParse(_transferAmountController.text) ?? 0)) ... [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                child: AlcanciaButton(
+                                  buttonText: appLoc.buttonDeposit,
+                                  onPressed: () {
+                                    context.push("/deposit");
+                                  },
+                                  color: alcanciaLightBlue,
+                                  width: 308,
+                                  height: 64,
+                                ),
+                              ),
+                            ],
                             AlcanciaButton(
                               buttonText: appLoc.buttonNext,
                               // TODO: enableButton again
