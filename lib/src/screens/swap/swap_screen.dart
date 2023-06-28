@@ -567,7 +567,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                             }
                                           } else {
                                             await metaMapService.showMatiFlow(
-                                                metamapMexicanINEId,
+                                                metamapDomicanFlowId,
                                                 user.id,
                                                 appLoc);
                                             final updatedUser =

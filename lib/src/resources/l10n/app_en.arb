@@ -192,7 +192,7 @@
 	"confirmation": "Confirmation",
 	"successfulTransaction": "Transaction successful",
 	"goBackToMainMenu": "Go back to Main Menu",
-	"labelPesosDeposits": "Pesos Deposits",
+	"labelPesosDeposits": "Bank Deposits",
 	"labelCryptoDeposits": "Crypto Deposits",
 	"labelNoCommissions": "No Commissions",
 	"labelPesosDepositsSubtitle": "By Bank Transfer",
