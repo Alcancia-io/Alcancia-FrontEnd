@@ -226,7 +226,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                                 child: TextFormField(
                                   style: Theme.of(context).textTheme.bodyText1,
                                   controller: _transferAmountController,
-                                  keyboardType: TextInputType.number,
+                                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
                                   inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {

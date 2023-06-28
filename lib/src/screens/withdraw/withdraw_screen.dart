@@ -387,7 +387,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         LabeledTextFormField(
           controller: _amountTextController,
           labelText: appLoc.labelWithdrawAmount,
-          inputType: TextInputType.number,
+          inputType: TextInputType.numberWithOptions(decimal: true),
           inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
           validator: (value) {
             if (value == null || value.isEmpty) {
