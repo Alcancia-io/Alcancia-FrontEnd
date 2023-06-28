@@ -155,7 +155,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     } else {
       sourceCurrency = sourceCurrencyCodes.first['name'];
     }
-    final sourceCurrencyIndex = sourceCurrencyCodes.indexWhere((element) => element['name'] == sourceCurrency);
+    final sourceCurrencyIndex = sourceCurrencyCodes
+        .indexWhere((element) => element['name'] == sourceCurrency);
     final code = sourceCurrencyCodes.removeAt(sourceCurrencyIndex);
     sourceCurrencyCodes.insert(0, code);
   }
@@ -436,8 +437,14 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                             : AlcanciaButton(
                                 buttonText: appLoc.buttonTransfer,
                                 onPressed: sourceAmount.isEmpty ||
-                                        int.parse(sourceAmount) < 200 ||
-                                        int.parse(sourceAmount) > 50000
+                                        ((sourceCurrency == 'MXN')
+                                                ? 200
+                                                : 600) >
+                                            int.parse(sourceAmount) ||
+                                        ((sourceCurrency == 'MXN')
+                                                ? 50000
+                                                : 150000) <
+                                            int.parse(sourceAmount)
                                     ? null
                                     : () async {
                                         //Temporary Variables
@@ -598,22 +605,16 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                     64, screenHeight),
                               ),
                       ),
-                      if (sourceAmount.isNotEmpty &&
-                          (int.parse(sourceAmount) < 200 ||
-                              int.parse(sourceAmount) > 50000)) ...[
+                      if (sourceAmount.isNotEmpty) ...[
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            int.parse(sourceAmount) <
-                                    (sourceCurrency == 'MXN' ? 200 : 600)
-                                ? (sourceCurrency == 'MXN'
-                                    ? appLoc.errorMinimumDepositAmount
-                                    : appLoc.errorMinimumDepositAmountDOP)
-                                : appLoc.errorMaximumDepositAmount,
+                            validateAmount(
+                                sourceAmount, sourceCurrency, appLoc),
                             style: const TextStyle(color: Colors.red),
                           ),
                         ),
-                      ],
+                      ]
                     ],
                   ),
                 ),
@@ -623,5 +624,30 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
         ),
       ),
     );
+  }
+
+  String validateAmount(
+      String sourceAmount, String sourceCurrency, AppLocalizations appLoc) {
+    int minAmount;
+    int maxAmont;
+
+    if (sourceCurrency == 'MXN') {
+      minAmount = 200;
+      maxAmont = 50000;
+    } else {
+      minAmount = 600;
+      maxAmont = 150000;
+    }
+
+    int parsedAmount = int.parse(sourceAmount);
+
+    if (parsedAmount < minAmount) {
+      return (sourceCurrency == 'MXN')
+          ? appLoc.errorMinimumDepositAmount
+          : appLoc.errorMinimumDepositAmountDOP;
+    } else if (parsedAmount > maxAmont) {
+      return appLoc.errorMaximumDepositAmount;
+    }
+    return '';
   }
 }
