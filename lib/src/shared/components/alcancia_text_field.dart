@@ -40,6 +40,7 @@ class LabeledTextFormField extends StatelessWidget {
           child: Text(labelText),
         ),
         TextFormField(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           controller: controller,
           keyboardType: inputType,
           autofillHints: autofillHints,

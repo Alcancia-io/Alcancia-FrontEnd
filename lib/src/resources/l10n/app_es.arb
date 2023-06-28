@@ -292,5 +292,10 @@
 	"labelAmountDOP": "Monto en DOP",
 	"errorCedulaLength": "El número de cédula debe tener 11 dígitos",
 	"errorEmailRequired": "El correo electrónico es requerido",
-	"alertErrorForgotPasswordCode": "Hubo un error al enviar el código de verificación, por favor verifique su correo electrónico e intente nuevamente"
+	"alertErrorForgotPasswordCode": "Hubo un error al enviar el código de verificación, por favor verifique su correo electrónico e intente nuevamente",
+	"labelRiskHigh": "Alto",
+    "labelRiskMedium": "Medio",
+    "labelRiskLow": "Bajo",
+    "unknown": "Desconocido",
+    "labelRecipientPhone": "Número de teléfono del destinatario"
 }
