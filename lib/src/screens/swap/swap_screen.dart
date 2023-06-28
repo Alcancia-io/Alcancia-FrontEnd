@@ -355,7 +355,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                         AlcanciaContainer(
                           top: 16,
                           child: CurrencyRiskCard(
-                            riskLevel: RiskLevel.medio,
+                            riskLevel: RiskLevel.medium,
                             targetCurrency: "CUSD",
                             percentage: currentCeloAPY,
                             color: cardColor,
@@ -368,7 +368,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                         AlcanciaContainer(
                           top: 16,
                           child: CurrencyRiskCard(
-                            riskLevel: RiskLevel.bajo,
+                            riskLevel: RiskLevel.low,
                             targetCurrency: "USDC",
                             percentage: currentUsdcAPY,
                             color: cardColor,
