@@ -1,4 +1,5 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
+import 'package:alcancia/src/screens/error/error_screen.dart';
 import 'package:alcancia/src/screens/withdraw/withdraw_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
@@ -166,7 +167,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
     }
 
     if (_error != "") {
-      return Scaffold(body: SafeArea(child: Center(child: Text(_error))));
+      return const ErrorScreen();
     }
 
     return GestureDetector(

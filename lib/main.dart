@@ -1,4 +1,6 @@
 import 'package:alcancia/src/resources/colors/app_theme.dart';
+import 'package:alcancia/src/screens/error/error_screen.dart';
+import 'package:alcancia/src/shared/components/alcancia_error_widget.dart';
 import 'package:alcancia/src/shared/provider/push_notifications_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +26,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return Center(child: AlcanciaErrorWidget());
+  };
   runApp(const ProviderScope(child: MyApp()));
 }
 
