@@ -7,14 +7,11 @@ class AlcanciaLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: const TextStyle(
-        color: alcanciaLightBlue,
-        fontSize: 15,
-        decoration: TextDecoration.underline,
-        decorationThickness: 4,
-      ),
-    );
+    return Text(text,
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: alcanciaLightBlue,
+              decoration: TextDecoration.underline,
+              decorationThickness: 4,
+            ));
   }
 }

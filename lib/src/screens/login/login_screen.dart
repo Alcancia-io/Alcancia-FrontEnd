@@ -363,7 +363,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             children: [
               Text(
                 appLocalization.labelLogInWith,
-                style: txtTheme.bodyText1,
+                style: txtTheme.bodyLarge,
               ),
               AlcanciaLink(
                 text: appLocalization.buttonAnotherAccount,
