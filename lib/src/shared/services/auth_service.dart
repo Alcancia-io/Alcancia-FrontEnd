@@ -1,4 +1,4 @@
-import 'package:alcancia/src/features/login/data/login_mutation.dart';
+import 'package:alcancia/src/shared/graphql/mutations/login_mutation.dart';
 import 'package:alcancia/src/shared/graphql/mutations/complete_forgot_password_mutation.dart';
 import 'package:alcancia/src/shared/graphql/queries/index.dart';
 import 'package:alcancia/src/shared/services/graphql_service.dart';

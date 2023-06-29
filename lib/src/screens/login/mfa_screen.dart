@@ -1,4 +1,3 @@
-import 'package:alcancia/src/features/registration/provider/timer_provider.dart';
 import 'package:alcancia/src/screens/login/login_controller.dart';
 import 'package:alcancia/src/shared/models/login_data_model.dart';
 import 'package:alcancia/src/shared/provider/push_notifications_provider.dart';
@@ -27,15 +26,26 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
   bool _loading = false;
   final StorageService _storageService = StorageService();
 
+  final timer = StopWatchTimer(
+    mode: StopWatchMode.countDown,
+    presetMillisecond: 60000
+  );
+
   saveToken(String token) async {
     final StorageItem storageItem = StorageItem("token", token);
     await _storageService.writeSecureData(storageItem);
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    timer.onStartTimer();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final pushNotifications = ref.watch(pushNotificationProvider);
-    final timer = ref.watch(timerProvider);
     final appLoc = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -116,9 +126,9 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                                     onPressed: value <= 0
                                         ? () async {
                                             final deviceToken = await pushNotifications.messaging.getToken();
-                                            final token = await loginController.login(
+                                            final data = await loginController.login(
                                                 widget.data.email, widget.data.password, deviceToken ?? "");
-                                            saveToken(token);
+                                            saveToken(data.token);
                                             timer.onResetTimer();
                                             timer.onStartTimer();
                                           }
