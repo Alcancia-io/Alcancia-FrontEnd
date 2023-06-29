@@ -85,7 +85,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var txtTheme = Theme.of(context).textTheme;
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     final appLocalization = AppLocalizations.of(context)!;
@@ -206,19 +205,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ],
                           ),
                         ),
-                        AlcanciaButton(
-                          color: alcanciaLightBlue,
-                          width: responsiveService.getWidthPixels(
-                              304, screenWidth),
-                          height: responsiveService.getHeightPixels(
-                              64, screenHeight),
-                          buttonText: appLocalization.buttonLogIn,
-                          onPressed: () async {
-                            await _login(
-                                pushNotifications,
-                                registrationController);
-                          },
-                        ),
+                        if (_loading) ... [
+                          const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
+                        ] else ... [
+                          AlcanciaButton(
+                            color: alcanciaLightBlue,
+                            width: responsiveService.getWidthPixels(
+                                304, screenWidth),
+                            height: responsiveService.getHeightPixels(
+                                64, screenHeight),
+                            buttonText: appLocalization.buttonLogIn,
+                            onPressed: () async {
+                              await _login(
+                                  pushNotifications,
+                                  registrationController);
+                            },
+                          ),
+                        ],
                         _buildFooter(appLocalization: appLocalization),
                       ],
                     ),
@@ -236,6 +244,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       PushNotificationProvider pushNotifications,
       RegistrationController registrationController) async {
     try {
+      setState(() {
+        _loading = true;
+      });
       final deviceToken = await pushNotifications.messaging.getToken();
       final data = await controller.login(
           emailController.text, passwordController.text, deviceToken ?? "");
@@ -244,7 +255,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         await saveUserInfo(data.name, data.email);
       }
       context.push("/mfa", extra: data);
+      setState(() {
+        _loading = false;
+      });
     } catch (e) {
+      setState(() {
+        _loading = false;
+      });
       final notVerified = e.toString().contains("UserNotConfirmedException");
       if (notVerified) {
         registrationController.resendVerificationCode(emailController.text);
