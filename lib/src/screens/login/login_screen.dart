@@ -1,4 +1,5 @@
 // Flutter package imports:
+import 'package:alcancia/src/features/registration/model/registration_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -103,32 +104,32 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.only(left: 32.0, right: 32.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: AlcanciaLogo(
-                        height: screenHeight / 8,
+              child: Form(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: AlcanciaLogo(
+                          height: screenHeight / 8,
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        bottom: responsiveService.getHeightPixels(
-                            50, screenHeight),
-                        top: responsiveService.getHeightPixels(
-                            40, screenHeight)),
-                    child: Text(
-                      appLocalization.labelHelloWelcome(userName ?? ""),
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 35),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          bottom: responsiveService.getHeightPixels(
+                              50, screenHeight),
+                          top: responsiveService.getHeightPixels(
+                              40, screenHeight)),
+                      child: Text(
+                        appLocalization.labelHelloWelcome(userName ?? ""),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 35),
+                      ),
                     ),
-                  ),
-                  Form(
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    child: Column(
+                    Column(
                       children: [
                         if (userName == null)
                           Column(
@@ -150,43 +151,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   }
                                 },
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    bottom: responsiveService
-                                        .getHeightPixels(
-                                            6, screenHeight),
-                                    top: responsiveService
-                                        .getHeightPixels(
-                                            6, screenHeight)),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: 25,
-                                      child: Checkbox(
-                                          value: _rememberMe,
-                                          shape:
-                                              RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(
-                                                    4),
-                                          ),
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _rememberMe = value!;
-                                            });
-                                          }),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 8.0),
-                                      child: Text(appLocalization
-                                          .labelRememberUser),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              _buildRememberMe(appLocalization, screenHeight),
                             ],
                           ),
                         LabeledTextFormField(
@@ -235,28 +200,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     ],
                                   ),
                                   onPressed: () async {
-                                    if (emailController
-                                        .text.isNotEmpty) {
-                                      final StorageItem userEmail =
-                                          StorageItem("userEmail",
-                                              emailController.text);
-                                      await _storageService
-                                          .writeSecureData(userEmail);
-                                      context.pushNamed(
-                                          'forgot-password');
-                                    } else {
-                                      Fluttertoast.showToast(
-                                          msg: appLocalization
-                                              .errorEmailRequired,
-                                          toastLength:
-                                              Toast.LENGTH_SHORT,
-                                          gravity:
-                                              ToastGravity.BOTTOM,
-                                          timeInSecForIosWeb: 2,
-                                          backgroundColor: Colors.red,
-                                          textColor: Colors.white,
-                                          fontSize: 16.0);
-                                    }
+                                    await _forgotPassword(appLocalization);
                                   },
                               ),
                             ],
@@ -270,92 +214,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               64, screenHeight),
                           buttonText: appLocalization.buttonLogIn,
                           onPressed: () async {
-                            try {
-                              final deviceToken = await pushNotifications
-                                  .messaging
-                                  .getToken();
-                              final data = await controller.login(
-                                  emailController.text,
-                                  passwordController.text,
-                                  deviceToken ?? "");
-                              await saveToken(data.token);
-                              if (_rememberMe) {
-                                await saveUserInfo(data.name, data.email);
-                              }
-                              context.push("/mfa", extra: data);
-                            } catch (e) {
-                              final notVerified = e.toString().contains("UserNotConfirmedException");
-                              if (notVerified) {
-                                registrationController
-                                    .resendVerificationCode(
-                                    emailController.text);
-                                context.push("/otp",
-                                    extra: OTPDataModel(
-                                        email: emailController.text));
-                              } else {
-                                Fluttertoast.showToast(
-                                    msg: e.toString(),
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 2,
-                                    backgroundColor: Colors.red,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0);
-                              }
-                            }
+                            await _login(
+                                pushNotifications,
+                                registrationController);
                           },
                         ),
-                        if (userName != null) ...[
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 30,
-                            ),
-                            child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  userName = null;
-                                  emailController.text = "";
-                                });
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    appLocalization.labelLogInWith,
-                                    style: txtTheme.bodyText1,
-                                  ),
-                                  AlcanciaLink(
-                                    text: appLocalization
-                                        .buttonAnotherAccount,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ] else ...[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(appLocalization.labelNeedAccount),
-                              CupertinoButton(
-                                child: Text(
-                                  appLocalization.buttonRegister,
-                                  style: const TextStyle(
-                                    decoration: TextDecoration.underline,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                onPressed: () {
-                                  context.push("/registration");
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
+                        _buildFooter(appLocalization: appLocalization),
                       ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -363,4 +231,150 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ),
     );
   }
+
+  Future<void> _login(
+      PushNotificationProvider pushNotifications,
+      RegistrationController registrationController) async {
+    try {
+      final deviceToken = await pushNotifications.messaging.getToken();
+      final data = await controller.login(
+          emailController.text, passwordController.text, deviceToken ?? "");
+      await saveToken(data.token);
+      if (_rememberMe) {
+        await saveUserInfo(data.name, data.email);
+      }
+      context.push("/mfa", extra: data);
+    } catch (e) {
+      final notVerified = e.toString().contains("UserNotConfirmedException");
+      if (notVerified) {
+        registrationController.resendVerificationCode(emailController.text);
+        context.push("/otp", extra: OTPDataModel(email: emailController.text));
+      } else {
+        Fluttertoast.showToast(
+            msg: e.toString(),
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
+    }
+  }
+
+  Future<void> _forgotPassword(appLocalization) async {
+    if (emailController
+        .text.isNotEmpty) {
+      final StorageItem userEmail =
+      StorageItem("userEmail",
+          emailController.text);
+      await _storageService
+          .writeSecureData(userEmail);
+      context.pushNamed(
+          'forgot-password');
+    } else {
+      Fluttertoast.showToast(
+          msg: appLocalization
+              .errorEmailRequired,
+          toastLength:
+          Toast.LENGTH_SHORT,
+          gravity:
+          ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+  }
+
+  Widget _buildRememberMe(appLocalization, screenHeight) {
+    return Padding(
+      padding: EdgeInsets.only(
+          bottom: responsiveService
+              .getHeightPixels(
+              6, screenHeight),
+          top: responsiveService
+              .getHeightPixels(
+              6, screenHeight)),
+      child: Row(
+        mainAxisAlignment:
+        MainAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 25,
+            child: Checkbox(
+                value: _rememberMe,
+                shape:
+                RoundedRectangleBorder(
+                  borderRadius:
+                  BorderRadius.circular(
+                      4),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    _rememberMe = value!;
+                  });
+                }),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+                left: 8.0),
+            child: Text(appLocalization
+                .labelRememberUser),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFooter({required AppLocalizations appLocalization}) {
+    final txtTheme = Theme.of(context).textTheme;
+    if (userName != null) {
+      return Padding(
+        padding: const EdgeInsets.only(
+          top: 30,
+        ),
+        child: InkWell(
+          onTap: () {
+            setState(() {
+              userName = null;
+              emailController.text = "";
+            });
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                appLocalization.labelLogInWith,
+                style: txtTheme.bodyText1,
+              ),
+              AlcanciaLink(
+                text: appLocalization.buttonAnotherAccount,
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(appLocalization.labelNeedAccount),
+          CupertinoButton(
+            child: Text(
+              appLocalization.buttonRegister,
+              style: const TextStyle(
+                decoration: TextDecoration.underline,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onPressed: () {
+              context.push("/registration");
+            },
+          ),
+        ],
+      );
+    }
+  }
+
 }
