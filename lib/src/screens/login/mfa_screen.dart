@@ -42,7 +42,6 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         body: SafeArea(
-          bottom: false,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: ListView(
