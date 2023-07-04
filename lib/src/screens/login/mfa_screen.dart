@@ -26,10 +26,8 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
   bool _loading = false;
   final StorageService _storageService = StorageService();
 
-  final timer = StopWatchTimer(
-    mode: StopWatchMode.countDown,
-    presetMillisecond: 60000
-  );
+  final timer =
+      StopWatchTimer(mode: StopWatchMode.countDown, presetMillisecond: 60000);
 
   saveToken(String token) async {
     final StorageItem storageItem = StorageItem("token", token);
@@ -64,15 +62,16 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
                   child: Text(
                     appLoc.labelVerifyIdentity,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 35),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: Text(
-                      appLoc.labelEnterCodePhone(widget.data.phoneNumber.substring(widget.data.phoneNumber.length - 4)),
-                  )
-                ),
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    child: Text(
+                      appLoc.labelEnterCodePhone(widget.data.phoneNumber
+                          .substring(widget.data.phoneNumber.length - 4)),
+                    )),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 40.0),
                   child: LabeledTextFormField(
@@ -88,7 +87,8 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                     initialData: 0,
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       final value = snapshot.data;
-                      final displayTime = StopWatchTimer.getDisplayTime(value, hours: false, milliSecond: false);
+                      final displayTime = StopWatchTimer.getDisplayTime(value,
+                          hours: false, milliSecond: false);
                       return Column(
                         children: [
                           Center(
@@ -96,7 +96,8 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                               decoration: ShapeDecoration(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(100),
-                                      side: const BorderSide(color: alcanciaLightBlue))),
+                                      side: const BorderSide(
+                                          color: alcanciaLightBlue))),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
@@ -108,34 +109,41 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                                     ),
                                     Text(
                                       displayTime,
-                                      style: const TextStyle(color: alcanciaLightBlue),
+                                      style: const TextStyle(
+                                          color: alcanciaLightBlue),
                                     ),
                                   ],
                                 ),
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(appLoc.labelDidNotReceiveCode),
-                                  TextButton(
-                                    onPressed: value <= 0
-                                        ? () async {
-                                            final deviceToken = await pushNotifications.messaging.getToken();
-                                            final data = await loginController.login(
-                                                widget.data.email, widget.data.password, deviceToken ?? "");
-                                            saveToken(data.token);
-                                            timer.onResetTimer();
-                                            timer.onStartTimer();
-                                          }
-                                        : null,
-                                    style: TextButton.styleFrom(foregroundColor: alcanciaLightBlue),
-                                    child: Text(
-                                      appLoc.buttonResend,
-                                      style: const TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(appLoc.labelDidNotReceiveCode),
+                              TextButton(
+                                onPressed: value <= 0
+                                    ? () async {
+                                        final deviceToken =
+                                            await pushNotifications.messaging
+                                                .getToken();
+                                        final data =
+                                            await loginController.login(
+                                                widget.data.email,
+                                                widget.data.password,
+                                                deviceToken ?? "");
+                                        saveToken(data.token);
+                                        timer.onResetTimer();
+                                        timer.onStartTimer();
+                                      }
+                                    : null,
+                                style: TextButton.styleFrom(
+                                    foregroundColor: alcanciaLightBlue),
+                                child: Text(
+                                  appLoc.buttonResend,
+                                  style: const TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
@@ -162,7 +170,8 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                             onPressed: () async {
                               _setLoading(true);
                               try {
-                                final completed = await loginController.completeSignIn(codeController.text);
+                                final completed = await loginController
+                                    .completeSignIn(codeController.text);
                                 if (completed) context.go("/homescreen/0");
                               } catch (err) {
                                 setState(() {
