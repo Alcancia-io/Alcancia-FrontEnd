@@ -1,5 +1,4 @@
 import 'package:alcancia/src/features/registration/provider/registration_controller_provider.dart';
-import 'package:alcancia/src/features/registration/provider/timer_provider.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
@@ -24,9 +23,20 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
   String _error = "";
   bool _loading = false;
 
+  final timer = StopWatchTimer(
+      mode: StopWatchMode.countDown,
+      presetMillisecond: 60000
+  );
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    timer.onStartTimer();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final timer = ref.watch(timerProvider);
     final registrationController = ref.watch(registrationControllerProvider);
     final appLocalization = AppLocalizations.of(context)!;
     return GestureDetector(
