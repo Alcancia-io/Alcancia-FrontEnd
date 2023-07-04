@@ -1,4 +1,5 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
+import 'package:alcancia/src/screens/error/error_screen.dart';
 import 'package:alcancia/src/screens/investment_info/investment_info.dart';
 import 'package:alcancia/src/screens/swap/components/currency_risk_card.dart';
 import 'package:alcancia/src/screens/swap/swap_controller.dart';
@@ -189,7 +190,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     }
 
     if (_error != "")
-      return Scaffold(body: SafeArea(child: Center(child: Text(_error))));
+      return const ErrorScreen();
 
     Color cardColor = Theme.of(context).brightness == Brightness.dark
         ? alcanciaCardDark
