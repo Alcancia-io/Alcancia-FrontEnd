@@ -40,137 +40,135 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: ListView(
               children: [
                 const Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.symmetric(vertical: 24.0),
                   child: AlcanciaLogo(),
                 ),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(0.0),
-                        child: Text(
-                          appLoc.labelVerifyIdentity,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                            appLoc.labelEnterCodePhone(widget.data.phoneNumber.substring(widget.data.phoneNumber.length - 4)),
-                        )
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: LabeledTextFormField(
-                            controller: codeController,
-                            inputType: TextInputType.number,
-                            autofillHints: const [AutofillHints.oneTimeCode],
-                            labelText: appLoc.labelCode),
-                      ),
-                      StreamBuilder<int>(
-                        stream: timer.rawTime,
-                        initialData: 0,
-                        builder: (BuildContext context, AsyncSnapshot snapshot) {
-                          final value = snapshot.data;
-                          final displayTime = StopWatchTimer.getDisplayTime(value, hours: false, milliSecond: false);
-                          return Column(
-                            children: [
-                              Center(
-                                child: Container(
-                                  decoration: ShapeDecoration(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(100),
-                                          side: const BorderSide(color: alcanciaLightBlue))),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        const Icon(
-                                          Icons.timer_sharp,
-                                          color: alcanciaLightBlue,
-                                        ),
-                                        Text(
-                                          displayTime,
-                                          style: const TextStyle(color: alcanciaLightBlue),
-                                        ),
-                                      ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: Text(
+                    appLoc.labelVerifyIdentity,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: Text(
+                      appLoc.labelEnterCodePhone(widget.data.phoneNumber.substring(widget.data.phoneNumber.length - 4)),
+                  )
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 40.0),
+                  child: LabeledTextFormField(
+                      controller: codeController,
+                      inputType: TextInputType.number,
+                      autofillHints: const [AutofillHints.oneTimeCode],
+                      labelText: appLoc.labelCode),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: StreamBuilder<int>(
+                    stream: timer.rawTime,
+                    initialData: 0,
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      final value = snapshot.data;
+                      final displayTime = StopWatchTimer.getDisplayTime(value, hours: false, milliSecond: false);
+                      return Column(
+                        children: [
+                          Center(
+                            child: Container(
+                              decoration: ShapeDecoration(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(100),
+                                      side: const BorderSide(color: alcanciaLightBlue))),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(
+                                      Icons.timer_sharp,
+                                      color: alcanciaLightBlue,
                                     ),
+                                    Text(
+                                      displayTime,
+                                      style: const TextStyle(color: alcanciaLightBlue),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(appLoc.labelDidNotReceiveCode),
+                              TextButton(
+                                onPressed: value <= 0
+                                    ? () async {
+                                        final deviceToken = await pushNotifications.messaging.getToken();
+                                        final token = await loginController.login(
+                                            widget.data.email, widget.data.password, deviceToken ?? "");
+                                        saveToken(token);
+                                        timer.onResetTimer();
+                                        timer.onStartTimer();
+                                      }
+                                    : null,
+                                style: TextButton.styleFrom(foregroundColor: alcanciaLightBlue),
+                                child: Text(
+                                  appLoc.buttonResend,
+                                  style: const TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(appLoc.labelDidNotReceiveCode),
-                                  TextButton(
-                                    onPressed: value <= 0
-                                        ? () async {
-                                            final deviceToken = await pushNotifications.messaging.getToken();
-                                            final token = await loginController.login(
-                                                widget.data.email, widget.data.password, deviceToken ?? "");
-                                            saveToken(token);
-                                            timer.onResetTimer();
-                                            timer.onStartTimer();
-                                          }
-                                        : null,
-                                    style: TextButton.styleFrom(foregroundColor: alcanciaLightBlue),
-                                    child: Text(
-                                      appLoc.buttonResend,
-                                      style: const TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
                             ],
-                          );
-                        },
-                      ),
-                      Center(
-                        child: Column(
-                          children: [
-                            if (_loading) ...[
-                              const CircularProgressIndicator(),
-                            ] else ...[
-                              AlcanciaButton(
-                                color: alcanciaLightBlue,
-                                width: 308,
-                                height: 64,
-                                buttonText: appLoc.buttonLogIn,
-                                onPressed: () async {
-                                  _setLoading(true);
-                                  try {
-                                    final completed = await loginController.completeSignIn(codeController.text);
-                                    if (completed) context.go("/homescreen/0");
-                                  } catch (err) {
-                                    setState(() {
-                                      error = err.toString();
-                                    });
-                                  }
-                                  _setLoading(false);
-                                },
-                              ),
-                              Text(
-                                error,
-                                style: const TextStyle(color: Colors.red),
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                    ],
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        if (_loading) ...[
+                          const CircularProgressIndicator(),
+                        ] else ...[
+                          AlcanciaButton(
+                            color: alcanciaLightBlue,
+                            width: 308,
+                            height: 64,
+                            buttonText: appLoc.buttonLogIn,
+                            onPressed: () async {
+                              _setLoading(true);
+                              try {
+                                final completed = await loginController.completeSignIn(codeController.text);
+                                if (completed) context.go("/homescreen/0");
+                              } catch (err) {
+                                setState(() {
+                                  error = err.toString();
+                                });
+                              }
+                              _setLoading(false);
+                            },
+                          ),
+                          Text(
+                            error,
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ],
+                      ],
+                    ),
                   ),
                 ),
               ],
