@@ -1,10 +1,12 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_transaction_item.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
+import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AlcanciaTransactions extends StatelessWidget {
+class AlcanciaTransactions extends ConsumerWidget {
   final List<Transaction> txns;
   final double? height;
   final String bottomText;
@@ -21,7 +23,8 @@ class AlcanciaTransactions extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider)!;
     final appTheme = Theme.of(context);
     final appLoc = AppLocalizations.of(context)!;
     if (txns.isEmpty) {
@@ -70,6 +73,7 @@ class AlcanciaTransactions extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           var txn = txns[index];
           return AlcanciaTransactionItem(
+            user: user,
             txn: txn,
           );
         },
