@@ -61,6 +61,7 @@ dependencies:
   qr_flutter: ^4.1.0
   flutter_svg_provider: ^1.0.3
   firebase_crashlytics: ^3.3.3
+  lottie: ^2.4.0
 
 
 flutter_icons:
@@ -98,6 +99,7 @@ flutter:
     - .env.dev
     - .env.prod
     - lib/src/resources/images/
+    - lib/src/resources/lottie/
     - lib/src/resources/images/welcome_image.png
     - lib/src/resources/images/icon_alcancia_light.svg
     - lib/src/resources/images/icon_alcancia_dark.svg
