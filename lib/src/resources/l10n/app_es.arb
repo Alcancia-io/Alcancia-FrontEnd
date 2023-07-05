@@ -297,5 +297,6 @@
     "labelRiskMedium": "Medio",
     "labelRiskLow": "Bajo",
     "unknown": "Desconocido",
-    "labelRecipientPhone": "Número de teléfono del destinatario"
+    "labelRecipientPhone": "Número de teléfono del destinatario",
+    "labelComingSoon": "Próximamente..."
 }
