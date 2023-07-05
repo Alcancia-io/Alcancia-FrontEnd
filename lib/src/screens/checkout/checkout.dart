@@ -22,16 +22,6 @@ class Checkout extends StatelessWidget {
 
   final CheckoutModel checkoutData;
 
-  String get concept {
-    if (checkoutData.txnInput.txnMethod == TransactionMethod.suarmi) {
-      return checkoutData.order.concept!;
-    } else {
-      final uuid = checkoutData.order.uuid;
-      final concept = uuid.split('-')[4].substring(0, 7);
-      return concept;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -50,7 +40,7 @@ class Checkout extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 32.0),
                 child: OrderInformation(
-                    txnInput: checkoutData.txnInput, concept: concept),
+                    txnInput: checkoutData.txnInput, concept: checkoutData.order.concept),
               ),
               AlcanciaButton(
                 height: responsiveService.getHeightPixels(64, screenHeight),
