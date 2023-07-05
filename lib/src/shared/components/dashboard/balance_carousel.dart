@@ -29,10 +29,11 @@ class _BalanceCarouselState extends State<BalanceCarousel> {
     final appLoc = AppLocalizations.of(context)!;
     final totalBalanceItem = BalanceItem(title: appLoc.labelTotalBalance, value: widget.balance.total, currency: "USD");
     final cUSDBalanceItem =
-        BalanceItem(title: appLoc.labelCELOBalance, value: widget.balance.mcUSD + widget.balance.cUSD, currency: "CUSD");
+        BalanceItem(title: appLoc.labelCELOBalance, value: widget.balance.celoBalance, currency: "CUSD");
     final usdcBalanceItem = BalanceItem(
-        title: appLoc.labelUSDCBalance, value: widget.balance.etherscan + widget.balance.aPolUSDC, currency: "USDC");
-    final carouselItems = [totalBalanceItem, usdcBalanceItem, cUSDBalanceItem];
+        title: appLoc.labelUSDCBalance, value: widget.balance.usdcBalance, currency: "USDC");
+    var carouselItems = [totalBalanceItem, usdcBalanceItem, cUSDBalanceItem];
+    if (widget.balance.celoBalance == 0) carouselItems = [usdcBalanceItem];
     return Column(
       children: [
         CarouselSlider.builder(
@@ -101,25 +102,29 @@ class _BalanceCarouselState extends State<BalanceCarousel> {
                 setState(() {
                   _current = index;
                 });
-              }),
+              },
+          ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: carouselItems.asMap().entries.map((entry) {
-            return GestureDetector(
-              onTap: () => _controller.animateToPage(entry.key),
-              child: Container(
-                width: 7.0,
-                height: 7.0,
-                margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black)
-                        .withOpacity(_current == entry.key ? 0.9 : 0.4)),
-              ),
-            );
-          }).toList(),
-        ),
+        if (carouselItems.length > 1) ... [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: carouselItems.asMap().entries.map((entry) {
+              return GestureDetector(
+                onTap: () => _controller.animateToPage(entry.key),
+                child: Container(
+                  width: 7.0,
+                  height: 7.0,
+                  margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black)
+                          .withOpacity(_current == entry.key ? 0.9 : 0.4)),
+                ),
+              );
+            }).toList(),
+          ),
+        ]
+
       ],
     );
   }
