@@ -296,5 +296,10 @@
 	"labelBeneficiary": "Beneficiario",
 	"labelRNC": "RNC",
 	"trxCanceled":"Transacción cancelada correctamente",
-	"labelConcept": "Concepto"
+	"labelConcept": "Concepto",
+	"labelRiskHigh": "Alto",
+    "labelRiskMedium": "Medio",
+    "labelRiskLow": "Bajo",
+    "unknown": "Desconocido",
+    "labelRecipientPhone": "Número de teléfono del destinatario"
 }
