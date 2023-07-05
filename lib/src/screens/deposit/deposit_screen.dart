@@ -37,6 +37,7 @@ class DepositScreen extends StatelessWidget {
             onTap: () {
               context.push("/crypto-deposit");
             },
+            comingSoon: true,
           )
         ],
       ),

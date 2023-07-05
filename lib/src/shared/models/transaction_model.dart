@@ -37,7 +37,7 @@ class Transaction {
     final targetAsset = json["targetAsset"];
     final sourceAsset = json["sourceAsset"];
     final createdAt = DateTime.parse(json["createdAt"]);
-    final method = jsonDecode(json["method"]);
+    final method = jsonDecode(json["method"] ?? "null");
     final String? concept = method == null || method is String ? null : method["concepto"];
     return Transaction(
         transactionID: json["id"] as String,

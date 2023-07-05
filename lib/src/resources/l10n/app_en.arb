@@ -214,10 +214,11 @@
 	"labelBeneficiary": "Beneficiary",
 	"labelRNC": "RNC",
 	"trxCanceled":"Transaction canceled successfully",
-	"labelConcept": "Concept"
+	"labelConcept": "Concept",
 	"labelRiskHigh": "High",
 	"labelRiskMedium": "Medium",
 	"labelRiskLow": "Low",
 	"unknown": "Unknown",
-	"labelRecipientPhone": "Recipient''s Phone Number"
+	"labelRecipientPhone": "Recipient''s Phone Number",
+	"labelComingSoon": "Coming soon..."
 }
