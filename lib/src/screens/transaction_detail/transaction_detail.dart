@@ -30,129 +30,131 @@ class TransactionDetail extends ConsumerWidget {
       body: SafeArea(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Container(
-              padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                color: ctx.brightness == Brightness.dark
-                    ? alcanciaCardDark2
-                    : alcanciaCardLight2,
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(11),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  color: ctx.brightness == Brightness.dark
+                      ? alcanciaCardDark2
+                      : alcanciaCardLight2,
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(11),
+                  ),
                 ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16, top: 8),
-                    child: Text(
-                      appLoc.labelActivityDetail,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16, top: 8),
+                      child: Text(
+                        appLoc.labelActivityDetail,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  TransactionDetailItem(
-                    leftText: appLoc.labelDate,
-                    rightText: txn.createdAt.formattedLocalString(),
-                  ),
-                  TransactionDetailItem(
-                    leftText: appLoc.labelTransactionId,
-                    rightText: txn.transactionID
-                        .substring(0, txn.transactionID.indexOf('-')),
-                  ),
-                  if (txn.type == TransactionType.deposit) ...[
                     TransactionDetailItem(
-                      leftText: appLoc.labelDepositValue,
-                      rightText: '\$${txn.sourceAmount?.toStringAsFixed(2)}',
+                      leftText: appLoc.labelDate,
+                      rightText: txn.createdAt.formattedLocalString(),
                     ),
-                  ] else if (txn.type == TransactionType.withdraw) ...[
                     TransactionDetailItem(
-                      leftText: appLoc.labelWithdrawalValue,
-                      rightText: '\$${txn.sourceAmount?.toStringAsFixed(2)}',
+                      leftText: appLoc.labelTransactionId,
+                      rightText: txn.transactionID
+                          .substring(0, txn.transactionID.indexOf('-')),
                     ),
-                  ],
-                  TransactionDetailItem(
-                    leftText: appLoc.labelValueAsset(txn.targetAsset ?? ''),
-                    rightText: '\$${txn.amount.toStringAsFixed(2)}',
-                  ),
-                  TransactionDetailItem(
-                    leftText: appLoc.labelTransactionType,
-                    rightText: txn.type.typeToString(appLoc),
-                  ),
-                  TransactionDetailItem(
-                    leftText: appLoc.labelStatus,
-                    rightIcon: txn.iconForTxnStatus(user.id),
-                  ),
-                  if (txn.status == TransactionStatus.pending &&
-                      txn.type == TransactionType.deposit) ...[
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
-                      child: Divider(
-                        thickness: 1,
+                    if (txn.type == TransactionType.deposit) ...[
+                      TransactionDetailItem(
+                        leftText: appLoc.labelDepositValue,
+                        rightText: '\$${txn.sourceAmount?.toStringAsFixed(2)}',
                       ),
+                    ] else if (txn.type == TransactionType.withdraw) ...[
+                      TransactionDetailItem(
+                        leftText: appLoc.labelWithdrawalValue,
+                        rightText: '\$${txn.sourceAmount?.toStringAsFixed(2)}',
+                      ),
+                    ],
+                    TransactionDetailItem(
+                      leftText: appLoc.labelValueAsset(txn.targetAsset ?? ''),
+                      rightText: '\$${txn.amount.toStringAsFixed(2)}',
                     ),
-                    BankInfo(appLoc),
+                    TransactionDetailItem(
+                      leftText: appLoc.labelTransactionType,
+                      rightText: txn.type.typeToString(appLoc),
+                    ),
+                    TransactionDetailItem(
+                      leftText: appLoc.labelStatus,
+                      rightIcon: txn.iconForTxnStatus(user.id),
+                    ),
+                    if (txn.status == TransactionStatus.pending &&
+                        txn.type == TransactionType.deposit) ...[
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 8.0),
+                        child: Divider(
+                          thickness: 1,
+                        ),
+                      ),
+                      BankInfo(appLoc),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 64,
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                foregroundColor: Colors.red,
+                                side: BorderSide(color: Colors.red)),
+                            onPressed: () async {
+                              try {
+                                await controller.cancelTransaction(
+                                    id: txn.transactionID);
+                                var txns =
+                                    await controller.fetchUserTransactions();
+                                ref.read(transactionsProvider.notifier).state =
+                                    txns;
+                                context.pop();
+
+                                Fluttertoast.showToast(
+                                    msg: appLoc.trxCanceled,
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 2,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0);
+                              } catch (e) {
+                                Fluttertoast.showToast(
+                                    msg: appLoc.errorSomethingWentWrong,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.white70);
+                              }
+                            },
+                            child: Text(appLoc.buttonCancel),
+                          ),
+                        ),
+                      )
+                    ],
                     Padding(
                       padding: const EdgeInsets.only(top: 20),
                       child: SizedBox(
                         width: double.infinity,
                         height: 64,
-                        child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              foregroundColor: Colors.red,
-                              side: BorderSide(color: Colors.red)),
-                          onPressed: () async {
-                            try {
-                              await controller.cancelTransaction(
-                                  id: txn.transactionID);
-                              var txns =
-                                  await controller.fetchUserTransactions();
-                              ref.read(transactionsProvider.notifier).state =
-                                  txns;
-                              context.pop();
-
-                              Fluttertoast.showToast(
-                                  msg: appLoc.trxCanceled,
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 2,
-                                  backgroundColor: Colors.red,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0);
-                            } catch (e) {
-                              Fluttertoast.showToast(
-                                  msg: appLoc.errorSomethingWentWrong,
-                                  backgroundColor: Colors.red,
-                                  textColor: Colors.white70);
-                            }
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: const Color(0xFF4E76E5),
+                          ),
+                          onPressed: () {
+                            context.pop();
                           },
-                          child: Text(appLoc.buttonCancel),
+                          child: Text(appLoc.buttonClose),
                         ),
                       ),
                     )
                   ],
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 64,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: const Color(0xFF4E76E5),
-                        ),
-                        onPressed: () {
-                          context.pop();
-                        },
-                        child: Text(appLoc.buttonClose),
-                      ),
-                    ),
-                  )
-                ],
+                ),
               ),
             ),
           ),
@@ -198,6 +200,14 @@ class TransactionDetail extends ConsumerWidget {
           DepositInfoItem(
             title: appLoc.labelCLABE,
             subtitle: info.clabe!,
+            supportsClipboard: true,
+            padding: EdgeInsets.only(bottom: 18),
+          ),
+        ],
+        if (txn.concept != null) ...[
+          DepositInfoItem(
+            title: appLoc.labelConcept,
+            subtitle: txn.concept!,
             supportsClipboard: true,
             padding: EdgeInsets.only(bottom: 18),
           ),

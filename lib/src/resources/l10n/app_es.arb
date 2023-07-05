@@ -295,5 +295,6 @@
 	"alertErrorForgotPasswordCode": "Hubo un error al enviar el código de verificación, por favor verifique su correo electrónico e intente nuevamente",
 	"labelBeneficiary": "Beneficiario",
 	"labelRNC": "RNC",
-	"trxCanceled":"Transacción cancelada correctamente"
+	"trxCanceled":"Transacción cancelada correctamente",
+	"labelConcept": "Concepto"
 }

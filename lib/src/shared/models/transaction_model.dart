@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:alcancia/src/shared/models/currency_asset.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +17,7 @@ class Transaction {
   TransactionStatus status;
   String? senderId;
   String? receiverId;
+  String? concept;
 
   Transaction({
     required this.transactionID,
@@ -27,12 +30,15 @@ class Transaction {
     required this.status,
     required this.senderId,
     required this.receiverId,
+    required this.concept,
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
     final targetAsset = json["targetAsset"];
     final sourceAsset = json["sourceAsset"];
     final createdAt = DateTime.parse(json["createdAt"]);
+    final method = jsonDecode(json["method"]);
+    final String? concept = method == null || method is String ? null : method["concepto"];
     return Transaction(
         transactionID: json["id"] as String,
         createdAt: createdAt,
@@ -46,6 +52,7 @@ class Transaction {
         status: TransactionStatus.values.firstWhere((e) => e.name.toUpperCase() == json["status"], orElse: () => TransactionStatus.unknown),
         senderId: json["senderId"],
         receiverId: json["receiverId"],
+      concept: concept,
     );
   }
 }

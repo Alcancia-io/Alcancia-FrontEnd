@@ -1,6 +1,6 @@
 class AlcanciaOrder {
   String? address;
-  String? concept;
+  String concept;
   String sourceAmount;
   String sourceCurrency;
   String targetCurrency;
@@ -9,7 +9,7 @@ class AlcanciaOrder {
 
   AlcanciaOrder({
     required this.address,
-    this.concept,
+    required this.concept,
     required this.sourceAmount,
     required this.sourceCurrency,
     required this.targetCurrency,

@@ -213,5 +213,6 @@
 	"alertErrorForgotPasswordCode": "There was an error sending the code, please check your email and try again",
 	"labelBeneficiary": "Beneficiary",
 	"labelRNC": "RNC",
-	"trxCanceled":"Transaction canceled successfully"
+	"trxCanceled":"Transaction canceled successfully",
+	"labelConcept": "Concept"
 }
