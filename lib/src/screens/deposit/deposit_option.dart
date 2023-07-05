@@ -38,7 +38,7 @@ class DepositOption extends StatelessWidget {
           splashFactory: InkSplash.splashFactory,
           splashColor: darkMode ? Colors.grey : Colors.red,
           borderRadius: BorderRadius.circular(10),
-          onTap: onTap,
+          onTap: comingSoon ? null : onTap,
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
