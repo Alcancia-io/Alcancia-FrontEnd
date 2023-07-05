@@ -211,6 +211,10 @@
 	"errorCedulaLength": "The cedula must consist of 11 digits",
 	"errorEmailRequired": "Email is required",
 	"alertErrorForgotPasswordCode": "There was an error sending the code, please check your email and try again",
+	"labelBeneficiary": "Beneficiary",
+	"labelRNC": "RNC",
+	"trxCanceled":"Transaction canceled successfully",
+	"labelConcept": "Concept"
 	"labelRiskHigh": "High",
 	"labelRiskMedium": "Medium",
 	"labelRiskLow": "Low",

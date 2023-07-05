@@ -29,7 +29,7 @@ import 'package:alcancia/src/shared/models/otp_data_model.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:alcancia/src/features/transaction-detail/presentation/transaction_detail.dart';
+import 'package:alcancia/src/screens/transaction_detail/transaction_detail.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
