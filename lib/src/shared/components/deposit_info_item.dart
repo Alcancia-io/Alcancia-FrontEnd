@@ -8,7 +8,6 @@ class DepositInfoItem extends StatelessWidget {
         required this.title,
         required this.subtitle,
         this.supportsClipboard = false,
-        this.clipboardAlertText,
         this.padding = const EdgeInsets.symmetric(
             horizontal: 24.0, vertical: 8.0),
         this.titleStyle,
@@ -19,7 +18,6 @@ class DepositInfoItem extends StatelessWidget {
   final String title;
   final String subtitle;
   final bool supportsClipboard;
-  final String? clipboardAlertText;
   final EdgeInsetsGeometry padding;
   final TextStyle? titleStyle;
   final TextStyle? subtitleStyle;
@@ -49,7 +47,7 @@ class DepositInfoItem extends StatelessWidget {
           ),
           if (supportsClipboard) ...[
             AlcanciaCopyToClipboard(
-                displayText: clipboardAlertText ?? appLoc.alertCopied,
+                displayText: "${title} ${appLoc.alertCopied.toLowerCase()}",
                 textToCopy: subtitle),
           ]
         ],

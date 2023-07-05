@@ -1,7 +1,9 @@
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_copy_clipboard.dart';
 import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
+import 'package:alcancia/src/shared/components/deposit_info_item.dart';
 import 'package:alcancia/src/shared/constants.dart';
+import 'package:alcancia/src/shared/models/bank_info_item.dart';
 import 'package:alcancia/src/shared/models/checkout_model.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/services/exception_service.dart';
@@ -73,17 +75,18 @@ class OrderInformation extends StatelessWidget {
 
   final TransactionInput txnInput;
   final String concept;
-  late List<BankInfoItem> bankInfo;
+  late AccountInfo bankInfo;
 
   @override
   Widget build(BuildContext context) {
+    final appLoc = AppLocalizations.of(context)!;
     final textStyle = Theme.of(context).textTheme.bodyLarge;
     final total = txnInput.sourceAmount;
 
     if (txnInput.txnMethod == TransactionMethod.alcancia) {
-      bankInfo = BankInfoItem.DOPInfo;
+      bankInfo = AccountInfo.DOPInfo;
     } else {
-      bankInfo = BankInfoItem.MXNInfo;
+      bankInfo = AccountInfo.MXNInfo;
     }
 
     return Container(
@@ -102,51 +105,51 @@ class OrderInformation extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (var item in bankInfo) ...[
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('${item.label}:',
-                        style:
-                            textStyle?.copyWith(fontWeight: FontWeight.bold)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('${item.value}', style: textStyle),
-                        if (item.copyable) ...[
-                          AlcanciaCopyToClipboard(
-                              displayText: '${item.label} copiad@',
-                              textToCopy: item.value as String),
-                        ]
-                      ],
-                    )
-                  ],
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DepositInfoItem(
+                  title: appLoc.labelBank,
+                  subtitle: bankInfo.bank,
+                  padding: EdgeInsets.only(bottom: 18),
                 ),
-              )
-            ],
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                      txnInput.txnMethod == TransactionMethod.suarmi
-                          ? "Concepto:"
-                          : "Comentario/Detalle:",
-                      style: textStyle?.copyWith(fontWeight: FontWeight.bold)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(concept, style: textStyle),
-                      AlcanciaCopyToClipboard(
-                          displayText: "Concepto copiad@",
-                          textToCopy: concept as String),
-                    ],
+                DepositInfoItem(
+                  title: appLoc.labelBeneficiary,
+                  subtitle: bankInfo.beneficiary,
+                  supportsClipboard: true,
+                  padding: EdgeInsets.only(bottom: 18),
+                ),
+                if (bankInfo.rnc != null) ...[
+                  DepositInfoItem(
+                    title: appLoc.labelRNC,
+                    subtitle: bankInfo.rnc!,
+                    supportsClipboard: true,
+                    padding: EdgeInsets.only(bottom: 18),
                   ),
                 ],
-              ),
+                if (bankInfo.accountNumber != null) ...[
+                  DepositInfoItem(
+                    title: appLoc.labelAccountNumber,
+                    subtitle: bankInfo.accountNumber!,
+                    supportsClipboard: true,
+                    padding: EdgeInsets.only(bottom: 18),
+                  ),
+                ],
+                if (bankInfo.clabe != null) ...[
+                  DepositInfoItem(
+                    title: appLoc.labelCLABE,
+                    subtitle: bankInfo.clabe!,
+                    supportsClipboard: true,
+                    padding: EdgeInsets.only(bottom: 18),
+                  ),
+                ],
+                  DepositInfoItem(
+                    title: appLoc.labelConcept,
+                    subtitle: concept,
+                    supportsClipboard: true,
+                    padding: EdgeInsets.only(bottom: 18),
+                  ),
+              ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -163,30 +166,3 @@ class OrderInformation extends StatelessWidget {
   }
 }
 
-class BankInfoItem {
-  final String label;
-  final String value;
-  final bool copyable;
-
-  BankInfoItem(
-      {required this.label, required this.value, required this.copyable});
-
-  static List<BankInfoItem> DOPInfo = [
-    BankInfoItem(label: "Banco", value: "Banreservas", copyable: false),
-    BankInfoItem(label: "Beneficiario", value: "BAPLTECH SRL", copyable: false),
-    BankInfoItem(label: "RNC", value: "1-32-75385-2", copyable: true),
-    BankInfoItem(label: "No. de cuenta", value: "9605734495", copyable: true),
-  ];
-
-  static List<BankInfoItem> MXNInfo = [
-    BankInfoItem(
-        label: "Cuenta",
-        value: "Sistema de Transferencias y Pagos (STP)",
-        copyable: false),
-    BankInfoItem(
-        label: "Beneficiario",
-        value: "Bctech Solutions SAPI de CV",
-        copyable: true),
-    BankInfoItem(label: "CLABE", value: "646180204200011681", copyable: true)
-  ];
-}

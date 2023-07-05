@@ -52,7 +52,6 @@ class CryptoDepositScreen extends ConsumerWidget {
               title: appLoc.labelAddress,
               subtitle: user.walletAddress,
               supportsClipboard: true,
-              clipboardAlertText: appLoc.alertAddressCopied,
             ),
             DepositInfoItem(title: appLoc.labelNetwork, subtitle: "Polygon"),
             DepositInfoItem(title: appLoc.labelCoin, subtitle: "USDC"),
