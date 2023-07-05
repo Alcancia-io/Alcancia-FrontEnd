@@ -1,6 +1,6 @@
 import 'package:alcancia/main.dart';
 import 'package:alcancia/src/features/registration/presentation/phone_registration_screen.dart';
-import 'package:alcancia/src/features/login/presentation/login_screen.dart';
+import 'package:alcancia/src/screens/login/login_screen.dart';
 import 'package:alcancia/src/features/registration/model/graphql_config.dart';
 import 'package:alcancia/src/features/registration/presentation/otp_screen.dart';
 import 'package:alcancia/src/features/user-profile/presentation/account_screen.dart';
@@ -10,6 +10,7 @@ import 'package:alcancia/src/features/registration/model/user_registration_model
 import 'package:alcancia/src/screens/checkout/checkout.dart';
 import 'package:alcancia/src/screens/deposit/crypto_deposit_screen.dart';
 import 'package:alcancia/src/screens/deposit/deposit_screen.dart';
+import 'package:alcancia/src/screens/error/error_screen.dart';
 import 'package:alcancia/src/screens/forgot_password/forgot_password.dart';
 import 'package:alcancia/src/screens/login/mfa_screen.dart';
 import 'package:alcancia/src/screens/metamap/address_screen.dart';

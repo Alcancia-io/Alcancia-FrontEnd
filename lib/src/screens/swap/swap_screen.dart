@@ -1,4 +1,5 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
+import 'package:alcancia/src/screens/error/error_screen.dart';
 import 'package:alcancia/src/screens/investment_info/investment_info.dart';
 import 'package:alcancia/src/screens/swap/components/currency_risk_card.dart';
 import 'package:alcancia/src/screens/swap/swap_controller.dart';
@@ -35,7 +36,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
   final sourceAmountController = TextEditingController();
 
   // source amount icons
-  final List<Map> sourceCurrencyCodes = [
+  List<Map> sourceCurrencyCodes = [
     {"name": "MXN", "icon": "lib/src/resources/images/icon_mexico_flag.png"},
     {"name": "DOP", "icon": "lib/src/resources/images/icon_dominican_flag.png"},
   ];
@@ -43,7 +44,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
   // target amount icons
   final List<Map> targetMXNCurrencies = [
     {"name": "USDC", "icon": "lib/src/resources/images/icon_usdc.png"},
-    {"name": "CUSD", "icon": "lib/src/resources/images/icon_celo_usd.png"},
+    //{"name": "CUSD", "icon": "lib/src/resources/images/icon_celo_usd.png"},
   ];
 
   final List<Map> targetDOPCurrencies = [
@@ -54,7 +55,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
   late String targetCurrency = targetMXNCurrencies.first['name'];
 
   // dropdown value for source currency, it can be MXN or DOP
-  late String sourceCurrency = sourceCurrencyCodes.first['name'];
+  late String sourceCurrency;
   final ResponsiveService responsiveService = ResponsiveService();
 
   // metamap
@@ -147,11 +148,24 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     getExchange();
     getCeloAPY();
     getUsdcAPY();
+    final user = ref.read(userProvider);
+    if (user?.country == "MX") {
+      sourceCurrency = "MXN";
+    } else if (user?.country == "DO") {
+      sourceCurrency = "DOP";
+    } else {
+      sourceCurrency = sourceCurrencyCodes.first['name'];
+    }
+    final sourceCurrencyIndex = sourceCurrencyCodes
+        .indexWhere((element) => element['name'] == sourceCurrency);
+    final code = sourceCurrencyCodes.removeAt(sourceCurrencyIndex);
+    sourceCurrencyCodes.insert(0, code);
   }
 
   @override
   Widget build(BuildContext context) {
     var user = ref.watch(userProvider);
+    print(sourceCurrency);
     final appLoc = AppLocalizations.of(context)!;
     final txtTheme = Theme.of(context).textTheme;
     final screenHeight = MediaQuery.of(context).size.height;
@@ -176,7 +190,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     }
 
     if (_error != "")
-      return Scaffold(body: SafeArea(child: Center(child: Text(_error))));
+      return const ErrorScreen();
 
     Color cardColor = Theme.of(context).brightness == Brightness.dark
         ? alcanciaCardDark
@@ -343,7 +357,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                         AlcanciaContainer(
                           top: 16,
                           child: CurrencyRiskCard(
-                            riskLevel: RiskLevel.medio,
+                            riskLevel: RiskLevel.medium,
                             targetCurrency: "CUSD",
                             percentage: currentCeloAPY,
                             color: cardColor,
@@ -356,7 +370,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                         AlcanciaContainer(
                           top: 16,
                           child: CurrencyRiskCard(
-                            riskLevel: RiskLevel.bajo,
+                            riskLevel: RiskLevel.low,
                             targetCurrency: "USDC",
                             percentage: currentUsdcAPY,
                             color: cardColor,
@@ -424,8 +438,14 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                             : AlcanciaButton(
                                 buttonText: appLoc.buttonTransfer,
                                 onPressed: sourceAmount.isEmpty ||
-                                        int.parse(sourceAmount) < 200 ||
-                                        int.parse(sourceAmount) > 50000
+                                        ((sourceCurrency == 'MXN')
+                                                ? 200
+                                                : 600) >
+                                            int.parse(sourceAmount) ||
+                                        ((sourceCurrency == 'MXN')
+                                                ? 50000
+                                                : 150000) <
+                                            int.parse(sourceAmount)
                                     ? null
                                     : () async {
                                         //Temporary Variables
@@ -567,7 +587,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                             }
                                           } else {
                                             await metaMapService.showMatiFlow(
-                                                metamapMexicanINEId,
+                                                metamapDomicanFlowId,
                                                 user.id,
                                                 appLoc);
                                             final updatedUser =
@@ -586,22 +606,16 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                     64, screenHeight),
                               ),
                       ),
-                      if (sourceAmount.isNotEmpty &&
-                          (int.parse(sourceAmount) < 200 ||
-                              int.parse(sourceAmount) > 50000)) ...[
+                      if (sourceAmount.isNotEmpty) ...[
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            int.parse(sourceAmount) <
-                                    (sourceCurrency == 'MXN' ? 200 : 600)
-                                ? (sourceCurrency == 'MXN'
-                                    ? appLoc.errorMinimumDepositAmount
-                                    : appLoc.errorMinimumDepositAmountDOP)
-                                : appLoc.errorMaximumDepositAmount,
+                            validateAmount(
+                                sourceAmount, sourceCurrency, appLoc),
                             style: const TextStyle(color: Colors.red),
                           ),
                         ),
-                      ],
+                      ]
                     ],
                   ),
                 ),
@@ -611,5 +625,30 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
         ),
       ),
     );
+  }
+
+  String validateAmount(
+      String sourceAmount, String sourceCurrency, AppLocalizations appLoc) {
+    int minAmount;
+    int maxAmont;
+
+    if (sourceCurrency == 'MXN') {
+      minAmount = 200;
+      maxAmont = 50000;
+    } else {
+      minAmount = 600;
+      maxAmont = 150000;
+    }
+
+    int parsedAmount = int.parse(sourceAmount);
+
+    if (parsedAmount < minAmount) {
+      return (sourceCurrency == 'MXN')
+          ? appLoc.errorMinimumDepositAmount
+          : appLoc.errorMinimumDepositAmountDOP;
+    } else if (parsedAmount > maxAmont) {
+      return appLoc.errorMaximumDepositAmount;
+    }
+    return '';
   }
 }

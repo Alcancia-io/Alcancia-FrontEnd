@@ -1,5 +1,8 @@
 import 'package:alcancia/src/resources/colors/app_theme.dart';
+import 'package:alcancia/src/screens/error/error_screen.dart';
+import 'package:alcancia/src/shared/components/alcancia_error_widget.dart';
 import 'package:alcancia/src/shared/provider/push_notifications_provider.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -15,6 +18,7 @@ GlobalKey<NavigatorState> navigatorKey =
     GlobalKey(debugLabel: "Main Navigator");
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await initHiveForFlutter();
   if (kReleaseMode) {
     await dotenv.load(fileName: ".env.prod");
@@ -24,6 +28,18 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FlutterError.onError = (errorDetails) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+  };
+  // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+  PlatformDispatcher.instance.onError = (error, stack) {
+    print(error);
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return Center(child: AlcanciaErrorWidget());
+  };
   runApp(const ProviderScope(child: MyApp()));
 }
 

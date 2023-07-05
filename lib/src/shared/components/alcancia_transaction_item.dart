@@ -2,6 +2,7 @@ import 'package:alcancia/src/shared/extensions/datetime_extensions.dart';
 import 'package:alcancia/src/shared/extensions/type_extensions.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/models/transaction_model.dart';
+import 'package:alcancia/src/shared/models/user_model.dart';
 import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,9 +11,10 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AlcanciaTransactionItem extends StatelessWidget {
-  const AlcanciaTransactionItem({Key? key, required this.txn}) : super(key: key);
+  const AlcanciaTransactionItem({Key? key, required this.txn, required this.user}) : super(key: key);
 
   final Transaction txn;
+  final User user;
 
   String getImageType(String txnType) {
     if (txnType == "WITHDRAW") {
@@ -29,18 +31,18 @@ class AlcanciaTransactionItem extends StatelessWidget {
         onTap: () {
           context.push('/transaction_detail', extra: txn);
         },
-        child: TransactionItem(txn: txn,));
+        child: TransactionItem(txn: txn, user: user,));
   }
 }
 
 class TransactionItem extends ConsumerWidget {
-  const TransactionItem({Key? key, required this.txn}) : super(key: key);
+  const TransactionItem({Key? key, required this.txn, required this.user}) : super(key: key);
 
   final Transaction txn;
+  final User user;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userProvider)!;
     final appLoc = AppLocalizations.of(context)!;
     final txtTheme = Theme.of(context).textTheme;
     switch (txn.type) {

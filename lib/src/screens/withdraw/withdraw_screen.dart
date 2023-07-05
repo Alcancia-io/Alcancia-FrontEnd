@@ -1,4 +1,5 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
+import 'package:alcancia/src/screens/error/error_screen.dart';
 import 'package:alcancia/src/screens/withdraw/withdraw_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
@@ -114,6 +115,16 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
     if (user?.lastUsedBankAccount != null) {
       _clabeTextController.text = user!.lastUsedBankAccount!;
     }
+    if (user?.country == "MX") {
+      country = "México";
+    } else if (user?.country == "DO") {
+      country = "República Dominicana";
+    } else {
+      country = countries.first['name'];
+    }
+    final countryIndex = countries.indexWhere((element) => element['name'] == country);
+    final code = countries.removeAt(countryIndex);
+    countries.insert(0, code);
   }
 
   double getBalance(Balance balance, String currency) {
@@ -156,7 +167,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
     }
 
     if (_error != "") {
-      return Scaffold(body: SafeArea(child: Center(child: Text(_error))));
+      return const ErrorScreen();
     }
 
     return GestureDetector(
@@ -377,7 +388,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         LabeledTextFormField(
           controller: _amountTextController,
           labelText: appLoc.labelWithdrawAmount,
-          inputType: TextInputType.number,
+          inputType: TextInputType.numberWithOptions(decimal: true),
           inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
           validator: (value) {
             if (value == null || value.isEmpty) {
