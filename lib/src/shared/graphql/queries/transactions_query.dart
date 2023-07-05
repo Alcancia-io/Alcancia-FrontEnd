@@ -13,6 +13,7 @@ const String transactionsQuery = """
           status,
           senderId,
           receiverId,
+          method,
       }
     }
   }

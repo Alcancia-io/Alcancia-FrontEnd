@@ -1,6 +1,6 @@
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
-import 'package:alcancia/src/shared/components/alcancia_copy_clipboard.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
+import 'package:alcancia/src/shared/components/deposit_info_item.dart';
 import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +53,6 @@ class CryptoDepositScreen extends ConsumerWidget {
               title: appLoc.labelAddress,
               subtitle: user.walletAddress,
               supportsClipboard: true,
-              clipboardAlertText: appLoc.alertAddressCopied,
             ),
             DepositInfoItem(title: appLoc.labelNetwork, subtitle: "Polygon"),
             DepositInfoItem(title: appLoc.labelCoin, subtitle: "USDC"),
@@ -69,54 +68,6 @@ class CryptoDepositScreen extends ConsumerWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class DepositInfoItem extends StatelessWidget {
-  const DepositInfoItem(
-      {Key? key,
-      required this.title,
-      required this.subtitle,
-      this.supportsClipboard = false,
-      this.clipboardAlertText})
-      : super(key: key);
-
-  final String title;
-  final String subtitle;
-  final bool supportsClipboard;
-  final String? clipboardAlertText;
-
-  @override
-  Widget build(BuildContext context) {
-    final appLoc = AppLocalizations.of(context)!;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                Text(
-                  subtitle,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-              ],
-            ),
-          ),
-          if (supportsClipboard) ...[
-            AlcanciaCopyToClipboard(
-                displayText: clipboardAlertText ?? appLoc.alertCopied,
-                textToCopy: subtitle),
-          ]
-        ],
       ),
     );
   }

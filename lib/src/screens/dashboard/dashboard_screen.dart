@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:alcancia/src/screens/dashboard/dashboard_controller.dart';
+import 'package:alcancia/src/screens/error/error_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/components/alcancia_transactions_list.dart';
 import 'package:alcancia/src/shared/components/dashboard/dashboard_actions.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
+import 'package:alcancia/src/shared/provider/transactions_provider.dart';
 import 'package:alcancia/src/shared/services/metamap_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,7 +27,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   Timer? timer;
   final DashboardController dashboardController = DashboardController();
   final MetamapService metamapService = MetamapService();
-  late List<Transaction> txns;
   bool _isLoading = false;
   String _error = "";
 
@@ -35,10 +36,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     });
     try {
       var userInfo = await dashboardController.fetchUserInformation();
-      inspect(userInfo);
-      txns = userInfo.txns;
-      ref.watch(userProvider.notifier).setUser(userInfo.user);
-      ref.watch(balanceProvider.notifier).setBalance(userInfo.user.balance);
+      ref.read(transactionsProvider.notifier).state = userInfo.txns;
+      ref.read(userProvider.notifier).setUser(userInfo.user);
+      ref.read(balanceProvider.notifier).setBalance(userInfo.user.balance);
     } catch (err) {
       setState(() {
         _error = err.toString();
@@ -78,12 +78,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     var user = ref.watch(userProvider);
+    final txns = ref.watch(transactionsProvider);
     final screenSize = MediaQuery.of(context).size;
     final appLoc = AppLocalizations.of(context)!;
     if (_isLoading) {
       return const SafeArea(child: Center(child: CircularProgressIndicator()));
     }
-    if (_error != "") return SafeArea(child: Center(child: Text(_error)));
+    if (_error != "") return const ErrorScreen();
     return Scaffold(
       appBar: AlcanciaToolbar(
         state: StateToolbar.profileTitleIcon,

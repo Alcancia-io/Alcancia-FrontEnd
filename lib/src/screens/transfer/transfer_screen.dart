@@ -6,6 +6,7 @@ import 'package:alcancia/src/shared/components/alcancia_confirmation_dialog.dart
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/components/decimal_input_formatter.dart';
+import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:flutter/material.dart';
@@ -91,6 +92,21 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final user = ref.read(userProvider);
+    if (user?.country != null) {
+      countryCode = countries.firstWhere((element) => element['value'] == user?.country)['name'];
+    } else {
+      countryCode = countries.first['name'];
+    }
+    final countryIndex = countries.indexWhere((element) => element['name'] == countryCode);
+    final code = countries.removeAt(countryIndex);
+    countries.insert(0, code);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final appLoc = AppLocalizations.of(context)!;
     final txtTheme = Theme.of(context).textTheme;
@@ -103,6 +119,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AlcanciaToolbar(
           title: appLoc.labelTransfer,
           state: StateToolbar.titleIcon,
@@ -132,7 +149,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(bottom: 6.0),
-                          child: Text(appLoc.labelPhone),
+                          child: Text(appLoc.labelRecipientPhone),
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -210,7 +227,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                                 child: TextFormField(
                                   style: Theme.of(context).textTheme.bodyText1,
                                   controller: _transferAmountController,
-                                  keyboardType: TextInputType.number,
+                                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
                                   inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
@@ -238,6 +255,20 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                           if (_loading) ...[
                             const CircularProgressIndicator(),
                           ] else ...[
+                            if (balance < (double.tryParse(_transferAmountController.text) ?? 0)) ... [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                child: AlcanciaButton(
+                                  buttonText: appLoc.buttonDeposit,
+                                  onPressed: () {
+                                    context.push("/deposit");
+                                  },
+                                  color: alcanciaLightBlue,
+                                  width: 308,
+                                  height: 64,
+                                ),
+                              ),
+                            ],
                             AlcanciaButton(
                               buttonText: appLoc.buttonNext,
                               // TODO: enableButton again

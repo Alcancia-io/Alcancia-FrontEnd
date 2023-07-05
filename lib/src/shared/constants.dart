@@ -18,7 +18,6 @@ const alcanciaDOPInfo = {
   'No. de cuenta': '9605734495'
 };
 
-
 const suarmiInfo = {
   'Cuenta': 'Sistema de Transferencias y Pagos (STP)',
   'Beneficiario': 'Bctech Solutions SAPI de CV',
@@ -28,7 +27,7 @@ const suarmiInfo = {
 const cryptopayFee = 1;
 const suarmiFee = 2;
 
-enum RiskLevel { alto, medio, bajo }
+enum RiskLevel { high, medium, low }
 
 // investment info
 
