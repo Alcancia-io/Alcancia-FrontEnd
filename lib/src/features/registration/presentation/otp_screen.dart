@@ -1,5 +1,4 @@
 import 'package:alcancia/src/features/registration/provider/registration_controller_provider.dart';
-import 'package:alcancia/src/features/registration/provider/timer_provider.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
@@ -24,153 +23,158 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
   String _error = "";
   bool _loading = false;
 
+  final timer = StopWatchTimer(
+      mode: StopWatchMode.countDown,
+      presetMillisecond: 60000
+  );
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    timer.onStartTimer();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final timer = ref.watch(timerProvider);
     final registrationController = ref.watch(registrationControllerProvider);
     final appLocalization = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: ListView(
               children: [
                 const Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(24.0),
                   child: AlcanciaLogo(),
                 ),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(0.0),
-                        child: Text(
-                          appLocalization.labelAlmostDone,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 35),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                            appLocalization.labelEnterCodePhone(widget.otpDataModel.phoneNumber ?? "")),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: LabeledTextFormField(
-                            controller: _codeController,
-                            autofillHints: const [AutofillHints.oneTimeCode],
-                            labelText: appLocalization.labelCode),
-                      ),
-                      StreamBuilder<int>(
-                          stream: timer.rawTime,
-                          initialData: 0,
-                          builder: (BuildContext ctx, AsyncSnapshot snapshot) {
-                            final value = snapshot.data;
-                            final displayTime = StopWatchTimer.getDisplayTime(
-                                value,
-                                hours: false,
-                                milliSecond: false);
-                            return Column(
-                              children: [
-                                Center(
-                                  child: Container(
-                                    decoration: ShapeDecoration(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            side: const BorderSide(
-                                                color: alcanciaLightBlue))),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const Icon(
-                                            Icons.timer_sharp,
-                                            color: alcanciaLightBlue,
-                                          ),
-                                          Text(
-                                            displayTime,
-                                            style: const TextStyle(
-                                                color: alcanciaLightBlue),
-                                          ),
-                                        ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: Text(
+                    appLocalization.labelAlmostDone,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 35),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: Text(
+                      appLocalization.labelEnterCodePhone(widget.otpDataModel.phoneNumber ?? "")),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 40.0),
+                  child: LabeledTextFormField(
+                      controller: _codeController,
+                      autofillHints: const [AutofillHints.oneTimeCode],
+                      labelText: appLocalization.labelCode),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: StreamBuilder<int>(
+                      stream: timer.rawTime,
+                      initialData: 0,
+                      builder: (BuildContext ctx, AsyncSnapshot snapshot) {
+                        final value = snapshot.data;
+                        final displayTime = StopWatchTimer.getDisplayTime(
+                            value,
+                            hours: false,
+                            milliSecond: false);
+                        return Column(
+                          children: [
+                            Center(
+                              child: Container(
+                                decoration: ShapeDecoration(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        side: const BorderSide(
+                                            color: alcanciaLightBlue))),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(
+                                        Icons.timer_sharp,
+                                        color: alcanciaLightBlue,
                                       ),
+                                      Text(
+                                        displayTime,
+                                        style: const TextStyle(
+                                            color: alcanciaLightBlue),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(appLocalization.labelDidNotReceiveCode),
+                                TextButton(
+                                  onPressed: value <= 0
+                                      ? () async {
+                                          await registrationController
+                                              .resendVerificationCode(widget
+                                                  .otpDataModel
+                                                  .email);
+                                          timer.onResetTimer();
+                                          timer.onStartTimer();
+                                        }
+                                      : null,
+                                  style: TextButton.styleFrom(foregroundColor: alcanciaLightBlue),
+                                  child: Text(
+                                    appLocalization.buttonResend,
+                                    style: const TextStyle(
+                                      decoration: TextDecoration.underline,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(appLocalization.labelDidNotReceiveCode),
-                                    TextButton(
-                                      onPressed: value <= 0
-                                          ? () async {
-                                              await registrationController
-                                                  .resendVerificationCode(widget
-                                                      .otpDataModel
-                                                      .email);
-                                              timer.onResetTimer();
-                                              timer.onStartTimer();
-                                            }
-                                          : null,
-                                      style: TextButton.styleFrom(foregroundColor: alcanciaLightBlue),
-                                      child: Text(
-                                        appLocalization.buttonResend,
-                                        style: const TextStyle(
-                                          decoration: TextDecoration.underline,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
                               ],
-                            );
-                          }),
-                      Center(
-                        child: Column(
-                          children: [
-                            if (_loading) ...[
-                              const CircularProgressIndicator(),
-                            ] else ...[
-                              AlcanciaButton(
-                                color: alcanciaLightBlue,
-                                width: 308,
-                                height: 64,
-                                buttonText: appLocalization.buttonNext,
-                                onPressed: () async {
-                                  _setLoading(true);
-                                  try {
-                                    await registrationController.verifyOTP(
-                                        _codeController.text,
-                                        widget.otpDataModel.email);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        alcanciaSnackBar(context,
-                                            appLocalization.labelAccountCreated));
-                                    context.go("/login");
-                                  } catch (err) {
-                                    setState(() {
-                                      _error = err.toString();
-                                    });
-                                  }
-                                  _setLoading(false);
-                                },
-                              ),
-                              Text(
-                                _error,
-                                style: const TextStyle(color: Colors.red),
-                              ),
-                            ],
+                            ),
                           ],
+                        );
+                      }),
+                ),
+                Center(
+                  child: Column(
+                    children: [
+                      if (_loading) ...[
+                        const CircularProgressIndicator(),
+                      ] else ...[
+                        AlcanciaButton(
+                          color: alcanciaLightBlue,
+                          width: 308,
+                          height: 64,
+                          buttonText: appLocalization.buttonNext,
+                          onPressed: () async {
+                            _setLoading(true);
+                            try {
+                              await registrationController.verifyOTP(
+                                  _codeController.text,
+                                  widget.otpDataModel.email);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  alcanciaSnackBar(context,
+                                      appLocalization.labelAccountCreated));
+                              context.go("/login");
+                            } catch (err) {
+                              setState(() {
+                                _error = err.toString();
+                              });
+                            }
+                            _setLoading(false);
+                          },
                         ),
-                      ),
+                        Text(
+                          _error,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      ],
                     ],
                   ),
                 ),

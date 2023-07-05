@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:alcancia/src/screens/dashboard/dashboard_controller.dart';
+import 'package:alcancia/src/screens/error/error_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/components/alcancia_transactions_list.dart';
@@ -83,7 +84,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     if (_isLoading) {
       return const SafeArea(child: Center(child: CircularProgressIndicator()));
     }
-    if (_error != "") return SafeArea(child: Center(child: Text(_error)));
+    if (_error != "") return const ErrorScreen();
     return Scaffold(
       appBar: AlcanciaToolbar(
         state: StateToolbar.profileTitleIcon,

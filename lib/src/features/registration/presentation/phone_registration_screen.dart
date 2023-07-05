@@ -1,5 +1,4 @@
 import 'package:alcancia/src/features/registration/presentation/registration_screen.dart';
-import 'package:alcancia/src/features/registration/provider/timer_provider.dart';
 import 'package:alcancia/src/shared/components/alcancia_container.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
 import 'package:alcancia/src/shared/services/exception_service.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
@@ -35,13 +35,24 @@ class _PhoneRegistrationScreenState extends ConsumerState<PhoneRegistrationScree
   String _error = "";
   final exceptionService = ExceptionService();
 
+  final timer = StopWatchTimer(
+      mode: StopWatchMode.countDown,
+      presetMillisecond: 60000
+  );
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    timer.onStartTimer();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final appLocalization = AppLocalizations.of(context)!;
     final selectedCountry = ref.watch(selectedCountryProvider);
     final registrationController = ref.watch(registrationControllerProvider);
-    final timer = ref.watch(timerProvider);
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
