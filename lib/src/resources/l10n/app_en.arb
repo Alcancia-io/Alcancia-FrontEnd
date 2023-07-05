@@ -214,7 +214,7 @@
 	"labelBeneficiary": "Beneficiary",
 	"labelRNC": "RNC",
 	"trxCanceled":"Transaction canceled successfully",
-	"labelConcept": "Concept"
+	"labelConcept": "Concept",
 	"labelRiskHigh": "High",
 	"labelRiskMedium": "Medium",
 	"labelRiskLow": "Low",
