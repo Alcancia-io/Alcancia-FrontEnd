@@ -96,6 +96,7 @@ class _BalanceCarouselState extends State<BalanceCarousel> {
             );
           },
           options: CarouselOptions(
+            scrollPhysics: carouselItems.length == 1 ? const NeverScrollableScrollPhysics() : null,
               viewportFraction: 1,
               height: 80,
               onPageChanged: (int index, _) {
