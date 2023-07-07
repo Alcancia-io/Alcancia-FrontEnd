@@ -29,12 +29,15 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   FlutterError.onError = (errorDetails) {
-    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    if (kReleaseMode) {
+      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    }
   };
   // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
   PlatformDispatcher.instance.onError = (error, stack) {
-    print(error);
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    if (kReleaseMode) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    }
     return true;
   };
   ErrorWidget.builder = (FlutterErrorDetails details) {
