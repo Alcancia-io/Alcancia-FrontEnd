@@ -220,5 +220,6 @@
 	"labelRiskLow": "Low",
 	"unknown": "Unknown",
 	"labelRecipientPhone": "Recipient''s Phone Number",
-	"labelComingSoon": "Coming soon..."
+	"labelComingSoon": "Coming soon...",
+	"labelErrorOtp": "Sorry, the OTP code has failed. Please try again later."
 }

@@ -175,15 +175,19 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                                 if (completed) context.go("/homescreen/0");
                               } catch (err) {
                                 setState(() {
-                                  error = err.toString();
+                                  error = appLoc.labelErrorOtp;
                                 });
                               }
                               _setLoading(false);
                             },
                           ),
-                          Text(
-                            error,
-                            style: const TextStyle(color: Colors.red),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 15.0, left: 7.0, right: 7.0),
+                            child: Text(
+                              error,
+                              style: const TextStyle(color: Colors.red),
+                            ),
                           ),
                         ],
                       ],
