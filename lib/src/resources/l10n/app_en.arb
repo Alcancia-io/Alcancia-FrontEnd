@@ -223,5 +223,6 @@
 	"labelComingSoon": "Coming soon...",
 	"buttonVerifyNow": "VERIFY IDENTITY",
 	"buttonPending": "VERIFICATION IN PROCESS",
-	"buttonFailed": "VERIFICATION FAILED"
+	"buttonFailed": "VERIFICATION FAILED",
+	"labelErrorOtp": "Sorry, the OTP code has failed. Please try again later."
 }

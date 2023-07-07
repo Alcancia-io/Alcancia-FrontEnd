@@ -298,12 +298,13 @@
 	"trxCanceled":"Transacción cancelada correctamente",
 	"labelConcept": "Concepto",
 	"labelRiskHigh": "Alto",
-    "labelRiskMedium": "Medio",
-    "labelRiskLow": "Bajo",
-    "unknown": "Desconocido",
-    "labelRecipientPhone": "Número de teléfono del destinatario",
-    "labelComingSoon": "Próximamente...",
-    "buttonVerifyNow": "VERIFICAR IDENTIDAD",
-    "buttonPending": "VERIFICACIÓN EN PROCESO",
-    "buttonFailed": "VERIFICACIÓN FALLIDA"
+  "labelRiskMedium": "Medio",
+  "labelRiskLow": "Bajo",
+  "unknown": "Desconocido",
+  "labelRecipientPhone": "Número de teléfono del destinatario",
+  "labelComingSoon": "Próximamente...",
+  "buttonVerifyNow": "VERIFICAR IDENTIDAD",
+  "buttonPending": "VERIFICACIÓN EN PROCESO",
+  "buttonFailed": "VERIFICACIÓN FALLIDA",
+	"labelErrorOtp": "Lo sentimos, el código OTP ha fallado. Por favor, inténtalo de nuevo más tarde."
 }

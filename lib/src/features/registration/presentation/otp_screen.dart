@@ -23,10 +23,8 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
   String _error = "";
   bool _loading = false;
 
-  final timer = StopWatchTimer(
-      mode: StopWatchMode.countDown,
-      presetMillisecond: 60000
-  );
+  final timer =
+      StopWatchTimer(mode: StopWatchMode.countDown, presetMillisecond: 60000);
 
   @override
   void initState() {
@@ -61,8 +59,8 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: Text(
-                      appLocalization.labelEnterCodePhone(widget.otpDataModel.phoneNumber ?? "")),
+                  child: Text(appLocalization.labelEnterCodePhone(
+                      widget.otpDataModel.phoneNumber ?? "")),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 40.0),
@@ -78,10 +76,8 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                       initialData: 0,
                       builder: (BuildContext ctx, AsyncSnapshot snapshot) {
                         final value = snapshot.data;
-                        final displayTime = StopWatchTimer.getDisplayTime(
-                            value,
-                            hours: false,
-                            milliSecond: false);
+                        final displayTime = StopWatchTimer.getDisplayTime(value,
+                            hours: false, milliSecond: false);
                         return Column(
                           children: [
                             Center(
@@ -119,14 +115,14 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                   onPressed: value <= 0
                                       ? () async {
                                           await registrationController
-                                              .resendVerificationCode(widget
-                                                  .otpDataModel
-                                                  .email);
+                                              .resendVerificationCode(
+                                                  widget.otpDataModel.email);
                                           timer.onResetTimer();
                                           timer.onStartTimer();
                                         }
                                       : null,
-                                  style: TextButton.styleFrom(foregroundColor: alcanciaLightBlue),
+                                  style: TextButton.styleFrom(
+                                      foregroundColor: alcanciaLightBlue),
                                   child: Text(
                                     appLocalization.buttonResend,
                                     style: const TextStyle(
@@ -164,7 +160,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                               context.go("/login");
                             } catch (err) {
                               setState(() {
-                                _error = err.toString();
+                                _error = appLocalization.labelErrorOtp;
                               });
                             }
                             _setLoading(false);
@@ -191,7 +187,6 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
     _codeController.dispose();
     super.dispose();
   }
-
 
   void _setLoading(bool loading) {
     setState(() {
