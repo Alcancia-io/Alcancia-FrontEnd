@@ -8,9 +8,9 @@ import 'package:alcancia/src/shared/components/decimal_input_formatter.dart';
 import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:alcancia/src/shared/services/suarmi_service.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -27,10 +27,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
 
   final List<Map> countries = [
     {"name": "México", "icon": "lib/src/resources/images/icon_mexico_flag.png"},
-    {
-      "name": "República Dominicana",
-      "icon": "lib/src/resources/images/icon_dominican_flag.png"
-    },
+    {"name": "República Dominicana", "icon": "lib/src/resources/images/icon_dominican_flag.png"},
   ];
   late String country = countries.first['name'];
 
@@ -86,10 +83,8 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
   Future<void> getExchange() async {
     _isLoading = true;
     try {
-      var mxnExchangeRate =
-          await controller.getSuarmiExchange(sourceCurrency: "USDC");
-      var mxnCeloRate =
-          await controller.getSuarmiExchange(sourceCurrency: "cUSD");
+      var mxnExchangeRate = await controller.getSuarmiExchange(sourceCurrency: "USDC");
+      var mxnCeloRate = await controller.getSuarmiExchange(sourceCurrency: "cUSD");
       var dopExchangeRate = await controller.getAlcanciaExchange("aPolUSDC");
       setState(() {
         suarmiUSDCExchange = 1.0 / double.parse(mxnExchangeRate);
@@ -162,8 +157,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
     final userBalance = ref.watch(userProvider)!.balance;
 
     if (_isLoading) {
-      return const Scaffold(
-          body: SafeArea(child: Center(child: CircularProgressIndicator())));
+      return const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator())));
     }
 
     if (_error != "") {
@@ -182,15 +176,13 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
           child: Form(
             key: _formKey,
             autovalidateMode: AutovalidateMode.always,
-            onChanged: () => setState(
-                () => _enableButton = _formKey.currentState!.validate()),
+            onChanged: () => setState(() => _enableButton = _formKey.currentState!.validate()),
             child: ListView(
               padding: const EdgeInsets.only(top: 10, left: 40, right: 40),
               children: [
                 Text(
                   appLoc.labelHello,
-                  style: const TextStyle(
-                      fontSize: 35, fontWeight: FontWeight.w700),
+                  style: const TextStyle(fontSize: 35, fontWeight: FontWeight.w700),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 12),
@@ -212,8 +204,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
                         itemsAlignment: MainAxisAlignment.start,
                         dropdownItems: countries,
                         decoration: BoxDecoration(
-                          color:
-                              Theme.of(context).inputDecorationTheme.fillColor,
+                          color: Theme.of(context).inputDecorationTheme.fillColor,
                           borderRadius: BorderRadius.circular(7),
                         ),
                         onChanged: (value) {
@@ -286,12 +277,8 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         "orderInput": {
           "from_amount": _amountTextController.text,
           "type": "WITHDRAW",
-          "from_currency": getSourceCurrency(country) == 'USDC'
-              ? 'aPolUSDC'
-              : 'mcUSD',
-          "network": getSourceCurrency(country) == "USDC"
-              ? "MATIC"
-              : "CELO",
+          "from_currency": getSourceCurrency(country) == 'USDC' ? 'aPolUSDC' : 'mcUSD',
+          "network": getSourceCurrency(country) == "USDC" ? "MATIC" : "CELO",
           "to_amount": targetAmount.toString(),
           "to_currency": "MXN",
           "bank_account": _clabeTextController.text,
@@ -312,10 +299,8 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
       };
     }
     try {
-      await controller
-          .sendOrder(orderInput);
-      context.go("/success",
-          extra: appLoc.labelWithdrawalSent);
+      await controller.sendOrder(orderInput);
+      context.go("/success", extra: appLoc.labelWithdrawalSent);
     } catch (e) {
       setState(() {
         _orderError = e.toString();
@@ -325,10 +310,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
 
   void updateTargetAmount(String value) {
     setState(() {
-      targetAmount = value.isNotEmpty
-          ? double.parse(_amountTextController.text) /
-              getExchangeRate(country)
-          : 0;
+      targetAmount = value.isNotEmpty ? double.parse(_amountTextController.text) / getExchangeRate(country) : 0;
       _targetTextController.text = targetAmount.toStringAsFixed(3);
     });
   }
@@ -423,8 +405,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
     );
   }
 
-  Widget DOPFields(double balance, BuildContext context, List<Map> currencies,
-      List<Map> banks) {
+  Widget DOPFields(double balance, BuildContext context, List<Map> currencies, List<Map> banks) {
     final appLoc = AppLocalizations.of(context)!;
     final txtTheme = Theme.of(context).textTheme;
     return Column(

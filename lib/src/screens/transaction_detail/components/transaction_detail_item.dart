@@ -5,9 +5,7 @@ class TransactionDetailItem extends StatelessWidget {
   final String? rightText;
   final Widget? rightIcon;
 
-  const TransactionDetailItem(
-      {Key? key, required this.leftText, this.rightText, this.rightIcon})
-      : super(key: key);
+  const TransactionDetailItem({Key? key, required this.leftText, this.rightText, this.rightIcon}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +18,9 @@ class TransactionDetailItem extends StatelessWidget {
             leftText,
             style: const TextStyle(fontSize: 15),
           ),
-          if (rightIcon != null) ... [
+          if (rightIcon != null) ...[
             rightIcon!,
-          ] else if (rightText != null)... [
+          ] else if (rightText != null) ...[
             Text(rightText!),
           ],
         ],

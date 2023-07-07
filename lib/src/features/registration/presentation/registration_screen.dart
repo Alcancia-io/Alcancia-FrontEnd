@@ -1,18 +1,19 @@
 import 'package:alcancia/src/features/registration/model/user_registration_model.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
+import 'package:alcancia/src/shared/components/alcancia_components.dart';
+import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
 import 'package:alcancia/src/shared/models/kyc_status.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:alcancia/src/shared/components/alcancia_components.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../shared/models/user_model.dart';
 import '../data/gender.dart';
 import 'gender_picker.dart';
-import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 
 final emailsInUseProvider = StateProvider<List<String>>((ref) => []);
 
@@ -33,10 +34,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
   bool obscurePassword = true;
   bool obscureConfirmPassword = true;
 
-  final selectedDateProvider =
-      StateProvider.autoDispose<DateTime>((ref) => DateTime.now());
-  final selectedGenderProvider =
-      StateProvider.autoDispose<Gender?>((ref) => null);
+  final selectedDateProvider = StateProvider.autoDispose<DateTime>((ref) => DateTime.now());
+  final selectedGenderProvider = StateProvider.autoDispose<Gender?>((ref) => null);
 
   var signupInput;
 
@@ -98,19 +97,16 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
             key: _formKey,
             autovalidateMode: AutovalidateMode.disabled,
             child: ListView(
-              padding:
-                  const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
+              padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       appLocalization.labelHello,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 35),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
                     ),
-                    Text(appLocalization.labelRegisterSubtitle,
-                        style: const TextStyle(fontSize: 15)),
+                    Text(appLocalization.labelRegisterSubtitle, style: const TextStyle(fontSize: 15)),
                   ],
                 ),
                 const SizedBox(
@@ -172,8 +168,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                 GenderPicker(
                   selectedGenderProvider: selectedGenderProvider,
                   validator: (Gender? gender) {
-                    if (selectedGender == null)
-                      return appLocalization.errorSelectGender;
+                    if (selectedGender == null) return appLocalization.errorSelectGender;
                     return null;
                   },
                 ),
@@ -193,9 +188,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                     if (value == null || value.isEmpty) {
                       return appLocalization.errorRequiredField;
                     } else {
-                      return value.isValidEmail()
-                          ? null
-                          : appLocalization.errorEmailFormat;
+                      return value.isValidEmail() ? null : appLocalization.errorEmailFormat;
                     }
                   },
                 ),
@@ -214,9 +207,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                         obscurePassword = !obscurePassword;
                       });
                     },
-                    child: Icon(obscurePassword
-                        ? CupertinoIcons.eye
-                        : CupertinoIcons.eye_fill),
+                    child: Icon(obscurePassword ? CupertinoIcons.eye : CupertinoIcons.eye_fill),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -224,8 +215,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                     } else {
                       return value.isValidPassword()
                           ? null
-                          : appLocalization
-                              .errorInvalidPassword; // TODO: Password validation text
+                          : appLocalization.errorInvalidPassword; // TODO: Password validation text
                     }
                   },
                 ),
@@ -243,16 +233,13 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                         obscureConfirmPassword = !obscureConfirmPassword;
                       });
                     },
-                    child: Icon(obscureConfirmPassword
-                        ? CupertinoIcons.eye
-                        : CupertinoIcons.eye_fill),
+                    child: Icon(obscureConfirmPassword ? CupertinoIcons.eye : CupertinoIcons.eye_fill),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return appLocalization.errorRequiredField;
                     } else if (value != passwordController.text) {
-                      return appLocalization
-                          .errorPasswordMatch; // TODO: Confirm password validation text
+                      return appLocalization.errorPasswordMatch; // TODO: Confirm password validation text
                     }
                     return null;
                   },
@@ -276,12 +263,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                         gender: selectedGender.string(appLocalization),
                         phoneNumber: "",
                         dob: selectedDate,
-                        balance: Balance(
-                            total: 0.0,
-                            aPolUSDC: 0.0,
-                            cUSD: 0.0,
-                            etherscan: 0.0,
-                            mcUSD: 0.0),
+                        balance: Balance(total: 0.0, aPolUSDC: 0.0, cUSD: 0.0, etherscan: 0.0, mcUSD: 0.0),
                         walletAddress: "",
                         country: '',
                         profession: '',
@@ -289,8 +271,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                       );
                       if (isValid(selectedGender, selectedDate)) {
                         context.push("/phone-registration",
-                            extra: UserRegistrationModel(
-                                user: user, password: passwordController.text));
+                            extra: UserRegistrationModel(user: user, password: passwordController.text));
                       }
                     }
                   },

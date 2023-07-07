@@ -1,8 +1,9 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'alcancia_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'alcancia_button.dart';
 
 class AlcanciaListPickerDialog extends StatelessWidget {
   const AlcanciaListPickerDialog({
@@ -67,11 +68,7 @@ class AlcanciaListPickerDialog extends StatelessWidget {
 
 class AlcanciaListTile extends ConsumerWidget {
   const AlcanciaListTile(
-      {Key? key,
-      required this.title,
-      required this.value,
-      required this.groupValueProvider,
-      required this.onChanged})
+      {Key? key, required this.title, required this.value, required this.groupValueProvider, required this.onChanged})
       : super(key: key);
 
   final String title;

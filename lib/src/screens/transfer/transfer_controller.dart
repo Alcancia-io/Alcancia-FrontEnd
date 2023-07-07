@@ -20,7 +20,8 @@ class TransferController {
     return Future.error('Error getting user');
   }
 
-  Future<TransferResponse> transferFunds({required String amount, required String destUserId, required String token}) async {
+  Future<TransferResponse> transferFunds(
+      {required String amount, required String destUserId, required String token}) async {
     TransactionsService transactionService = TransactionsService();
     try {
       final transferInput = {

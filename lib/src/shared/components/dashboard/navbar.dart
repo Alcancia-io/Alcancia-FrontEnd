@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
+import 'package:flutter/material.dart';
 
 class AlcanciaNavbar extends StatelessWidget {
   const AlcanciaNavbar({Key? key, required this.username}) : super(key: key);

@@ -3,11 +3,11 @@ import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter/material.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OTPScreen extends ConsumerStatefulWidget {
   OTPScreen({Key? key, required this.otpDataModel}) : super(key: key);
@@ -23,8 +23,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
   String _error = "";
   bool _loading = false;
 
-  final timer =
-      StopWatchTimer(mode: StopWatchMode.countDown, presetMillisecond: 60000);
+  final timer = StopWatchTimer(mode: StopWatchMode.countDown, presetMillisecond: 60000);
 
   @override
   void initState() {
@@ -53,14 +52,12 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
                   child: Text(
                     appLocalization.labelAlmostDone,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 35),
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: Text(appLocalization.labelEnterCodePhone(
-                      widget.otpDataModel.phoneNumber ?? "")),
+                  child: Text(appLocalization.labelEnterCodePhone(widget.otpDataModel.phoneNumber ?? "")),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 40.0),
@@ -76,18 +73,15 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                       initialData: 0,
                       builder: (BuildContext ctx, AsyncSnapshot snapshot) {
                         final value = snapshot.data;
-                        final displayTime = StopWatchTimer.getDisplayTime(value,
-                            hours: false, milliSecond: false);
+                        final displayTime = StopWatchTimer.getDisplayTime(value, hours: false, milliSecond: false);
                         return Column(
                           children: [
                             Center(
                               child: Container(
                                 decoration: ShapeDecoration(
                                     shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        side: const BorderSide(
-                                            color: alcanciaLightBlue))),
+                                        borderRadius: BorderRadius.circular(100),
+                                        side: const BorderSide(color: alcanciaLightBlue))),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Row(
@@ -99,8 +93,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                       ),
                                       Text(
                                         displayTime,
-                                        style: const TextStyle(
-                                            color: alcanciaLightBlue),
+                                        style: const TextStyle(color: alcanciaLightBlue),
                                       ),
                                     ],
                                   ),
@@ -115,14 +108,12 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                                   onPressed: value <= 0
                                       ? () async {
                                           await registrationController
-                                              .resendVerificationCode(
-                                                  widget.otpDataModel.email);
+                                              .resendVerificationCode(widget.otpDataModel.email);
                                           timer.onResetTimer();
                                           timer.onStartTimer();
                                         }
                                       : null,
-                                  style: TextButton.styleFrom(
-                                      foregroundColor: alcanciaLightBlue),
+                                  style: TextButton.styleFrom(foregroundColor: alcanciaLightBlue),
                                   child: Text(
                                     appLocalization.buttonResend,
                                     style: const TextStyle(
@@ -151,12 +142,9 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                           onPressed: () async {
                             _setLoading(true);
                             try {
-                              await registrationController.verifyOTP(
-                                  _codeController.text,
-                                  widget.otpDataModel.email);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  alcanciaSnackBar(context,
-                                      appLocalization.labelAccountCreated));
+                              await registrationController.verifyOTP(_codeController.text, widget.otpDataModel.email);
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(alcanciaSnackBar(context, appLocalization.labelAccountCreated));
                               context.go("/login");
                             } catch (err) {
                               setState(() {

@@ -1,27 +1,25 @@
 // Flutter package imports:
 import 'package:alcancia/src/features/registration/model/registration_controller.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-
-// Other package imports:
-import 'package:go_router/go_router.dart';
-
 // Relative imports:
 import 'package:alcancia/src/features/registration/provider/registration_controller_provider.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/screens/login/login_controller.dart';
-import 'package:alcancia/src/shared/components/alcancia_link.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
+import 'package:alcancia/src/shared/components/alcancia_link.dart';
+import 'package:alcancia/src/shared/extensions/string_extensions.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
 import 'package:alcancia/src/shared/models/storage_item.dart';
 import 'package:alcancia/src/shared/provider/push_notifications_provider.dart';
 import 'package:alcancia/src/shared/services/exception_service.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
-import 'package:alcancia/src/shared/extensions/string_extensions.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+// Other package imports:
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -118,14 +116,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     Padding(
                       padding: EdgeInsets.only(
-                          bottom: responsiveService.getHeightPixels(
-                              50, screenHeight),
-                          top: responsiveService.getHeightPixels(
-                              40, screenHeight)),
+                          bottom: responsiveService.getHeightPixels(50, screenHeight),
+                          top: responsiveService.getHeightPixels(40, screenHeight)),
                       child: Text(
                         appLocalization.labelHelloWelcome(userName ?? ""),
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 35),
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
                       ),
                     ),
                     Column(
@@ -138,15 +133,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 labelText: appLocalization.labelEmail,
                                 inputType: TextInputType.emailAddress,
                                 validator: (value) {
-                                  if (value == null ||
-                                      value.isEmpty) {
-                                    return appLocalization
-                                        .errorRequiredField;
+                                  if (value == null || value.isEmpty) {
+                                    return appLocalization.errorRequiredField;
                                   } else {
-                                    return value.isValidEmail()
-                                        ? null
-                                        : appLocalization
-                                            .errorEmailFormat;
+                                    return value.isValidEmail() ? null : appLocalization.errorEmailFormat;
                                   }
                                 },
                               ),
@@ -163,67 +153,55 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 _obscurePassword = !_obscurePassword;
                               });
                             },
-                            child: Icon(_obscurePassword
-                                ? CupertinoIcons.eye
-                                : CupertinoIcons.eye_fill),
+                            child: Icon(_obscurePassword ? CupertinoIcons.eye : CupertinoIcons.eye_fill),
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return appLocalization
-                                  .errorRequiredField;
+                              return appLocalization.errorRequiredField;
                             }
                             return null;
                           },
                         ),
                         Padding(
                           padding: EdgeInsets.only(
-                              bottom: responsiveService
-                                  .getHeightPixels(6, screenHeight),
-                              top: responsiveService.getHeightPixels(
-                                  6, screenHeight),
+                            bottom: responsiveService.getHeightPixels(6, screenHeight),
+                            top: responsiveService.getHeightPixels(6, screenHeight),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               CupertinoButton(
-                                  child: Row(
-                                    children: [
-                                      const Padding(
-                                        padding: EdgeInsets.only(
-                                            right: 4.0),
-                                        child: Icon(CupertinoIcons
-                                            .question_circle),
-                                      ),
-                                      Text(appLocalization
-                                          .labelForgotPassword),
-                                    ],
-                                  ),
-                                  onPressed: () async {
-                                    await _forgotPassword(appLocalization);
-                                  },
+                                child: Row(
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.only(right: 4.0),
+                                      child: Icon(CupertinoIcons.question_circle),
+                                    ),
+                                    Text(appLocalization.labelForgotPassword),
+                                  ],
+                                ),
+                                onPressed: () async {
+                                  await _forgotPassword(appLocalization);
+                                },
                               ),
                             ],
                           ),
                         ),
-                        if (_loading) ... [
+                        if (_loading) ...[
                           const Center(
                             child: Padding(
                               padding: EdgeInsets.all(8.0),
                               child: CircularProgressIndicator(),
                             ),
                           ),
-                        ] else ... [
+                        ] else ...[
                           AlcanciaButton(
                             color: alcanciaLightBlue,
-                            width: responsiveService.getWidthPixels(
-                                304, screenWidth),
-                            height: responsiveService.getHeightPixels(
-                                64, screenHeight),
+                            width: responsiveService.getWidthPixels(304, screenWidth),
+                            height: responsiveService.getHeightPixels(64, screenHeight),
                             buttonText: appLocalization.buttonLogIn,
                             onPressed: () async {
-                              await _login(
-                                  pushNotifications,
-                                  registrationController);
+                              await _login(pushNotifications, registrationController);
                             },
                           ),
                         ],
@@ -240,16 +218,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  Future<void> _login(
-      PushNotificationProvider pushNotifications,
-      RegistrationController registrationController) async {
+  Future<void> _login(PushNotificationProvider pushNotifications, RegistrationController registrationController) async {
     try {
       setState(() {
         _loading = true;
       });
       final deviceToken = await pushNotifications.messaging.getToken();
-      final data = await controller.login(
-          emailController.text, passwordController.text, deviceToken ?? "");
+      final data = await controller.login(emailController.text, passwordController.text, deviceToken ?? "");
       await saveToken(data.token);
       if (_rememberMe) {
         await saveUserInfo(data.name, data.email);
@@ -280,23 +255,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _forgotPassword(appLocalization) async {
-    if (emailController
-        .text.isNotEmpty) {
-      final StorageItem userEmail =
-      StorageItem("userEmail",
-          emailController.text);
-      await _storageService
-          .writeSecureData(userEmail);
-      context.pushNamed(
-          'forgot-password');
+    if (emailController.text.isNotEmpty) {
+      final StorageItem userEmail = StorageItem("userEmail", emailController.text);
+      await _storageService.writeSecureData(userEmail);
+      context.pushNamed('forgot-password');
     } else {
       Fluttertoast.showToast(
-          msg: appLocalization
-              .errorEmailRequired,
-          toastLength:
-          Toast.LENGTH_SHORT,
-          gravity:
-          ToastGravity.BOTTOM,
+          msg: appLocalization.errorEmailRequired,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 2,
           backgroundColor: Colors.red,
           textColor: Colors.white,
@@ -307,25 +274,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget _buildRememberMe(appLocalization, screenHeight) {
     return Padding(
       padding: EdgeInsets.only(
-          bottom: responsiveService
-              .getHeightPixels(
-              6, screenHeight),
-          top: responsiveService
-              .getHeightPixels(
-              6, screenHeight)),
+          bottom: responsiveService.getHeightPixels(6, screenHeight),
+          top: responsiveService.getHeightPixels(6, screenHeight)),
       child: Row(
-        mainAxisAlignment:
-        MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(
             width: 25,
             child: Checkbox(
                 value: _rememberMe,
-                shape:
-                RoundedRectangleBorder(
-                  borderRadius:
-                  BorderRadius.circular(
-                      4),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4),
                 ),
                 onChanged: (value) {
                   setState(() {
@@ -334,10 +293,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 }),
           ),
           Padding(
-            padding: const EdgeInsets.only(
-                left: 8.0),
-            child: Text(appLocalization
-                .labelRememberUser),
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Text(appLocalization.labelRememberUser),
           ),
         ],
       ),
@@ -393,5 +350,4 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       );
     }
   }
-
 }

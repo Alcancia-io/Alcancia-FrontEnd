@@ -1,8 +1,6 @@
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-enum Gender {
-  woman, man, nonbinary, other
-}
+enum Gender { woman, man, nonbinary, other }
 
 extension GenderString on Gender? {
   String string(AppLocalizations appLoc) {

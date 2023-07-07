@@ -5,11 +5,11 @@ import 'package:alcancia/src/shared/models/kyc_status.dart';
 import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DashboardActions extends ConsumerWidget {
   DashboardActions({Key? key}) : super(key: key);
@@ -30,7 +30,10 @@ class DashboardActions extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 4.0),
                 child: AlcanciaButton(
                   rounded: true,
-                  icon: SvgPicture.asset("lib/src/resources/images/icon_deposit.svg", color: Colors.white,),
+                  icon: SvgPicture.asset(
+                    "lib/src/resources/images/icon_deposit.svg",
+                    color: Colors.white,
+                  ),
                   buttonText: appLoc.labelDeposit,
                   foregroundColor: Colors.white,
                   onPressed: () {
@@ -46,7 +49,10 @@ class DashboardActions extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 4.0),
                 child: AlcanciaButton(
                   rounded: true,
-                  icon: SvgPicture.asset("lib/src/resources/images/icon_transfer.svg", color: Colors.white,),
+                  icon: SvgPicture.asset(
+                    "lib/src/resources/images/icon_transfer.svg",
+                    color: Colors.white,
+                  ),
                   buttonText: appLoc.labelTransfer,
                   foregroundColor: Colors.white,
                   onPressed: () {
@@ -62,7 +68,10 @@ class DashboardActions extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 4.0),
                 child: AlcanciaButton(
                   rounded: true,
-                  icon: SvgPicture.asset("lib/src/resources/images/icon_withdraw.svg", color: Colors.white,),
+                  icon: SvgPicture.asset(
+                    "lib/src/resources/images/icon_withdraw.svg",
+                    color: Colors.white,
+                  ),
                   buttonText: appLoc.labelWithdraw,
                   foregroundColor: Colors.white,
                   onPressed: () {
@@ -81,7 +90,10 @@ class DashboardActions extends ConsumerWidget {
           child: AlcanciaButton(
             rounded: true,
             buttonText: appLoc.buttonPending,
-            icon: Icon(CupertinoIcons.hourglass, size: 21,),
+            icon: Icon(
+              CupertinoIcons.hourglass,
+              size: 21,
+            ),
             foregroundColor: Colors.white,
             onPressed: () {
               Fluttertoast.showToast(
@@ -162,7 +174,5 @@ class DashboardActions extends ConsumerWidget {
           ),
         );
     }
-
-
   }
 }

@@ -54,9 +54,7 @@ class TransactionsService {
     return await clientResponse.mutate(
       MutationOptions(
         document: gql(cancelTransactionMutation),
-        variables: {
-          "id": id
-        },
+        variables: {"id": id},
         fetchPolicy: FetchPolicy.noCache,
       ),
     );

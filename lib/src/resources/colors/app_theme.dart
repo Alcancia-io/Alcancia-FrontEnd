@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'colors.dart';
 
 class AlcanciaTheme {
@@ -28,17 +29,13 @@ class AlcanciaTheme {
       fontFamily: 'Gotham',
       textTheme: _textTheme,
       textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(
-          textStyle: const TextStyle(fontFamily: 'Gotham'),
-          splashFactory: NoSplash.splashFactory,
-          shadowColor: Colors.transparent
-        )
-      ),
+          style: TextButton.styleFrom(
+              textStyle: const TextStyle(fontFamily: 'Gotham'),
+              splashFactory: NoSplash.splashFactory,
+              shadowColor: Colors.transparent)),
       iconTheme: const IconThemeData(color: Colors.black),
       inputDecorationTheme: InputDecorationTheme(
-        border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(7),
-            borderSide: BorderSide.none),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(7), borderSide: BorderSide.none),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7),
           borderSide: const BorderSide(color: Colors.red),
@@ -49,8 +46,7 @@ class AlcanciaTheme {
       ),
       unselectedWidgetColor: alcanciaLightBlue,
       checkboxTheme: CheckboxThemeData(
-          fillColor: MaterialStateProperty.all(alcanciaLightBlue),
-          checkColor: MaterialStateProperty.all(Colors.white)),
+          fillColor: MaterialStateProperty.all(alcanciaLightBlue), checkColor: MaterialStateProperty.all(Colors.white)),
       cupertinoOverrideTheme: const NoDefaultCupertinoThemeData(
         scaffoldBackgroundColor: alcanciaBgLight,
         brightness: Brightness.light,
@@ -77,8 +73,7 @@ class AlcanciaTheme {
       textTheme: _textTheme,
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
-          textStyle:
-              MaterialStateProperty.all(const TextStyle(fontFamily: 'Gotham')),
+          textStyle: MaterialStateProperty.all(const TextStyle(fontFamily: 'Gotham')),
         ),
       ),
       iconTheme: const IconThemeData(
@@ -99,8 +94,7 @@ class AlcanciaTheme {
       ),
       unselectedWidgetColor: alcanciaLightBlue,
       checkboxTheme: CheckboxThemeData(
-          fillColor: MaterialStateProperty.all(alcanciaLightBlue),
-          checkColor: MaterialStateProperty.all(Colors.white)),
+          fillColor: MaterialStateProperty.all(alcanciaLightBlue), checkColor: MaterialStateProperty.all(Colors.white)),
       cupertinoOverrideTheme: const NoDefaultCupertinoThemeData(
         scaffoldBackgroundColor: alcanciaBgDark,
         brightness: Brightness.dark,

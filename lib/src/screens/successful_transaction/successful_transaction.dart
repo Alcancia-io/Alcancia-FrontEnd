@@ -4,12 +4,13 @@ import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/extensions/datetime_extensions.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SuccessfulTransaction extends StatelessWidget {
   final TransferResponse transferResponse;
+
   const SuccessfulTransaction({super.key, required this.transferResponse});
 
   @override
@@ -37,9 +38,8 @@ class SuccessfulTransaction extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? alcanciaFieldDark
-                              : alcanciaFieldLight,
+                          color:
+                              Theme.of(context).brightness == Brightness.dark ? alcanciaFieldDark : alcanciaFieldLight,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Column(
@@ -48,8 +48,7 @@ class SuccessfulTransaction extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(top: 50, bottom: 35),
                               child: Center(
-                                child:
-                                    Text(appLoc.successfulTransaction, style: txtTheme.subtitle1),
+                                child: Text(appLoc.successfulTransaction, style: txtTheme.subtitle1),
                               ),
                             ),
                             Padding(

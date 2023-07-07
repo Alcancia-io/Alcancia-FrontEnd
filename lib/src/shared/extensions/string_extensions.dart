@@ -1,4 +1,5 @@
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 extension StringExtension on String {
   bool isValidEmail() {
     return RegExp(

@@ -1,6 +1,6 @@
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
-import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BalanceItem {
@@ -30,8 +30,8 @@ class _BalanceCarouselState extends State<BalanceCarousel> {
     final totalBalanceItem = BalanceItem(title: appLoc.labelTotalBalance, value: widget.balance.total, currency: "USD");
     final cUSDBalanceItem =
         BalanceItem(title: appLoc.labelCELOBalance, value: widget.balance.celoBalance, currency: "CUSD");
-    final usdcBalanceItem = BalanceItem(
-        title: appLoc.labelUSDCBalance, value: widget.balance.usdcBalance, currency: "USDC");
+    final usdcBalanceItem =
+        BalanceItem(title: appLoc.labelUSDCBalance, value: widget.balance.usdcBalance, currency: "USDC");
     var carouselItems = [totalBalanceItem, usdcBalanceItem, cUSDBalanceItem];
     if (widget.balance.celoBalance == 0) carouselItems = [usdcBalanceItem];
     return Column(
@@ -56,40 +56,45 @@ class _BalanceCarouselState extends State<BalanceCarousel> {
                   ),
                   Container(
                     padding: const EdgeInsets.only(top: 16),
-                    child: balance.value == 0 ? Text("\$0 ${balance.currency}", style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: screenSize.width / 14,
-                      color: Theme.of(context).textTheme.bodyMedium?.color,
-                    ),) : Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: "\$${balanceString.substring(0, balanceString.lastIndexOf("."))}",
+                    child: balance.value == 0
+                        ? Text(
+                            "\$0 ${balance.currency}",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: screenSize.width / 14,
                               color: Theme.of(context).textTheme.bodyMedium?.color,
                             ),
-                          ),
-                          TextSpan(
-                            text: "${balanceString.substring(balanceString.lastIndexOf("."))} ",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: screenSize.width / 14,
-                              color: Colors.grey,
+                          )
+                        : Text.rich(
+                            TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: "\$${balanceString.substring(0, balanceString.lastIndexOf("."))}",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: screenSize.width / 14,
+                                    color: Theme.of(context).textTheme.bodyMedium?.color,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: "${balanceString.substring(balanceString.lastIndexOf("."))} ",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: screenSize.width / 14,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: balance.currency,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: screenSize.width / 14,
+                                    color: Theme.of(context).textTheme.bodyMedium?.color,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          TextSpan(
-                            text: balance.currency,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: screenSize.width / 14,
-                              color: Theme.of(context).textTheme.bodyMedium?.color,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                   ),
                 ],
               ),
@@ -97,16 +102,16 @@ class _BalanceCarouselState extends State<BalanceCarousel> {
           },
           options: CarouselOptions(
             scrollPhysics: carouselItems.length == 1 ? const NeverScrollableScrollPhysics() : null,
-              viewportFraction: 1,
-              height: 80,
-              onPageChanged: (int index, _) {
-                setState(() {
-                  _current = index;
-                });
-              },
+            viewportFraction: 1,
+            height: 80,
+            onPageChanged: (int index, _) {
+              setState(() {
+                _current = index;
+              });
+            },
           ),
         ),
-        if (carouselItems.length > 1) ... [
+        if (carouselItems.length > 1) ...[
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: carouselItems.asMap().entries.map((entry) {
@@ -125,7 +130,6 @@ class _BalanceCarouselState extends State<BalanceCarousel> {
             }).toList(),
           ),
         ]
-
       ],
     );
   }

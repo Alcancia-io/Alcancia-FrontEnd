@@ -1,13 +1,14 @@
-import 'package:alcancia/src/screens/dashboard/dashboard_screen.dart';
 import 'package:alcancia/src/features/transactions-list/presentation/transactions_list_screen.dart';
 import 'package:alcancia/src/features/user-profile/presentation/user_profile_screen.dart';
+import 'package:alcancia/src/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AlcanciaTabbar extends StatefulWidget {
   late int selectedIndex;
+
   AlcanciaTabbar({
     Key? key,
     required this.selectedIndex,
@@ -58,7 +59,7 @@ class _AlcanciaTabbarState extends State<AlcanciaTabbar> {
         currentIndex: widget.selectedIndex,
         selectedItemColor: ctx.iconTheme.color,
         onTap: (newTabIndex) {
-            context.go('/homescreen/$newTabIndex');
+          context.go('/homescreen/$newTabIndex');
         },
         // this will be needed when more than 3 items in the bar
         // type: BottomNavigationBarType.fixed,

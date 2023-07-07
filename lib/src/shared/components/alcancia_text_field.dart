@@ -15,7 +15,6 @@ class LabeledTextFormField extends StatelessWidget {
     this.inputFormatters,
     this.onChanged,
     this.enabled,
-
   }) : super(key: key);
 
   final TextEditingController controller;

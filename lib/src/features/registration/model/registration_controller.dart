@@ -1,7 +1,8 @@
+import 'package:alcancia/src/features/registration/data/signup_mutation.dart';
 import 'package:alcancia/src/shared/models/user_model.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:alcancia/src/features/registration/data/signup_mutation.dart';
 import 'package:intl/intl.dart';
+
 import 'graphql_config.dart';
 
 class RegistrationController {
@@ -70,8 +71,8 @@ class RegistrationController {
     try {
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
       GraphQLClient client = graphQLConfiguration.clientToQuery();
-      QueryResult result = await client
-          .mutate(MutationOptions(document: gql(signupMutation), variables: {"signupUserInput": signupInput}
+      QueryResult result =
+          await client.mutate(MutationOptions(document: gql(signupMutation), variables: {"signupUserInput": signupInput}
               //onCompleted: (resultData) {
               //  if (resultData != null) {
               //    context.go("/login");

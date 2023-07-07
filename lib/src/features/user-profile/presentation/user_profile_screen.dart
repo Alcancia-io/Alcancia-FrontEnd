@@ -3,21 +3,22 @@ import 'package:alcancia/src/shared/components/alcancia_action_dialog.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
+import 'package:alcancia/src/shared/models/user_model.dart';
 import 'package:alcancia/src/shared/provider/auth_service_provider.dart';
 import 'package:alcancia/src/shared/provider/user_provider.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
-import 'package:alcancia/src/shared/models/user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UserProfileScreen extends ConsumerWidget {
   UserProfileScreen({Key? key}) : super(key: key);
 
   final Uri url = Uri.parse('https://landing.alcancia.io/privacypolicy');
   final Uri url2 = Uri.parse('https://landing.alcancia.io/termsandconditions');
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider) ?? User.sampleUser;
@@ -130,9 +131,8 @@ class UserProfileScreen extends ConsumerWidget {
 
                                     context.go("/");
                                   } catch (e) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        alcanciaSnackBar(context,
-                                            appLoc.errorSignOut));
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(alcanciaSnackBar(context, appLoc.errorSignOut));
                                   }
                                   ref.read(userProvider.notifier).setUser(null);
                                 },

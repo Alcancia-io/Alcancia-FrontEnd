@@ -59,21 +59,22 @@ class User {
 
   factory User.fromJSON(Map<String, dynamic> map) {
     return User(
-      id: map["id"],
-      authId: map["authId"],
-      surname: map["surname"],
-      gender: map["gender"],
-      country: map["country"],
-      phoneNumber: map["phoneNumber"],
-      dob: DateFormat('yyyy-MM-dd').parse(map["dob"]),
-      name: map["name"],
-      email: map["email"],
-      balance: Balance.fromMap(map['balance']),
-      walletAddress: map['walletAddress'],
-      kycStatus: KYCStatus.values.firstWhere((element) => element.name.toLowerCase() == map['kycStatus'].toString().toLowerCase(),  orElse: () => KYCStatus.none),
-      profession: map["profession"],
-      address: map["address"],
-      lastUsedBankAccount: map["lastUsedBankAccount"]
-    );
+        id: map["id"],
+        authId: map["authId"],
+        surname: map["surname"],
+        gender: map["gender"],
+        country: map["country"],
+        phoneNumber: map["phoneNumber"],
+        dob: DateFormat('yyyy-MM-dd').parse(map["dob"]),
+        name: map["name"],
+        email: map["email"],
+        balance: Balance.fromMap(map['balance']),
+        walletAddress: map['walletAddress'],
+        kycStatus: KYCStatus.values.firstWhere(
+            (element) => element.name.toLowerCase() == map['kycStatus'].toString().toLowerCase(),
+            orElse: () => KYCStatus.none),
+        profession: map["profession"],
+        address: map["address"],
+        lastUsedBankAccount: map["lastUsedBankAccount"]);
   }
 }

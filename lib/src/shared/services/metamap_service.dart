@@ -1,10 +1,10 @@
 import 'package:alcancia/src/shared/graphql/queries/kyc_cancel_query.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:metamap_plugin_flutter/metamap_plugin_flutter.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../features/registration/model/graphql_config.dart';
 

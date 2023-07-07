@@ -2,12 +2,12 @@ import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/components/deposit_info_item.dart';
 import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 
 class CryptoDepositScreen extends ConsumerWidget {
   const CryptoDepositScreen({Key? key}) : super(key: key);
@@ -17,8 +17,7 @@ class CryptoDepositScreen extends ConsumerWidget {
     final screenSize = MediaQuery.of(context).size;
     final appLoc = AppLocalizations.of(context)!;
     final user = ref.watch(userProvider);
-    final darkMode =
-        MediaQuery.of(context).platformBrightness == Brightness.dark;
+    final darkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
     return Scaffold(
       appBar: AlcanciaToolbar(
         title: appLoc.labelDeposit,
@@ -35,18 +34,14 @@ class CryptoDepositScreen extends ConsumerWidget {
                 data: user!.walletAddress,
                 size: MediaQuery.of(context).size.width / 1.2,
                 dataModuleStyle: QrDataModuleStyle(
-                  color:
-                      darkMode ? Colors.white.withOpacity(0.9) : Colors.black,
+                  color: darkMode ? Colors.white.withOpacity(0.9) : Colors.black,
                 ),
                 eyeStyle: QrEyeStyle(
-                    color:
-                        darkMode ? Colors.white.withOpacity(0.9) : Colors.black,
-                    eyeShape: QrEyeShape.square),
+                    color: darkMode ? Colors.white.withOpacity(0.9) : Colors.black, eyeShape: QrEyeShape.square),
                 embeddedImage: Svg(darkMode
                     ? "lib/src/resources/images/icon_alcancia_dark_no_letters.svg"
                     : "lib/src/resources/images/icon_alcancia_light_no_letters.svg"),
-                embeddedImageStyle: QrEmbeddedImageStyle(
-                    size: Size(screenSize.width / 6.4, screenSize.width / 6.4)),
+                embeddedImageStyle: QrEmbeddedImageStyle(size: Size(screenSize.width / 6.4, screenSize.width / 6.4)),
               ),
             ),
             DepositInfoItem(

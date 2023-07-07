@@ -4,8 +4,8 @@ import 'package:alcancia/src/shared/graphql/queries/transactions_query.dart';
 import 'package:alcancia/src/shared/services/graphql_client_service.dart';
 import 'package:alcancia/src/shared/services/services.dart';
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 class TransactionsListScreen extends StatelessWidget {
   TransactionsListScreen({Key? key}) : super(key: key);
@@ -40,8 +40,7 @@ class TransactionsListScreen extends StatelessWidget {
                     document: gql(transactionsQuery),
                     variables: getUserTransactionsInput,
                   ),
-                  builder: (QueryResult result,
-                      {VoidCallback? refetch, FetchMore? fetchMore}) {
+                  builder: (QueryResult result, {VoidCallback? refetch, FetchMore? fetchMore}) {
                     if (result.hasException) {
                       return Text("${result.exception?.graphqlErrors.first}");
                     }
@@ -50,11 +49,9 @@ class TransactionsListScreen extends StatelessWidget {
                       return const Center(child: CircularProgressIndicator());
                     }
 
-                    Map<String, dynamic> response =
-                        result.data?['getUserTransactions'];
+                    Map<String, dynamic> response = result.data?['getUserTransactions'];
 
-                    var transactionsList =
-                        txnsService.getTransactionsFromJson(response);
+                    var transactionsList = txnsService.getTransactionsFromJson(response);
 
                     return Container(
                       padding: const EdgeInsets.only(

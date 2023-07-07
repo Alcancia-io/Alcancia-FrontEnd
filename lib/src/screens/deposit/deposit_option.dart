@@ -1,7 +1,7 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class DepositOption extends StatelessWidget {
   const DepositOption({
@@ -26,9 +26,7 @@ class DepositOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final darkMode = Theme.of(context).brightness == Brightness.dark;
-    final comingSoonColor = darkMode
-        ? alcanciaMidBlue
-        : alcanciaLightBlue;
+    final comingSoonColor = darkMode ? alcanciaMidBlue : alcanciaLightBlue;
     final appLoc = AppLocalizations.of(context)!;
     return Opacity(
       opacity: comingSoon ? 0.5 : 1,
@@ -43,9 +41,7 @@ class DepositOption extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? alcanciaCardDark2
-                  : alcanciaCardLight2,
+              color: Theme.of(context).brightness == Brightness.dark ? alcanciaCardDark2 : alcanciaCardLight2,
             ),
             child: Row(
               children: [
@@ -67,7 +63,7 @@ class DepositOption extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Text(subtitle),
                     ),
-                    if (comingSoon) ... [
+                    if (comingSoon) ...[
                       Padding(
                         padding: const EdgeInsets.only(right: 8.0),
                         child: Container(
@@ -79,15 +75,12 @@ class DepositOption extends StatelessWidget {
                             padding: const EdgeInsets.all(5.0),
                             child: Text(
                               appLoc.labelComingSoon,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold
-                              ),
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
                       ),
-                    ] else ... [
+                    ] else ...[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -96,18 +89,14 @@ class DepositOption extends StatelessWidget {
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
-                                color: darkMode
-                                    ? Color(0xFF9AFF47).withOpacity(0.2)
-                                    : Color(0xFF31DE52).withOpacity(0.2),
+                                color:
+                                    darkMode ? Color(0xFF9AFF47).withOpacity(0.2) : Color(0xFF31DE52).withOpacity(0.2),
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.all(5.0),
                                 child: Text(
                                   pill1,
-                                  style: TextStyle(
-                                      color: darkMode
-                                          ? Color(0xFF31DE52)
-                                          : Colors.green),
+                                  style: TextStyle(color: darkMode ? Color(0xFF31DE52) : Colors.green),
                                 ),
                               ),
                             ),
@@ -117,18 +106,14 @@ class DepositOption extends StatelessWidget {
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
-                                color: darkMode
-                                    ? Color(0xFF9AFF47).withOpacity(0.2)
-                                    : Color(0xFF31DE52).withOpacity(0.2),
+                                color:
+                                    darkMode ? Color(0xFF9AFF47).withOpacity(0.2) : Color(0xFF31DE52).withOpacity(0.2),
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.all(5.0),
                                 child: Text(
                                   pill2,
-                                  style: TextStyle(
-                                      color: darkMode
-                                          ? Color(0xFF31DE52)
-                                          : Colors.green),
+                                  style: TextStyle(color: darkMode ? Color(0xFF31DE52) : Colors.green),
                                 ),
                               ),
                             ),

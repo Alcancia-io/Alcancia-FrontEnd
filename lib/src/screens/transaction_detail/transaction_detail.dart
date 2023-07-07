@@ -1,3 +1,4 @@
+import 'package:alcancia/src/screens/transaction_detail/components/transaction_detail_item.dart';
 import 'package:alcancia/src/screens/transaction_detail/transaction_detail_controller.dart';
 import 'package:alcancia/src/shared/components/deposit_info_item.dart';
 import 'package:alcancia/src/shared/extensions/datetime_extensions.dart';
@@ -7,11 +8,11 @@ import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import 'package:alcancia/src/shared/provider/transactions_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:alcancia/src/screens/transaction_detail/components/transaction_detail_item.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import '../../resources/colors/colors.dart';
 import '../../shared/models/transaction_model.dart';
 
@@ -35,9 +36,7 @@ class TransactionDetail extends ConsumerWidget {
               child: Container(
                 padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
-                  color: ctx.brightness == Brightness.dark
-                      ? alcanciaCardDark2
-                      : alcanciaCardLight2,
+                  color: ctx.brightness == Brightness.dark ? alcanciaCardDark2 : alcanciaCardLight2,
                   borderRadius: const BorderRadius.all(
                     Radius.circular(11),
                   ),
@@ -62,8 +61,7 @@ class TransactionDetail extends ConsumerWidget {
                     ),
                     TransactionDetailItem(
                       leftText: appLoc.labelTransactionId,
-                      rightText: txn.transactionID
-                          .substring(0, txn.transactionID.indexOf('-')),
+                      rightText: txn.transactionID.substring(0, txn.transactionID.indexOf('-')),
                     ),
                     if (txn.type == TransactionType.deposit) ...[
                       TransactionDetailItem(
@@ -88,8 +86,7 @@ class TransactionDetail extends ConsumerWidget {
                       leftText: appLoc.labelStatus,
                       rightIcon: txn.iconForTxnStatus(user.id),
                     ),
-                    if (txn.status == TransactionStatus.pending &&
-                        txn.type == TransactionType.deposit) ...[
+                    if (txn.status == TransactionStatus.pending && txn.type == TransactionType.deposit) ...[
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 8.0),
                         child: Divider(
@@ -109,12 +106,9 @@ class TransactionDetail extends ConsumerWidget {
                                 side: BorderSide(color: Colors.red)),
                             onPressed: () async {
                               try {
-                                await controller.cancelTransaction(
-                                    id: txn.transactionID);
-                                var txns =
-                                    await controller.fetchUserTransactions();
-                                ref.read(transactionsProvider.notifier).state =
-                                    txns;
+                                await controller.cancelTransaction(id: txn.transactionID);
+                                var txns = await controller.fetchUserTransactions();
+                                ref.read(transactionsProvider.notifier).state = txns;
                                 context.pop();
 
                                 Fluttertoast.showToast(
@@ -164,8 +158,7 @@ class TransactionDetail extends ConsumerWidget {
   }
 
   Widget BankInfo(AppLocalizations appLoc) {
-    final info =
-        txn.sourceAsset == 'MXN' ? AccountInfo.MXNInfo : AccountInfo.DOPInfo;
+    final info = txn.sourceAsset == 'MXN' ? AccountInfo.MXNInfo : AccountInfo.DOPInfo;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

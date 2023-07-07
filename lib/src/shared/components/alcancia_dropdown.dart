@@ -112,11 +112,11 @@ class AlcanciaDropdownItem extends StatelessWidget {
             ),
           if (item['name'] != null)
             Text(
-            item['name'],
-            style: TextStyle(
-              fontSize: _responsiveService.getHeightPixels(fontSize, screenHeight),
-            ),
-          )
+              item['name'],
+              style: TextStyle(
+                fontSize: _responsiveService.getHeightPixels(fontSize, screenHeight),
+              ),
+            )
         ],
       ),
     );

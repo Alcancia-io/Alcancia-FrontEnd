@@ -1,20 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../data/gender.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../data/gender.dart';
 
 class GenderPicker extends ConsumerWidget {
-  const GenderPicker({
-    Key? key,
-    required this.selectedGenderProvider,
-    this.validator
-  }) : super(key: key);
+  const GenderPicker({Key? key, required this.selectedGenderProvider, this.validator}) : super(key: key);
 
   final AutoDisposeStateProvider<Gender?> selectedGenderProvider;
   final String? Function(Gender?)? validator;
-
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,12 +36,10 @@ class GenderPicker extends ConsumerWidget {
                   children: [
                     Text(
                       selectedGender.string(appLocalization),
-                      style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                          color: Theme.of(context)
-                              .textTheme
-                              .subtitle2
-                              ?.color
-                              ?.withOpacity(0.6)),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          ?.copyWith(color: Theme.of(context).textTheme.subtitle2?.color?.withOpacity(0.6)),
                     ),
                     const Spacer(),
                     Icon(
@@ -64,17 +58,13 @@ class GenderPicker extends ConsumerWidget {
                           itemBuilder: (context, index) {
                             final gender = Gender.values[index];
                             return GestureDetector(
-                              onTap: () => ref
-                                  .read(selectedGenderProvider.notifier)
-                                  .state = gender,
+                              onTap: () => ref.read(selectedGenderProvider.notifier).state = gender,
                               child: AlcanciaListTile(
                                 title: gender.string(appLocalization),
                                 value: gender,
                                 groupValueProvider: selectedGenderProvider,
                                 onChanged: (newValue) {
-                                  ref
-                                      .read(selectedGenderProvider.notifier)
-                                      .state = newValue;
+                                  ref.read(selectedGenderProvider.notifier).state = newValue;
                                 },
                               ),
                             );
@@ -85,10 +75,14 @@ class GenderPicker extends ConsumerWidget {
                 },
               ),
             ),
-            if (state.hasError) Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(state.errorText!, style: const TextStyle(color: Colors.red, fontSize: 10),),
-            ),
+            if (state.hasError)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  state.errorText!,
+                  style: const TextStyle(color: Colors.red, fontSize: 10),
+                ),
+              ),
           ],
         );
       },

@@ -9,20 +9,17 @@ import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/constants.dart';
 import 'package:alcancia/src/shared/models/checkout_model.dart';
-import 'package:alcancia/src/shared/models/kyc_status.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/provider/user_provider.dart';
 import 'package:alcancia/src/shared/services/exception_service.dart';
-import 'package:alcancia/src/shared/services/metamap_service.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SwapScreen extends ConsumerStatefulWidget {
   const SwapScreen({Key? key}) : super(key: key);

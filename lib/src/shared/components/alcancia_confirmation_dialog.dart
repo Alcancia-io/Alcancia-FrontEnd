@@ -31,8 +31,7 @@ class AlcanciaConfirmationDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
-      backgroundColor:
-          Theme.of(context).brightness == Brightness.dark ? alcanciaFieldDark : alcanciaFieldLight,
+      backgroundColor: Theme.of(context).brightness == Brightness.dark ? alcanciaFieldDark : alcanciaFieldLight,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 30),
@@ -59,8 +58,7 @@ class AlcanciaConfirmationDialog extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(appLoc.sourceAccount, style: txtTheme.subtitle2),
-                        Text('Balance - ${userBalance.toStringAsFixed(2)} $currency',
-                            style: txtTheme.subtitle2),
+                        Text('Balance - ${userBalance.toStringAsFixed(2)} $currency', style: txtTheme.subtitle2),
                       ],
                     ),
                   ),

@@ -5,10 +5,10 @@ import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/models/onboarding_item.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OnboardingScreens extends StatefulWidget {
   const OnboardingScreens({Key? key}) : super(key: key);
@@ -29,20 +29,17 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
       OnboardingItem(
         assetPath: "lib/src/resources/images/welcome.svg",
         title: appLoc.labelOnboardingTitle1,
-        text:
-        appLoc.labelOnboardingText1,
+        text: appLoc.labelOnboardingText1,
       ),
       OnboardingItem(
         assetPath: "lib/src/resources/images/save_and_grow.svg",
         title: appLoc.labelOnboardingTitle2,
-        text:
-        appLoc.labelOnboardingText2,
+        text: appLoc.labelOnboardingText2,
       ),
       OnboardingItem(
         assetPath: "lib/src/resources/images/open_account.svg",
         title: appLoc.labelOnboardingTitle3,
-        text:
-        appLoc.labelOnboardingText3,
+        text: appLoc.labelOnboardingText3,
       ),
       OnboardingItem(
         assetPath: "lib/src/resources/images/prepare.svg",
@@ -152,7 +149,8 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
             SmoothPageIndicator(
               controller: _pageController,
               count: items.length,
-              onDotClicked: (index) => _pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.linear),
+              onDotClicked: (index) => _pageController.animateToPage(index,
+                  duration: const Duration(milliseconds: 300), curve: Curves.linear),
               effect: const ExpandingDotsEffect(
                 dotHeight: 8,
                 dotWidth: 8,
@@ -162,14 +160,15 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
             if (pageIndex != items.length - 1) ...[
               TextButton(
                 onPressed: () {
-                  _pageController.animateToPage(pageIndex + 1, duration: const Duration(milliseconds: 300), curve: Curves.linear);
+                  _pageController.animateToPage(pageIndex + 1,
+                      duration: const Duration(milliseconds: 300), curve: Curves.linear);
                 },
                 child: Text(appLoc.buttonNext),
               ),
             ],
           ],
         ),
-        if (pageIndex == items.length - 1) ... [
+        if (pageIndex == items.length - 1) ...[
           Padding(
             padding: const EdgeInsets.all(24.0),
             child: AlcanciaButton(

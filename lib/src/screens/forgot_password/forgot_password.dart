@@ -1,20 +1,20 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
-import 'package:alcancia/src/shared/extensions/string_extensions.dart';
 import 'package:alcancia/src/shared/components/alcancia_container.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
+import 'package:alcancia/src/shared/extensions/string_extensions.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:alcancia/src/shared/services/auth_service.dart';
 import 'package:alcancia/src/shared/services/exception_service.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ForgotPassword extends ConsumerStatefulWidget {
   const ForgotPassword({super.key});
@@ -81,8 +81,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
           timeInSecForIosWeb: 2,
           backgroundColor: Colors.red,
           textColor: Colors.white,
-          fontSize: 16.0
-      );
+          fontSize: 16.0);
     } else {
       _phoneNumEnding = (response.data?['forgotPassword'] as String).substring(6);
     }
@@ -144,7 +143,11 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        appBar: const AlcanciaToolbar(state: StateToolbar.logoLetters, logoHeight: 60, toolbarHeight: 70,),
+        appBar: const AlcanciaToolbar(
+          state: StateToolbar.logoLetters,
+          logoHeight: 60,
+          toolbarHeight: 70,
+        ),
         body: SafeArea(
           bottom: false,
           child: Form(
@@ -233,7 +236,8 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                                   style: TextButton.styleFrom(foregroundColor: alcanciaLightBlue),
                                   child: Text(
                                     appLoc.buttonResend,
-                                    style: const TextStyle(decoration: TextDecoration.underline, fontWeight: FontWeight.bold),
+                                    style: const TextStyle(
+                                        decoration: TextDecoration.underline, fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ],
@@ -294,7 +298,8 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                           _newPassword.hasUpperCase()
                               ? SvgPicture.asset('lib/src/resources/images/icon_check.svg', height: 20)
                               : SvgPicture.asset('lib/src/resources/images/icon_cross.svg', height: 20),
-                          Padding(padding: const EdgeInsets.only(left: 10), child: Text(appLoc.labelRequirementUppercase))
+                          Padding(
+                              padding: const EdgeInsets.only(left: 10), child: Text(appLoc.labelRequirementUppercase))
                         ],
                       ),
                       Padding(
@@ -304,7 +309,8 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                             _newPassword.hasLowerCase()
                                 ? SvgPicture.asset('lib/src/resources/images/icon_check.svg', height: 20)
                                 : SvgPicture.asset('lib/src/resources/images/icon_cross.svg', height: 20),
-                            Padding(padding: const EdgeInsets.only(left: 10), child: Text(appLoc.labelRequirementLowercase))
+                            Padding(
+                                padding: const EdgeInsets.only(left: 10), child: Text(appLoc.labelRequirementLowercase))
                           ],
                         ),
                       ),
@@ -315,7 +321,8 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                             _newPassword.hasDigits()
                                 ? SvgPicture.asset('lib/src/resources/images/icon_check.svg', height: 20)
                                 : SvgPicture.asset('lib/src/resources/images/icon_cross.svg', height: 20),
-                            Padding(padding: const EdgeInsets.only(left: 10), child: Text(appLoc.labelRequirementNumber))
+                            Padding(
+                                padding: const EdgeInsets.only(left: 10), child: Text(appLoc.labelRequirementNumber))
                           ],
                         ),
                       ),

@@ -1,9 +1,9 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AlcanciaDatePicker extends ConsumerWidget {
   const AlcanciaDatePicker({
@@ -41,15 +41,11 @@ class AlcanciaDatePicker extends ConsumerWidget {
                 child: Row(
                   children: [
                     Text(
-                      DateFormat.yMMMMd(
-                              Localizations.localeOf(context).toString())
-                          .format(date),
-                      style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                          color: Theme.of(context)
-                              .textTheme
-                              .subtitle2
-                              ?.color
-                              ?.withOpacity(0.6)),
+                      DateFormat.yMMMMd(Localizations.localeOf(context).toString()).format(date),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          ?.copyWith(color: Theme.of(context).textTheme.subtitle2?.color?.withOpacity(0.6)),
                     ),
                     const Spacer(),
                     const Icon(
@@ -65,8 +61,7 @@ class AlcanciaDatePicker extends ConsumerWidget {
                       builder: (cxt) {
                         return Container(
                           height: MediaQuery.of(context).size.height * 0.3,
-                          color: CupertinoColors.systemBackground
-                              .resolveFrom(context),
+                          color: CupertinoColors.systemBackground.resolveFrom(context),
                           child: SafeArea(
                               child: CupertinoDatePicker(
                             initialDateTime: date,

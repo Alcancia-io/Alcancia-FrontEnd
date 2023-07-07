@@ -11,7 +11,6 @@ class TransactionDetailController {
     },
   };
 
-
   Future<void> cancelTransaction({required String id}) async {
     final response = await transactionsService.cancelTransaction(id);
     if (response.hasException) {

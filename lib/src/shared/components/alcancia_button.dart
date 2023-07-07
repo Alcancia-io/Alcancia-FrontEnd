@@ -13,7 +13,8 @@ class AlcanciaButton extends StatelessWidget {
   final Widget? icon;
   final EdgeInsetsGeometry padding;
 
-  const AlcanciaButton({super.key,
+  const AlcanciaButton({
+    super.key,
     required this.buttonText,
     this.fontSize,
     required this.onPressed,

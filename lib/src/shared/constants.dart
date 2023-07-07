@@ -35,8 +35,7 @@ class AssetDescription extends StatelessWidget {
   final String boldText;
   final String regularText;
 
-  const AssetDescription(
-      {super.key, required this.boldText, required this.regularText});
+  const AssetDescription({super.key, required this.boldText, required this.regularText});
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +46,7 @@ class AssetDescription extends StatelessWidget {
         children: [
           TextSpan(
             text: boldText,
-            style: TextStyle(
-                fontWeight: FontWeight.bold, color: txtTheme.bodyText1?.color),
+            style: TextStyle(fontWeight: FontWeight.bold, color: txtTheme.bodyText1?.color),
           ),
           TextSpan(text: regularText, style: txtTheme.bodyText1),
         ],
@@ -57,11 +55,7 @@ class AssetDescription extends StatelessWidget {
   }
 }
 
-const usdcDescription =
-    AssetDescription(boldText: 'USD Coin (USDC) ', regularText: '');
-const usdcProtocolDescription =
-    AssetDescription(boldText: 'Aave ', regularText: '');
-const celoDescription =
-    AssetDescription(boldText: 'Celo Dollar (cUSD) ', regularText: '');
-const celoProtocolDescription =
-    AssetDescription(boldText: 'Moola Market ', regularText: '');
+const usdcDescription = AssetDescription(boldText: 'USD Coin (USDC) ', regularText: '');
+const usdcProtocolDescription = AssetDescription(boldText: 'Aave ', regularText: '');
+const celoDescription = AssetDescription(boldText: 'Celo Dollar (cUSD) ', regularText: '');
+const celoProtocolDescription = AssetDescription(boldText: 'Moola Market ', regularText: '');

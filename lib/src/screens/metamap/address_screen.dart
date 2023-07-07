@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/screens/metamap/address_controller.dart';
 import 'package:alcancia/src/screens/metamap/metamap_controller.dart';
@@ -291,7 +292,10 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
                           final checkoutData = CheckoutModel(order: order, txnInput: txnInput);
                           context.pushNamed('checkout', extra: checkoutData);
                         } catch (e) {
-                          Fluttertoast.showToast(msg: appLocalization.errorSomethingWentWrong, backgroundColor: Colors.red, textColor: Colors.white70);
+                          Fluttertoast.showToast(
+                              msg: appLocalization.errorSomethingWentWrong,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white70);
                         }
                         setState(() {
                           _loadingCheckout = false;

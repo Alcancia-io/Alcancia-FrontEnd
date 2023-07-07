@@ -6,7 +6,6 @@ class MinimalUser {
   String phoneNumber;
   String walletAddress;
 
-
   MinimalUser({
     required this.id,
     required this.surname,
@@ -18,12 +17,12 @@ class MinimalUser {
 
   factory MinimalUser.fromJSON(Map<String, dynamic> map) {
     return MinimalUser(
-        id: map["id"],
-        surname: map["surname"],
-        phoneNumber: map["phoneNumber"],
-        name: map["name"],
-        email: map["email"],
-        walletAddress: map['walletAddress'],
+      id: map["id"],
+      surname: map["surname"],
+      phoneNumber: map["phoneNumber"],
+      name: map["name"],
+      email: map["email"],
+      walletAddress: map['walletAddress'],
     );
   }
 }

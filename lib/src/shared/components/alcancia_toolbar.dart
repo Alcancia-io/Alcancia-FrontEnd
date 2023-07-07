@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum StateToolbar { logoNoletters, logoLetters, titleIcon, profileTitleIcon }
@@ -20,6 +20,7 @@ class AlcanciaToolbar extends StatelessWidget implements PreferredSizeWidget {
   final double logoHeight;
   final bool showBackButton;
   final double toolbarHeight;
+
   /*
   logo-noletters
   logo-letters
@@ -27,6 +28,7 @@ class AlcanciaToolbar extends StatelessWidget implements PreferredSizeWidget {
   profile-title-icon
    */
   final StateToolbar state;
+
   @override
   Widget build(BuildContext context) {
     var txtTheme = Theme.of(context).textTheme;
@@ -39,8 +41,7 @@ class AlcanciaToolbar extends StatelessWidget implements PreferredSizeWidget {
           backgroundColor: Theme.of(context).backgroundColor,
           elevation: 0,
           scrolledUnderElevation: 0.3,
-          title:
-          AlcanciaLogo(
+          title: AlcanciaLogo(
             height: logoHeight,
           ),
           centerTitle: true,
@@ -52,11 +53,10 @@ class AlcanciaToolbar extends StatelessWidget implements PreferredSizeWidget {
           backgroundColor: Theme.of(context).backgroundColor,
           elevation: 0,
           scrolledUnderElevation: 0.3,
-          title:
-            AlcanciaLogo(
-              letters: true,
-              height: logoHeight,
-            ),
+          title: AlcanciaLogo(
+            letters: true,
+            height: logoHeight,
+          ),
           centerTitle: true,
         );
       case StateToolbar.titleIcon:

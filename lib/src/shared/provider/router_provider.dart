@@ -1,23 +1,23 @@
 import 'package:alcancia/main.dart';
-import 'package:alcancia/src/features/registration/presentation/phone_registration_screen.dart';
-import 'package:alcancia/src/screens/login/login_screen.dart';
 import 'package:alcancia/src/features/registration/model/graphql_config.dart';
+import 'package:alcancia/src/features/registration/model/user_registration_model.dart';
 import 'package:alcancia/src/features/registration/presentation/otp_screen.dart';
+import 'package:alcancia/src/features/registration/presentation/phone_registration_screen.dart';
+import 'package:alcancia/src/features/registration/presentation/registration_screen.dart';
 import 'package:alcancia/src/features/user-profile/presentation/account_screen.dart';
 import 'package:alcancia/src/features/welcome/presentation/welcome_screen.dart';
-import 'package:alcancia/src/features/registration/presentation/registration_screen.dart';
-import 'package:alcancia/src/features/registration/model/user_registration_model.dart';
 import 'package:alcancia/src/screens/checkout/checkout.dart';
 import 'package:alcancia/src/screens/deposit/crypto_deposit_screen.dart';
 import 'package:alcancia/src/screens/deposit/deposit_screen.dart';
-import 'package:alcancia/src/screens/error/error_screen.dart';
 import 'package:alcancia/src/screens/forgot_password/forgot_password.dart';
+import 'package:alcancia/src/screens/login/login_screen.dart';
 import 'package:alcancia/src/screens/login/mfa_screen.dart';
 import 'package:alcancia/src/screens/metamap/address_screen.dart';
 import 'package:alcancia/src/screens/onboarding/onboarding_screens.dart';
 import 'package:alcancia/src/screens/success/success_screen.dart';
 import 'package:alcancia/src/screens/successful_transaction/successful_transaction.dart';
 import 'package:alcancia/src/screens/swap/swap_screen.dart';
+import 'package:alcancia/src/screens/transaction_detail/transaction_detail.dart';
 import 'package:alcancia/src/screens/transfer/transfer_screen.dart';
 import 'package:alcancia/src/screens/withdraw/withdraw_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
@@ -29,7 +29,6 @@ import 'package:alcancia/src/shared/models/otp_data_model.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:alcancia/src/screens/transaction_detail/transaction_detail.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -171,24 +170,24 @@ final routerProvider = Provider<GoRouter>(
         ),
       ],
       redirect: (context, state) async {
-        final loginLoc = state.namedLocation("login");
+        final loginLoc = context.namedLocation("login");
         final loggingIn = state.subloc == loginLoc;
-        final createAccountLoc = state.namedLocation("registration");
-        final welcomeLoc = state.namedLocation("welcome");
-        final mfaLoc = state.namedLocation("mfa");
+        final createAccountLoc = context.namedLocation("registration");
+        final welcomeLoc = context.namedLocation("welcome");
+        final mfaLoc = context.namedLocation("mfa");
         final isMfa = state.subloc == mfaLoc;
-        final otp = state.namedLocation("otp");
+        final otp = context.namedLocation("otp");
         final isOtp = state.subloc == otp;
-        final phoneRegistration = state.namedLocation("phone-registration");
+        final phoneRegistration = context.namedLocation("phone-registration");
         final isPhoneRegistration = state.subloc == phoneRegistration;
         final isStartup = state.subloc == welcomeLoc;
         final creatingAccount = state.subloc == createAccountLoc;
         final loggedIn = await isUserAuthenticated();
-        final home = state.namedLocation("homescreen", params: {"id": "0"});
-        final forgotPassword = state.namedLocation('forgot-password');
+        final home = context.namedLocation("homescreen", params: {"id": "0"});
+        final forgotPassword = context.namedLocation('forgot-password');
         final isForgotPassword = state.subloc == forgotPassword;
         final finishedOnboarding = await _finishedOnboarding();
-        final onboardingLoc = state.namedLocation('onboarding');
+        final onboardingLoc = context.namedLocation('onboarding');
         final isOnboarding = state.subloc == onboardingLoc;
         if (!loggedIn && !finishedOnboarding && !isOnboarding) return onboardingLoc;
         if (!loggedIn &&

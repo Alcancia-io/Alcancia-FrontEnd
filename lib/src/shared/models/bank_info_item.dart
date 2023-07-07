@@ -19,6 +19,4 @@ class AccountInfo {
     beneficiary: "Bctech Solutions SAPI de CV",
     clabe: "646180204200011681",
   );
-
-
 }

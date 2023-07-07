@@ -2,9 +2,9 @@ import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SuccessScreen extends StatelessWidget {
   SuccessScreen({Key? key, required this.message}) : super(key: key);
@@ -45,12 +45,12 @@ class SuccessScreen extends StatelessWidget {
               ),
               const Spacer(),
               AlcanciaButton(
-                  width: double.infinity,
-                  height: responsiveService.getHeightPixels(64, screenHeight),
-                  buttonText: appLoc.buttonUnderstood,
-                  onPressed: () {
-                    context.go("/");
-                  },
+                width: double.infinity,
+                height: responsiveService.getHeightPixels(64, screenHeight),
+                buttonText: appLoc.buttonUnderstood,
+                onPressed: () {
+                  context.go("/");
+                },
               ),
             ],
           ),

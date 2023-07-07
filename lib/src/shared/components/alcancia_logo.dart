@@ -5,6 +5,7 @@ class AlcanciaLogo extends StatelessWidget {
   const AlcanciaLogo({Key? key, this.height, this.letters}) : super(key: key);
   final double? height;
   final bool? letters;
+
   @override
   Widget build(BuildContext context) {
     var isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -23,6 +24,5 @@ class AlcanciaLogo extends StatelessWidget {
         height: height,
       );
     }
-
   }
 }

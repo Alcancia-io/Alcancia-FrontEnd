@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'alcancia_copy_clipboard.dart';
 
 class DepositInfoItem extends StatelessWidget {
-  const DepositInfoItem(
-      {Key? key,
-        required this.title,
-        required this.subtitle,
-        this.supportsClipboard = false,
-        this.padding = const EdgeInsets.symmetric(
-            horizontal: 24.0, vertical: 8.0),
-        this.titleStyle,
-        this.subtitleStyle,
-      })
-      : super(key: key);
+  const DepositInfoItem({
+    Key? key,
+    required this.title,
+    required this.subtitle,
+    this.supportsClipboard = false,
+    this.padding = const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+    this.titleStyle,
+    this.subtitleStyle,
+  }) : super(key: key);
 
   final String title;
   final String subtitle;
@@ -35,8 +34,7 @@ class DepositInfoItem extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: titleStyle ?? const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 16),
+                  style: titleStyle ?? const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 Text(
                   subtitle,
@@ -46,9 +44,7 @@ class DepositInfoItem extends StatelessWidget {
             ),
           ),
           if (supportsClipboard) ...[
-            AlcanciaCopyToClipboard(
-                displayText: "${title} ${appLoc.alertCopied.toLowerCase()}",
-                textToCopy: subtitle),
+            AlcanciaCopyToClipboard(displayText: "${title} ${appLoc.alertCopied.toLowerCase()}", textToCopy: subtitle),
           ]
         ],
       ),

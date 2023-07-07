@@ -7,8 +7,7 @@ class SwapController {
   final _exceptionHandler = ExceptionService();
   final _swapService = SwapService();
 
-  Map<String, Map<String, String>> suarmiQuoteInput(
-      {required String targetCurrency}) {
+  Map<String, Map<String, String>> suarmiQuoteInput({required String targetCurrency}) {
     return {
       "quoteInput": {
         "from_amount": "1",
@@ -19,8 +18,7 @@ class SwapController {
     };
   }
 
-  Map<String, Map<String, String>> alcanciaQuoteInput(
-      {required String targetCurrency}) {
+  Map<String, Map<String, String>> alcanciaQuoteInput({required String targetCurrency}) {
     return {
       "quoteInput": {
         "from_amount": "1",
@@ -31,8 +29,7 @@ class SwapController {
   }
 
   getSuarmiExchange(String targetCurrency) async {
-    var response = await _swapService
-        .getSuarmiQuote(suarmiQuoteInput(targetCurrency: targetCurrency));
+    var response = await _swapService.getSuarmiQuote(suarmiQuoteInput(targetCurrency: targetCurrency));
     if (response.hasException) {
       var exception = _exceptionHandler.handleException(response.exception);
       throw Exception(exception);
@@ -41,8 +38,7 @@ class SwapController {
   }
 
   Future<double> getAlcanciaExchange(String targetCurrency) async {
-    var response = await _swapService
-        .getAlcanciaQuote(alcanciaQuoteInput(targetCurrency: targetCurrency));
+    var response = await _swapService.getAlcanciaQuote(alcanciaQuoteInput(targetCurrency: targetCurrency));
     if (response.hasException) {
       var exception = _exceptionHandler.handleException(response.exception);
       throw Exception(exception);

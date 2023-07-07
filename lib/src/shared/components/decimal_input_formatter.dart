@@ -1,24 +1,23 @@
-import 'package:flutter/services.dart';
 import 'dart:math' as math;
 
+import 'package:flutter/services.dart';
+
 class DecimalTextInputFormatter extends TextInputFormatter {
-  DecimalTextInputFormatter({required this.decimalRange})
-      : assert(decimalRange > 0);
+  DecimalTextInputFormatter({required this.decimalRange}) : assert(decimalRange > 0);
 
   final int decimalRange;
 
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, // unused.
-      TextEditingValue newValue,
-      ) {
+    TextEditingValue oldValue, // unused.
+    TextEditingValue newValue,
+  ) {
     TextSelection newSelection = newValue.selection;
     String truncated = newValue.text;
 
     String value = newValue.text;
 
-    if (value.contains(".") &&
-        value.substring(value.indexOf(".") + 1).length > decimalRange) {
+    if (value.contains(".") && value.substring(value.indexOf(".") + 1).length > decimalRange) {
       truncated = oldValue.text;
       newSelection = oldValue.selection;
     } else if (value == ".") {

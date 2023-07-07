@@ -1,4 +1,3 @@
-
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/screens/transfer/transfer_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
@@ -13,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 
 class TransferScreen extends ConsumerStatefulWidget {
   const TransferScreen({Key? key}) : super(key: key);
@@ -85,7 +83,6 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
       _loading = false;
     });
 
-
     if (_transferError.isEmpty) {
       context.goNamed('successful-transaction', extra: transferResponse);
     }
@@ -111,8 +108,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
     final appLoc = AppLocalizations.of(context)!;
     final txtTheme = Theme.of(context).textTheme;
     final userBalance = ref.watch(balanceProvider);
-    final balance =
-        sourceCurrency == "apolusdc" ? userBalance.usdcBalance : userBalance.celoBalance;
+    final balance = sourceCurrency == "apolusdc" ? userBalance.usdcBalance : userBalance.celoBalance;
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
@@ -165,8 +161,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                               ),
                               onChanged: (value) {
                                 setState(() {
-                                  countryCode = countries
-                                      .firstWhere((element) => element['value'] == value)['name'];
+                                  countryCode = countries.firstWhere((element) => element['value'] == value)['name'];
                                   _enableButton = _formKey.currentState!.validate();
                                 });
                               },
@@ -255,7 +250,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                           if (_loading) ...[
                             const CircularProgressIndicator(),
                           ] else ...[
-                            if (balance < (double.tryParse(_transferAmountController.text) ?? 0)) ... [
+                            if (balance < (double.tryParse(_transferAmountController.text) ?? 0)) ...[
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                                 child: AlcanciaButton(
@@ -281,8 +276,8 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                                         final phoneNumber = countryCode + _phoneController.text;
                                         final currency = sourceCurrency;
                                         final amount = double.parse(_transferAmountController.text);
-                                        final targetUser = await transferController.searchUser(
-                                            phoneNumber: phoneNumber);
+                                        final targetUser =
+                                            await transferController.searchUser(phoneNumber: phoneNumber);
                                         showDialog(
                                           context: context,
                                           builder: (ctx) {
@@ -290,8 +285,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                                               targetUser: targetUser,
                                               userBalance: balance,
                                               amount: amount,
-                                              currency:
-                                                  sourceCurrency == "apolusdc" ? "USDC" : "CUSD",
+                                              currency: sourceCurrency == "apolusdc" ? "USDC" : "CUSD",
                                               onConfirm: () {
                                                 transferFunds(amount, currency, targetUser.id);
                                               },

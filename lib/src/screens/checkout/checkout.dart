@@ -1,8 +1,6 @@
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
-import 'package:alcancia/src/shared/components/alcancia_copy_clipboard.dart';
 import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
 import 'package:alcancia/src/shared/components/deposit_info_item.dart';
-import 'package:alcancia/src/shared/constants.dart';
 import 'package:alcancia/src/shared/models/bank_info_item.dart';
 import 'package:alcancia/src/shared/models/checkout_model.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
@@ -10,8 +8,9 @@ import 'package:alcancia/src/shared/services/exception_service.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:alcancia/src/shared/services/suarmi_service.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
+
 import '../../resources/colors/colors.dart';
 
 class Checkout extends StatelessWidget {
@@ -41,8 +40,7 @@ class Checkout extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 32.0),
-                child: OrderInformation(
-                    txnInput: checkoutData.txnInput, concept: checkoutData.order.concept),
+                child: OrderInformation(txnInput: checkoutData.txnInput, concept: checkoutData.order.concept),
               ),
               AlcanciaButton(
                 height: responsiveService.getHeightPixels(64, screenHeight),
@@ -93,9 +91,7 @@ class OrderInformation extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark
-            ? alcanciaCardDark
-            : alcanciaFieldLight,
+        color: Theme.of(context).brightness == Brightness.dark ? alcanciaCardDark : alcanciaFieldLight,
         borderRadius: const BorderRadius.all(
           Radius.circular(7),
         ),
@@ -143,19 +139,18 @@ class OrderInformation extends StatelessWidget {
                     padding: EdgeInsets.only(bottom: 18),
                   ),
                 ],
-                  DepositInfoItem(
-                    title: appLoc.labelConcept,
-                    subtitle: concept,
-                    supportsClipboard: true,
-                    padding: EdgeInsets.only(bottom: 18),
-                  ),
+                DepositInfoItem(
+                  title: appLoc.labelConcept,
+                  subtitle: concept,
+                  supportsClipboard: true,
+                  padding: EdgeInsets.only(bottom: 18),
+                ),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("\nTotal:",
-                    style: textStyle?.copyWith(fontWeight: FontWeight.bold)),
+                Text("\nTotal:", style: textStyle?.copyWith(fontWeight: FontWeight.bold)),
                 Text("\n\$ $total", style: textStyle),
               ],
             ),
@@ -165,4 +160,3 @@ class OrderInformation extends StatelessWidget {
     );
   }
 }
-

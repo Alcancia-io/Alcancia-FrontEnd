@@ -3,12 +3,11 @@ import 'package:alcancia/src/shared/extensions/type_extensions.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/models/transaction_model.dart';
 import 'package:alcancia/src/shared/models/user_model.dart';
-import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import "package:flutter/material.dart";
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AlcanciaTransactionItem extends StatelessWidget {
   const AlcanciaTransactionItem({Key? key, required this.txn, required this.user}) : super(key: key);
@@ -26,12 +25,14 @@ class AlcanciaTransactionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        customBorder:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         onTap: () {
           context.push('/transaction_detail', extra: txn);
         },
-        child: TransactionItem(txn: txn, user: user,));
+        child: TransactionItem(
+          txn: txn,
+          user: user,
+        ));
   }
 }
 
@@ -48,8 +49,7 @@ class TransactionItem extends ConsumerWidget {
     switch (txn.type) {
       case TransactionType.deposit:
         return Container(
-          padding:
-          const EdgeInsets.only(top: 12, bottom: 12, left: 12, right: 12),
+          padding: const EdgeInsets.only(top: 12, bottom: 12, left: 12, right: 12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -81,8 +81,7 @@ class TransactionItem extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text("\$${txn.sourceAmount?.toStringAsFixed(2)}"),
-                        Text(
-                            "\$${txn.amount.toStringAsFixed(2)} ${txn.targetAsset}"),
+                        Text("\$${txn.amount.toStringAsFixed(2)} ${txn.targetAsset}"),
                       ],
                     ),
                   ),
@@ -96,8 +95,7 @@ class TransactionItem extends ConsumerWidget {
         );
       case TransactionType.withdraw:
         return Container(
-          padding:
-          const EdgeInsets.only(top: 12, bottom: 12, left: 12, right: 12),
+          padding: const EdgeInsets.only(top: 12, bottom: 12, left: 12, right: 12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -129,8 +127,7 @@ class TransactionItem extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text("\$${txn.sourceAmount?.toStringAsFixed(2)}"),
-                        Text(
-                            "\$${txn.amount.toStringAsFixed(2)} ${txn.targetAsset}"),
+                        Text("\$${txn.amount.toStringAsFixed(2)} ${txn.targetAsset}"),
                       ],
                     ),
                   ),
@@ -144,8 +141,7 @@ class TransactionItem extends ConsumerWidget {
         );
       case TransactionType.p2p:
         return Container(
-          padding:
-          const EdgeInsets.only(top: 12, bottom: 12, left: 12, right: 12),
+          padding: const EdgeInsets.only(top: 12, bottom: 12, left: 12, right: 12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -173,8 +169,7 @@ class TransactionItem extends ConsumerWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(right: 6),
-                    child: Text(
-                        "\$${txn.amount.toStringAsFixed(2)} ${txn.sourceAsset}"),
+                    child: Text("\$${txn.amount.toStringAsFixed(2)} ${txn.sourceAsset}"),
                   ),
                   SvgPicture.asset(
                     "lib/src/resources/images/white_arrow_right.svg",
@@ -186,8 +181,7 @@ class TransactionItem extends ConsumerWidget {
         );
       case TransactionType.unknown:
         return Container(
-          padding:
-          const EdgeInsets.only(top: 12, bottom: 12, left: 12, right: 12),
+          padding: const EdgeInsets.only(top: 12, bottom: 12, left: 12, right: 12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -219,8 +213,7 @@ class TransactionItem extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text("\$${txn.sourceAmount?.toStringAsFixed(2)}"),
-                        Text(
-                            "${txn.amount.toStringAsFixed(2)} ${txn.targetAsset ?? txn.sourceAsset}"),
+                        Text("${txn.amount.toStringAsFixed(2)} ${txn.targetAsset ?? txn.sourceAsset}"),
                       ],
                     ),
                   ),
@@ -235,4 +228,3 @@ class TransactionItem extends ConsumerWidget {
     }
   }
 }
-

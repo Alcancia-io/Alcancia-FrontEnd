@@ -46,7 +46,6 @@ class AlcanciaTransactions extends ConsumerWidget {
                 "lib/src/resources/images/no_transactions.png",
                 color: emptyTransactionsColor(appTheme),
                 height: 80,
-
               ),
             ),
             Text(

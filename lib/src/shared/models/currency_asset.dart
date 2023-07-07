@@ -4,8 +4,7 @@ enum CurrencyAsset {
   mxn(actualAsset: "MXN", shownAsset: "MXN");
 
   const CurrencyAsset({required this.actualAsset, required this.shownAsset});
+
   final String actualAsset;
   final String shownAsset;
-
-
 }
