@@ -191,7 +191,7 @@
 	"labelMoneyWithdrawal": "Retiro de dinero",
 	"buttonSkip": "Saltar",
 	"buttonTransfer": "Transferencia",
-	"alertVerificationInProgress": "Revisión en proceso, espera un momento...",
+	"alertVerificationInProcess": "Revisión en proceso, espera un momento...",
 	"errorMinimumDepositAmount": "Deposito mínimo de $200",
 	"errorMaximumDepositAmount": "Deposito máximo de $50,000",
 	"errorMinimumDepositAmountDOP": "Deposito mínimo de $600",
@@ -302,5 +302,8 @@
     "labelRiskLow": "Bajo",
     "unknown": "Desconocido",
     "labelRecipientPhone": "Número de teléfono del destinatario",
-    "labelComingSoon": "Próximamente..."
+    "labelComingSoon": "Próximamente...",
+    "buttonVerifyNow": "VERIFICAR IDENTIDAD",
+    "buttonPending": "VERIFICACIÓN EN PROCESO",
+    "buttonFailed": "VERIFICACIÓN FALLIDA"
 }
