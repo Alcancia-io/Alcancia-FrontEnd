@@ -302,5 +302,6 @@
     "labelRiskLow": "Bajo",
     "unknown": "Desconocido",
     "labelRecipientPhone": "Número de teléfono del destinatario",
-    "labelComingSoon": "Próximamente..."
+    "labelComingSoon": "Próximamente...",
+	"labelErrorOtp": "Lo sentimos, el código OTP ha fallado. Por favor, inténtalo de nuevo más tarde."
 }
