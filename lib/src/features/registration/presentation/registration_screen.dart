@@ -1,6 +1,7 @@
 import 'package:alcancia/src/features/registration/model/user_registration_model.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
+import 'package:alcancia/src/shared/models/kyc_status.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -284,6 +285,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                         walletAddress: "",
                         country: '',
                         profession: '',
+                        kycStatus: KYCStatus.none,
                       );
                       if (isValid(selectedGender, selectedDate)) {
                         context.push("/phone-registration",

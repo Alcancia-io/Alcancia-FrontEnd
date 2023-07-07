@@ -6,24 +6,6 @@ import '../models/alcancia_models.dart';
 class UserState extends StateNotifier<User?> {
   UserState() : super(null);
 
-  Future<void> login(String email, String password) async {
-    // This mocks some sort of request / response
-    state = User(
-      id: "",
-      authId: "",
-      name: "My Name",
-      surname: "My Surname",
-      email: "My Email",
-      gender: "Gender",
-      country: "",
-      phoneNumber: "",
-      dob: DateTime.now(),
-      balance: Balance(total: 0, aPolUSDC: 0, cUSD: 0, etherscan: 0, mcUSD: 0),
-      walletAddress: "",
-      profession: '',
-    );
-  }
-
   void setUser(User? user) {
     state = user;
   }

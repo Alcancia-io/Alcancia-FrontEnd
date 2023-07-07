@@ -130,7 +130,7 @@
 	"labelMoneyWithdrawal": "Withdrawal of money",
 	"buttonSkip": "Skip",
 	"buttonTransfer": "Bank Transfer",
-	"alertVerificationInProgress": "Review in process, wait a moment...",
+	"alertVerificationInProcress": "Review in process, wait a moment...",
 	"errorMinimumDepositAmount": "Minimum deposit of $200",
 	"errorMaximumDepositAmount": "Maximum deposit of $50,000",
 	"errorMinimumDepositAmountDOP": "Minimum deposit of $600",
@@ -221,5 +221,8 @@
 	"unknown": "Unknown",
 	"labelRecipientPhone": "Recipient''s Phone Number",
 	"labelComingSoon": "Coming soon...",
+	"buttonVerifyNow": "VERIFY IDENTITY",
+	"buttonPending": "VERIFICATION IN PROCESS",
+	"buttonFailed": "VERIFICATION FAILED",
 	"labelErrorOtp": "Sorry, the OTP code has failed. Please try again later."
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class AlcanciaButton extends StatelessWidget {
   final void Function()? onPressed;
@@ -32,7 +31,7 @@ class AlcanciaButton extends StatelessWidget {
   Widget build(
     BuildContext context,
   ) {
-    if (rounded != null) {
+    if (rounded == true) {
       return SizedBox(
         height: height,
         child: OutlinedButton.icon(
@@ -45,7 +44,7 @@ class AlcanciaButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(26),
             ),
           ),
-          icon: icon ?? SvgPicture.asset("lib/src/resources/images/plus_icon.svg"),
+          icon: icon ?? Container(),
           label: Text(
             buttonText,
             style: TextStyle(
