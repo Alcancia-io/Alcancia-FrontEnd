@@ -30,7 +30,10 @@ class DashboardActions extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 4.0),
                 child: AlcanciaButton(
                   rounded: true,
-                  icon: SvgPicture.asset("lib/src/resources/images/icon_deposit.svg", color: Colors.white,),
+                  icon: SvgPicture.asset(
+                    "lib/src/resources/images/icon_deposit.svg",
+                    color: Colors.white,
+                  ),
                   buttonText: appLoc.labelDeposit,
                   foregroundColor: Colors.white,
                   onPressed: () {
@@ -46,7 +49,10 @@ class DashboardActions extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 4.0),
                 child: AlcanciaButton(
                   rounded: true,
-                  icon: SvgPicture.asset("lib/src/resources/images/icon_transfer.svg", color: Colors.white,),
+                  icon: SvgPicture.asset(
+                    "lib/src/resources/images/icon_transfer.svg",
+                    color: Colors.white,
+                  ),
                   buttonText: appLoc.labelTransfer,
                   foregroundColor: Colors.white,
                   onPressed: () {
@@ -62,7 +68,10 @@ class DashboardActions extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 4.0),
                 child: AlcanciaButton(
                   rounded: true,
-                  icon: SvgPicture.asset("lib/src/resources/images/icon_withdraw.svg", color: Colors.white,),
+                  icon: SvgPicture.asset(
+                    "lib/src/resources/images/icon_withdraw.svg",
+                    color: Colors.white,
+                  ),
                   buttonText: appLoc.labelWithdraw,
                   foregroundColor: Colors.white,
                   onPressed: () {
@@ -81,7 +90,10 @@ class DashboardActions extends ConsumerWidget {
           child: AlcanciaButton(
             rounded: true,
             buttonText: appLoc.buttonPending,
-            icon: Icon(CupertinoIcons.hourglass, size: 21,),
+            icon: Icon(
+              CupertinoIcons.hourglass,
+              size: 21,
+            ),
             foregroundColor: Colors.white,
             onPressed: () {
               Fluttertoast.showToast(
@@ -108,7 +120,8 @@ class DashboardActions extends ConsumerWidget {
                 context.pushNamed("user-address", extra: {"verified": false});
               } else {
                 try {
-                  final updatedUser = await dashboardController.verifyUser(user, appLoc);
+                  final updatedUser =
+                      await dashboardController.verifyUser(user, appLoc);
                   ref.read(userProvider.notifier).setUser(updatedUser);
                   context.go("/");
                 } catch (e) {
@@ -133,15 +146,18 @@ class DashboardActions extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 4.0),
           child: AlcanciaButton(
             rounded: true,
-            icon: const Icon(CupertinoIcons.person_crop_circle_fill_badge_checkmark),
+            icon: const Icon(
+                CupertinoIcons.person_crop_circle_fill_badge_checkmark),
             buttonText: appLoc.buttonVerifyNow,
             foregroundColor: Colors.white,
             onPressed: () async {
-              if (user.address == null || user.profession == null) {
+              if ((user.address == null || user.profession == null) &&
+                  user.country == 'MX') {
                 context.pushNamed("user-address", extra: {"verified": false});
               } else {
                 try {
-                  final updatedUser = await dashboardController.verifyUser(user, appLoc);
+                  final updatedUser =
+                      await dashboardController.verifyUser(user, appLoc);
                   ref.read(userProvider.notifier).setUser(updatedUser);
                   context.go("/");
                 } catch (e) {
@@ -162,7 +178,5 @@ class DashboardActions extends ConsumerWidget {
           ),
         );
     }
-
-
   }
 }
