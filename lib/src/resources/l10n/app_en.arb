@@ -130,7 +130,7 @@
 	"labelMoneyWithdrawal": "Withdrawal of money",
 	"buttonSkip": "Skip",
 	"buttonTransfer": "Bank Transfer",
-	"alertVerificationInProcress": "Review in process, wait a moment...",
+	"alertVerificationInProcess": "Verification in process, wait a moment...",
 	"errorMinimumDepositAmount": "Minimum deposit of $200",
 	"errorMaximumDepositAmount": "Maximum deposit of $50,000",
 	"errorMinimumDepositAmountDOP": "Minimum deposit of $600",
