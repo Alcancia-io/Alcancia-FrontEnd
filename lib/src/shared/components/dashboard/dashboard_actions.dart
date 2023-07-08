@@ -116,7 +116,8 @@ class DashboardActions extends ConsumerWidget {
             buttonText: appLoc.buttonFailed,
             foregroundColor: Colors.white,
             onPressed: () async {
-              if (user.address == null || user.profession == null) {
+              if ((user.address == null || user.profession == null) &&
+                  user.country == 'MX') {
                 context.pushNamed("user-address", extra: {"verified": false});
               } else {
                 try {
