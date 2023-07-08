@@ -2,6 +2,7 @@ import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/screens/dashboard/dashboard_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:alcancia/src/shared/models/kyc_status.dart';
+import 'package:alcancia/src/shared/models/user_model.dart';
 import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -116,27 +117,7 @@ class DashboardActions extends ConsumerWidget {
             buttonText: appLoc.buttonFailed,
             foregroundColor: Colors.white,
             onPressed: () async {
-              if ((user.address == null || user.profession == null) &&
-                  user.country == 'MX') {
-                context.pushNamed("user-address", extra: {"verified": false});
-              } else {
-                try {
-                  final updatedUser =
-                      await dashboardController.verifyUser(user, appLoc);
-                  ref.read(userProvider.notifier).setUser(updatedUser);
-                  context.go("/");
-                } catch (e) {
-                  Fluttertoast.showToast(
-                    msg: e.toString(),
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: alcanciaMidBlue,
-                    textColor: Colors.white,
-                    fontSize: 16.0,
-                  );
-                }
-              }
+              await kycForward(user, context, appLoc, ref);
             },
             height: 38,
             color: Colors.red,
@@ -152,32 +133,36 @@ class DashboardActions extends ConsumerWidget {
             buttonText: appLoc.buttonVerifyNow,
             foregroundColor: Colors.white,
             onPressed: () async {
-              if ((user.address == null || user.profession == null) &&
-                  user.country == 'MX') {
-                context.pushNamed("user-address", extra: {"verified": false});
-              } else {
-                try {
-                  final updatedUser =
-                      await dashboardController.verifyUser(user, appLoc);
-                  ref.read(userProvider.notifier).setUser(updatedUser);
-                  context.go("/");
-                } catch (e) {
-                  Fluttertoast.showToast(
-                    msg: e.toString(),
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: alcanciaMidBlue,
-                    textColor: Colors.white,
-                    fontSize: 16.0,
-                  );
-                }
-              }
+              await kycForward(user, context, appLoc, ref);
             },
             height: 38,
             color: alcanciaMidBlue,
           ),
         );
+    }
+  }
+
+  Future<void> kycForward(User user, BuildContext context,
+      AppLocalizations appLoc, WidgetRef ref) async {
+    if ((user.address == null || user.profession == null) &&
+        user.country == 'MX') {
+      context.pushNamed("user-address", extra: {"verified": false});
+    } else {
+      try {
+        final updatedUser = await dashboardController.verifyUser(user, appLoc);
+        ref.read(userProvider.notifier).setUser(updatedUser);
+        context.go("/");
+      } catch (e) {
+        Fluttertoast.showToast(
+          msg: e.toString(),
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: alcanciaMidBlue,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
     }
   }
 }
