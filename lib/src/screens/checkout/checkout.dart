@@ -42,7 +42,10 @@ class Checkout extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 32.0),
                 child: OrderInformation(
-                    txnInput: checkoutData.txnInput, concept: checkoutData.order.concept),
+                    txnInput: checkoutData.txnInput,
+                    concept: (checkoutData.order.concept == null)
+                        ? ""
+                        : checkoutData.order.concept!),
               ),
               AlcanciaButton(
                 height: responsiveService.getHeightPixels(64, screenHeight),
@@ -74,7 +77,7 @@ class OrderInformation extends StatelessWidget {
   });
 
   final TransactionInput txnInput;
-  final String concept;
+  String concept;
   late AccountInfo bankInfo;
 
   @override
@@ -143,12 +146,12 @@ class OrderInformation extends StatelessWidget {
                     padding: EdgeInsets.only(bottom: 18),
                   ),
                 ],
-                  DepositInfoItem(
-                    title: appLoc.labelConcept,
-                    subtitle: concept,
-                    supportsClipboard: true,
-                    padding: EdgeInsets.only(bottom: 18),
-                  ),
+                DepositInfoItem(
+                  title: appLoc.labelConcept,
+                  subtitle: concept,
+                  supportsClipboard: true,
+                  padding: EdgeInsets.only(bottom: 18),
+                ),
               ],
             ),
             Row(
@@ -165,4 +168,3 @@ class OrderInformation extends StatelessWidget {
     );
   }
 }
-
