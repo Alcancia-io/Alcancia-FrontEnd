@@ -36,7 +36,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
 
   final List<Map> sourceCurrenciesMXN = [
     {"name": "USDC", "icon": "lib/src/resources/images/icon_usdc.png"},
-    {"name": "cUSD", "icon": "lib/src/resources/images/icon_celo_usd.png"},
+    /*{"name": "cUSD", "icon": "lib/src/resources/images/icon_celo_usd.png"},*/
   ];
   final List<Map> sourceCurrenciesDOP = [
     {"name": "USDC", "icon": "lib/src/resources/images/icon_usdc.png"},
@@ -122,7 +122,8 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
     } else {
       country = countries.first['name'];
     }
-    final countryIndex = countries.indexWhere((element) => element['name'] == country);
+    final countryIndex =
+        countries.indexWhere((element) => element['name'] == country);
     final code = countries.removeAt(countryIndex);
     countries.insert(0, code);
   }
@@ -229,9 +230,11 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
                   height: 10,
                 ),
                 if (country == "México") ...[
-                  MXNFields(getBalance(userBalance, sourceMXNCurrency), context, sourceCurrenciesMXN),
+                  MXNFields(getBalance(userBalance, sourceMXNCurrency), context,
+                      sourceCurrenciesMXN),
                 ] else if (country == "República Dominicana") ...[
-                  DOPFields(getBalance(userBalance, sourceDOPCurrency), context, sourceCurrenciesDOP, dopBanks),
+                  DOPFields(getBalance(userBalance, sourceDOPCurrency), context,
+                      sourceCurrenciesDOP, dopBanks),
                 ],
                 Padding(
                   padding: const EdgeInsets.only(top: 24),
@@ -279,19 +282,17 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
     );
   }
 
-  Future<void> sendOrder(BuildContext context, AppLocalizations appLoc, String selectedCountry) async {
+  Future<void> sendOrder(BuildContext context, AppLocalizations appLoc,
+      String selectedCountry) async {
     Map<String, dynamic> orderInput = {};
     if (selectedCountry == "México") {
       orderInput = {
         "orderInput": {
           "from_amount": _amountTextController.text,
           "type": "WITHDRAW",
-          "from_currency": getSourceCurrency(country) == 'USDC'
-              ? 'aPolUSDC'
-              : 'mcUSD',
-          "network": getSourceCurrency(country) == "USDC"
-              ? "MATIC"
-              : "CELO",
+          "from_currency":
+              getSourceCurrency(country) == 'USDC' ? 'aPolUSDC' : 'mcUSD',
+          "network": getSourceCurrency(country) == "USDC" ? "MATIC" : "CELO",
           "to_amount": targetAmount.toString(),
           "to_currency": "MXN",
           "bank_account": _clabeTextController.text,
@@ -312,10 +313,8 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
       };
     }
     try {
-      await controller
-          .sendOrder(orderInput);
-      context.go("/success",
-          extra: appLoc.labelWithdrawalSent);
+      await controller.sendOrder(orderInput);
+      context.go("/success", extra: appLoc.labelWithdrawalSent);
     } catch (e) {
       setState(() {
         _orderError = e.toString();
@@ -326,8 +325,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
   void updateTargetAmount(String value) {
     setState(() {
       targetAmount = value.isNotEmpty
-          ? double.parse(_amountTextController.text) /
-              getExchangeRate(country)
+          ? double.parse(_amountTextController.text) / getExchangeRate(country)
           : 0;
       _targetTextController.text = targetAmount.toStringAsFixed(3);
     });

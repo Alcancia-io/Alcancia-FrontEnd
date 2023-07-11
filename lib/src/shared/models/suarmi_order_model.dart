@@ -1,6 +1,6 @@
 class AlcanciaOrder {
   String? address;
-  String concept;
+  String? concept;
   String sourceAmount;
   String sourceCurrency;
   String targetCurrency;
@@ -20,7 +20,7 @@ class AlcanciaOrder {
   factory AlcanciaOrder.fromJson(Map<String, dynamic> json) {
     return AlcanciaOrder(
       address: json["address"] as String?,
-      concept: json["concepto"],
+      concept: json["concepto"] as String?,
       sourceCurrency: json["from_currency"] as String,
       sourceAmount: json["from_amount"] as String,
       network: json['network'],
