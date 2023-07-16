@@ -306,5 +306,6 @@
 	"buttonVerifyNow": "VERIFICAR IDENTIDAD",
 	"buttonPending": "VERIFICACIÓN EN PROCESO",
 	"buttonFailed": "VERIFICACIÓN FALLIDA",
-	"labelErrorOtp": "Lo sentimos, el código OTP ha fallado. Por favor, inténtalo de nuevo más tarde."
+	"labelErrorOtp": "Lo sentimos, el código OTP ha fallado. Por favor, inténtalo de nuevo más tarde.",
+	"labelAccountType": "Tipo cuenta"
 }

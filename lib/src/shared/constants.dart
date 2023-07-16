@@ -15,6 +15,7 @@ const alcanciaDOPInfo = {
   'Banco': 'Banreservas',
   'Beneficiario': 'BAPLTECH SRL',
   'RNC': '1-32-75385-2',
+  'Tipo cuenta': 'Cuenta de ahorros',
   'No. de cuenta': '9605734495'
 };
 
