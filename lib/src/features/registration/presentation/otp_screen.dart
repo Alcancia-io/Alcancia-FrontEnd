@@ -164,25 +164,8 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   alcanciaSnackBar(context,
                                       appLocalization.labelAccountCreated));
-                              try {
-                                final deviceToken = await pushNotifications
-                                    .messaging
-                                    .getToken();
-                                final data = await loginController.login(
-                                    widget.otpDataModel.email,
-                                    widget.otpDataModel.password!,
-                                    deviceToken ?? "");
-                                await saveToken(data.token);
-                                await saveUserInfo(data.name, data.email);
-
-                                final completed = await loginController
-                                    .completeSignIn(_codeController.text);
-                                if (completed) context.go("/homescreen/0");
-                              } catch (err) {
-                                setState(() {
-                                  _error = appLocalization.labelErrorOtp;
-                                });
-                              }
+                              await autoLogin(
+                                  pushNotifications, context, appLocalization);
                             } catch (err) {
                               setState(() {
                                 _error = appLocalization.labelErrorOtp;
@@ -205,6 +188,25 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> autoLogin(PushNotificationProvider pushNotifications,
+      BuildContext context, AppLocalizations appLocalization) async {
+    try {
+      final deviceToken = await pushNotifications.messaging.getToken();
+      final data = await loginController.login(widget.otpDataModel.email,
+          widget.otpDataModel.password!, deviceToken ?? "");
+      await saveToken(data.token);
+      await saveUserInfo(data.name, data.email);
+
+      final completed =
+          await loginController.completeSignIn(_codeController.text);
+      if (completed) context.go("/homescreen/0");
+    } catch (err) {
+      setState(() {
+        _error = appLocalization.labelErrorOtp;
+      });
+    }
   }
 
   @override
