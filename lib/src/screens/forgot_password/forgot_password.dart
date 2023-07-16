@@ -27,13 +27,16 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
   final AuthService _authService = AuthService();
   final ExceptionService _exceptionService = ExceptionService();
   final StorageService _storageService = StorageService();
-  final TextEditingController _verificationCodeControler = TextEditingController();
+  final TextEditingController _verificationCodeControler =
+      TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final FetchState _state = FetchState();
   final FetchState _completePassState = FetchState();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final StopWatchTimer timer = StopWatchTimer(mode: StopWatchMode.countDown, presetMillisecond: 60000);
+  final StopWatchTimer timer =
+      StopWatchTimer(mode: StopWatchMode.countDown, presetMillisecond: 60000);
 
   String? _email;
   String _phoneNumEnding = "";
@@ -81,10 +84,10 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
           timeInSecForIosWeb: 2,
           backgroundColor: Colors.red,
           textColor: Colors.white,
-          fontSize: 16.0
-      );
+          fontSize: 16.0);
     } else {
-      _phoneNumEnding = (response.data?['forgotPassword'] as String).substring(6);
+      _phoneNumEnding =
+          (response.data?['forgotPassword'] as String).substring(6);
     }
 
     setState(() {
@@ -101,10 +104,12 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
       newPassword: _newPassword,
       verificationCode: _verificationCode,
     );
-    var response = await _authService.completeForgotPassword(forgotPasswordInput);
+    var response =
+        await _authService.completeForgotPassword(forgotPasswordInput);
 
     if (response.hasException) {
-      _completePassState.error = _exceptionService.handleException(response.exception);
+      _completePassState.error =
+          _exceptionService.handleException(response.exception);
     } else {
       await _storageService.deleteSecureData("userName");
       await _storageService.deleteSecureData("userEmail");
@@ -138,17 +143,25 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
     final txtTheme = Theme.of(context).textTheme;
     final appLoc = AppLocalizations.of(context)!;
 
-    if (_state.loading) return const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator())));
-    if (_state.error != null) return Scaffold(body: SafeArea(child: Text(_state.error as String)));
+    if (_state.loading)
+      return const Scaffold(
+          body: SafeArea(child: Center(child: CircularProgressIndicator())));
+    if (_state.error != null)
+      return Scaffold(body: SafeArea(child: Text(_state.error as String)));
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        appBar: const AlcanciaToolbar(state: StateToolbar.logoLetters, logoHeight: 60, toolbarHeight: 70,),
+        appBar: const AlcanciaToolbar(
+          state: StateToolbar.logoLetters,
+          logoHeight: 60,
+          toolbarHeight: 70,
+        ),
         body: SafeArea(
           bottom: false,
           child: Form(
-            onChanged: () => setState(() => _isButtonEnabled = _formKey.currentState!.validate()),
+            onChanged: () => setState(
+                () => _isButtonEnabled = _formKey.currentState!.validate()),
             key: _formKey,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             child: ListView(
@@ -159,8 +172,12 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                 bottom: 28,
               ),
               children: [
-                AlcanciaContainer(child: Text(appLoc.labelHello, style: txtTheme.headline1)),
-                AlcanciaContainer(top: 8, child: Text(appLoc.labelRecoverPassword, style: txtTheme.headline2)),
+                AlcanciaContainer(
+                    child: Text(appLoc.labelHello, style: txtTheme.headline1)),
+                AlcanciaContainer(
+                    top: 8,
+                    child: Text(appLoc.labelRecoverPassword,
+                        style: txtTheme.headline2)),
                 AlcanciaContainer(
                   top: 16,
                   child: Text(
@@ -173,7 +190,9 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                   child: LabeledTextFormField(
                     controller: _verificationCodeControler,
                     labelText: appLoc.labelCode,
-                    validator: (value) => value == null || value == "" ? appLoc.errorRequiredField : null,
+                    validator: (value) => value == null || value == ""
+                        ? appLoc.errorRequiredField
+                        : null,
                     onChanged: (value) {
                       setState(() {
                         _verificationCode = value;
@@ -189,7 +208,8 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                       initialData: 0,
                       builder: (BuildContext ctx, AsyncSnapshot snapshot) {
                         final value = snapshot.data;
-                        final displayTime = StopWatchTimer.getDisplayTime(value, hours: false, milliSecond: false);
+                        final displayTime = StopWatchTimer.getDisplayTime(value,
+                            hours: false, milliSecond: false);
                         return Column(
                           children: [
                             Center(
@@ -197,7 +217,8 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                                 decoration: ShapeDecoration(
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(100),
-                                    side: const BorderSide(color: alcanciaLightBlue),
+                                    side: const BorderSide(
+                                        color: alcanciaLightBlue),
                                   ),
                                 ),
                                 child: Padding(
@@ -211,7 +232,8 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                                       ),
                                       Text(
                                         displayTime,
-                                        style: const TextStyle(color: alcanciaLightBlue),
+                                        style: const TextStyle(
+                                            color: alcanciaLightBlue),
                                       ),
                                     ],
                                   ),
@@ -230,10 +252,13 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                                           timer.onStartTimer();
                                         }
                                       : null,
-                                  style: TextButton.styleFrom(foregroundColor: alcanciaLightBlue),
+                                  style: TextButton.styleFrom(
+                                      foregroundColor: alcanciaLightBlue),
                                   child: Text(
                                     appLoc.buttonResend,
-                                    style: const TextStyle(decoration: TextDecoration.underline, fontWeight: FontWeight.bold),
+                                    style: const TextStyle(
+                                        decoration: TextDecoration.underline,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ],
@@ -248,7 +273,9 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                     controller: _newPasswordController,
                     labelText: appLoc.labelNewPassword,
                     obscure: obscurePassword,
-                    validator: (value) => value == null || value == "" ? appLoc.errorRequiredField : null,
+                    validator: (value) => value == null || value == ""
+                        ? appLoc.errorRequiredField
+                        : null,
                     onChanged: (value) => setState(() {
                       _newPassword = value;
                     }),
@@ -258,7 +285,9 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                           obscurePassword = !obscurePassword;
                         });
                       },
-                      child: Icon(obscurePassword ? CupertinoIcons.eye : CupertinoIcons.eye_fill),
+                      child: Icon(obscurePassword
+                          ? CupertinoIcons.eye
+                          : CupertinoIcons.eye_fill),
                     ),
                   ),
                 ),
@@ -269,8 +298,10 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                     labelText: appLoc.labelConfirmNewPassword,
                     obscure: obscureConfirmPassword,
                     validator: (value) {
-                      if (value == null || value.isEmpty) return appLoc.errorRequiredField;
-                      if (value != _newPassword) return appLoc.errorPasswordMatch;
+                      if (value == null || value.isEmpty)
+                        return appLoc.errorRequiredField;
+                      if (value != _newPassword)
+                        return appLoc.errorPasswordMatch;
                       return null;
                     },
                     suffixIcon: GestureDetector(
@@ -279,7 +310,9 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                           obscureConfirmPassword = !obscureConfirmPassword;
                         });
                       },
-                      child: Icon(obscureConfirmPassword ? CupertinoIcons.eye : CupertinoIcons.eye_fill),
+                      child: Icon(obscureConfirmPassword
+                          ? CupertinoIcons.eye
+                          : CupertinoIcons.eye_fill),
                     ),
                   ),
                 ),
@@ -288,13 +321,20 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(appLoc.labelPasswordRequirements, style: txtTheme.bodyText1),
+                      Text(appLoc.labelPasswordRequirements,
+                          style: txtTheme.bodyText1),
                       Row(
                         children: [
                           _newPassword.hasUpperCase()
-                              ? SvgPicture.asset('lib/src/resources/images/icon_check.svg', height: 20)
-                              : SvgPicture.asset('lib/src/resources/images/icon_cross.svg', height: 20),
-                          Padding(padding: const EdgeInsets.only(left: 10), child: Text(appLoc.labelRequirementUppercase))
+                              ? SvgPicture.asset(
+                                  'lib/src/resources/images/icon_check.svg',
+                                  height: 20)
+                              : SvgPicture.asset(
+                                  'lib/src/resources/images/icon_cross.svg',
+                                  height: 20),
+                          Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Text(appLoc.labelRequirementUppercase))
                         ],
                       ),
                       Padding(
@@ -302,9 +342,15 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                         child: Row(
                           children: [
                             _newPassword.hasLowerCase()
-                                ? SvgPicture.asset('lib/src/resources/images/icon_check.svg', height: 20)
-                                : SvgPicture.asset('lib/src/resources/images/icon_cross.svg', height: 20),
-                            Padding(padding: const EdgeInsets.only(left: 10), child: Text(appLoc.labelRequirementLowercase))
+                                ? SvgPicture.asset(
+                                    'lib/src/resources/images/icon_check.svg',
+                                    height: 20)
+                                : SvgPicture.asset(
+                                    'lib/src/resources/images/icon_cross.svg',
+                                    height: 20),
+                            Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Text(appLoc.labelRequirementLowercase))
                           ],
                         ),
                       ),
@@ -313,9 +359,15 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                         child: Row(
                           children: [
                             _newPassword.hasDigits()
-                                ? SvgPicture.asset('lib/src/resources/images/icon_check.svg', height: 20)
-                                : SvgPicture.asset('lib/src/resources/images/icon_cross.svg', height: 20),
-                            Padding(padding: const EdgeInsets.only(left: 10), child: Text(appLoc.labelRequirementNumber))
+                                ? SvgPicture.asset(
+                                    'lib/src/resources/images/icon_check.svg',
+                                    height: 20)
+                                : SvgPicture.asset(
+                                    'lib/src/resources/images/icon_cross.svg',
+                                    height: 20),
+                            Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Text(appLoc.labelRequirementNumber))
                           ],
                         ),
                       ),
@@ -324,11 +376,16 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                         child: Row(
                           children: [
                             _newPassword.hasSpecialChar()
-                                ? SvgPicture.asset('lib/src/resources/images/icon_check.svg', height: 20)
-                                : SvgPicture.asset('lib/src/resources/images/icon_cross.svg', height: 20),
+                                ? SvgPicture.asset(
+                                    'lib/src/resources/images/icon_check.svg',
+                                    height: 20)
+                                : SvgPicture.asset(
+                                    'lib/src/resources/images/icon_cross.svg',
+                                    height: 20),
                             Padding(
                               padding: const EdgeInsets.only(left: 10),
-                              child: Text(appLoc.labelRequirementSpecialCharacter),
+                              child:
+                                  Text(appLoc.labelRequirementSpecialCharacter),
                             )
                           ],
                         ),
@@ -342,14 +399,24 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                     width: double.infinity,
                     height: 64,
                     buttonText: appLoc.buttonNext,
-                    onPressed: _isButtonEnabled ? completeForgotPassword(appLoc) : null,
+                    onPressed: () {
+                      if (_isButtonEnabled) {
+                        completeForgotPassword(appLoc);
+                      } else {
+                        null;
+                      }
+                    },
                   ),
                 ),
-                if (_state.loading) const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator()))),
+                if (_state.loading)
+                  const Scaffold(
+                      body: SafeArea(
+                          child: Center(child: CircularProgressIndicator()))),
                 if (_completePassState.error != null)
                   AlcanciaContainer(
                     top: 16,
-                    child: Text(_completePassState.error as String, style: const TextStyle(color: Colors.red)),
+                    child: Text(_completePassState.error as String,
+                        style: const TextStyle(color: Colors.red)),
                   )
               ],
             ),
