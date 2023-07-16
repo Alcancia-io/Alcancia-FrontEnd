@@ -19,26 +19,28 @@ import 'package:alcancia/src/features/registration/model/user_registration_model
 import 'country_picker.dart';
 
 class PhoneRegistrationScreen extends ConsumerStatefulWidget {
-  PhoneRegistrationScreen({Key? key, required this.userRegistrationData}) : super(key: key);
+  PhoneRegistrationScreen({Key? key, required this.userRegistrationData})
+      : super(key: key);
   final UserRegistrationModel userRegistrationData;
   final Uri url = Uri.parse('https://landing.alcancia.io/privacypolicy');
   final Uri url2 = Uri.parse('https://landing.alcancia.io/termsandconditions');
 
   @override
-  ConsumerState<PhoneRegistrationScreen> createState() => _PhoneRegistrationScreenState();
+  ConsumerState<PhoneRegistrationScreen> createState() =>
+      _PhoneRegistrationScreenState();
 }
 
-class _PhoneRegistrationScreenState extends ConsumerState<PhoneRegistrationScreen> {
-  final selectedCountryProvider = StateProvider.autoDispose<Country>((ref) => countries[0]);
+class _PhoneRegistrationScreenState
+    extends ConsumerState<PhoneRegistrationScreen> {
+  final selectedCountryProvider =
+      StateProvider.autoDispose<Country>((ref) => countries[0]);
   TextEditingController phoneController = TextEditingController();
   bool acceptTerms = false;
   String _error = "";
   final exceptionService = ExceptionService();
 
-  final timer = StopWatchTimer(
-      mode: StopWatchMode.countDown,
-      presetMillisecond: 60000
-  );
+  final timer =
+      StopWatchTimer(mode: StopWatchMode.countDown, presetMillisecond: 60000);
 
   @override
   void initState() {
@@ -63,7 +65,8 @@ class _PhoneRegistrationScreenState extends ConsumerState<PhoneRegistrationScree
         ),
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
+            padding:
+                const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
             child: Column(
               children: [
                 AlcanciaContainer(
@@ -73,7 +76,8 @@ class _PhoneRegistrationScreenState extends ConsumerState<PhoneRegistrationScree
                     children: [
                       Text(
                         appLocalization.labelPhone,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 35),
                       ),
                       Text(appLocalization.labelEnterPhoneNumber,
                           style: const TextStyle(fontSize: 15)),
@@ -103,7 +107,9 @@ class _PhoneRegistrationScreenState extends ConsumerState<PhoneRegistrationScree
                                 style: Theme.of(context).textTheme.bodyText1,
                                 controller: phoneController,
                                 keyboardType: TextInputType.phone,
-                                autofillHints: const [AutofillHints.telephoneNumber],
+                                autofillHints: const [
+                                  AutofillHints.telephoneNumber
+                                ],
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return appLocalization.errorRequiredField;
@@ -147,8 +153,10 @@ class _PhoneRegistrationScreenState extends ConsumerState<PhoneRegistrationScree
                                 style: Theme.of(context).textTheme.bodyText2,
                                 children: [
                                   TextSpan(
-                                    text: appLocalization.labelTermsAndConditions,
-                                    style: const TextStyle(color: alcanciaLightBlue),
+                                    text:
+                                        appLocalization.labelTermsAndConditions,
+                                    style: const TextStyle(
+                                        color: alcanciaLightBlue),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
                                         _launchUrl(widget.url2);
@@ -159,7 +167,8 @@ class _PhoneRegistrationScreenState extends ConsumerState<PhoneRegistrationScree
                                   ),
                                   TextSpan(
                                     text: appLocalization.labelPrivacyPolicy,
-                                    style: const TextStyle(color: alcanciaLightBlue),
+                                    style: const TextStyle(
+                                        color: alcanciaLightBlue),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
                                         _launchUrl(widget.url);
@@ -172,9 +181,7 @@ class _PhoneRegistrationScreenState extends ConsumerState<PhoneRegistrationScree
                     ],
                   ),
                 ),
-                Text(
-                  appLocalization.labelFeeDisclaimer
-                ),
+                Text(appLocalization.labelFeeDisclaimer),
                 const Spacer(),
                 Column(
                   children: [
@@ -187,28 +194,42 @@ class _PhoneRegistrationScreenState extends ConsumerState<PhoneRegistrationScree
                         if (acceptTerms) {
                           if (phoneController.text.isNotEmpty) {
                             try {
-                              final phoneNumber = "+${selectedCountry.dialCode}${phoneController.text}";
-                              widget.userRegistrationData.user.phoneNumber = phoneNumber;
-                              widget.userRegistrationData.user.country = selectedCountry.code;
+                              final phoneNumber =
+                                  "+${selectedCountry.dialCode}${phoneController.text}";
+                              widget.userRegistrationData.user.phoneNumber =
+                                  phoneNumber;
+                              widget.userRegistrationData.user.country =
+                                  selectedCountry.code;
                               await registrationController.signUp(
-                                  widget.userRegistrationData.user, widget.userRegistrationData.password);
+                                  widget.userRegistrationData.user,
+                                  widget.userRegistrationData.password);
                               timer.setPresetMinuteTime(1, add: false);
                               timer.onResetTimer();
                               timer.onStartTimer();
-                              final email = widget.userRegistrationData.user.email;
-                              context.push("/otp", extra: OTPDataModel(email: email, phoneNumber: phoneNumber));
+                              final email =
+                                  widget.userRegistrationData.user.email;
+                              final password =
+                                  widget.userRegistrationData.password;
+                              context.push("/otp",
+                                  extra: OTPDataModel(
+                                      email: email,
+                                      phoneNumber: phoneNumber,
+                                      password: password));
                             } on OperationException catch (e) {
-                              final error = exceptionService.handleException(e)!;
+                              final error =
+                                  exceptionService.handleException(e)!;
                               if (error.contains("UsernameExistsException")) {
                                 ref
                                     .read(emailsInUseProvider.notifier)
                                     .state
-                                    .add(widget.userRegistrationData.user.email);
+                                    .add(
+                                        widget.userRegistrationData.user.email);
                                 ref.refresh(emailsInUseProvider);
                                 ref
                                     .read(emailsInUseProvider.notifier)
                                     .state
-                                    .add(widget.userRegistrationData.user.email);
+                                    .add(
+                                        widget.userRegistrationData.user.email);
                                 context.pop();
                               } else {
                                 setState(() {

@@ -9,6 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../screens/login/login_controller.dart';
+import '../../../shared/models/storage_item.dart';
+import '../../../shared/provider/push_notifications_provider.dart';
+import '../../../shared/services/storage_service.dart';
+
 class OTPScreen extends ConsumerStatefulWidget {
   OTPScreen({Key? key, required this.otpDataModel}) : super(key: key);
   final OTPDataModel otpDataModel;
@@ -20,9 +25,10 @@ class OTPScreen extends ConsumerStatefulWidget {
 
 class _OTPScreenState extends ConsumerState<OTPScreen> {
   final _codeController = TextEditingController();
+  final loginController = LoginController();
   String _error = "";
   bool _loading = false;
-
+  final StorageService _storageService = StorageService();
   final timer =
       StopWatchTimer(mode: StopWatchMode.countDown, presetMillisecond: 60000);
 
@@ -37,6 +43,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
   Widget build(BuildContext context) {
     final registrationController = ref.watch(registrationControllerProvider);
     final appLocalization = AppLocalizations.of(context)!;
+    final pushNotifications = ref.watch(pushNotificationProvider);
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -157,7 +164,25 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   alcanciaSnackBar(context,
                                       appLocalization.labelAccountCreated));
-                              context.go("/login");
+                              try {
+                                final deviceToken = await pushNotifications
+                                    .messaging
+                                    .getToken();
+                                final data = await loginController.login(
+                                    widget.otpDataModel.email,
+                                    widget.otpDataModel.password!,
+                                    deviceToken ?? "");
+                                await saveToken(data.token);
+                                await saveUserInfo(data.name, data.email);
+
+                                final completed = await loginController
+                                    .completeSignIn(_codeController.text);
+                                if (completed) context.go("/homescreen/0");
+                              } catch (err) {
+                                setState(() {
+                                  _error = appLocalization.labelErrorOtp;
+                                });
+                              }
                             } catch (err) {
                               setState(() {
                                 _error = appLocalization.labelErrorOtp;
@@ -186,6 +211,19 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
   void dispose() {
     _codeController.dispose();
     super.dispose();
+  }
+
+  Future<void> saveToken(String token) async {
+    final StorageItem storageItem = StorageItem("token", token);
+    await _storageService.writeSecureData(storageItem);
+  }
+
+  Future<void> saveUserInfo(String name, String email) async {
+    final StorageItem userName = StorageItem("userName", name);
+    final StorageItem userEmail = StorageItem("userEmail", email);
+
+    await _storageService.writeSecureData(userName);
+    await _storageService.writeSecureData(userEmail);
   }
 
   void _setLoading(bool loading) {
