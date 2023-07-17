@@ -42,6 +42,11 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
       "name": "+1",
       "icon": "lib/src/resources/images/icon_us_flag.png"
     },
+    {
+      "value": "ES",
+      "name": "+34",
+      "icon": "lib/src/resources/images/icon_spain_flag.png"
+    },
   ];
   late String countryCode = countries.first['name'];
 
