@@ -268,6 +268,8 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                                       return appLoc.errorRequiredField;
                                     } else if (balance < double.parse(value)) {
                                       return appLoc.errorInsufficientBalance;
+                                    } else if (double.parse(value) <= 0.1) {
+                                      return appLoc.errorMinimumTransferAmount;
                                     }
                                     return null;
                                   },
