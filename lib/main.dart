@@ -13,6 +13,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:alcancia/src/shared/provider/router_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter/services.dart';
 
 GlobalKey<NavigatorState> navigatorKey =
     GlobalKey(debugLabel: "Main Navigator");
@@ -41,8 +42,12 @@ void main() async {
     return true;
   };
   ErrorWidget.builder = (FlutterErrorDetails details) {
-    return Center(child: AlcanciaErrorWidget());
+    return const Center(child: AlcanciaErrorWidget());
   };
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation
+        .portraitUp, // Locks the device orientation to portrait mode
+  ]);
   runApp(const ProviderScope(child: MyApp()));
 }
 

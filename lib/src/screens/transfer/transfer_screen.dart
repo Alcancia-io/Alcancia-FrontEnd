@@ -42,6 +42,11 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
       "name": "+1",
       "icon": "lib/src/resources/images/icon_us_flag.png"
     },
+    {
+      "value": "ES",
+      "name": "+34",
+      "icon": "lib/src/resources/images/icon_spain_flag.png"
+    },
   ];
   late String countryCode = countries.first['name'];
 
@@ -129,7 +134,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
     final balance = sourceCurrency == "apolusdc"
         ? userBalance.usdcBalance
         : userBalance.celoBalance;
-    final screenHeight = MediaQuery.of(context).size.height;
+
     final screenWidth = MediaQuery.of(context).size.width;
 
     return GestureDetector(
@@ -149,100 +154,100 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                 () => _enableButton = _formKey.currentState!.validate()),
             child: Padding(
               padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 12),
-                    child: Text(
-                      appLoc.labelTransferPrompt,
-                      style: txtTheme.bodyText1,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: Text(
+                        appLoc.labelTransferPrompt,
+                        style: txtTheme.bodyText1,
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 32.0, bottom: 16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 6.0),
-                          child: Text(appLoc.labelRecipientPhone),
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            AlcanciaDropdown(
-                              itemsAlignment: MainAxisAlignment.spaceBetween,
-                              dropdownItems: countries,
-                              dropdownWidth: _responsiveService.getWidthPixels(
-                                  120, screenWidth),
-                              dropdownHeight: _responsiveService
-                                  .getHeightPixels(50, screenHeight),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .inputDecorationTheme
-                                    .fillColor,
-                                borderRadius: BorderRadius.circular(7),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 32.0, bottom: 16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 6.0),
+                            child: Text(appLoc.labelRecipientPhone),
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              AlcanciaDropdown(
+                                itemsAlignment: MainAxisAlignment.spaceBetween,
+                                dropdownItems: countries,
+                                dropdownWidth: _responsiveService
+                                    .getWidthPixels(120, screenWidth),
+                                dropdownHeight: 55.0,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .inputDecorationTheme
+                                      .fillColor,
+                                  borderRadius: BorderRadius.circular(7),
+                                ),
+                                onChanged: (value) {
+                                  setState(() {
+                                    countryCode = countries.firstWhere(
+                                        (element) =>
+                                            element['value'] == value)['name'];
+                                    _enableButton =
+                                        _formKey.currentState!.validate();
+                                  });
+                                },
                               ),
-                              onChanged: (value) {
-                                setState(() {
-                                  countryCode = countries.firstWhere(
-                                      (element) =>
-                                          element['value'] == value)['name'];
-                                  _enableButton =
-                                      _formKey.currentState!.validate();
-                                });
-                              },
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: TextFormField(
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                  controller: _phoneController,
-                                  keyboardType: TextInputType.phone,
-                                  autofillHints: const [
-                                    AutofillHints.telephoneNumber
-                                  ],
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return appLoc.errorRequiredField;
-                                    }
-                                    return null;
-                                  },
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: TextFormField(
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                    controller: _phoneController,
+                                    keyboardType: TextInputType.phone,
+                                    autofillHints: const [
+                                      AutofillHints.telephoneNumber
+                                    ],
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return appLoc.errorRequiredField;
+                                      }
+                                      return null;
+                                    },
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 29, bottom: 10.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 6.0),
-                          child: Text(appLoc.labelTransferAmount),
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            AlcanciaDropdown(
-                              itemsAlignment: MainAxisAlignment.spaceBetween,
-                              dropdownItems: sourceCurrencies,
-                              dropdownWidth: _responsiveService.getWidthPixels(
-                                  120, screenWidth),
-                              dropdownHeight: _responsiveService
-                                  .getHeightPixels(50, screenHeight),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .inputDecorationTheme
-                                    .fillColor,
-                                borderRadius: BorderRadius.circular(7),
-                              ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 29, bottom: 10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 6.0),
+                            child: Text(appLoc.labelTransferAmount),
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              AlcanciaDropdown(
+                                itemsAlignment: MainAxisAlignment.spaceBetween,
+                                dropdownItems: sourceCurrencies,
+                                dropdownWidth: _responsiveService
+                                    .getWidthPixels(120, screenWidth),
+                                dropdownHeight: 55.0,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .inputDecorationTheme
+                                      .fillColor,
+                                  borderRadius: BorderRadius.circular(7),
+                                ),
                               onChanged: (value) {
                                 setState(() {
                                   sourceCurrency = value;
@@ -273,114 +278,118 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                                     }
                                     return null;
                                   },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Text(
-                      appLoc.labelAvailableBalance(balance.toStringAsFixed(6))),
-                  const Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 30),
-                    child: Center(
-                      child: Column(
-                        children: [
-                          if (_loading) ...[
-                            const CircularProgressIndicator(),
-                          ] else ...[
-                            if (balance <
-                                (double.tryParse(
-                                        _transferAmountController.text) ??
-                                    0)) ...[
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8.0),
-                                child: AlcanciaButton(
-                                  buttonText: appLoc.buttonDeposit,
-                                  onPressed: () {
-                                    context.push("/deposit");
-                                  },
-                                  color: alcanciaLightBlue,
-                                  width: 308,
-                                  height: 64,
+                                  ),
                                 ),
                               ),
                             ],
-                            AlcanciaButton(
-                              buttonText: appLoc.buttonNext,
-                              // TODO: enableButton again
-                              onPressed: _enableButton
-                                  ? () async {
-                                      setState(() {
-                                        _loading = true;
-                                      });
-                                      try {
-                                        final phoneNumber =
-                                            countryCode + _phoneController.text;
-                                        final currency = sourceCurrency;
-                                        final amount = double.parse(
-                                            _transferAmountController.text);
-                                        final targetUser =
-                                            await transferController.searchUser(
-                                                phoneNumber: phoneNumber);
-                                        showDialog(
-                                          context: context,
-                                          builder: (ctx) {
-                                            return AlcanciaConfirmationDialog(
-                                              targetUser: targetUser,
-                                              userBalance: balance,
-                                              amount: amount,
-                                              currency:
-                                                  sourceCurrency == "apolusdc"
-                                                      ? "USDC"
-                                                      : "CUSD",
-                                              onConfirm: () {
-                                                transferFunds(amount, currency,
-                                                    targetUser.id);
-                                              },
-                                            );
-                                          },
-                                        );
-                                      } catch (e) {
-                                        _error = e.toString();
-                                      }
-                                      setState(() {
-                                        _loading = false;
-                                      });
-                                    }
-                                  : null,
-                              color: alcanciaLightBlue,
-                              width: 308,
-                              height: 64,
-                            ),
-                          ],
-                          if (_error.isNotEmpty) ...[
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                _error,
-                                style: const TextStyle(color: Colors.red),
-                              ),
-                            ),
-                          ],
-                          if (_transferError.isNotEmpty) ...[
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                _transferError,
-                                style: const TextStyle(color: Colors.red),
-                              ),
-                            ),
-                          ]
+                          ),
                         ],
                       ),
                     ),
-                  ),
-                ],
+                    Text(appLoc
+                        .labelAvailableBalance(balance.toStringAsFixed(6))),
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.4,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 30),
+                      child: Center(
+                        child: Column(
+                          children: [
+                            if (_loading) ...[
+                              const CircularProgressIndicator(),
+                            ] else ...[
+                              if (balance <
+                                  (double.tryParse(
+                                          _transferAmountController.text) ??
+                                      0)) ...[
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: AlcanciaButton(
+                                    buttonText: appLoc.buttonDeposit,
+                                    onPressed: () {
+                                      context.push("/deposit");
+                                    },
+                                    color: alcanciaLightBlue,
+                                    width: 308,
+                                    height: 64,
+                                  ),
+                                ),
+                              ],
+                              AlcanciaButton(
+                                buttonText: appLoc.buttonNext,
+                                // TODO: enableButton again
+                                onPressed: _enableButton
+                                    ? () async {
+                                        setState(() {
+                                          _loading = true;
+                                        });
+                                        try {
+                                          final phoneNumber = countryCode +
+                                              _phoneController.text;
+                                          final currency = sourceCurrency;
+                                          final amount = double.parse(
+                                              _transferAmountController.text);
+                                          final targetUser =
+                                              await transferController
+                                                  .searchUser(
+                                                      phoneNumber: phoneNumber);
+                                          showDialog(
+                                            context: context,
+                                            builder: (ctx) {
+                                              return AlcanciaConfirmationDialog(
+                                                targetUser: targetUser,
+                                                userBalance: balance,
+                                                amount: amount,
+                                                currency:
+                                                    sourceCurrency == "apolusdc"
+                                                        ? "USDC"
+                                                        : "CUSD",
+                                                onConfirm: () {
+                                                  transferFunds(amount,
+                                                      currency, targetUser.id);
+                                                },
+                                              );
+                                            },
+                                          );
+                                        } catch (e) {
+                                          _error = e.toString();
+                                        }
+                                        setState(() {
+                                          _loading = false;
+                                        });
+                                      }
+                                    : null,
+                                color: alcanciaLightBlue,
+                                width: 308,
+                                height: 64,
+                              ),
+                            ],
+                            if (_error.isNotEmpty) ...[
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  _error,
+                                  style: const TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            ],
+                            if (_transferError.isNotEmpty) ...[
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  _transferError,
+                                  style: const TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            ]
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
