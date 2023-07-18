@@ -248,36 +248,36 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                                       .fillColor,
                                   borderRadius: BorderRadius.circular(7),
                                 ),
-                                onChanged: (value) {
-                                  setState(() {
-                                    sourceCurrency = value;
-                                    _enableButton =
-                                        _formKey.currentState!.validate();
-                                  });
-                                },
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: TextFormField(
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1,
-                                    controller: _transferAmountController,
-                                    keyboardType:
-                                        const TextInputType.numberWithOptions(
-                                            decimal: true),
-                                    inputFormatters: [
-                                      DecimalTextInputFormatter(decimalRange: 2)
-                                    ],
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return appLoc.errorRequiredField;
-                                      } else if (balance <
-                                          double.parse(value)) {
-                                        return appLoc.errorInsufficientBalance;
-                                      }
-                                      return null;
-                                    },
+                              onChanged: (value) {
+                                setState(() {
+                                  sourceCurrency = value;
+                                  _enableButton =
+                                      _formKey.currentState!.validate();
+                                });
+                              },
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: TextFormField(
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                  controller: _transferAmountController,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          decimal: true),
+                                  inputFormatters: [
+                                    DecimalTextInputFormatter(decimalRange: 2)
+                                  ],
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return appLoc.errorRequiredField;
+                                    } else if (balance < double.parse(value)) {
+                                      return appLoc.errorInsufficientBalance;
+                                    } else if (double.parse(value) <= 0.1) {
+                                      return appLoc.errorMinimumTransferAmount;
+                                    }
+                                    return null;
+                                  },
                                   ),
                                 ),
                               ),

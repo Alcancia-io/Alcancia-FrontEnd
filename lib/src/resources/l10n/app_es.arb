@@ -307,5 +307,6 @@
 	"buttonPending": "VERIFICACIÓN EN PROCESO",
 	"buttonFailed": "VERIFICACIÓN FALLIDA",
 	"labelErrorOtp": "Lo sentimos, el código OTP ha fallado. Por favor, inténtalo de nuevo más tarde.",
+	"errorMinimumTransferAmount": "Transferencia mínima de $0.1",
 	"labelAccountType": "Tipo de cuenta"
 }
