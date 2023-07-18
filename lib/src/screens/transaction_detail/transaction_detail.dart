@@ -196,6 +196,14 @@ class TransactionDetail extends ConsumerWidget {
             padding: EdgeInsets.only(bottom: 18),
           ),
         ],
+        if (info.tipoCuenta != null) ...[
+          DepositInfoItem(
+            title: appLoc.labelAccountType,
+            subtitle: info.tipoCuenta!,
+            supportsClipboard: true,
+            padding: EdgeInsets.only(bottom: 18),
+          ),
+        ],
         if (info.clabe != null) ...[
           DepositInfoItem(
             title: appLoc.labelCLABE,
