@@ -138,6 +138,14 @@ class OrderInformation extends StatelessWidget {
                     padding: EdgeInsets.only(bottom: 18),
                   ),
                 ],
+                if (bankInfo.tipoCuenta != null) ...[
+                  DepositInfoItem(
+                    title: appLoc.labelAccountType,
+                    subtitle: bankInfo.tipoCuenta!,
+                    supportsClipboard: true,
+                    padding: EdgeInsets.only(bottom: 18),
+                  ),
+                ],
                 if (bankInfo.clabe != null) ...[
                   DepositInfoItem(
                     title: appLoc.labelCLABE,

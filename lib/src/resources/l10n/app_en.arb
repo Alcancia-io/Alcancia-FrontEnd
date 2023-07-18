@@ -45,7 +45,7 @@
 	"labelActivity": "Activity",
 	"labelDepositToYourAccount": "Deposit to your account",
 	"labelLetsStart": "Let''s get started!",
-	"labelInputAmount": "Enter the amount you wish to convert from our selection. Below, you can see the equivalent in",
+	"labelInputAmount": "Enter the amount you wish to convert from our selection.",
 	"labelAmountQuestion": "How much do you wish to convert?",
 	"labelPaymentMethod": "Payment method:",
 	"labelDebitCredit": "Debit/Credit card",
@@ -224,5 +224,7 @@
 	"buttonVerifyNow": "VERIFY IDENTITY",
 	"buttonPending": "VERIFICATION IN PROCESS",
 	"buttonFailed": "VERIFICATION FAILED",
-	"labelErrorOtp": "Sorry, the OTP code has failed. Please try again later."
+	"labelErrorOtp": "Sorry, the OTP code has failed. Please try again later.",
+	"errorMinimumTransferAmount": "Minimum transfer of $0.1",
+	"labelAccountType": "Account type"
 }

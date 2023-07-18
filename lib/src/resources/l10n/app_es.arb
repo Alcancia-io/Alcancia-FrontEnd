@@ -84,7 +84,7 @@
 	"labelActivity": "Actividad",
 	"labelDepositToYourAccount": "Deposita a tu cuenta",
 	"labelLetsStart": "¡Empecemos!",
-	"labelInputAmount": "Ingresa el monto que deseas convertir de nuestra opciones. A continuación, se presenta a cuanto equivale en",
+	"labelInputAmount": "Ingresa el monto que deseas convertir de nuestra opciones.",
 	"labelAmountQuestion": "¿Cuánto deseas convertir?",
 	"labelPaymentMethod": "Medio de pago:",
 	"labelDebitCredit": "Tarjeta de Débito/Crédito",
@@ -306,5 +306,7 @@
 	"buttonVerifyNow": "VERIFICAR IDENTIDAD",
 	"buttonPending": "VERIFICACIÓN EN PROCESO",
 	"buttonFailed": "VERIFICACIÓN FALLIDA",
-	"labelErrorOtp": "Lo sentimos, el código OTP ha fallado. Por favor, inténtalo de nuevo más tarde."
+	"labelErrorOtp": "Lo sentimos, el código OTP ha fallado. Por favor, inténtalo de nuevo más tarde.",
+	"errorMinimumTransferAmount": "Transferencia mínima de $0.1",
+	"labelAccountType": "Tipo de cuenta"
 }

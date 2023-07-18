@@ -156,7 +156,6 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
   @override
   Widget build(BuildContext context) {
     var user = ref.watch(userProvider);
-    print(sourceCurrency);
     final appLoc = AppLocalizations.of(context)!;
     final txtTheme = Theme.of(context).textTheme;
     final screenHeight = MediaQuery.of(context).size.height;
@@ -320,6 +319,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                             targetCurrency: "CUSD",
                             percentage: currentCeloAPY,
                             color: cardColor,
+                            sourceCurrency: sourceCurrency,
+                            exchangeRate: sourceCurrency == "MXN" ? suarmiCeloExchange : 0.0,
                           ),
                         ),
                       ],
@@ -333,6 +334,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                             targetCurrency: "USDC",
                             percentage: currentUsdcAPY,
                             color: cardColor,
+                            sourceCurrency: sourceCurrency,
+                            exchangeRate: sourceCurrency == "MXN" ? suarmiUSDCExchage : alcanciaUSDCExchange,
                           ),
                         ),
                       ],
