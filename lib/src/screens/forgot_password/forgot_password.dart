@@ -399,13 +399,9 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                     width: double.infinity,
                     height: 64,
                     buttonText: appLoc.buttonNext,
-                    onPressed: () {
-                      if (_isButtonEnabled) {
-                        completeForgotPassword(appLoc);
-                      } else {
-                        null;
-                      }
-                    },
+                    onPressed: _isButtonEnabled
+                        ? () => completeForgotPassword(appLoc)
+                        : null,
                   ),
                 ),
                 if (_state.loading)
