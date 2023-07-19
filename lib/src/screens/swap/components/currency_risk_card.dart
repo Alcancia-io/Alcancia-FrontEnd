@@ -10,8 +10,6 @@ class CurrencyRiskCard extends StatelessWidget {
   final String targetCurrency;
   final Color color;
   final String percentage;
-  final String sourceCurrency;
-  final double exchangeRate;
 
   const CurrencyRiskCard({
     super.key,
@@ -19,8 +17,6 @@ class CurrencyRiskCard extends StatelessWidget {
     required this.targetCurrency,
     required this.color,
     required this.percentage,
-    required this.sourceCurrency,
-    required this.exchangeRate,
   });
 
   @override
@@ -64,14 +60,6 @@ class CurrencyRiskCard extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-          ),
-          Text(
-            "1 USDC = ${exchangeRate.toStringAsFixed(2)} $sourceCurrency",
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-              color: txtTheme.bodyMedium?.color,
             ),
           ),
         ],
