@@ -2,6 +2,7 @@
 import 'package:alcancia/src/features/registration/model/registration_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -137,6 +138,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 controller: emailController,
                                 labelText: appLocalization.labelEmail,
                                 inputType: TextInputType.emailAddress,
+                                inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r"\s"))],
                                 validator: (value) {
                                   if (value == null ||
                                       value.isEmpty) {
