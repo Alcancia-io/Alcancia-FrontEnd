@@ -120,7 +120,7 @@ class DashboardActions extends ConsumerWidget {
               await kycForward(user, context, appLoc, ref);
             },
             height: 38,
-            color: Colors.red,
+            color: Colors.orange,
           ),
         );
       case KYCStatus.none:
