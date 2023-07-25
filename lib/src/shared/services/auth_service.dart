@@ -12,7 +12,7 @@ class CompletePasswordInput {
 
   Map<String, dynamic> toMap() {
     return {
-      "email": email.toLowerCase(),
+      "email": email?.toLowerCase(),
       "newPassword": newPassword,
       "verificationCode": verificationCode,
     };
