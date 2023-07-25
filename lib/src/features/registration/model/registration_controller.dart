@@ -28,7 +28,7 @@ class RegistrationController {
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
       GraphQLClient client = graphQLConfiguration.clientToQuery();
       QueryResult result = await client.query(
-        QueryOptions(document: gql(resendVerificationQuery), variables: {"email": email}),
+        QueryOptions(document: gql(resendVerificationQuery), variables: {"email": email.toLowerCase()}),
       );
       if (result.hasException) {
         final e = result.exception?.graphqlErrors[0].message;
@@ -44,7 +44,7 @@ class RegistrationController {
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
       GraphQLClient client = graphQLConfiguration.clientToQuery();
       QueryResult result = await client.query(
-        QueryOptions(document: gql(verifyOTPQuery), variables: {"verificationCode": otp, "email": email}),
+        QueryOptions(document: gql(verifyOTPQuery), variables: {"verificationCode": otp, "email": email.toLowerCase()}),
       );
       if (result.hasException) {
         final e = result.exception?.graphqlErrors[0].message;

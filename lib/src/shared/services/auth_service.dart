@@ -12,7 +12,7 @@ class CompletePasswordInput {
 
   Map<String, dynamic> toMap() {
     return {
-      "email": email,
+      "email": email.toLowerCase(),
       "newPassword": newPassword,
       "verificationCode": verificationCode,
     };
@@ -96,7 +96,7 @@ class AuthService {
       MutationOptions(
         document: gql(loginMutation),
         variables: {
-          "loginUserInput": {"email": email, "password": password, "deviceToken": deviceToken}
+          "loginUserInput": {"email": email.toLowerCase(), "password": password, "deviceToken": deviceToken}
         },
       ),
     );
@@ -107,7 +107,7 @@ class AuthService {
     return clientResponse.query(
       QueryOptions(
         document: gql(forgotPasswordQuery),
-        variables: {"email": email},
+        variables: {"email": email.toLowerCase()},
         fetchPolicy: FetchPolicy.noCache,
       ),
     );
