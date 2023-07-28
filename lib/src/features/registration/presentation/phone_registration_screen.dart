@@ -21,8 +21,8 @@ import 'country_picker.dart';
 class PhoneRegistrationScreen extends ConsumerStatefulWidget {
   PhoneRegistrationScreen({Key? key, required this.userRegistrationData}) : super(key: key);
   final UserRegistrationModel userRegistrationData;
-  final Uri url = Uri.parse('https://landing.alcancia.io/privacypolicy');
-  final Uri url2 = Uri.parse('https://landing.alcancia.io/termsandconditions');
+  final Uri url = Uri.parse('https://alcancia.io/privacypolicy');
+  final Uri url2 = Uri.parse('https://alcancia.io/termsandconditions');
 
   @override
   ConsumerState<PhoneRegistrationScreen> createState() => _PhoneRegistrationScreenState();
