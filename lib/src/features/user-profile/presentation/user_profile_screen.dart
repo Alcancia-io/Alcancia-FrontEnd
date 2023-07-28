@@ -16,8 +16,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class UserProfileScreen extends ConsumerWidget {
   UserProfileScreen({Key? key}) : super(key: key);
 
-  final Uri url = Uri.parse('https://landing.alcancia.io/privacypolicy');
-  final Uri url2 = Uri.parse('https://landing.alcancia.io/termsandconditions');
+  final Uri url = Uri.parse('https://alcancia.io/privacypolicy');
+  final Uri url2 = Uri.parse('https://alcancia.io/termsandconditions');
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider) ?? User.sampleUser;
