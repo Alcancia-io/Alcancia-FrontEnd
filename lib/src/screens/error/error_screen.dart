@@ -6,7 +6,9 @@ import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 
 class ErrorScreen extends StatelessWidget {
-  const ErrorScreen({Key? key}) : super(key: key);
+  const ErrorScreen({Key? key, this.error}) : super(key: key);
+
+  final String? error;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,13 @@ class ErrorScreen extends StatelessWidget {
                     appLoc.errorSomethingWentWrong,
                     style: Theme.of(context).textTheme.titleLarge,
                     textAlign: TextAlign.center,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Error: $error",
+                      style: Theme.of(context).textTheme.bodyText1,
+                    ),
                   ),
                 ],
               ),
