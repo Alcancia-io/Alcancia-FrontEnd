@@ -84,7 +84,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     if (_isLoading) {
       return const SafeArea(child: Center(child: CircularProgressIndicator()));
     }
-    if (_error != "") return const ErrorScreen();
+    if (_error != "") return ErrorScreen(error: _error,);
     return Scaffold(
       appBar: AlcanciaToolbar(
         state: StateToolbar.profileTitleIcon,
