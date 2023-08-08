@@ -21,45 +21,48 @@ class AlcanciaListPickerDialog extends StatelessWidget {
     return Dialog(
       insetPadding: const EdgeInsets.all(15),
       backgroundColor: Colors.transparent,
-      child: Container(
-        constraints: BoxConstraints(
-          minHeight: size.height * 0.3,
-          maxHeight: size.height * 0.5,
-        ),
-        decoration: BoxDecoration(
-          color: Theme.of(context).inputDecorationTheme.fillColor,
-          borderRadius: BorderRadius.circular(7),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text(
-                appLoc.labelSelectDialogTitle,
-                style: Theme.of(context).textTheme.bodyText1,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Theme.of(context).inputDecorationTheme.fillColor,
+              borderRadius: BorderRadius.circular(7),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    appLoc.labelSelectDialogTitle,
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Column(
+                      children: [
+                        for (var i = 0; i < list.length; i++)
+                          itemBuilder(context, i),
+                      ]
+                    ),
+                  ),
+                  AlcanciaButton(
+                    buttonText: appLoc.buttonAccept,
+                    color: alcanciaLightBlue,
+                    width: 308,
+                    height: 64,
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
               ),
-              SizedBox(
-                height: 200,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemBuilder: itemBuilder,
-                  itemCount: list.length,
-                ),
-              ),
-              AlcanciaButton(
-                buttonText: appLoc.buttonAccept,
-                color: alcanciaLightBlue,
-                width: 308,
-                height: 64,
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              )
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
