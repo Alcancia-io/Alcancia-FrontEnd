@@ -19,6 +19,8 @@ import 'package:alcancia/src/screens/success/success_screen.dart';
 import 'package:alcancia/src/screens/successful_transaction/successful_transaction.dart';
 import 'package:alcancia/src/screens/swap/swap_screen.dart';
 import 'package:alcancia/src/screens/transfer/transfer_screen.dart';
+import 'package:alcancia/src/screens/withdraw/crypto_withdraw_screen.dart';
+import 'package:alcancia/src/screens/withdraw/withdraw_options_screen.dart';
 import 'package:alcancia/src/screens/withdraw/withdraw_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
 import 'package:alcancia/src/shared/graphql/queries/is_authenticated_query.dart';
@@ -135,7 +137,17 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "withdraw",
           path: "/withdraw",
+          builder: (context, state) => const WithdrawOptionsScreen(),
+        ),
+        GoRoute(
+          name: "fiat-withdrawal",
+          path: "/fiat-withdrawal",
           builder: (context, state) => const WithdrawScreen(),
+        ),
+        GoRoute(
+          name: "crypto-withdrawal",
+          path: "/crypto-withdrawal",
+          builder: (context, state) => const CryptoWithdrawScreen(),
         ),
         GoRoute(
           name: "success",

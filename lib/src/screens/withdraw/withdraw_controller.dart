@@ -1,10 +1,13 @@
+import 'package:alcancia/src/shared/models/external_withdrawal.dart';
 import 'package:alcancia/src/shared/models/suarmi_order_model.dart';
+import 'package:alcancia/src/shared/services/crypto_wallet_service.dart';
 import 'package:alcancia/src/shared/services/exception_service.dart';
 import 'package:alcancia/src/shared/services/suarmi_service.dart';
 
 class WithdrawController {
   final _exceptionHandler = ExceptionService();
   final _swapService = SwapService();
+  final _cryptoWalletService = CryptoWalletService();
 
   Map<String, dynamic> suarmiQuoteInput({required String sourceCurrency}) {
     return {
@@ -54,5 +57,15 @@ class WithdrawController {
     }
     final data = response.data?['sendUserTransaction'];
     return AlcanciaOrder.fromJson(data);
+  }
+
+  Future<ExternalWithdrawal> sendExternalWithdrawal({required String amount, required String address}) async {
+    final response = await _cryptoWalletService.sendExternalWithdraw(amount: amount, address: address);
+    if (response.hasException) {
+      var exception = _exceptionHandler.handleException(response.exception);
+      throw Exception(exception);
+    }
+    final data = response.data?['alcanciaExternalWithdraw'];
+    return ExternalWithdrawal.fromJSON(data);
   }
 }

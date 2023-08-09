@@ -308,5 +308,9 @@
 	"buttonFailed": "VERIFICACIÓN FALLIDA",
 	"labelErrorOtp": "Lo sentimos, el código OTP ha fallado. Por favor, inténtalo de nuevo más tarde.",
 	"errorMinimumTransferAmount": "Transferencia mínima de $0.1",
-	"labelAccountType": "Tipo de cuenta"
+	"labelAccountType": "Tipo de cuenta",
+	"labelPesosWithdrawals": "Retiros en pesos",
+	"labelCryptoWithdrawals": "Retiros en crypto",
+	"labelDetailCryptoWithdrawal": "RETIRO EN CRYPTO",
+	"errorInvalidWalletAddress": "Dirección inválida"
 }
