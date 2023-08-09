@@ -10,13 +10,6 @@ const String meQuery = """
       dob,
       name,
       email,
-      balance {
-        total,
-        aPolUSDC,
-        mcUSD,
-        cUSD,
-        etherscan
-      },
       walletAddress,
       kycStatus,
       profession,
