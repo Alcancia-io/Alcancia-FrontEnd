@@ -125,11 +125,8 @@ class _CryptoWithdrawScreenState extends ConsumerState<CryptoWithdrawScreen> {
               inputType: TextInputType.numberWithOptions(decimal: true),
               inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
               validator: (value) {
-                return null;
                 if (value == null || value.isEmpty) {
                   return appLoc.errorRequiredField;
-                } else if (double.parse(value) < 10) {
-                  return appLoc.errorMinimumWithdrawAmount;
                 } else if (balance < double.parse(value)) {
                   return appLoc.errorInsufficientBalance;
                 }
