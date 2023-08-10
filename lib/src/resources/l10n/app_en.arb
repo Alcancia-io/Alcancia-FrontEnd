@@ -226,5 +226,14 @@
 	"buttonFailed": "VERIFICATION FAILED",
 	"labelErrorOtp": "Sorry, the OTP code has failed. Please try again later.",
 	"errorMinimumTransferAmount": "Minimum transfer of $0.1",
-	"labelAccountType": "Account type"
+	"labelAccountType": "Account type",
+	"labelPesosWithdrawals": "Bank Withdrawals",
+	"labelCryptoWithdrawals": "Crypto Withdrawals",
+	"labelDetailCryptoWithdrawal": "CRYPTO WITHDRAWAL",
+	"errorInvalidWalletAddress": "Invalid wallet address",
+	"errorWithdrawalFailed": "Withdrawal failed. Please try again later.",
+	"labelWithdrawalConfirmed": "Withdrawal order confirmed",
+	"labelWithdrawalProcessingTime": "It will be processed in the next 5 to 20 minutes.",
+	"alertWithdrawalSuccessful": "Withdrawal completed successfully",
+	"labelWithdrawalFee": "Withdrawal fee"
 }
