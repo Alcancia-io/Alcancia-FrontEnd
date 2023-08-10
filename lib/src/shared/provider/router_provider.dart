@@ -28,6 +28,7 @@ import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:alcancia/src/shared/models/checkout_model.dart';
 import 'package:alcancia/src/shared/models/login_data_model.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
+import 'package:alcancia/src/shared/models/success_screen_model.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -152,7 +153,7 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "success",
           path: "/success",
-          builder: (context, state) => SuccessScreen(message: state.extra as String),
+          builder: (context, state) => SuccessScreen(model: state.extra as SuccessScreenModel),
         ),
         GoRoute(
           name: "onboarding",
