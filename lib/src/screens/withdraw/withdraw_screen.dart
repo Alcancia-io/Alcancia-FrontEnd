@@ -160,7 +160,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
   Widget build(BuildContext context) {
     var txtTheme = Theme.of(context).textTheme;
     final appLoc = AppLocalizations.of(context)!;
-    final userBalance = ref.watch(userProvider)!.balance;
+    final userBalance = ref.watch(balanceProvider);
 
     if (_isLoading) {
       return const Scaffold(

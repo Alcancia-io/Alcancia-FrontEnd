@@ -36,9 +36,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     });
     try {
       var userInfo = await dashboardController.fetchUserInformation();
+      var balance = await dashboardController.fetchUserBalance();
       ref.read(transactionsProvider.notifier).state = userInfo.txns;
       ref.read(userProvider.notifier).setUser(userInfo.user);
-      ref.read(balanceProvider.notifier).setBalance(userInfo.user.balance);
+      ref.read(balanceProvider.notifier).setBalance(balance);
     } catch (err) {
       setState(() {
         _error = err.toString();
@@ -84,7 +85,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     if (_isLoading) {
       return const SafeArea(child: Center(child: CircularProgressIndicator()));
     }
-    if (_error != "") return const ErrorScreen();
+    if (_error != "") return ErrorScreen(error: _error,);
     return Scaffold(
       appBar: AlcanciaToolbar(
         state: StateToolbar.profileTitleIcon,

@@ -1,4 +1,5 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
+import 'package:alcancia/src/screens/error/error_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
 import 'package:alcancia/src/shared/components/alcancia_container.dart';
@@ -72,22 +73,26 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
       _state.error = "No user email";
       return;
     }
-    var response = await _authService.forgotPassword(_email!);
-    if (response.hasException) {
-      _state.error = _exceptionService.handleException(response.exception);
-      context.pop();
-      final appLoc = AppLocalizations.of(context)!;
-      Fluttertoast.showToast(
-          msg: appLoc.alertErrorForgotPasswordCode,
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
-    } else {
-      _phoneNumEnding =
-          (response.data?['forgotPassword'] as String).substring(6);
+    try {
+      var response = await _authService.forgotPassword(_email!);
+      if (response.hasException) {
+        _state.error = _exceptionService.handleException(response.exception);
+        context.pop();
+        final appLoc = AppLocalizations.of(context)!;
+        Fluttertoast.showToast(
+            msg: appLoc.alertErrorForgotPasswordCode,
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      } else {
+        _phoneNumEnding =
+            (response.data?['forgotPassword'] as String).substring(6);
+      }
+    } catch (e) {
+      _state.error = e.toString();
     }
 
     setState(() {
@@ -147,7 +152,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
       return const Scaffold(
           body: SafeArea(child: Center(child: CircularProgressIndicator())));
     if (_state.error != null)
-      return Scaffold(body: SafeArea(child: Text(_state.error as String)));
+      return ErrorScreen(error: _state.error,);
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
