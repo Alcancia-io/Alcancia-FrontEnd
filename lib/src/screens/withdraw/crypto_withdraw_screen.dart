@@ -5,6 +5,7 @@ import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/components/decimal_input_formatter.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
+import 'package:alcancia/src/shared/models/success_screen_model.dart';
 import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:flutter/material.dart';
@@ -35,10 +36,10 @@ class _CryptoWithdrawScreenState extends ConsumerState<CryptoWithdrawScreen> {
   final _amountTextController = TextEditingController();
 
 
-  Future<void> sendOrder() async {
+  Future<void> sendOrder(AppLocalizations appLoc) async {
     walletController.sendExternalWithdrawal(amount: _amountTextController.text, address: _walletAddressController.text).then((value) {
       Fluttertoast.showToast(
-        msg: "Withdrawal completed successfully",
+        msg: appLoc.alertWithdrawalSuccessful,
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.green,
@@ -46,20 +47,13 @@ class _CryptoWithdrawScreenState extends ConsumerState<CryptoWithdrawScreen> {
       );
     }, onError: (e) {
       Fluttertoast.showToast(
-        msg: e.toString(),
+        msg: appLoc.errorWithdrawalFailed,
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,
       );
     });
-    Fluttertoast.showToast(
-      msg: "Withdrawal sent",
-      toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.green,
-      textColor: Colors.white,
-    );
   }
 
   @override
@@ -136,16 +130,19 @@ class _CryptoWithdrawScreenState extends ConsumerState<CryptoWithdrawScreen> {
             const SizedBox(
               height: 10,
             ),
-            Text(appLoc.labelAvailableBalance(balance.toStringAsFixed(2))),
+            Text(appLoc.labelAvailableBalance(balance > 0 ? balance.toStringAsFixed(3) : "0.00")),
             const SizedBox(
               height: 40,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Comisión de retiro", style: txtTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700)),
+                Text(appLoc.labelWithdrawalFee, style: txtTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700)),
                 Text("1 USDC", style: txtTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700)),
               ],
+            ),
+            const SizedBox(
+              height: 70,
             ),
             Padding(
               padding: const EdgeInsets.only(top: 24),
@@ -162,11 +159,11 @@ class _CryptoWithdrawScreenState extends ConsumerState<CryptoWithdrawScreen> {
                         setState(() {
                           _loadingButton = true;
                         });
-                        sendOrder();
+                        sendOrder(appLoc);
                         setState(() {
                           _loadingButton = false;
                         });
-                        context.go('/');
+                        context.go("/success", extra: SuccessScreenModel(title: appLoc.labelWithdrawalConfirmed, subtitle: appLoc.labelWithdrawalProcessingTime));
                       }
                           : null,
                       color: alcanciaLightBlue,
