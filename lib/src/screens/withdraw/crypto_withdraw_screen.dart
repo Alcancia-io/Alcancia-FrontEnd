@@ -71,121 +71,124 @@ class _CryptoWithdrawScreenState extends ConsumerState<CryptoWithdrawScreen> {
       return const ErrorScreen();
     }
 
-    return Scaffold(
-      appBar: AlcanciaToolbar(
-        title: appLoc.labelMoneyWithdrawal,
-        state: StateToolbar.titleIcon,
-        logoHeight: 40,
-      ),
-      body: SafeArea(
-          child: Form(
-            key: _formKey,
-        onChanged: () => setState(() => _enableButton = _formKey.currentState!.validate()),
-        child: ListView(
-          padding: const EdgeInsets.only(top: 10, left: 40, right: 40),
-          children: [
-            Text(
-              appLoc.labelHello,
-              style: const TextStyle(fontSize: 35, fontWeight: FontWeight.w700),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 12),
-              child: Text(
-                appLoc.labelWithdrawInformationPrompt,
-                style: txtTheme.bodyText1,
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: AlcanciaToolbar(
+          title: appLoc.labelMoneyWithdrawal,
+          state: StateToolbar.titleIcon,
+          logoHeight: 40,
+        ),
+        body: SafeArea(
+            child: Form(
+              key: _formKey,
+          onChanged: () => setState(() => _enableButton = _formKey.currentState!.validate()),
+          child: ListView(
+            padding: const EdgeInsets.only(top: 10, left: 40, right: 40),
+            children: [
+              Text(
+                appLoc.labelHello,
+                style: const TextStyle(fontSize: 35, fontWeight: FontWeight.w700),
               ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            LabeledTextFormField(controller: _walletAddressController, labelText: appLoc.labelAddress, validator: (value) {
-              if (value == null || value.isEmpty) {
-                return appLoc.errorRequiredField;
-              } else if (!value.isValidWalletAddress()) {
-                return appLoc.errorInvalidWalletAddress;
-              }
-              return null;
-            },),
-            const SizedBox(
-              height: 20,
-            ),
-            LabeledTextFormField(controller: _networkController, labelText: appLoc.labelNetwork, enabled: false,),
-            const SizedBox(
-              height: 20,
-            ),
-            LabeledTextFormField(
-              controller: _amountTextController,
-              labelText: appLoc.labelWithdrawAmount,
-              inputType: TextInputType.numberWithOptions(decimal: true),
-              inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
-              validator: (value) {
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Text(
+                  appLoc.labelWithdrawInformationPrompt,
+                  style: txtTheme.bodyText1,
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              LabeledTextFormField(controller: _walletAddressController, labelText: appLoc.labelAddress, validator: (value) {
                 if (value == null || value.isEmpty) {
                   return appLoc.errorRequiredField;
-                } else if (balance < double.parse(value)) {
-                  return appLoc.errorInsufficientBalance;
+                } else if (!value.isValidWalletAddress()) {
+                  return appLoc.errorInvalidWalletAddress;
                 }
                 return null;
-              },
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(appLoc.labelAvailableBalance(balance > 0 ? balance.toStringAsFixed(3) : "0.00")),
-            const SizedBox(
-              height: 40,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(appLoc.labelWithdrawalFee, style: txtTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700)),
-                Text("1 USDC", style: txtTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700)),
-              ],
-            ),
-            const SizedBox(
-              height: 70,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 24),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+              },),
+              const SizedBox(
+                height: 20,
+              ),
+              LabeledTextFormField(controller: _networkController, labelText: appLoc.labelNetwork, enabled: false,),
+              const SizedBox(
+                height: 20,
+              ),
+              LabeledTextFormField(
+                controller: _amountTextController,
+                labelText: appLoc.labelWithdrawAmount,
+                inputType: TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return appLoc.errorRequiredField;
+                  } else if (balance < double.parse(value)) {
+                    return appLoc.errorInsufficientBalance;
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(appLoc.labelAvailableBalance(balance > 0 ? balance.toStringAsFixed(3) : "0.00")),
+              const SizedBox(
+                height: 40,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (_loadingButton) ...[
-                    const CircularProgressIndicator(),
-                  ] else ...[
-                    AlcanciaButton(
-                      buttonText: appLoc.buttonNext,
-                      onPressed: _enableButton
-                          ? () async {
-                        setState(() {
-                          _loadingButton = true;
-                        });
-                        sendOrder(appLoc);
-                        setState(() {
-                          _loadingButton = false;
-                        });
-                        context.go("/success", extra: SuccessScreenModel(title: appLoc.labelWithdrawalConfirmed, subtitle: appLoc.labelWithdrawalProcessingTime));
-                      }
-                          : null,
-                      color: alcanciaLightBlue,
-                      width: 308,
-                      height: 64,
-                    ),
-                  ],
-                  if (_error.isNotEmpty) ...[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        _error,
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                    ),
-                  ]
+                  Text(appLoc.labelWithdrawalFee, style: txtTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700)),
+                  Text("1 USDC", style: txtTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700)),
                 ],
               ),
-            ),
-          ],
-        ),
-      )),
+              const SizedBox(
+                height: 70,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 24),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (_loadingButton) ...[
+                      const CircularProgressIndicator(),
+                    ] else ...[
+                      AlcanciaButton(
+                        buttonText: appLoc.buttonNext,
+                        onPressed: _enableButton
+                            ? () async {
+                          setState(() {
+                            _loadingButton = true;
+                          });
+                          sendOrder(appLoc);
+                          setState(() {
+                            _loadingButton = false;
+                          });
+                          context.go("/success", extra: SuccessScreenModel(title: appLoc.labelWithdrawalConfirmed, subtitle: appLoc.labelWithdrawalProcessingTime));
+                        }
+                            : null,
+                        color: alcanciaLightBlue,
+                        width: 308,
+                        height: 64,
+                      ),
+                    ],
+                    if (_error.isNotEmpty) ...[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          _error,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    ]
+                  ],
+                ),
+              ),
+            ],
+          ),
+        )),
+      ),
     );
   }
 }
