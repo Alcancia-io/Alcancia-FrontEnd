@@ -226,5 +226,7 @@
 	"buttonFailed": "VERIFICATION FAILED",
 	"labelErrorOtp": "Sorry, the OTP code has failed. Please try again later.",
 	"errorMinimumTransferAmount": "Minimum transfer of $0.1",
-	"labelAccountType": "Account type"
+	"labelAccountType": "Account type",
+	"labelChartBalance":"Balance History",
+	"labelButtonChart":"Balance History Chart"
 }
