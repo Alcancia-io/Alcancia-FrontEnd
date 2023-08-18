@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../shared/components/dashboard/alcancia_button_chart.dart';
 import '../../shared/provider/user_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -138,7 +137,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ],
                   ),
                 ),
-                const AlcanciaButtonChart(),
                 AlcanciaTransactions(
                   height: screenSize.height * 0.5,
                   txns: txns,
