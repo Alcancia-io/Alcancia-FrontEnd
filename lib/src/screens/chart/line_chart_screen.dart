@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../shared/components/alcancia_toolbar.dart';
 import '../../shared/components/alcancia_transactions_list.dart';
 import '../../shared/provider/alcancia_providers.dart';
+import '../../shared/provider/balance_hist_provider.dart';
 import '../../shared/provider/transactions_provider.dart';
 import 'alcancia_line_chart.dart';
 
@@ -19,6 +20,7 @@ class _LineChartState extends ConsumerState<LineChartScreen> {
   Widget build(BuildContext context) {
     var user = ref.watch(userProvider);
     final txns = ref.watch(transactionsProvider);
+    final balHist = ref.watch(balanceHistProvider);
     final screenSize = MediaQuery.of(context).size;
     final appLoc = AppLocalizations.of(context)!;
     return Scaffold(
@@ -31,11 +33,11 @@ class _LineChartState extends ConsumerState<LineChartScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const Center(
+              Center(
                 child: SizedBox(
                   height: 300,
                   width: 500,
-                  child: AlcanciaLineChart(),
+                  child: AlcanciaLineChart(balanceHist: balHist),
                 ),
               ),
               Container(

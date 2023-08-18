@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../shared/provider/balance_hist_provider.dart';
 import '../../shared/provider/user_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -37,6 +38,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     try {
       var userInfo = await dashboardController.fetchUserInformation();
       var balance = await dashboardController.fetchUserBalance();
+      var balanceHist = await dashboardController.fetchUserBalanceHistory();
+      ref.read(balanceHistProvider.notifier).state = balanceHist;
       ref.read(transactionsProvider.notifier).state = userInfo.txns;
       ref.read(userProvider.notifier).setUser(userInfo.user);
       ref.read(balanceProvider.notifier).setBalance(balance);

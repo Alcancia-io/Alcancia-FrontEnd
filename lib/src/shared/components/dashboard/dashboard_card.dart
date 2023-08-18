@@ -1,5 +1,6 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/dashboard/balance_carousel.dart';
+import 'package:alcancia/src/shared/provider/balance_hist_provider.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,7 +56,7 @@ class _DashboardCardState extends ConsumerState<DashboardCard>
   Widget build(BuildContext context) {
     final ctx = Theme.of(context);
     final userBalance = ref.watch(balanceProvider);
-
+    final balanceHist = ref.watch(balanceHistProvider);
     return SlideTransition(
       position: Tween<Offset>(
         begin: Offset(-1.0, 0.0), // Slide in from the left
@@ -83,11 +84,11 @@ class _DashboardCardState extends ConsumerState<DashboardCard>
                 return SizeTransition(
                   axisAlignment: -1.0,
                   sizeFactor: _sizeController,
-                  child: const Center(
+                  child: Center(
                     child: SizedBox(
                       height: 300,
                       width: 500,
-                      child: AlcanciaLineChart(),
+                      child: AlcanciaLineChart(balanceHist: balanceHist),
                     ),
                   ),
                 );
