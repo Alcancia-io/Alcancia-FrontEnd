@@ -33,10 +33,9 @@ class _LineChartState extends ConsumerState<LineChartScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Center(
-                child: SizedBox(
-                  height: 300,
-                  width: 500,
+              Container(
+                padding: const EdgeInsets.only(left: 24, right: 24, bottom: 0),
+                child: Center(
                   child: AlcanciaLineChart(balanceHist: balHist),
                 ),
               ),

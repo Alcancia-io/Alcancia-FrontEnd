@@ -14,10 +14,10 @@ class BalanceItem {
 
 class BalanceCarousel extends StatefulWidget {
   const BalanceCarousel(
-      {Key? key, required this.balance, required this.toggleVisibility})
+      {Key? key, required this.balance, required this.redirectToGraph})
       : super(key: key);
   final Balance balance;
-  final VoidCallback toggleVisibility;
+  final VoidCallback redirectToGraph;
   @override
   State<BalanceCarousel> createState() => _BalanceCarouselState();
 }
@@ -60,18 +60,17 @@ class _BalanceCarouselState extends State<BalanceCarousel> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Expanded(
-                        child: Text(
-                          balance.title,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      Text(
+                        balance.title,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
+                      Spacer(),
                       IconButton(
-                        onPressed: widget.toggleVisibility,
+                        onPressed: widget.redirectToGraph,
                         icon: const Icon(Icons.auto_graph_rounded),
                       ),
                     ],
