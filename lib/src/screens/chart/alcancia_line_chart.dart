@@ -2,6 +2,7 @@ import 'package:alcancia/src/shared/models/balance_history_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 
 class _LineChart extends StatelessWidget {
   const _LineChart(
@@ -18,13 +19,13 @@ class _LineChart extends StatelessWidget {
   }
 
   LineChartData get sampleData1 => LineChartData(
-        lineTouchData: lineTouchData1,
+        lineTouchData: lineTouchData,
         gridData: gridData,
-        titlesData: titlesData1,
+        titlesData: titlesData,
         borderData: borderData,
         lineBarsData: lineBarsData1,
         minX: 0,
-        maxX: 14,
+        maxX: null,
         maxY: balanceHist
                 .map((data) => data.balance)
                 .reduce((a, b) => a! > b! ? a : b)! +
@@ -32,14 +33,14 @@ class _LineChart extends StatelessWidget {
         minY: 0,
       );
 
-  LineTouchData get lineTouchData1 => LineTouchData(
+  LineTouchData get lineTouchData => LineTouchData(
         handleBuiltInTouches: true,
         touchTooltipData: LineTouchTooltipData(
           tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
         ),
       );
 
-  FlTitlesData get titlesData1 => FlTitlesData(
+  FlTitlesData get titlesData => FlTitlesData(
         bottomTitles: AxisTitles(
           sideTitles: bottomTitles,
         ),
@@ -50,7 +51,7 @@ class _LineChart extends StatelessWidget {
           sideTitles: SideTitles(showTitles: false),
         ),
         leftTitles: AxisTitles(
-          sideTitles: leftTitles(),
+          sideTitles: SideTitles(showTitles: false),
         ),
       );
 
@@ -173,6 +174,7 @@ class _LineChart extends StatelessWidget {
         dotData: const FlDotData(show: false),
         belowBarData: BarAreaData(show: true),
         spots: balanceHist
+        .where((data) => data.createdAt!.isBefore(DateTime.now()) && data.createdAt!.isAfter(DateTime.now().subtract(const Duration(days: 365))))
             .map((data) =>
                 FlSpot(data.createdAt!.month.toDouble(), data.balance!))
             .toList(),
@@ -180,8 +182,10 @@ class _LineChart extends StatelessWidget {
 }
 
 class AlcanciaLineChart extends StatefulWidget {
+  const AlcanciaLineChart({super.key, required this.balanceHist, this.showTitle = true});
+
   final List<UserBalanceHistory> balanceHist;
-  const AlcanciaLineChart({super.key, required this.balanceHist});
+  final bool showTitle;
 
   @override
   State<StatefulWidget> createState() => _AlcanciaLineChart();
@@ -209,16 +213,21 @@ class _AlcanciaLineChart extends State<AlcanciaLineChart> {
               const SizedBox(
                 height: 10,
               ),
-              Text(
-                appLoc.labelChartBalance,
-                style: const TextStyle(
-                  color: Color(0xFF4E76E5),
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2,
+              if (widget.showTitle) ... [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    appLoc.labelChartBalance,
+                    style: const TextStyle(
+                      color: Color(0xFF4E76E5),
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2,
+                    ),
+                    textAlign: TextAlign.start,
+                  ),
                 ),
-                textAlign: TextAlign.center,
-              ),
+              ],
               const SizedBox(
                 height: 27,
               ),
@@ -236,17 +245,17 @@ class _AlcanciaLineChart extends State<AlcanciaLineChart> {
               ),
             ],
           ),
-          IconButton(
-            icon: Icon(
-              Icons.refresh,
-              color: Colors.white.withOpacity(isShowingMainData ? 1.0 : 0.5),
-            ),
-            onPressed: () {
-              setState(() {
-                isShowingMainData = !isShowingMainData;
-              });
-            },
-          ),
+          // IconButton(
+          //   icon: Icon(
+          //     Icons.refresh,
+          //     color: Colors.white.withOpacity(isShowingMainData ? 1.0 : 0.5),
+          //   ),
+          //   onPressed: () {
+          //     setState(() {
+          //       isShowingMainData = !isShowingMainData;
+          //     });
+          //   },
+          // ),
         ],
       ),
     );
