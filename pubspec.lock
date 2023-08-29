@@ -1314,6 +1314,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
+  zendesk_messaging:
+    dependency: "direct main"
+    description:
+      name: zendesk_messaging
+      sha256: "8233221de5c8a6dfb30067beb610c8d4fd10bb98cf57ce3d02feeb281146ffdd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.7.6"
 sdks:
   dart: ">=3.0.0 <4.0.0"
   flutter: ">=3.10.0"
