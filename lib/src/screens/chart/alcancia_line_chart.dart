@@ -14,7 +14,7 @@ class _LineChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return LineChart(
       sampleData1,
-      duration: const Duration(milliseconds: 2),
+      duration: const Duration(milliseconds: 20),
     );
   }
 
@@ -25,11 +25,11 @@ class _LineChart extends StatelessWidget {
         borderData: borderData,
         lineBarsData: lineBarsData1,
         minX: 0,
-        maxX: null,
+        maxX: balanceHist.length.toDouble() - 1,
         maxY: balanceHist
                 .map((data) => data.balance)
                 .reduce((a, b) => a! > b! ? a : b)! +
-            20.0, //Max Balance
+            20.0, //Max Balance with margin of 20 units
         minY: 0,
       );
 
@@ -50,7 +50,7 @@ class _LineChart extends StatelessWidget {
         topTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
-        leftTitles: AxisTitles(
+        leftTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
       );
@@ -96,60 +96,39 @@ class _LineChart extends StatelessWidget {
       fontWeight: FontWeight.bold,
       fontSize: 12,
     );
-    Widget text;
-    switch (value.toInt()) {
-      case 1:
-        text = const Text('ENE', style: style);
-        break;
-      case 2:
-        text = const Text('FEB', style: style);
-        break;
-      case 3:
-        text = const Text('MAR', style: style);
-        break;
-      case 4:
-        text = const Text('ABR', style: style);
-        break;
-      case 5:
-        text = const Text('MAY', style: style);
-        break;
-      case 6:
-        text = const Text('JUN', style: style);
-        break;
-      case 7:
-        text = const Text('JUL', style: style);
-        break;
-      case 8:
-        text = const Text('AGO', style: style);
-        break;
-      case 9:
-        text = const Text('SEP', style: style);
-        break;
-      case 10:
-        text = const Text('OCT', style: style);
-        break;
-      case 11:
-        text = const Text('NOV', style: style);
-        break;
-      case 12:
-        text = const Text('DIC', style: style);
-        break;
-      default:
-        text = const Text('');
-        break;
+
+    DateTime? minDate = balanceHist.map((history) => history.createdAt).reduce(
+        (value, element) => value!.isBefore(element!) ? value : element);
+
+    DateTime? maxDate = balanceHist
+        .map((history) => history.createdAt)
+        .reduce((value, element) => value!.isAfter(element!) ? value : element);
+    int monthDifference =
+        (maxDate!.year - minDate!.year) * 12 + maxDate.month - minDate.month;
+    Widget? text;
+
+    if (monthDifference > value.toInt()) {
+      text = Text(
+          DateFormat("MMM")
+              .format(balanceHist[value.toInt()].createdAt!)
+              .toString(),
+          style: style);
     }
 
+    if (text == null) {
+      return Container();
+    }
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      space: 10,
+      space: 8,
       child: text,
     );
   }
 
   SideTitles get bottomTitles => SideTitles(
         showTitles: true,
-        reservedSize: 32,
-        interval: 2,
+        reservedSize: 26,
+        interval: 1,
         getTitlesWidget: bottomTitleWidgets,
       );
 
@@ -167,22 +146,23 @@ class _LineChart extends StatelessWidget {
       );
 
   LineChartBarData get lineChartBarData1_1 => LineChartBarData(
-        isCurved: true,
+        isCurved: false,
         color: const Color(0xFF4E76E5),
         barWidth: 3,
-        isStrokeCapRound: false,
-        dotData: const FlDotData(show: false),
+        isStrokeCapRound: true,
+        dotData: const FlDotData(show: true),
         belowBarData: BarAreaData(show: true),
-        spots: balanceHist
-        .where((data) => data.createdAt!.isBefore(DateTime.now()) && data.createdAt!.isAfter(DateTime.now().subtract(const Duration(days: 365))))
-            .map((data) =>
-                FlSpot(data.createdAt!.month.toDouble(), data.balance!))
-            .toList(),
+        spots: balanceHist.asMap().entries.map((entry) {
+          int index = entry.key;
+          UserBalanceHistory data = entry.value;
+          return FlSpot(index.toDouble(), data.balance!.toDouble());
+        }).toList(),
       );
 }
 
 class AlcanciaLineChart extends StatefulWidget {
-  const AlcanciaLineChart({super.key, required this.balanceHist, this.showTitle = true});
+  const AlcanciaLineChart(
+      {super.key, required this.balanceHist, this.showTitle = true});
 
   final List<UserBalanceHistory> balanceHist;
   final bool showTitle;
@@ -213,7 +193,7 @@ class _AlcanciaLineChart extends State<AlcanciaLineChart> {
               const SizedBox(
                 height: 10,
               ),
-              if (widget.showTitle) ... [
+              if (widget.showTitle) ...[
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(
