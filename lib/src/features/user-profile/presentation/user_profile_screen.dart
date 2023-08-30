@@ -107,7 +107,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                     children: [
                       const Padding(
                         padding: EdgeInsets.all(8.0),
-                        child: Icon(Icons.supervisor_account),
+                        child: Icon(Icons.headphones_outlined),
                       ),
                       Text(
                         appLoc.labelCustomerService,
