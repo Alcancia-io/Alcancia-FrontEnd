@@ -62,7 +62,7 @@ dependencies:
   flutter_svg_provider: ^1.0.3
   firebase_crashlytics: ^3.3.3
   lottie: ^2.4.0
-  zendesk_messaging: ^2.7.6
+  zendesk_messaging: ^2.7.7
 
 flutter_icons:
   image_path: "lib/src/resources/images/app_icon.png"

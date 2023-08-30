@@ -41,7 +41,8 @@ Future<bool> isUserAuthenticated() async {
   var token = await service.readSecureData("token");
   GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "$token");
   GraphQLClient client = graphQLConfiguration.clientToQuery();
-  var result = await client.query(QueryOptions(document: gql(isAuthenticatedQuery)));
+  var result =
+      await client.query(QueryOptions(document: gql(isAuthenticatedQuery)));
   return !result.hasException;
   // print(result.hasException);
 }
@@ -91,8 +92,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "phone-registration",
           path: "/phone-registration",
-          builder: (context, state) =>
-              PhoneRegistrationScreen(userRegistrationData: state.extra as UserRegistrationModel),
+          builder: (context, state) => PhoneRegistrationScreen(
+              userRegistrationData: state.extra as UserRegistrationModel),
         ),
         GoRoute(
           name: "swap",
@@ -102,7 +103,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "transaction_detail",
           path: "/transaction_detail",
-          builder: (context, state) => TransactionDetail(txn: state.extra as Transaction),
+          builder: (context, state) =>
+              TransactionDetail(txn: state.extra as Transaction),
         ),
         GoRoute(
           name: "otp",
@@ -114,7 +116,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "mfa",
           path: "/mfa",
-          builder: (context, state) => MFAScreen(data: state.extra as LoginDataModel),
+          builder: (context, state) =>
+              MFAScreen(data: state.extra as LoginDataModel),
         ),
         GoRoute(
           name: "checkout",
@@ -153,7 +156,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "success",
           path: "/success",
-          builder: (context, state) => SuccessScreen(model: state.extra as SuccessScreenModel),
+          builder: (context, state) =>
+              SuccessScreen(model: state.extra as SuccessScreenModel),
         ),
         GoRoute(
           name: "onboarding",
@@ -203,7 +207,8 @@ final routerProvider = Provider<GoRouter>(
         final finishedOnboarding = await _finishedOnboarding();
         final onboardingLoc = state.namedLocation('onboarding');
         final isOnboarding = state.subloc == onboardingLoc;
-        if (!loggedIn && !finishedOnboarding && !isOnboarding) return onboardingLoc;
+        if (!loggedIn && !finishedOnboarding && !isOnboarding)
+          return onboardingLoc;
         if (!loggedIn &&
             !loggingIn &&
             !creatingAccount &&
@@ -213,7 +218,8 @@ final routerProvider = Provider<GoRouter>(
             !isOtp &&
             !isForgotPassword &&
             !isOnboarding) return welcomeLoc;
-        if (loggedIn && (loggingIn || creatingAccount || isStartup)) return home;
+        if (loggedIn && (loggingIn || creatingAccount || isStartup))
+          return home;
         return null;
       },
     );

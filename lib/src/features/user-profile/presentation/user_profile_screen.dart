@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_action_dialog.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
@@ -12,14 +14,50 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zendesk_messaging/zendesk_messaging.dart';
 
-class UserProfileScreen extends ConsumerWidget {
-  UserProfileScreen({Key? key}) : super(key: key);
+class UserProfileScreen extends ConsumerStatefulWidget {
+  const UserProfileScreen({Key? key}) : super(key: key);
 
+  @override
+  ConsumerState<UserProfileScreen> createState() => _UserProfileScreenState();
+}
+
+class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
   final Uri url = Uri.parse('https://alcancia.io/privacypolicy');
   final Uri url2 = Uri.parse('https://alcancia.io/termsandconditions');
+  final String androidChannelKey =
+      'eyJzZXR0aW5nc191cmwiOiJodHRwczovL2FsY2FuY2lhaGVscC56ZW5kZXNrLmNvbS9tb2JpbGVfc2RrX2FwaS9zZXR0aW5ncy8wMUg4WVkwRU04NUFUUjk2UjZKNzZONlA1RS5qc29uIn0=';
+  final String iosChannelKey =
+      'eyJzZXR0aW5nc191cmwiOiJodHRwczovL2FsY2FuY2lhaGVscC56ZW5kZXNrLmNvbS9tb2JpbGVfc2RrX2FwaS9zZXR0aW5ncy8wMUg4WVk0TlFUNlFWWVJXQ0hIRFRBSjhQQi5qc29uIn0=';
+  int unreadMessageCount = 0;
+  late Timer _refreshTimer;
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void initState() {
+    super.initState();
+
+    ZendeskMessaging.initialize(
+      androidChannelKey: androidChannelKey,
+      iosChannelKey: iosChannelKey,
+    );
+
+    //RefreshTimer debe ejecutarse siempre y cuando el usuario haya iniciado una sesion de Zendesk a fin de ahorra recursos.
+    //Pendiente de validar login() en ZenDesk
+    _refreshTimer = Timer.periodic(const Duration(seconds: 18), (_) {
+      // Llama a setState para refrescar la pantalla y detectar notificaciones no leidas.
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _refreshTimer.cancel();
+    ZendeskMessaging.logoutUser();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final user = ref.watch(userProvider) ?? User.sampleUser;
     final authService = ref.watch(authServiceProvider);
     final appLoc = AppLocalizations.of(context)!;
@@ -51,6 +89,73 @@ class UserProfileScreen extends ConsumerWidget {
                       Text(
                         appLoc.labelMyAccount,
                         style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                      const Spacer(),
+                      const Icon(Icons.chevron_right)
+                    ],
+                  ),
+                ),
+              ),
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () {
+                  ZendeskMessaging.show();
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(Icons.supervisor_account),
+                      ),
+                      Text(
+                        appLoc.labelCustomerService,
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                      const SizedBox(width: 8),
+                      FutureBuilder<int>(
+                        future: _getUnreadMessageCount(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Container();
+                          } else if (snapshot.hasError) {
+                            return const Text(
+                              "",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            );
+                          } else if (snapshot.data! > 0) {
+                            final unreadCount = snapshot.data;
+                            return Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Container(
+                                  width: 24,
+                                  height: 24,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.blue,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                Text(
+                                  "$unreadCount",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else {
+                            return Container();
+                          }
+                        },
                       ),
                       const Spacer(),
                       const Icon(Icons.chevron_right)
@@ -113,7 +218,8 @@ class UserProfileScreen extends ConsumerWidget {
                     color: Colors.transparent,
                     buttonText: appLoc.labelSignOut,
                     fontSize: 18,
-                    padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
+                    padding: const EdgeInsets.only(
+                        left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
                     onPressed: () async {
                       await showDialog(
                           context: context,
@@ -126,13 +232,15 @@ class UserProfileScreen extends ConsumerWidget {
                                   try {
                                     await authService.logout();
                                     await deleteToken();
-                                    ref.read(userProvider.notifier).setUser(null);
+                                    ref
+                                        .read(userProvider.notifier)
+                                        .setUser(null);
 
                                     context.go("/");
                                   } catch (e) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                        alcanciaSnackBar(context,
-                                            appLoc.errorSignOut));
+                                        alcanciaSnackBar(
+                                            context, appLoc.errorSignOut));
                                   }
                                   ref.read(userProvider.notifier).setUser(null);
                                 },
@@ -155,13 +263,25 @@ class UserProfileScreen extends ConsumerWidget {
     );
   }
 
+  Future<void> Login() async {
+    final ZendeskLoginResponse result =
+        await ZendeskMessaging.loginUser(jwt: "YOUR_JWT");
+  }
+
+  Future<int> _getUnreadMessageCount() async {
+    final messageCount = await ZendeskMessaging.getUnreadMessageCount();
+    return messageCount;
+  }
+
   Widget _profileCard(BuildContext context, User user) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
-          color: Theme.of(context).brightness == Brightness.dark ? alcanciaCardDark2 : alcanciaCardLight2,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? alcanciaCardDark2
+              : alcanciaCardLight2,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Padding(
@@ -188,7 +308,10 @@ class UserProfileScreen extends ConsumerWidget {
                   Text(
                     "${user.name} ${user.surname}",
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ],
               ),

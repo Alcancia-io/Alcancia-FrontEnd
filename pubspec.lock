@@ -1318,10 +1318,10 @@ packages:
     dependency: "direct main"
     description:
       name: zendesk_messaging
-      sha256: "8233221de5c8a6dfb30067beb610c8d4fd10bb98cf57ce3d02feeb281146ffdd"
+      sha256: "2144d548332145c68ff063bb3565017e81b2f3d3dd98919352f0755d6728eb80"
       url: "https://pub.dev"
     source: hosted
-    version: "2.7.6"
+    version: "2.7.7"
 sdks:
   dart: ">=3.0.0 <4.0.0"
   flutter: ">=3.10.0"

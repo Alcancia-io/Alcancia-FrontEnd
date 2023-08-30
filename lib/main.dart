@@ -63,18 +63,10 @@ class _MyAppState extends ConsumerState<MyApp> {
   // This widget is the root of your application.
   final PushNotificationProvider pushNotificationProvider =
       PushNotificationProvider();
-  final String androidChannelKey =
-      'eyJzZXR0aW5nc191cmwiOiJodHRwczovL2FsY2FuY2lhaGVscC56ZW5kZXNrLmNvbS9tb2JpbGVfc2RrX2FwaS9zZXR0aW5ncy8wMUg4WVkwRU04NUFUUjk2UjZKNzZONlA1RS5qc29uIn0=';
-  final String iosChannelKey =
-      'eyJzZXR0aW5nc191cmwiOiJodHRwczovL2FsY2FuY2lhaGVscC56ZW5kZXNrLmNvbS9tb2JpbGVfc2RrX2FwaS9zZXR0aW5ncy8wMUg4WVk0TlFUNlFWWVJXQ0hIRFRBSjhQQi5qc29uIn0=';
   @override
   void initState() {
     super.initState();
     pushNotificationProvider.initNotifications();
-    ZendeskMessaging.initialize(
-      androidChannelKey: androidChannelKey,
-      iosChannelKey: iosChannelKey,
-    );
   }
 
   @override

@@ -235,5 +235,6 @@
 	"labelWithdrawalConfirmed": "Withdrawal order confirmed",
 	"labelWithdrawalProcessingTime": "It will be processed in the next 5 to 20 minutes.",
 	"alertWithdrawalSuccessful": "Withdrawal completed successfully",
-	"labelWithdrawalFee": "Withdrawal fee"
+	"labelWithdrawalFee": "Withdrawal fee",
+	"labelCustomerService": "Customer service"
 }
