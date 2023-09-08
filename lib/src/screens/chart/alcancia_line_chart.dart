@@ -111,7 +111,8 @@ class _LineChart extends StatelessWidget {
       text = Text(
           DateFormat("MMM")
               .format(balanceHist[value.toInt()].createdAt!)
-              .toString(),
+              .toString()
+          .toUpperCase(),
           style: style);
     }
 
