@@ -309,13 +309,15 @@
 	"labelErrorOtp": "Lo sentimos, el código OTP ha fallado. Por favor, inténtalo de nuevo más tarde.",
 	"errorMinimumTransferAmount": "Transferencia mínima de $0.1",
 	"labelAccountType": "Tipo de cuenta",
+	"labelChartBalance":"Historial de balance",
+	"labelButtonChart":"Gráfica historial balance",
 	"labelPesosWithdrawals": "Retiros en pesos",
 	"labelCryptoWithdrawals": "Retiros en crypto",
 	"labelDetailCryptoWithdrawal": "RETIRO EN CRYPTO",
 	"errorInvalidWalletAddress": "Dirección inválida",
 	"errorWithdrawalFailed": "Retiro fallido. Por favor, inténtalo de nuevo más tarde.",
-    "labelWithdrawalConfirmed": "Orden de retiro confirmada",
-    "labelWithdrawalProcessingTime": "Será procesada de 5 a 20 minutos",
-    "alertWithdrawalSuccessful": "Retiro completado exitosamente",
-    "labelWithdrawalFee": "Comisión de retiro"
+  "labelWithdrawalConfirmed": "Orden de retiro confirmada",
+  "labelWithdrawalProcessingTime": "Será procesada de 5 a 20 minutos",
+  "alertWithdrawalSuccessful": "Retiro completado exitosamente",
+  "labelWithdrawalFee": "Comisión de retiro"
 }
