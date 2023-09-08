@@ -1,5 +1,6 @@
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
+import 'package:alcancia/src/shared/models/success_screen_model.dart';
 import 'package:alcancia/src/shared/services/responsive_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,9 +8,9 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SuccessScreen extends StatelessWidget {
-  SuccessScreen({Key? key, required this.message}) : super(key: key);
+  SuccessScreen({Key? key, required this.model}) : super(key: key);
 
-  final String message;
+  final SuccessScreenModel model;
   final responsiveService = ResponsiveService();
 
   @override
@@ -37,10 +38,20 @@ class SuccessScreen extends StatelessWidget {
                     height: responsiveService.getHeightPixels(40, screenHeight),
                   ),
                   Text(
-                    message,
+                    model.title,
                     style: Theme.of(context).textTheme.titleMedium,
                     textAlign: TextAlign.center,
                   ),
+                  if (model.subtitle != null) ... [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        model.subtitle!,
+                        style: Theme.of(context).textTheme.titleSmall,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ]
                 ],
               ),
               const Spacer(),

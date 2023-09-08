@@ -3,14 +3,17 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 extension TypeToString on TransactionType {
   String typeToString(AppLocalizations appLoc) {
-    switch (name.toUpperCase()) {
-      case 'DEPOSIT':
+    switch (this) {
+      case TransactionType.deposit:
         return appLoc.labelDetailDeposit;
-      case 'WITHDRAW':
+      case TransactionType.withdraw:
         return appLoc.labelDetailWithdraw;
-      case 'P2P':
+      case TransactionType.p2p:
         return appLoc.labelDetailTransfer;
+      case TransactionType.p2p_ext:
+        return appLoc.labelDetailCryptoWithdrawal;
+      case TransactionType.unknown:
+        return appLoc.unknown;
     }
-    return name;
   }
 }

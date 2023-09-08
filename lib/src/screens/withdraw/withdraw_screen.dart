@@ -5,6 +5,7 @@ import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/components/decimal_input_formatter.dart';
+import 'package:alcancia/src/shared/models/success_screen_model.dart';
 import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:alcancia/src/shared/services/suarmi_service.dart';
@@ -314,7 +315,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
     }
     try {
       await controller.sendOrder(orderInput);
-      context.go("/success", extra: appLoc.labelWithdrawalSent);
+      context.go("/success", extra: SuccessScreenModel(title: appLoc.labelWithdrawalSent));
     } catch (e) {
       setState(() {
         _orderError = e.toString();

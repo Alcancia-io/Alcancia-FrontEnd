@@ -38,4 +38,10 @@ extension StringExtension on String {
   bool hasSpecialChar() {
     return contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
   }
+
+  bool isValidWalletAddress() {
+    return RegExp(r'^(0x)[0-9a-fA-F]{40}$').hasMatch(this);
+  }
+
+
 }

@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class DepositOption extends StatelessWidget {
-  const DepositOption({
+class TransactionOption extends StatelessWidget {
+  const TransactionOption({
     Key? key,
     required this.imageSrc,
     required this.title,
     required this.subtitle,
     required this.pill1,
-    required this.pill2,
+    this.pill2,
     required this.onTap,
     this.comingSoon = false,
   }) : super(key: key);
@@ -19,7 +19,7 @@ class DepositOption extends StatelessWidget {
   final String title;
   final String subtitle;
   final String pill1;
-  final String pill2;
+  final String? pill2;
   final void Function()? onTap;
   final bool comingSoon;
 
@@ -112,27 +112,29 @@ class DepositOption extends StatelessWidget {
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: darkMode
-                                    ? Color(0xFF9AFF47).withOpacity(0.2)
-                                    : Color(0xFF31DE52).withOpacity(0.2),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Text(
-                                  pill2,
-                                  style: TextStyle(
-                                      color: darkMode
-                                          ? Color(0xFF31DE52)
-                                          : Colors.green),
+                          if (pill2 != null) ... [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: darkMode
+                                      ? Color(0xFF9AFF47).withOpacity(0.2)
+                                      : Color(0xFF31DE52).withOpacity(0.2),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Text(
+                                    pill2!,
+                                    style: TextStyle(
+                                        color: darkMode
+                                            ? Color(0xFF31DE52)
+                                            : Colors.green),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
+                          ]
                         ],
                       ),
                     ]

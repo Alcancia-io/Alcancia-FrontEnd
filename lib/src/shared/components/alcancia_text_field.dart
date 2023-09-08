@@ -51,7 +51,7 @@ class LabeledTextFormField extends StatelessWidget {
             suffixIcon: suffixIcon,
           ),
           validator: validator,
-          style: Theme.of(context).textTheme.bodyText1,
+          style: enabled == false ? Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.grey) : Theme.of(context).textTheme.bodyText1!,
           onChanged: onChanged,
           enabled: enabled,
         ),

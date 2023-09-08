@@ -40,9 +40,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       var balance = await dashboardController.fetchUserBalance();
       var balanceHist = await dashboardController.fetchUserBalanceHistory();
       ref.read(balanceHistProvider.notifier).state = balanceHist;
+      ref.read(balanceProvider.notifier).setBalance(balance);
       ref.read(transactionsProvider.notifier).state = userInfo.txns;
       ref.read(userProvider.notifier).setUser(userInfo.user);
-      ref.read(balanceProvider.notifier).setBalance(balance);
     } catch (err) {
       setState(() {
         _error = err.toString();
