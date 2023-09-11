@@ -32,6 +32,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
       'eyJzZXR0aW5nc191cmwiOiJodHRwczovL2FsY2FuY2lhaGVscC56ZW5kZXNrLmNvbS9tb2JpbGVfc2RrX2FwaS9zZXR0aW5ncy8wMUg4WVk0TlFUNlFWWVJXQ0hIRFRBSjhQQi5qc29uIn0=';
   int unreadMessageCount = 0;
   late Timer _refreshTimer;
+  String _error = "";
   @override
   void initState() {
     super.initState();
@@ -61,6 +62,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
     final user = ref.watch(userProvider) ?? User.sampleUser;
     final authService = ref.watch(authServiceProvider);
     final appLoc = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AlcanciaToolbar(
         state: StateToolbar.titleIcon,
@@ -98,8 +100,18 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
               ),
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
-                onTap: () {
-                  ZendeskMessaging.show();
+                onTap: () async {
+                  final ZendeskLoginResponse result =
+                      await ZendeskMessaging.loginUser(jwt: user.id);
+                  _error = result.id!;
+                  /*await ZendeskMessaging.loginUserCallbacks(
+                      jwt: user.id,
+                      onSuccess: (id, externalId) {
+                        ZendeskMessaging.show();
+                      },
+                      onFailure: () {
+                        _error = "Failed starting customer service";
+                      });*/
                 },
                 child: Container(
                   padding: const EdgeInsets.all(16.0),
@@ -210,6 +222,15 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                 ),
               ),
               const Spacer(),
+              if (_error.isNotEmpty) ...[
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: Text(
+                    _error,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ),
+              ],
               Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: AlcanciaButton(
@@ -261,11 +282,6 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
         ),
       ),
     );
-  }
-
-  Future<void> Login() async {
-    final ZendeskLoginResponse result =
-        await ZendeskMessaging.loginUser(jwt: "YOUR_JWT");
   }
 
   Future<int> _getUnreadMessageCount() async {
