@@ -36,6 +36,8 @@ import 'package:alcancia/src/screens/transaction_detail/transaction_detail.dart'
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../screens/chart/line_chart_screen.dart';
+
 Future<bool> isUserAuthenticated() async {
   StorageService service = StorageService();
   var token = await service.readSecureData("token");
@@ -185,6 +187,11 @@ final routerProvider = Provider<GoRouter>(
           name: "crypto-deposit",
           path: "/crypto-deposit",
           builder: (context, state) => const CryptoDepositScreen(),
+        ),
+        GoRoute(
+          name: "line-chart",
+          path: "/line-chart",
+          builder: (context, state) => const LineChartScreen(),
         ),
       ],
       redirect: (context, state) async {

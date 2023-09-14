@@ -6,6 +6,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../screens/chart/line_chart_screen.dart';
+
 class AlcanciaTabbar extends StatefulWidget {
   late int selectedIndex;
   AlcanciaTabbar({
@@ -13,7 +15,11 @@ class AlcanciaTabbar extends StatefulWidget {
     required this.selectedIndex,
   }) : super(key: key);
 
-  final screens = [const DashboardScreen(), TransactionsListScreen(), UserProfileScreen()];
+  final screens = [
+    const DashboardScreen(),
+    const LineChartScreen(),
+    UserProfileScreen()
+  ];
 
   @override
   State<AlcanciaTabbar> createState() => _AlcanciaTabbarState();
@@ -58,7 +64,7 @@ class _AlcanciaTabbarState extends State<AlcanciaTabbar> {
         currentIndex: widget.selectedIndex,
         selectedItemColor: ctx.iconTheme.color,
         onTap: (newTabIndex) {
-            context.go('/homescreen/$newTabIndex');
+          context.go('/homescreen/$newTabIndex');
         },
         // this will be needed when more than 3 items in the bar
         // type: BottomNavigationBarType.fixed,

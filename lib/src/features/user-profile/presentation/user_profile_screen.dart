@@ -54,6 +54,10 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
     });
   }
 
+  final Uri url = Uri.parse('https://www.alcancia.io/blog/aviso-de-privacidad');
+  final Uri url2 =
+      Uri.parse('https://www.alcancia.io/blog/terminos-condiciones');
+  
   @override
   void dispose() {
     _refreshTimer.cancel();
