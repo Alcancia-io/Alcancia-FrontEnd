@@ -63,9 +63,9 @@ dependencies:
   firebase_crashlytics: ^3.3.3
   lottie: ^2.4.0
   zendesk_messaging: ^2.7.7
-  fl_chart: ^0.63.0
   page_transition: ^2.0.9
   swipeable_button_view: ^0.0.2
+  fl_chart: ^0.63.0
 
 flutter_icons:
   image_path: "lib/src/resources/images/app_icon.png"
