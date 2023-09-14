@@ -1,4 +1,5 @@
 import 'package:alcancia/src/shared/graphql/mutations/update_user_mutation.dart';
+import 'package:alcancia/src/shared/graphql/queries/index.dart';
 import 'package:alcancia/src/shared/graphql/queries/me_query.dart';
 import 'package:alcancia/src/shared/graphql/queries/user_phone_number_search_query.dart';
 import 'package:alcancia/src/shared/graphql/queries/walletbalance_query.dart';
@@ -22,6 +23,15 @@ class UserService {
     return await clientResponse.query(
       QueryOptions(
         document: gql(meQuery),
+      ),
+    );
+  }
+
+  Future<QueryResult> getUserToken() async {
+    var clientResponse = await client;
+    return await clientResponse.query(
+      QueryOptions(
+        document: gql(jwtZendeskQuery),
       ),
     );
   }

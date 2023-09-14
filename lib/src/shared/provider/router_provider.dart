@@ -158,7 +158,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "success",
           path: "/success",
-          builder: (context, state) => SuccessScreen(model: state.extra as SuccessScreenModel),
+          builder: (context, state) =>
+              SuccessScreen(model: state.extra as SuccessScreenModel),
         ),
         GoRoute(
           name: "onboarding",

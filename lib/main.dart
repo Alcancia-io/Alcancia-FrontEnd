@@ -16,6 +16,7 @@ import 'package:alcancia/src/shared/provider/router_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/services.dart';
+import 'package:zendesk_messaging/zendesk_messaging.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/intl_standalone.dart';
 
@@ -66,7 +67,6 @@ class _MyAppState extends ConsumerState<MyApp> {
   // This widget is the root of your application.
   final PushNotificationProvider pushNotificationProvider =
       PushNotificationProvider();
-
   @override
   void initState() {
     super.initState();
