@@ -11,6 +11,7 @@ import 'package:alcancia/src/shared/provider/user_provider.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:alcancia/src/shared/models/user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -26,10 +27,8 @@ class UserProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
-  final String androidChannelKey =
-      'eyJzZXR0aW5nc191cmwiOiJodHRwczovL2FsY2FuY2lhaGVscC56ZW5kZXNrLmNvbS9tb2JpbGVfc2RrX2FwaS9zZXR0aW5ncy8wMUg4WVkwRU04NUFUUjk2UjZKNzZONlA1RS5qc29uIn0=';
-  final String iosChannelKey =
-      'eyJzZXR0aW5nc191cmwiOiJodHRwczovL2FsY2FuY2lhaGVscC56ZW5kZXNrLmNvbS9tb2JpbGVfc2RrX2FwaS9zZXR0aW5ncy8wMUg4WVk0TlFUNlFWWVJXQ0hIRFRBSjhQQi5qc29uIn0=';
+  final String androidChannelKey = dotenv.env['ANDROID_KEY_ZENDESK'] as String;
+  final String iosChannelKey = dotenv.env['IOS_KEY_ZENDESK'] as String;
   int unreadMessageCount = 0;
   late Timer _refreshTimer;
   String _error = "";
