@@ -26,8 +26,6 @@ class UserProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
-  final Uri url = Uri.parse('https://alcancia.io/privacypolicy');
-  final Uri url2 = Uri.parse('https://alcancia.io/termsandconditions');
   final String androidChannelKey =
       'eyJzZXR0aW5nc191cmwiOiJodHRwczovL2FsY2FuY2lhaGVscC56ZW5kZXNrLmNvbS9tb2JpbGVfc2RrX2FwaS9zZXR0aW5ncy8wMUg4WVkwRU04NUFUUjk2UjZKNzZONlA1RS5qc29uIn0=';
   final String iosChannelKey =
@@ -57,7 +55,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
   final Uri url = Uri.parse('https://www.alcancia.io/blog/aviso-de-privacidad');
   final Uri url2 =
       Uri.parse('https://www.alcancia.io/blog/terminos-condiciones');
-  
+
   @override
   void dispose() {
     _refreshTimer.cancel();
