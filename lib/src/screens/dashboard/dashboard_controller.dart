@@ -1,3 +1,4 @@
+import 'package:alcancia/src/shared/models/jwt_zendesk.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:alcancia/src/shared/services/metamap_service.dart';
 import 'package:alcancia/src/shared/services/services.dart';
@@ -32,6 +33,21 @@ class DashboardController {
       return Future.error(error);
     }
     return Future.error('Error getting user');
+  }
+
+  Future<JWTZendesk> getUserToken() async {
+    UserService userService = UserService();
+    try {
+      var response = await userService.getUserToken();
+      if (response.data != null) {
+        var resp = response.data!["generateUserToken"];
+        final jwt = JWTZendesk.fromJson(resp);
+        return jwt;
+      }
+    } catch (error) {
+      return Future.error(error);
+    }
+    return Future.error('Error getting JWT');
   }
 
   Future<Balance> fetchUserBalance() async {

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:alcancia/src/resources/colors/colors.dart';
+import 'package:alcancia/src/screens/dashboard/dashboard_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_action_dialog.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
@@ -12,6 +13,7 @@ import 'package:alcancia/src/shared/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:zendesk_messaging/zendesk_messaging.dart';
@@ -33,6 +35,8 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
   int unreadMessageCount = 0;
   late Timer _refreshTimer;
   String _error = "";
+  bool isLogin = false;
+  DashboardController dashboardController = DashboardController();
   @override
   void initState() {
     super.initState();
@@ -53,7 +57,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
   @override
   void dispose() {
     _refreshTimer.cancel();
-    ZendeskMessaging.logoutUser();
+    //ZendeskMessaging.logoutUser();
     super.dispose();
   }
 
@@ -101,17 +105,15 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () async {
-                  final ZendeskLoginResponse result =
-                      await ZendeskMessaging.loginUser(jwt: user.id);
-                  _error = result.id!;
-                  /*await ZendeskMessaging.loginUserCallbacks(
-                      jwt: user.id,
-                      onSuccess: (id, externalId) {
-                        ZendeskMessaging.show();
-                      },
-                      onFailure: () {
-                        _error = "Failed starting customer service";
-                      });*/
+                  if (!isLogin) {
+                    await dashboardController.getUserToken().then((value) {
+                      login(value.jwt, appLoc);
+                    }).catchError((error) {
+                      _error = error.toString();
+                    });
+                  } else {
+                    ZendeskMessaging.show();
+                  }
                 },
                 child: Container(
                   padding: const EdgeInsets.all(16.0),
@@ -342,6 +344,23 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
     if (!await launchUrl(url)) {
       throw 'Could not launch $url';
     }
+  }
+
+  void login(jwt, appLoc) {
+    ZendeskMessaging.loginUserCallbacks(
+        jwt: jwt!,
+        onSuccess: (id, externalId) {
+          setState(() {
+            isLogin = true;
+            ZendeskMessaging.show();
+          });
+        },
+        onFailure: () {
+          setState(() {
+            isLogin = false;
+            _error = appLoc.labelErrorCustomerService;
+          });
+        });
   }
 
   deleteToken() async {
