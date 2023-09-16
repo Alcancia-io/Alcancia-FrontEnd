@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../shared/provider/balance_hist_provider.dart';
 import '../../shared/provider/user_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -42,6 +43,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         final code = await dashboardController.getReferralCode();
         userInfo.user.referralCode = code;
       }
+      var balanceHist = await dashboardController.fetchUserBalanceHistory();
+      ref.read(balanceHistProvider.notifier).state = balanceHist;
       ref.read(balanceProvider.notifier).setBalance(balance);
       ref.read(transactionsProvider.notifier).state = userInfo.txns;
       ref.read(userProvider.notifier).setUser(userInfo.user);
@@ -65,7 +68,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
   void setTimer() {
-    timer = Timer.periodic(const Duration(seconds: 10), (Timer t) => setUserBalance());
+    timer = Timer.periodic(
+        const Duration(seconds: 10), (Timer t) => setUserBalance());
   }
 
   @override
@@ -90,7 +94,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     if (_isLoading) {
       return const SafeArea(child: Center(child: CircularProgressIndicator()));
     }
-    if (_error != "") return ErrorScreen(error: _error,);
+    if (_error != "")
+      return ErrorScreen(
+        error: _error,
+      );
     return Scaffold(
       appBar: AlcanciaToolbar(
         state: StateToolbar.profileTitleIcon,
@@ -126,7 +133,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                       AlcanciaButton(
                         buttonText: appLoc.buttonSeeMore,
-                        icon: SvgPicture.asset("lib/src/resources/images/plus_icon.svg"),
+                        icon: SvgPicture.asset(
+                            "lib/src/resources/images/plus_icon.svg"),
                         onPressed: () {
                           context.go("/homescreen/1");
                         },

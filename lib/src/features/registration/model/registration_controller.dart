@@ -59,7 +59,7 @@ class RegistrationController {
     final signupInput = {
       "name": user.name,
       "surname": user.surname,
-      "email": user.email,
+      "email": user.email.toLowerCase(),
       "phoneNumber": user.phoneNumber,
       "gender": user.gender,
       "password": password,

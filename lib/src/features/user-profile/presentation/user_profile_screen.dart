@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:alcancia/src/resources/colors/colors.dart';
+import 'package:alcancia/src/screens/dashboard/dashboard_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_action_dialog.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
@@ -8,21 +11,63 @@ import 'package:alcancia/src/shared/provider/user_provider.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:alcancia/src/shared/models/user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:zendesk_messaging/zendesk_messaging.dart';
 
-class UserProfileScreen extends ConsumerWidget {
-  UserProfileScreen({Key? key}) : super(key: key);
+class UserProfileScreen extends ConsumerStatefulWidget {
+  const UserProfileScreen({Key? key}) : super(key: key);
 
-  final Uri url = Uri.parse('https://alcancia.io/privacypolicy');
-  final Uri url2 = Uri.parse('https://alcancia.io/termsandconditions');
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<UserProfileScreen> createState() => _UserProfileScreenState();
+}
+
+class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
+  final String androidChannelKey = dotenv.env['ANDROID_KEY_ZENDESK'] as String;
+  final String iosChannelKey = dotenv.env['IOS_KEY_ZENDESK'] as String;
+  int unreadMessageCount = 0;
+  late Timer _refreshTimer;
+  String _error = "";
+  bool isLogin = false;
+  DashboardController dashboardController = DashboardController();
+  @override
+  void initState() {
+    super.initState();
+
+    ZendeskMessaging.initialize(
+      androidChannelKey: androidChannelKey,
+      iosChannelKey: iosChannelKey,
+    );
+
+    //RefreshTimer debe ejecutarse siempre y cuando el usuario haya iniciado una sesion de Zendesk a fin de ahorra recursos.
+    //Pendiente de validar login() en ZenDesk
+    _refreshTimer = Timer.periodic(const Duration(seconds: 18), (_) {
+      // Llama a setState para refrescar la pantalla y detectar notificaciones no leidas.
+      setState(() {});
+    });
+  }
+
+  final Uri url = Uri.parse('https://www.alcancia.io/blog/aviso-de-privacidad');
+  final Uri url2 =
+      Uri.parse('https://www.alcancia.io/blog/terminos-condiciones');
+
+  @override
+  void dispose() {
+    _refreshTimer.cancel();
+    //ZendeskMessaging.logoutUser();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final user = ref.watch(userProvider) ?? User.sampleUser;
     final authService = ref.watch(authServiceProvider);
     final appLoc = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AlcanciaToolbar(
         state: StateToolbar.titleIcon,
@@ -51,6 +96,81 @@ class UserProfileScreen extends ConsumerWidget {
                       Text(
                         appLoc.labelMyAccount,
                         style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                      const Spacer(),
+                      const Icon(Icons.chevron_right)
+                    ],
+                  ),
+                ),
+              ),
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () async {
+                  if (!isLogin) {
+                    await dashboardController.getUserToken().then((value) {
+                      login(value.jwt, appLoc);
+                    }).catchError((error) {
+                      _error = error.toString();
+                    });
+                  } else {
+                    ZendeskMessaging.show();
+                  }
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(Icons.headphones_outlined),
+                      ),
+                      Text(
+                        appLoc.labelCustomerService,
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                      const SizedBox(width: 8),
+                      FutureBuilder<int>(
+                        future: _getUnreadMessageCount(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Container();
+                          } else if (snapshot.hasError) {
+                            return const Text(
+                              "",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            );
+                          } else if (snapshot.data! > 0) {
+                            final unreadCount = snapshot.data;
+                            return Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Container(
+                                  width: 24,
+                                  height: 24,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.blue,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                Text(
+                                  "$unreadCount",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else {
+                            return Container();
+                          }
+                        },
                       ),
                       const Spacer(),
                       const Icon(Icons.chevron_right)
@@ -105,6 +225,15 @@ class UserProfileScreen extends ConsumerWidget {
                 ),
               ),
               const Spacer(),
+              if (_error.isNotEmpty) ...[
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: Text(
+                    _error,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ),
+              ],
               Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: AlcanciaButton(
@@ -113,7 +242,8 @@ class UserProfileScreen extends ConsumerWidget {
                     color: Colors.transparent,
                     buttonText: appLoc.labelSignOut,
                     fontSize: 18,
-                    padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
+                    padding: const EdgeInsets.only(
+                        left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
                     onPressed: () async {
                       await showDialog(
                           context: context,
@@ -126,13 +256,15 @@ class UserProfileScreen extends ConsumerWidget {
                                   try {
                                     await authService.logout();
                                     await deleteToken();
-                                    ref.read(userProvider.notifier).setUser(null);
+                                    ref
+                                        .read(userProvider.notifier)
+                                        .setUser(null);
 
                                     context.go("/");
                                   } catch (e) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                        alcanciaSnackBar(context,
-                                            appLoc.errorSignOut));
+                                        alcanciaSnackBar(
+                                            context, appLoc.errorSignOut));
                                   }
                                   ref.read(userProvider.notifier).setUser(null);
                                 },
@@ -155,13 +287,20 @@ class UserProfileScreen extends ConsumerWidget {
     );
   }
 
+  Future<int> _getUnreadMessageCount() async {
+    final messageCount = await ZendeskMessaging.getUnreadMessageCount();
+    return messageCount;
+  }
+
   Widget _profileCard(BuildContext context, User user) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
-          color: Theme.of(context).brightness == Brightness.dark ? alcanciaCardDark2 : alcanciaCardLight2,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? alcanciaCardDark2
+              : alcanciaCardLight2,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Padding(
@@ -188,7 +327,10 @@ class UserProfileScreen extends ConsumerWidget {
                   Text(
                     "${user.name} ${user.surname}",
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -203,6 +345,23 @@ class UserProfileScreen extends ConsumerWidget {
     if (!await launchUrl(url)) {
       throw 'Could not launch $url';
     }
+  }
+
+  void login(jwt, appLoc) {
+    ZendeskMessaging.loginUserCallbacks(
+        jwt: jwt!,
+        onSuccess: (id, externalId) {
+          setState(() {
+            isLogin = true;
+            ZendeskMessaging.show();
+          });
+        },
+        onFailure: () {
+          setState(() {
+            isLogin = false;
+            _error = appLoc.labelErrorCustomerService;
+          });
+        });
   }
 
   deleteToken() async {

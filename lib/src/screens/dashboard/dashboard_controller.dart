@@ -1,3 +1,4 @@
+import 'package:alcancia/src/shared/models/jwt_zendesk.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:alcancia/src/shared/services/metamap_service.dart';
 import 'package:alcancia/src/shared/services/referral_service.dart';
@@ -6,6 +7,8 @@ import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../shared/models/balance_history_model.dart';
 
 class DashboardController {
   final MetamapService metaMapService = MetamapService();
@@ -35,6 +38,21 @@ class DashboardController {
     return Future.error('Error getting user');
   }
 
+  Future<JWTZendesk> getUserToken() async {
+    UserService userService = UserService();
+    try {
+      var response = await userService.getUserToken();
+      if (response.data != null) {
+        var resp = response.data!["generateUserToken"];
+        final jwt = JWTZendesk.fromJson(resp);
+        return jwt;
+      }
+    } catch (error) {
+      return Future.error(error);
+    }
+    return Future.error('Error getting JWT');
+  }
+
   Future<Balance> fetchUserBalance() async {
     UserService userService = UserService();
       var response = await userService.getUserBalance();
@@ -45,6 +63,25 @@ class DashboardController {
       } else {
         return Future.error('Error getting balance: ${response}');
       }
+  }
+
+  Future<List<UserBalanceHistory>> fetchUserBalanceHistory() async {
+    UserService userService = UserService();
+    try {
+      var response = await userService.getUserBalanceHisotry();
+      if (response.data != null) {
+        List<dynamic> balanceHistData = response.data!["getUserBalanceHistory"];
+        if (balanceHistData != null) {
+          final balanceHist = balanceHistData
+              .map((data) => UserBalanceHistory.fromJson(data))
+              .toList();
+          return balanceHist;
+        }
+      }
+    } catch (error) {
+      return Future.error(error);
+    }
+    return Future.error('Error getting balance history');
   }
 
   Future<List<Transaction>> fetchUserTransactions() async {

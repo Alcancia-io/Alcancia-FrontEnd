@@ -227,6 +227,8 @@
 	"labelErrorOtp": "Sorry, the OTP code has failed. Please try again later.",
 	"errorMinimumTransferAmount": "Minimum transfer of $0.1",
 	"labelAccountType": "Account type",
+	"labelChartBalance":"Balance History",
+	"labelButtonChart":"Balance History Chart",
 	"labelPesosWithdrawals": "Bank Withdrawals",
 	"labelCryptoWithdrawals": "Crypto Withdrawals",
 	"labelDetailCryptoWithdrawal": "CRYPTO WITHDRAWAL",
@@ -250,5 +252,7 @@
 	"labelConfirmReferralCode": "Confirm referral code",
 	"labelConfirmReferralCodeDescription": "This action cannot be undone. Are you sure you want to confirm this referral code?\n{referralCode}",
 	"labelConfirmReferralCodeDescriptionNoCode": "This action cannot be undone. Are you sure you don''t want to enter a referral code?",
-	"buttonWinFiveDollars": "Win $5 \uD83E\uDD11"
+	"buttonWinFiveDollars": "Win $5 \uD83E\uDD11",
+	"labelCustomerService": "Customer service",
+	"labelErrorCustomerService": "Failed starting customer service."
 }
