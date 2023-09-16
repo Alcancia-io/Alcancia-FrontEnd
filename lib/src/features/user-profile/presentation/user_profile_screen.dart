@@ -43,11 +43,11 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
       iosChannelKey: iosChannelKey,
     );
 
-    //RefreshTimer debe ejecutarse siempre y cuando el usuario haya iniciado una sesion de Zendesk a fin de ahorra recursos.
-    //Pendiente de validar login() en ZenDesk
-    _refreshTimer = Timer.periodic(const Duration(seconds: 18), (_) {
+    _refreshTimer = Timer.periodic(const Duration(seconds: 7), (_) {
       // Llama a setState para refrescar la pantalla y detectar notificaciones no leidas.
-      setState(() {});
+      if (isLogin) {
+        setState(() {});
+      }
     });
   }
 
@@ -58,7 +58,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
   @override
   void dispose() {
     _refreshTimer.cancel();
-    //ZendeskMessaging.logoutUser();
+    ZendeskMessaging.logoutUser();
     super.dispose();
   }
 

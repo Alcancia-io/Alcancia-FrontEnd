@@ -26,10 +26,8 @@ class _LineChart extends StatelessWidget {
         lineBarsData: lineBarsData1,
         minX: 0,
         maxX: balanceHist.length.toDouble() - 1,
-        maxY: balanceHist
-                .map((data) => data.balance)
-                .reduce((a, b) => a! > b! ? a : b)! +
-            20.0, //Max Balance with margin of 20 units
+        maxY: balanceHist.map((data) => data.balance).reduce(
+            (a, b) => a! > b! ? a : b)!, //Max Balance with margin of 20 units
         minY: 0,
       );
 
@@ -66,9 +64,8 @@ class _LineChart extends StatelessWidget {
     );
     String? text;
     double maxBalance = balanceHist
-            .map((data) => data.balance)
-            .reduce((a, b) => a! > b! ? a : b)! +
-        20.0;
+        .map((data) => data.balance)
+        .reduce((a, b) => a! > b! ? a : b)!;
     List<int> balanceParts = List.generate(6, (index) => maxBalance ~/ 6);
     int sumCumulative = 0;
     for (int i = 0; i < balanceParts.length; i++) {
