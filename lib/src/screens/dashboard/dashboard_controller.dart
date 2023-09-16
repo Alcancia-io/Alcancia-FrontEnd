@@ -1,5 +1,6 @@
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:alcancia/src/shared/services/metamap_service.dart';
+import 'package:alcancia/src/shared/services/referral_service.dart';
 import 'package:alcancia/src/shared/services/services.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,17 +37,14 @@ class DashboardController {
 
   Future<Balance> fetchUserBalance() async {
     UserService userService = UserService();
-    try {
       var response = await userService.getUserBalance();
       if (response.data != null) {
         final balanceData = response.data!["getWalletBalance"];
         final balance = Balance.fromMap(balanceData);
         return balance;
+      } else {
+        return Future.error('Error getting balance: ${response}');
       }
-    } catch (error) {
-      return Future.error(error);
-    }
-    return Future.error('Error getting balance');
   }
 
   Future<List<Transaction>> fetchUserTransactions() async {
@@ -88,5 +86,29 @@ class DashboardController {
       return Future.error("Country not supported");
     }
     return await fetchUser();
+  }
+
+  Future<bool> campaignUserExists() async {
+    UserService userService = UserService();
+    var response = await userService.campaignUserExists();
+    if (response.data != null) {
+      final data = response.data!["campaignUserExists"];
+      final exists = data as bool;
+      return exists;
+    } else {
+      return Future.error('Error checking campaign: ${response}');
+    }
+  }
+
+  Future<String> getReferralCode() async {
+    ReferralService referralService = ReferralService();
+    var response = await referralService.getReferralCode();
+    if (response.data != null) {
+      final data = response.data!["getReferralCode"];
+      final code = data["code"] as String;
+      return code;
+    } else {
+      return Future.error('Error getting referral: ${response}');
+    }
   }
 }

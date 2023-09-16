@@ -19,6 +19,7 @@ class User {
   String? profession;
   String? address;
   String? lastUsedBankAccount;
+  String? referralCode;
 
   User({
     required this.id,
@@ -36,6 +37,7 @@ class User {
     required this.profession,
     this.address,
     this.lastUsedBankAccount,
+    this.referralCode,
   });
 
   static final sampleUser = User(
@@ -51,6 +53,7 @@ class User {
     walletAddress: "",
     kycStatus: KYCStatus.none,
     profession: "",
+    referralCode: null,
   );
 
   factory User.fromJSON(Map<String, dynamic> map) {
@@ -68,7 +71,7 @@ class User {
       kycStatus: KYCStatus.values.firstWhere((element) => element.name.toLowerCase() == map['kycStatus'].toString().toLowerCase(),  orElse: () => KYCStatus.none),
       profession: map["profession"],
       address: map["address"],
-      lastUsedBankAccount: map["lastUsedBankAccount"]
+      lastUsedBankAccount: map["lastUsedBankAccount"],
     );
   }
 }

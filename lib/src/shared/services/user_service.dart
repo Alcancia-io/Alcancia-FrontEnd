@@ -1,4 +1,6 @@
 import 'package:alcancia/src/shared/graphql/mutations/update_user_mutation.dart';
+import 'package:alcancia/src/shared/graphql/queries/campaing_user_exists_query.dart';
+import 'package:alcancia/src/shared/graphql/queries/get_referral_code_query.dart';
 import 'package:alcancia/src/shared/graphql/queries/me_query.dart';
 import 'package:alcancia/src/shared/graphql/queries/user_phone_number_search_query.dart';
 import 'package:alcancia/src/shared/graphql/queries/walletbalance_query.dart';
@@ -48,6 +50,15 @@ class UserService {
       QueryOptions(
         document: gql(userPhoneNumberSearchQuery),
         variables: {"phoneNumber": phoneNumber},
+      ),
+    );
+  }
+
+  Future<QueryResult> campaignUserExists() async {
+    var clientResponse = await client;
+    return await clientResponse.query(
+      QueryOptions(
+        document: gql(campaignUserExistsQuery),
       ),
     );
   }

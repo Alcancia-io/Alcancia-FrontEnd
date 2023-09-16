@@ -37,6 +37,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     try {
       var userInfo = await dashboardController.fetchUserInformation();
       var balance = await dashboardController.fetchUserBalance();
+      final isInCampaign = await dashboardController.campaignUserExists();
+      if (isInCampaign) {
+        final code = await dashboardController.getReferralCode();
+        userInfo.user.referralCode = code;
+      }
       ref.read(balanceProvider.notifier).setBalance(balance);
       ref.read(transactionsProvider.notifier).state = userInfo.txns;
       ref.read(userProvider.notifier).setUser(userInfo.user);

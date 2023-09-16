@@ -1,0 +1,5 @@
+const campaignUserExistsQuery = '''
+  query {
+    campaignUserExists
+  }
+''';
