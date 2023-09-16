@@ -110,6 +110,34 @@ PODS:
   - Toast (4.0.0)
   - url_launcher_ios (0.0.1):
     - Flutter
+  - Zendesk (1.14.0):
+    - ZendeskSDKConversationKit (~> 1.11.0)
+    - ZendeskSDKCoreUtilities (~> 1.5.0)
+  - zendesk_messaging (2.13.1):
+    - Flutter
+    - ZendeskSDKMessaging (= 2.13.1)
+  - ZendeskSDKConversationKit (1.11.0):
+    - ZendeskSDKCoreUtilities (~> 1.5.0)
+    - ZendeskSDKFayeClient (~> 1.5.0)
+    - ZendeskSDKHTTPClient (~> 0.13.0)
+    - ZendeskSDKStorage (~> 0.8.0)
+  - ZendeskSDKCoreUtilities (1.5.0)
+  - ZendeskSDKFayeClient (1.5.0):
+    - ZendeskSDKLogger (~> 0.8.0)
+    - ZendeskSDKSocketClient (~> 1.5.0)
+  - ZendeskSDKHTTPClient (0.13.0):
+    - ZendeskSDKLogger (~> 0.8.0)
+  - ZendeskSDKLogger (0.8.0)
+  - ZendeskSDKMessaging (2.13.1):
+    - Zendesk (~> 1.14.0)
+    - ZendeskSDKConversationKit (~> 1.11.0)
+    - ZendeskSDKCoreUtilities (~> 1.5.0)
+    - ZendeskSDKUIComponents (~> 2.8.0)
+  - ZendeskSDKSocketClient (1.5.0):
+    - ZendeskSDKLogger (~> 0.8.0)
+  - ZendeskSDKStorage (0.8.0):
+    - ZendeskSDKLogger (~> 0.8.0)
+  - ZendeskSDKUIComponents (2.8.0)
 
 DEPENDENCIES:
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
@@ -124,6 +152,7 @@ DEPENDENCIES:
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
+  - zendesk_messaging (from `.symlinks/plugins/zendesk_messaging/ios`)
 
 SPEC REPOS:
   trunk:
@@ -143,6 +172,16 @@ SPEC REPOS:
     - PromisesSwift
     - ReachabilitySwift
     - Toast
+    - Zendesk
+    - ZendeskSDKConversationKit
+    - ZendeskSDKCoreUtilities
+    - ZendeskSDKFayeClient
+    - ZendeskSDKHTTPClient
+    - ZendeskSDKLogger
+    - ZendeskSDKMessaging
+    - ZendeskSDKSocketClient
+    - ZendeskSDKStorage
+    - ZendeskSDKUIComponents
 
 EXTERNAL SOURCES:
   connectivity_plus:
@@ -169,6 +208,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
+  zendesk_messaging:
+    :path: ".symlinks/plugins/zendesk_messaging/ios"
 
 SPEC CHECKSUMS:
   connectivity_plus: 413a8857dd5d9f1c399a39130850d02fe0feaf7e
@@ -199,6 +240,17 @@ SPEC CHECKSUMS:
   shared_preferences_foundation: 986fc17f3d3251412d18b0265f9c64113a8c2472
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
+  Zendesk: f76348b53a84c1100e7d56aa5dd80d00e94a48f0
+  zendesk_messaging: 3a9dc2817d1073b5877209eaad2d4ccd2bb6f711
+  ZendeskSDKConversationKit: 54f2ff2ffa80d89eb1d77134c4b5df4157fb0051
+  ZendeskSDKCoreUtilities: cbf0a4afea966e01ba206a4760dc46f15840edc3
+  ZendeskSDKFayeClient: a06c403c1c38adb9ae5a341a4d54632c78275a3e
+  ZendeskSDKHTTPClient: 79dfe6b5e75beccb435003051a081c71e7361770
+  ZendeskSDKLogger: e59c678c74a88838a0844423996cb15dd88825d5
+  ZendeskSDKMessaging: f960c52823dbecfe7ca05a9cadd1d3ffc7de6107
+  ZendeskSDKSocketClient: 33c0eb83b065409723559c798738bbc504b0a967
+  ZendeskSDKStorage: 00d6f78a39a42b71c3730b1c39cc0a5c12690685
+  ZendeskSDKUIComponents: 59fab9ac52f3ac5ef3136188da8dc38b06d100f7
 
 PODFILE CHECKSUM: b45c1b0b9fd1bbece44dc545877e9281ced89cd7
 
