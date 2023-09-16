@@ -23,4 +23,9 @@ class UserBalanceHistory {
     data['createdAt'] = createdAt;
     return data;
   }
+
+  @override
+  String toString() {
+    return 'Balance: $balance, Created At: $createdAt';
+  }
 }

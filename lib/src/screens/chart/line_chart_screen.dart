@@ -120,7 +120,8 @@ class _LineChartState extends ConsumerState<LineChartScreen> {
               Container(
                 padding: const EdgeInsets.only(left: 24, right: 24, bottom: 0),
                 child: Center(
-                  child: AlcanciaLineChart(balanceHist: selectedHistories),
+                  child: AlcanciaLineChart(
+                      balanceHist: completeBalanceHistory(selectedHistories)),
                 ),
               ),
               Container(
@@ -136,5 +137,18 @@ class _LineChartState extends ConsumerState<LineChartScreen> {
         ),
       ),
     );
+  }
+
+  List<UserBalanceHistory> completeBalanceHistory(
+      List<UserBalanceHistory> balHist) {
+    DateTime lastDate = balHist.last.createdAt!;
+    List<UserBalanceHistory> completedBalHist = List.from(balHist);
+
+    for (int i = 0; i < 12 - balHist.length; i++) {
+      lastDate = DateTime(lastDate.year, lastDate.month + 1, lastDate.day);
+      completedBalHist.add(UserBalanceHistory(balance: 0, createdAt: lastDate));
+    }
+
+    return completedBalHist;
   }
 }
