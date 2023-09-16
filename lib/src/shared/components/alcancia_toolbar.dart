@@ -1,6 +1,9 @@
+import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:badges/badges.dart' as badges;
+import 'package:go_router/go_router.dart';
 
 enum StateToolbar { logoNoletters, logoLetters, titleIcon, profileTitleIcon }
 
@@ -39,8 +42,7 @@ class AlcanciaToolbar extends StatelessWidget implements PreferredSizeWidget {
           backgroundColor: Theme.of(context).backgroundColor,
           elevation: 0,
           scrolledUnderElevation: 0.3,
-          title:
-          AlcanciaLogo(
+          title: AlcanciaLogo(
             height: logoHeight,
           ),
           centerTitle: true,
@@ -52,11 +54,10 @@ class AlcanciaToolbar extends StatelessWidget implements PreferredSizeWidget {
           backgroundColor: Theme.of(context).backgroundColor,
           elevation: 0,
           scrolledUnderElevation: 0.3,
-          title:
-            AlcanciaLogo(
-              letters: true,
-              height: logoHeight,
-            ),
+          title: AlcanciaLogo(
+            letters: true,
+            height: logoHeight,
+          ),
           centerTitle: true,
         );
       case StateToolbar.titleIcon:
@@ -88,13 +89,9 @@ class AlcanciaToolbar extends StatelessWidget implements PreferredSizeWidget {
           elevation: 0,
           scrolledUnderElevation: 0.3,
           leadingWidth: 60,
-          leading: Padding(
-            padding: const EdgeInsets.only(left: 16.0),
-            child: Image.asset(
-              "lib/src/resources/images/profile.png",
-              width: 38,
-              height: 38,
-            ),
+          leading: const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: AlcanciaLogo(),
           ),
           title: Text(
             appLoc.labelHelloName(userName ?? ""),
@@ -103,11 +100,20 @@ class AlcanciaToolbar extends StatelessWidget implements PreferredSizeWidget {
           centerTitle: false,
           actions: [
             Padding(
-              padding: const EdgeInsets.only(right: 40.0),
-              child: AlcanciaLogo(
-                height: logoHeight,
+              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: badges.Badge(
+                badgeAnimation: badges.BadgeAnimation.scale(loopAnimation: true, animationDuration: Duration(milliseconds: 700)),
+                badgeContent: SizedBox(
+                  height: 8,
+                  width: 8,
+                ),
+                child: AlcanciaButton(buttonText: appLoc.buttonWinFiveDollars, onPressed: () {
+                  context.push("/referral");
+                },
+                  color: alcanciaMidBlue,
+                ),
               ),
-            ),
+            )
           ],
         );
       default:

@@ -15,6 +15,7 @@ import 'package:alcancia/src/screens/forgot_password/forgot_password.dart';
 import 'package:alcancia/src/screens/login/mfa_screen.dart';
 import 'package:alcancia/src/screens/metamap/address_screen.dart';
 import 'package:alcancia/src/screens/onboarding/onboarding_screens.dart';
+import 'package:alcancia/src/screens/referral/referral_screen.dart';
 import 'package:alcancia/src/screens/success/success_screen.dart';
 import 'package:alcancia/src/screens/successful_transaction/successful_transaction.dart';
 import 'package:alcancia/src/screens/swap/swap_screen.dart';
@@ -187,6 +188,11 @@ final routerProvider = Provider<GoRouter>(
           name: "crypto-deposit",
           path: "/crypto-deposit",
           builder: (context, state) => const CryptoDepositScreen(),
+        ),
+        GoRoute(
+          name: "referral",
+          path: "/referral",
+          builder: (context, state) => const ReferralScreen(),
         ),
         GoRoute(
           name: "line-chart",

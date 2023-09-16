@@ -18,6 +18,10 @@ class UserState extends StateNotifier<User?> {
     // In this example user==null iff we're logged out
     state = null; // No request is mocked here but I guess we could
   }
+
+  void setReferralCode(String code) {
+    state?.referralCode = code;
+  }
 }
 
 final userProvider = StateNotifierProvider<UserState, User?>((ref) {

@@ -9,12 +9,14 @@ class AlcanciaActionDialog extends StatelessWidget {
     required this.acceptText,
     required this.cancelText,
     this.acceptColor,
+    this.cancelColor,
     required this.acceptAction,
   }) : super(key: key);
 
   final Widget child;
   final String acceptText;
   final Color? acceptColor;
+  final Color? cancelColor;
   final Function() acceptAction;
   final String cancelText;
 
@@ -58,7 +60,7 @@ class AlcanciaActionDialog extends StatelessWidget {
                   buttonText: cancelText,
                   width: 308,
                   height: 40,
-                  color: alcanciaLightBlue,
+                  color: cancelColor ?? alcanciaLightBlue,
                   onPressed: () {
                     Navigator.pop(context);
                   },
