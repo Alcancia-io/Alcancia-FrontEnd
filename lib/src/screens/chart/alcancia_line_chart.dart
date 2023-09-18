@@ -104,7 +104,7 @@ class _LineChart extends StatelessWidget {
         (maxDate!.year - minDate!.year) * 12 + maxDate.month - minDate.month;
     Widget? text;
 
-    if (monthDifference > value.toInt()) {
+    if (monthDifference >= value.toInt()) {
       text = Text(
           DateFormat("MMM")
               .format(balanceHist[value.toInt()].createdAt!)
