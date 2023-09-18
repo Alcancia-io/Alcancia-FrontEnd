@@ -26,8 +26,10 @@ class _LineChart extends StatelessWidget {
         lineBarsData: lineBarsData1,
         minX: 0,
         maxX: balanceHist.length.toDouble() - 1,
-        maxY: balanceHist.map((data) => data.balance).reduce(
-            (a, b) => a! > b! ? a : b)!, //Max Balance with margin of 20 units
+        maxY: balanceHist
+                .map((data) => data.balance)
+                .reduce((a, b) => a! > b! ? a : b)! *
+            1.35, //Max Balance with margin of 20 units
         minY: 0,
       );
 
