@@ -195,7 +195,7 @@
 	"labelPesosDeposits": "Bank Deposits",
 	"labelCryptoDeposits": "Crypto Deposits",
 	"labelNoCommissions": "No Commissions",
-	"labelPesosDepositsSubtitle": "By Bank Transfer",
+	"labelPesosDepositsSubtitle": "Buy USDC by bank transfer",
 	"labelCryptoDepositsSubtitle": "By Wallet Address",
 	"labelUnder20Min": "<20 minutes",
 	"labelUnder5Min": "<5 minutes",
