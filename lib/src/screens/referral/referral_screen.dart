@@ -27,71 +27,76 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
     final ctx = Theme.of(context);
     final user = ref.watch(userProvider)!;
     final appLoc = AppLocalizations.of(context)!;
-    return Scaffold(
-      appBar: AlcanciaToolbar(
-        state: StateToolbar.logoLetters,
-        logoHeight: 38,
-      ),
-      body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                const ReferralInstructions(),
-                const SizedBox(height: 16),
-                if (user.referralCode == null) ...[
-                  ReferralCodeCard(
-                      referralCode: user.referralCode!,
-                      onPressed: () {
-                        Share.share(appLoc.referralTextShare(user.referralCode!));
-                      }),
-                ] else ...[
-                  ExternalReferralCard(
-                    onPressed: (referralCode) async {
-                      // Show confirmation dialog
-                      final confirm = await showDialog(
-                          context: context,
-                          builder: (BuildContext ctx) {
-                            return AlcanciaActionDialog(
-                                acceptText: appLoc.buttonConfirm,
-                                cancelText: appLoc.buttonCancel,
-                                acceptColor: alcanciaMidBlue,
-                                cancelColor: Colors.red,
-                                acceptAction: () {
-                                  Navigator.of(context).pop(true);
-                                },
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      appLoc.labelConfirmReferralCode,
-                                      style: Theme.of(context).textTheme.titleLarge,
-                                    ),
-                                    const SizedBox(height: 16),
-                                    if (referralCode != null) ... [
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: AlcanciaToolbar(
+          state: StateToolbar.logoLetters,
+          logoHeight: 38,
+        ),
+        body: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const ReferralInstructions(),
+                    const SizedBox(height: 16),
+                    if (user.referralCode == null) ...[
+                      ReferralCodeCard(
+                          referralCode: user.referralCode!,
+                          onPressed: () {
+                            Share.share(appLoc.referralTextShare(user.referralCode!));
+                          }),
+                    ] else ...[
+                      ExternalReferralCard(
+                        onPressed: (referralCode) async {
+                          // Show confirmation dialog
+                          final confirm = await showDialog(
+                            context: context,
+                            builder: (BuildContext ctx) {
+                              return AlcanciaActionDialog(
+                                  acceptText: appLoc.buttonConfirm,
+                                  cancelText: appLoc.buttonCancel,
+                                  acceptColor: alcanciaMidBlue,
+                                  cancelColor: Colors.red,
+                                  acceptAction: () {
+                                    Navigator.of(ctx).pop(true);
+                                  },
+                                  child: Column(
+                                    children: [
                                       Text(
-                                        appLoc.labelConfirmReferralCodeDescription(referralCode),
-                                        style: Theme.of(context).textTheme.bodyText1,
+                                        appLoc.labelConfirmReferralCode,
+                                        style: Theme.of(context).textTheme.titleLarge,
                                       ),
-                                    ] else ...[
-                                      Text(
-                                        appLoc.labelConfirmReferralCodeDescriptionNoCode,
-                                        style: Theme.of(context).textTheme.bodyText1,
-                                      ),
-                                    ]
-                                  ],
-                                ));
-                          },
-                      );
-                      if (confirm == true) {
-                        await _referralController.subscribeToCampaign(code: referralCode);
-                        final code = await _referralController.getReferralCode();
-                        ref.read(userProvider.notifier).setReferralCode(code);
-                      }
-                    },
-                  ),
-                ],
-              ],
+                                      const SizedBox(height: 16),
+                                      if (referralCode != null) ...[
+                                        Text(
+                                          appLoc.labelConfirmReferralCodeDescription(referralCode),
+                                          style: Theme.of(context).textTheme.bodyText1,
+                                        ),
+                                      ] else ...[
+                                        Text(
+                                          appLoc.labelConfirmReferralCodeDescriptionNoCode,
+                                          style: Theme.of(context).textTheme.bodyText1,
+                                        ),
+                                      ]
+                                    ],
+                                  ));
+                            },
+                          );
+                          if (confirm == true) {
+                            await _referralController.subscribeToCampaign(code: referralCode);
+                            final code = await _referralController.getReferralCode();
+                            ref.read(userProvider.notifier).setReferralCode(code);
+                          }
+                        },
+                      ),
+                    ],
+                  ],
+                ),
+              ),
             ),
           ),
         ),
@@ -241,7 +246,7 @@ class _ExternalReferralCardState extends State<ExternalReferralCard> {
             width: MediaQuery.of(context).size.width * 0.7,
             height: 50,
             child: TextField(
-              onChanged: (value) => setState(() => _enableButton = value.isNotEmpty),
+                onChanged: (value) => setState(() => _enableButton = value.isNotEmpty),
                 controller: _controller,
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
