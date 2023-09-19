@@ -24,7 +24,6 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ctx = Theme.of(context);
     final user = ref.watch(userProvider)!;
     final appLoc = AppLocalizations.of(context)!;
     return GestureDetector(
@@ -43,7 +42,7 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
                   children: [
                     const ReferralInstructions(),
                     const SizedBox(height: 16),
-                    if (user.referralCode == null) ...[
+                    if (user.referralCode != null) ...[
                       ReferralCodeCard(
                           referralCode: user.referralCode!,
                           onPressed: () {

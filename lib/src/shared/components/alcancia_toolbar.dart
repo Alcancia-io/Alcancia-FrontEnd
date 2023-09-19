@@ -84,7 +84,7 @@ class AlcanciaToolbar extends StatelessWidget implements PreferredSizeWidget {
         );
       case StateToolbar.profileTitleIcon:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: AppBar(
             iconTheme: Theme.of(context).iconTheme,
             toolbarHeight: toolbarHeight,
@@ -108,14 +108,19 @@ class AlcanciaToolbar extends StatelessWidget implements PreferredSizeWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 8, bottom: 8, right: 10.0),
                 child: badges.Badge(
-                  badgeAnimation: badges.BadgeAnimation.scale(loopAnimation: true, animationDuration: Duration(milliseconds: 700)),
+                  badgeAnimation:
+                      badges.BadgeAnimation.scale(loopAnimation: true, animationDuration: Duration(milliseconds: 700)),
                   badgeContent: SizedBox(
                     height: 8,
                     width: 8,
                   ),
-                  child: AlcanciaButton(buttonText: appLoc.buttonWinFiveDollars, onPressed: () {
-                    context.push("/referral");
-                  },
+                  child: AlcanciaButton(
+                    buttonText: appLoc.buttonWinFiveDollars,
+                    onPressed: () {
+                      context.push("/referral");
+                    },
+                    width: MediaQuery.of(context).size.width * 0.31,
+                    height: MediaQuery.of(context).size.height * 0.1,
                     color: alcanciaMidBlue,
                   ),
                 ),

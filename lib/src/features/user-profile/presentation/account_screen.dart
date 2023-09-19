@@ -89,6 +89,7 @@ class AccountScreen extends ConsumerWidget {
                                         alcanciaSnackBar(context,
                                             appLoc.errorDeleteAccount));
                                   }
+                                  Navigator.pop(ctx);
                                 },
                                 child: Text(
                                   appLoc.labelDeleteAccountConfirmation,
