@@ -5,6 +5,7 @@ const String balanceQuery = """
       aPolUSDC,
       mcUSD,
       cUSD,
+      USDC,
       etherscan
     }
   }
