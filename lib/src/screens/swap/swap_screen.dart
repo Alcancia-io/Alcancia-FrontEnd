@@ -87,8 +87,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     try {
       var mxnExchangeRate = await swapController.getSuarmiExchange("USDC");
       var mxnCeloRate = await swapController.getSuarmiExchange("cUSD");
-      var dopExchangeRate =
-          await swapController.getAlcanciaExchange("aPolUSDC");
+      var dopExchangeRate = await swapController.getAlcanciaExchange("USDC");
       setState(() {
         suarmiUSDCExchage = 1.0 / double.parse(mxnExchangeRate);
         suarmiCeloExchange = 1.0 / double.parse(mxnCeloRate);
@@ -464,17 +463,9 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                             sourceAmount:
                                                 double.parse(sourceAmount),
                                             targetAmount: double.parse(
-                                                getTargetAmount(
-                                                    sourceAmount,
-                                                    targetCurrency,
-                                                    sourceCurrency)),
-                                            targetCurrency:
-                                                targetCurrency == 'USDC'
-                                                    ? 'aPolUSDC'
-                                                    : 'mcUSD',
-                                            network: targetCurrency == 'USDC'
-                                                ? 'MATIC'
-                                                : 'CELO',
+                                                getTargetAmount(sourceAmount, targetCurrency, sourceCurrency)),
+                                            targetCurrency: targetCurrency == 'USDC' ? 'USDC' : 'mcUSD',
+                                            network: targetCurrency == 'USDC' ? 'MATIC' : 'CELO',
                                           );
                                           Map wrapper = {
                                             "verified": true,
@@ -507,16 +498,10 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                             txnMethod:
                                                 TransactionMethod.alcancia,
                                             txnType: TransactionType.deposit,
-                                            sourceAmount:
-                                                double.parse(sourceAmount),
-                                            targetAmount: (double.parse(
-                                                    sourceAmountController
-                                                        .text) /
-                                                (alcanciaUSDCExchange)),
-                                            targetCurrency:
-                                                targetCurrency == 'USDC'
-                                                    ? 'aPolUSDC'
-                                                    : 'mcUSD',
+                                            sourceAmount: double.parse(sourceAmount),
+                                            targetAmount:
+                                                (double.parse(sourceAmountController.text) / (alcanciaUSDCExchange)),
+                                            targetCurrency: targetCurrency == 'USDC' ? 'USDC' : 'mcUSD',
                                             network: 'ALCANCIA',
                                           );
                                           orderInput = {
