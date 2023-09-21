@@ -30,7 +30,9 @@ class _InvestmentInfoState extends State<InvestmentInfo> {
       padding: const EdgeInsets.only(top: 100, right: 26, bottom: 34, left: 26),
       child: AlcanciaContainer(
         borderRadius: 8,
-        color: Theme.of(context).brightness == Brightness.dark ? alcanciaCardDark : alcanciaFieldLight,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? alcanciaCardDark
+            : alcanciaFieldLight,
         top: 36,
         right: 26,
         left: 26,
@@ -45,14 +47,18 @@ class _InvestmentInfoState extends State<InvestmentInfo> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      padding: const EdgeInsets.only(top: 3, bottom: 3, right: 10, left: 10),
-                      decoration: pageIndex == 0 ? _activeBoxDecoration() : null,
+                      padding: const EdgeInsets.only(
+                          top: 3, bottom: 3, right: 10, left: 10),
+                      decoration:
+                          pageIndex == 0 ? _activeBoxDecoration() : null,
                       child: Text(
                         appLoc.labelAssets,
-                        style: pageIndex == 0 ? const TextStyle(color: Colors.white) : null,
+                        style: pageIndex == 0
+                            ? const TextStyle(color: Colors.white)
+                            : null,
                       ),
                     ),
-                    Padding(
+                    /*Padding(
                       padding: const EdgeInsets.only(left: 20),
                       child: Container(
                         padding: const EdgeInsets.only(top: 3, bottom: 3, right: 10, left: 10),
@@ -62,7 +68,7 @@ class _InvestmentInfoState extends State<InvestmentInfo> {
                           style: pageIndex == 1 ? const TextStyle(color: Colors.white) : null,
                         ),
                       ),
-                    ),
+                    ),*/
                   ],
                 ),
               ),
@@ -80,9 +86,13 @@ class _InvestmentInfoState extends State<InvestmentInfo> {
                         children: [
                           TextSpan(
                             text: widget.items[index]["bold"],
-                            style: TextStyle(fontWeight: FontWeight.bold, color: txtTheme.bodyText1?.color),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: txtTheme.bodyText1?.color),
                           ),
-                          TextSpan(text: widget.items[index]['regular'], style: txtTheme.bodyText1),
+                          TextSpan(
+                              text: widget.items[index]['regular'],
+                              style: txtTheme.bodyText1),
                         ],
                       ),
                     );
@@ -122,7 +132,9 @@ class _InvestmentInfoState extends State<InvestmentInfo> {
               controller: _pageController,
               count: widget.items.length,
               onDotClicked: (index) {
-                _pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.linear);
+                _pageController.animateToPage(index,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.linear);
               },
               effect: const ExpandingDotsEffect(
                 dotHeight: 8,
