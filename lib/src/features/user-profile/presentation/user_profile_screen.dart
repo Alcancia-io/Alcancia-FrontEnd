@@ -267,6 +267,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                                             context, appLoc.errorSignOut));
                                   }
                                   ref.read(userProvider.notifier).setUser(null);
+                                  Navigator.pop(ctx);
                                 },
                                 child: Text(
                                   appLoc.labelSignOutConfirmation,

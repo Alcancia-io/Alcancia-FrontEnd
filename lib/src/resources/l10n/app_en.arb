@@ -238,7 +238,7 @@
 	"labelWithdrawalProcessingTime": "It will be processed in the next 5 to 20 minutes.",
 	"alertWithdrawalSuccessful": "Withdrawal completed successfully",
 	"labelWithdrawalFee": "Withdrawal fee",
-	"referralTextShare": "Hey, my people! Download the Alcancía app with my code {referral} and start saving in your savings account. You''ll receive an extra $5 USDC as a little gift from me to you! \uD83D\uDE0E\uD83D\uDCB8\n\nDownload Alcancía from this link ⤵\uFE0F\nalcancia.io/download",
+	"referralTextShare": "¡Ey, mi gente! Descarga el App de Alcancía con mi código {referral} y arranca a convertir tus pesos en dolares digitales (USDC). ¡Te caen $5 USDC de ñapa cómo regalito de mi para tí! \uD83D\uDE0E\uD83D\uDCB8\nDescarga Alcancía en este link ⤵\uFE0F\nalcancia.io/download",
 	"labelWinFiveDollars": "Win $5 for inviting your friends to Alcancía",
 	"labelHowItWorks": "How does it work?",
 	"labelReferralStepOne": "1. You receive $5 for sharing your code for the first time.",
