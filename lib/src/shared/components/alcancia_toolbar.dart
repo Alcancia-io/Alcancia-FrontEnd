@@ -99,7 +99,7 @@ class AlcanciaToolbar extends StatelessWidget implements PreferredSizeWidget {
           ),
           centerTitle: false,
           actions: [
-            Padding(
+            /*Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               child: badges.Badge(
                 badgeAnimation: badges.BadgeAnimation.scale(loopAnimation: true, animationDuration: Duration(milliseconds: 700)),
@@ -113,7 +113,7 @@ class AlcanciaToolbar extends StatelessWidget implements PreferredSizeWidget {
                   color: alcanciaMidBlue,
                 ),
               ),
-            )
+            )*/
           ],
         );
       default:
