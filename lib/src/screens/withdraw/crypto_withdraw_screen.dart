@@ -18,7 +18,8 @@ class CryptoWithdrawScreen extends ConsumerStatefulWidget {
   const CryptoWithdrawScreen({super.key});
 
   @override
-  ConsumerState<CryptoWithdrawScreen> createState() => _CryptoWithdrawScreenState();
+  ConsumerState<CryptoWithdrawScreen> createState() =>
+      _CryptoWithdrawScreenState();
 }
 
 class _CryptoWithdrawScreenState extends ConsumerState<CryptoWithdrawScreen> {
@@ -35,9 +36,12 @@ class _CryptoWithdrawScreenState extends ConsumerState<CryptoWithdrawScreen> {
   final _networkController = TextEditingController(text: "POLYGON");
   final _amountTextController = TextEditingController();
 
-
   Future<void> sendOrder(AppLocalizations appLoc) async {
-    walletController.sendExternalWithdrawal(amount: _amountTextController.text, address: _walletAddressController.text).then((value) {
+    double total = double.parse(_amountTextController.text) + 1;
+    walletController
+        .sendExternalWithdrawal(
+            amount: total.toString(), address: _walletAddressController.text)
+        .then((value) {
       Fluttertoast.showToast(
         msg: appLoc.alertWithdrawalSuccessful,
         toastLength: Toast.LENGTH_LONG,
@@ -64,7 +68,8 @@ class _CryptoWithdrawScreenState extends ConsumerState<CryptoWithdrawScreen> {
     final balance = totalUserBalance.usdcBalance - 1;
 
     if (_isLoading) {
-      return const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator())));
+      return const Scaffold(
+          body: SafeArea(child: Center(child: CircularProgressIndicator())));
     }
 
     if (_error != "") {
@@ -81,14 +86,16 @@ class _CryptoWithdrawScreenState extends ConsumerState<CryptoWithdrawScreen> {
         ),
         body: SafeArea(
             child: Form(
-              key: _formKey,
-          onChanged: () => setState(() => _enableButton = _formKey.currentState!.validate()),
+          key: _formKey,
+          onChanged: () =>
+              setState(() => _enableButton = _formKey.currentState!.validate()),
           child: ListView(
             padding: const EdgeInsets.only(top: 10, left: 40, right: 40),
             children: [
               Text(
                 appLoc.labelHello,
-                style: const TextStyle(fontSize: 35, fontWeight: FontWeight.w700),
+                style:
+                    const TextStyle(fontSize: 35, fontWeight: FontWeight.w700),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 12),
@@ -100,18 +107,26 @@ class _CryptoWithdrawScreenState extends ConsumerState<CryptoWithdrawScreen> {
               const SizedBox(
                 height: 20,
               ),
-              LabeledTextFormField(controller: _walletAddressController, labelText: appLoc.labelAddress, validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return appLoc.errorRequiredField;
-                } else if (!value.isValidWalletAddress()) {
-                  return appLoc.errorInvalidWalletAddress;
-                }
-                return null;
-              },),
+              LabeledTextFormField(
+                controller: _walletAddressController,
+                labelText: appLoc.labelAddress,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return appLoc.errorRequiredField;
+                  } else if (!value.isValidWalletAddress()) {
+                    return appLoc.errorInvalidWalletAddress;
+                  }
+                  return null;
+                },
+              ),
               const SizedBox(
                 height: 20,
               ),
-              LabeledTextFormField(controller: _networkController, labelText: appLoc.labelNetwork, enabled: false,),
+              LabeledTextFormField(
+                controller: _networkController,
+                labelText: appLoc.labelNetwork,
+                enabled: false,
+              ),
               const SizedBox(
                 height: 20,
               ),
@@ -132,15 +147,20 @@ class _CryptoWithdrawScreenState extends ConsumerState<CryptoWithdrawScreen> {
               const SizedBox(
                 height: 10,
               ),
-              Text(appLoc.labelAvailableBalance(balance > 0 ? balance.toStringAsFixed(3) : "0.00")),
+              Text(appLoc.labelAvailableBalance(
+                  balance > 0 ? balance.toStringAsFixed(3) : "0.00")),
               const SizedBox(
                 height: 40,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(appLoc.labelWithdrawalFee, style: txtTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700)),
-                  Text("1 USDC", style: txtTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700)),
+                  Text(appLoc.labelWithdrawalFee,
+                      style: txtTheme.bodyLarge
+                          ?.copyWith(fontWeight: FontWeight.w700)),
+                  Text("1 USDC",
+                      style: txtTheme.bodyLarge
+                          ?.copyWith(fontWeight: FontWeight.w700)),
                 ],
               ),
               const SizedBox(
@@ -158,15 +178,19 @@ class _CryptoWithdrawScreenState extends ConsumerState<CryptoWithdrawScreen> {
                         buttonText: appLoc.buttonNext,
                         onPressed: _enableButton
                             ? () async {
-                          setState(() {
-                            _loadingButton = true;
-                          });
-                          sendOrder(appLoc);
-                          setState(() {
-                            _loadingButton = false;
-                          });
-                          context.go("/success", extra: SuccessScreenModel(title: appLoc.labelWithdrawalConfirmed, subtitle: appLoc.labelWithdrawalProcessingTime));
-                        }
+                                setState(() {
+                                  _loadingButton = true;
+                                });
+                                sendOrder(appLoc);
+                                setState(() {
+                                  _loadingButton = false;
+                                });
+                                context.go("/success",
+                                    extra: SuccessScreenModel(
+                                        title: appLoc.labelWithdrawalConfirmed,
+                                        subtitle: appLoc
+                                            .labelWithdrawalProcessingTime));
+                              }
                             : null,
                         color: alcanciaLightBlue,
                         width: 308,
