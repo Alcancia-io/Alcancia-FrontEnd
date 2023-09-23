@@ -1,5 +1,4 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -83,50 +82,39 @@ class AlcanciaToolbar extends StatelessWidget implements PreferredSizeWidget {
           ],
         );
       case StateToolbar.profileTitleIcon:
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: AppBar(
-            iconTheme: Theme.of(context).iconTheme,
-            toolbarHeight: toolbarHeight,
-            backgroundColor: Theme.of(context).backgroundColor,
-            elevation: 0,
-            scrolledUnderElevation: 0.3,
-            leadingWidth: 50,
-            leading: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: AlcanciaLogo(),
-            ),
-            title: Expanded(
-              child: AutoSizeText(
-                appLoc.labelHelloName(userName ?? ""),
-                style: txtTheme.subtitle1,
-                maxLines: 2,
-              ),
-            ),
-            centerTitle: false,
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(top: 8, bottom: 8, right: 10.0),
-                child: badges.Badge(
-                  badgeAnimation:
-                      badges.BadgeAnimation.scale(loopAnimation: true, animationDuration: Duration(milliseconds: 700)),
-                  badgeContent: SizedBox(
-                    height: 8,
-                    width: 8,
-                  ),
-                  child: AlcanciaButton(
-                    buttonText: appLoc.buttonWinFiveDollars,
-                    onPressed: () {
-                      context.push("/referral");
-                    },
-                    width: MediaQuery.of(context).size.width * 0.31,
-                    height: MediaQuery.of(context).size.height * 0.1,
-                    color: alcanciaMidBlue,
-                  ),
-                ),
-              )
-            ],
+        return AppBar(
+          iconTheme: Theme.of(context).iconTheme,
+          toolbarHeight: toolbarHeight,
+          backgroundColor: Theme.of(context).backgroundColor,
+          elevation: 0,
+          scrolledUnderElevation: 0.3,
+          leadingWidth: 60,
+          leading: const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: AlcanciaLogo(),
           ),
+          title: Text(
+            appLoc.labelHelloName(userName ?? ""),
+            style: txtTheme.subtitle1,
+          ),
+          centerTitle: false,
+          actions: [
+            /*Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: badges.Badge(
+                badgeAnimation: badges.BadgeAnimation.scale(loopAnimation: true, animationDuration: Duration(milliseconds: 700)),
+                badgeContent: SizedBox(
+                  height: 8,
+                  width: 8,
+                ),
+                child: AlcanciaButton(buttonText: appLoc.buttonWinFiveDollars, onPressed: () {
+                  context.push("/referral");
+                },
+                  color: alcanciaMidBlue,
+                ),
+              ),
+            )*/
+          ],
         );
       default:
         return const Text("Default");

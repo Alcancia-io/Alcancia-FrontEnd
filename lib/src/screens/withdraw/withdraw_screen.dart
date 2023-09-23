@@ -91,7 +91,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
           await controller.getSuarmiExchange(sourceCurrency: "USDC");
       var mxnCeloRate =
           await controller.getSuarmiExchange(sourceCurrency: "cUSD");
-      var dopExchangeRate = await controller.getAlcanciaExchange("aPolUSDC");
+      var dopExchangeRate = await controller.getAlcanciaExchange("USDC");
       setState(() {
         suarmiUSDCExchange = 1.0 / double.parse(mxnExchangeRate);
         suarmiCELOExchange = 1.0 / double.parse(mxnCeloRate);
@@ -292,7 +292,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
           "from_amount": _amountTextController.text,
           "type": "WITHDRAW",
           "from_currency":
-              getSourceCurrency(country) == 'USDC' ? 'aPolUSDC' : 'mcUSD',
+              getSourceCurrency(country) == 'USDC' ? 'USDC' : 'mcUSD',
           "network": getSourceCurrency(country) == "USDC" ? "MATIC" : "CELO",
           "to_amount": targetAmount.toString(),
           "to_currency": "MXN",
@@ -304,7 +304,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         "orderInput": {
           "from_amount": _amountTextController.text,
           "type": "WITHDRAW",
-          "from_currency": 'aPolUSDC',
+          "from_currency": 'USDC',
           "network": "ALCANCIA",
           "to_amount": targetAmount.toString(),
           "to_currency": "DOP",

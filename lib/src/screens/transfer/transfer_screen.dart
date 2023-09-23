@@ -67,7 +67,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
     {
       "name": "USDC",
       "icon": "lib/src/resources/images/icon_usdc.png",
-      "value": "apolusdc",
+      "value": "usdc",
     },
     /*{
       "name": "cUSD",
@@ -131,7 +131,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
     final appLoc = AppLocalizations.of(context)!;
     final txtTheme = Theme.of(context).textTheme;
     final userBalance = ref.watch(balanceProvider);
-    final balance = sourceCurrency == "apolusdc"
+    final balance = sourceCurrency == "usdc"
         ? userBalance.usdcBalance
         : userBalance.celoBalance;
 
@@ -343,7 +343,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                                                 userBalance: balance,
                                                 amount: amount,
                                                 currency:
-                                                    sourceCurrency == "apolusdc"
+                                                    sourceCurrency == "usdc"
                                                         ? "USDC"
                                                         : "CUSD",
                                                 onConfirm: () {
