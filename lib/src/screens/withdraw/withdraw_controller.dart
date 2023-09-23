@@ -13,7 +13,7 @@ class WithdrawController {
     return {
       "quoteInput": {
         "from_amount": "1",
-        "from_currency": sourceCurrency == 'USDC' ? 'aPolUSDC' : 'mcUSD',
+        "from_currency": sourceCurrency == 'USDC' ? 'USDC' : 'mcUSD',
         "network": sourceCurrency == "USDC" ? "MATIC" : "CELO",
         "to_currency": "MXN",
       }
