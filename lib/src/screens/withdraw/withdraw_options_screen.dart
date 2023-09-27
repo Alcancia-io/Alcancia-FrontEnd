@@ -21,7 +21,7 @@ class WithdrawOptionsScreen extends StatelessWidget {
           TransactionOption(
             imageSrc: "lib/src/resources/images/icon_bank.svg",
             title: appLoc.labelPesosWithdrawals,
-            subtitle: appLoc.labelPesosDepositsSubtitle,
+            subtitle: appLoc.labelPesosWithdrawalsSubtitle,
             pill1: appLoc.labelUnder20Min,
             onTap: () {
               context.push("/fiat-withdrawal");
