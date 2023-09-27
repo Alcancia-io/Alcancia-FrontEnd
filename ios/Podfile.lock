@@ -226,7 +226,7 @@ SPEC CHECKSUMS:
   FirebaseSessions: ee59a7811bef4c15f65ef6472f3210faa293f9c8
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_secure_storage: 23fc622d89d073675f2eaa109381aefbcf5a49be
-  fluttertoast: eb263d302cc92e04176c053d2385237e9f43fad0
+  fluttertoast: 48c57db1b71b0ce9e6bba9f31c940ff4b001293c
   GoogleDataTransport: 54dee9d48d14580407f8f5fbf2f496e92437a2f2
   GoogleUtilities: 13e2c67ede716b8741c7989e26893d151b2b2084
   MetaMap-ID-SDK: 5c1cbd248cb646fced9aa69fce15b28e69a879b6
@@ -254,4 +254,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: b45c1b0b9fd1bbece44dc545877e9281ced89cd7
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.13.0
