@@ -50,7 +50,6 @@ class AlcanciaActionDialog extends StatelessWidget {
                   color: acceptColor,
                   onPressed: () {
                     acceptAction();
-                    Navigator.pop(context);
                   },
                 ),
               ),

@@ -321,7 +321,7 @@
   "labelWithdrawalProcessingTime": "Será procesada de 5 a 20 minutos",
   "alertWithdrawalSuccessful": "Retiro completado exitosamente",
   "labelWithdrawalFee": "Comisión de retiro",
-	"referralTextShare": "¡Ey, mi gente! Descarga el App de Alcancía con mi código {referral} y arranca a guardar en tu cuenta de ahorro. ¡Te caen $5 USDC de yapa cómo regalito de mi para tí! \uD83D\uDE0E\uD83D\uDCB8\n Descarga Alcancía en este link ⤵\uFE0F\nalcancia.io/download",
+	"referralTextShare": "¡Ey, mi gente! Descarga el App de Alcancía con mi código {referral} y arranca a convertir tus pesos en dolares digitales (USDC). ¡Te caen $5 USDC de ñapa cómo regalito de mi para tí! \uD83D\uDE0E\uD83D\uDCB8\nDescarga Alcancía en este link ⤵\uFE0F\nalcancia.io/download",
 	"@referralTextShare": {
 		"placeholders": {
 			"referral": {
