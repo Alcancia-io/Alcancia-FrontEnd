@@ -29,21 +29,19 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
       OnboardingItem(
         assetPath: "lib/src/resources/images/welcome.svg",
         title: appLoc.labelOnboardingTitle1,
-        text:
-        appLoc.labelOnboardingText1,
+        text: appLoc.labelOnboardingText1,
       ),
-      OnboardingItem(
+      /*OnboardingItem(
         assetPath: "lib/src/resources/images/save_and_grow.svg",
         title: appLoc.labelOnboardingTitle2,
         text:
         appLoc.labelOnboardingText2,
-      ),
-      OnboardingItem(
+      ),*/
+      /*OnboardingItem(
         assetPath: "lib/src/resources/images/open_account.svg",
         title: appLoc.labelOnboardingTitle3,
-        text:
-        appLoc.labelOnboardingText3,
-      ),
+        text: appLoc.labelOnboardingText3,
+      ),*/
       OnboardingItem(
         assetPath: "lib/src/resources/images/prepare.svg",
         title: appLoc.labelOnboardingTitle4,
@@ -92,7 +90,8 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
     );
   }
 
-  Widget _buildPage({required OnboardingItem item, required double assetHeight}) {
+  Widget _buildPage(
+      {required OnboardingItem item, required double assetHeight}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
@@ -113,7 +112,8 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: Text(
                     item.title,
-                    style: const TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 35, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -152,7 +152,9 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
             SmoothPageIndicator(
               controller: _pageController,
               count: items.length,
-              onDotClicked: (index) => _pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.linear),
+              onDotClicked: (index) => _pageController.animateToPage(index,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.linear),
               effect: const ExpandingDotsEffect(
                 dotHeight: 8,
                 dotWidth: 8,
@@ -162,20 +164,23 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
             if (pageIndex != items.length - 1) ...[
               TextButton(
                 onPressed: () {
-                  _pageController.animateToPage(pageIndex + 1, duration: const Duration(milliseconds: 300), curve: Curves.linear);
+                  _pageController.animateToPage(pageIndex + 1,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.linear);
                 },
                 child: Text(appLoc.buttonNext),
               ),
             ],
           ],
         ),
-        if (pageIndex == items.length - 1) ... [
+        if (pageIndex == items.length - 1) ...[
           Padding(
             padding: const EdgeInsets.all(24.0),
             child: AlcanciaButton(
               color: alcanciaLightBlue,
               width: double.infinity,
-              height: _responsiveService.getHeightPixels(64, MediaQuery.of(context).size.height),
+              height: _responsiveService.getHeightPixels(
+                  64, MediaQuery.of(context).size.height),
               buttonText: appLoc.buttonNext,
               onPressed: () async {
                 await finishOnboarding();

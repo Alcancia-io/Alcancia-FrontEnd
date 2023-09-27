@@ -204,7 +204,7 @@
 			}
 		}
 	},
-	"labelOnboardingText1": "Sabemos que quieres lograr muchas metas, por eso, en Alcancía nos encargamos de ayudarte a crecer tu capital",
+	"labelOnboardingText1": "Alcancía es el mejor puente Crypto <> FIAT de la República Dominicana y México. Compra, vende, y transfiere USDC.",
 	"labelOnboardingTitle1": "Bienvenido",
 	"labelOnboardingTitle2": "Ahorra y crece",
 	"labelOnboardingText2": "Ahorra en Alcancía y los diferentes protocolos que utilizamos para diversificar el riesgo y generar rentabilidad",
@@ -262,7 +262,7 @@
 	"labelProtocol": "Protocolo",
 	"labelStartTransactionDashboard": "Inicie una nueva transacción tocando los botones \"Depositar\" o \"Retirar\" arriba",
 	"labelStartTransactionActivity": "Inicie una nueva transacción en la pantalla de inicio",
-	"buttonWhatAmIInvesting": "¿En qué estoy invirtiendo?",
+	"buttonWhatAmIInvesting": "¿Qué es USDC?",
 	"isDataCorrect": "¿Los datos son correctos?",
 	"sourceAccount": "Cuenta de origen",
 	"targetPhone": "Celular destino",
@@ -277,7 +277,8 @@
 	"labelPesosDeposits": "Depósito de banco",
 	"labelCryptoDeposits": "Depósitos en crypto",
 	"labelNoCommissions": "Sin comisión",
-	"labelPesosDepositsSubtitle": "Compra USDC por transferencia",
+	"labelPesosDepositsSubtitle": "Deposita USDC por transferencia",
+	"labelPesosWithdrawalsSubtitle": "Retira USDC por transferencia",
 	"labelCryptoDepositsSubtitle": "Por Wallet Address",
 	"labelUnder20Min": "<20 minutos",
 	"labelUnder5Min": "<5 minutos",
