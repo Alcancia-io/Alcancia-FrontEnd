@@ -43,7 +43,7 @@ class _BalanceCarouselState extends State<BalanceCarousel> {
         value: widget.balance.usdcBalance,
         currency: "USDC");
     var carouselItems = [totalBalanceItem, usdcBalanceItem, cUSDBalanceItem];
-    if (widget.balance.celoBalance == 0) carouselItems = [usdcBalanceItem];
+    if (widget.balance.celoBalance == 0) carouselItems = [totalBalanceItem];
     return Column(
       children: [
         CarouselSlider.builder(
