@@ -69,9 +69,12 @@ class _BalanceCarouselState extends State<BalanceCarousel> {
                         ),
                       ),
                       Spacer(),
-                      IconButton(
-                        onPressed: widget.redirectToGraph,
-                        icon: const Icon(Icons.auto_graph_rounded),
+                      SizedBox(
+                        height: 40,
+                        child: IconButton(
+                          onPressed: widget.redirectToGraph,
+                          icon: const Icon(Icons.auto_graph_rounded),
+                        ),
                       ),
                     ],
                   ),
