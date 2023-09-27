@@ -32,12 +32,15 @@ class Balance {
   }
 
   double get usdcBalance {
-    return aPolUSDC + etherscan + USDC;
+    //return aPolUSDC + etherscan + USDC;
+    return USDC;
   }
 }
 
 class BalanceState extends StateNotifier<Balance> {
-  BalanceState() : super(Balance(total: 0, aPolUSDC: 0, cUSD: 0, etherscan: 0, mcUSD: 0, USDC: 0));
+  BalanceState()
+      : super(Balance(
+            total: 0, aPolUSDC: 0, cUSD: 0, etherscan: 0, mcUSD: 0, USDC: 0));
 
   void setBalance(Balance balance) {
     state = balance;

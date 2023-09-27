@@ -40,7 +40,8 @@ class _BalanceCarouselState extends State<BalanceCarousel> {
         currency: "CUSD");
     final usdcBalanceItem = BalanceItem(
         title: appLoc.labelUSDCBalance,
-        value: widget.balance.usdcBalance,
+        //value: widget.balance.usdcBalance,
+        value: widget.balance.total,
         currency: "USDC");
     var carouselItems = [totalBalanceItem, usdcBalanceItem, cUSDBalanceItem];
     if (widget.balance.celoBalance == 0) carouselItems = [usdcBalanceItem];
