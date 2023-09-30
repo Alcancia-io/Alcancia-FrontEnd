@@ -1,12 +1,12 @@
+import 'dart:async';
+
 import 'package:alcancia/src/resources/colors/colors.dart';
+import 'package:alcancia/src/screens/dashboard/dashboard_controller.dart';
 import 'package:alcancia/src/shared/components/dashboard/balance_carousel.dart';
-import 'package:alcancia/src/shared/provider/balance_hist_provider.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../screens/chart/alcancia_line_chart.dart';
 
 class DashboardCard extends ConsumerStatefulWidget {
   const DashboardCard({Key? key}) : super(key: key);
@@ -17,14 +17,45 @@ class DashboardCard extends ConsumerStatefulWidget {
 
 class _DashboardCardState extends ConsumerState<DashboardCard>
     with TickerProviderStateMixin {
+  final DashboardController dashboardController = DashboardController();
+  Timer? timer;
+  bool _loading = false;
+
   @override
   void initState() {
     super.initState();
+    setInitialBalance();
+    setTimer();
   }
 
   @override
   void dispose() {
     super.dispose();
+    timer?.cancel();
+  }
+
+  void setTimer() {
+    timer = Timer.periodic(
+        const Duration(seconds: 10), (Timer t) => setUserBalance());
+  }
+
+  Future<void> setUserBalance() async {
+    try {
+      var balance = await dashboardController.fetchUserBalance();
+      ref.read(balanceProvider.notifier).setBalance(balance);
+    } catch (err) {
+      return Future.error(err);
+    }
+  }
+
+  Future<void> setInitialBalance() async {
+    setState(() {
+      _loading = true;
+    });
+    await setUserBalance();
+    setState(() {
+      _loading = false;
+    });
   }
 
   @override
@@ -43,12 +74,21 @@ class _DashboardCardState extends ConsumerState<DashboardCard>
       ),
       child: Column(
         children: [
-          BalanceCarousel(
-            balance: userBalance,
-            redirectToGraph: () {
-              context.go("/homescreen/1");
-            },
-          ),
+          if (_loading) ... [
+            const SizedBox(
+              height: 100,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ] else ...[
+            BalanceCarousel(
+              balance: userBalance,
+              redirectToGraph: () {
+                context.go("/homescreen/1");
+              },
+            ),
+          ]
         ],
       ),
     );

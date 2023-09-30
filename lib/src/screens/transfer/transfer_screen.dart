@@ -113,7 +113,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    final user = ref.read(userProvider);
+    final user = ref.read(alcanciaUserProvider).value;
     if (user?.country != null) {
       countryCode = countries
           .firstWhere((element) => element['value'] == user?.country)['name'];

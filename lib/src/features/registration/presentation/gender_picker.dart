@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../data/gender.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../data/gender.dart';
 
 class GenderPicker extends ConsumerWidget {
   const GenderPicker({

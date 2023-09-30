@@ -4,8 +4,8 @@ import 'package:alcancia/src/shared/graphql/queries/transactions_query.dart';
 import 'package:alcancia/src/shared/services/graphql_client_service.dart';
 import 'package:alcancia/src/shared/services/services.dart';
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 class TransactionsListScreen extends StatelessWidget {
   TransactionsListScreen({Key? key}) : super(key: key);

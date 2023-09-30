@@ -1,14 +1,14 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
+import 'package:alcancia/src/screens/error/error_screen.dart';
 import 'package:alcancia/src/screens/referral/referral_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_action_dialog.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../shared/provider/user_provider.dart';
 
@@ -24,83 +24,88 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(userProvider)!;
+    final userValue = ref.watch(alcanciaUserProvider);
     final appLoc = AppLocalizations.of(context)!;
-    return GestureDetector(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: Scaffold(
-        appBar: AlcanciaToolbar(
-          state: StateToolbar.logoLetters,
-          logoHeight: 38,
-        ),
-        body: SafeArea(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const ReferralInstructions(),
-                    const SizedBox(height: 16),
-                    if (user.referralCode != null) ...[
-                      ReferralCodeCard(
-                          referralCode: user.referralCode!,
-                          onPressed: () {
-                            Share.share(appLoc.referralTextShare(user.referralCode!));
-                          }),
-                    ] else ...[
-                      ExternalReferralCard(
-                        onPressed: (referralCode) async {
-                          // Show confirmation dialog
-                          final confirm = await showDialog(
-                            context: context,
-                            builder: (BuildContext ctx) {
-                              return AlcanciaActionDialog(
-                                  acceptText: appLoc.buttonConfirm,
-                                  cancelText: appLoc.buttonCancel,
-                                  acceptColor: alcanciaMidBlue,
-                                  cancelColor: Colors.red,
-                                  acceptAction: () {
-                                    Navigator.of(ctx).pop(true);
-                                  },
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        appLoc.labelConfirmReferralCode,
-                                        style: Theme.of(context).textTheme.titleLarge,
-                                      ),
-                                      const SizedBox(height: 16),
-                                      if (referralCode != null) ...[
+    return userValue.when(data: (user) {
+      return GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Scaffold(
+          appBar: AlcanciaToolbar(
+            state: StateToolbar.logoLetters,
+            logoHeight: 38,
+          ),
+          body: SafeArea(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const ReferralInstructions(),
+                      const SizedBox(height: 16),
+                      if (user.referralCode != null) ...[
+                        ReferralCodeCard(
+                            referralCode: user.referralCode!,
+                            onPressed: () {
+                              Share.share(appLoc.referralTextShare(user.referralCode!));
+                            }),
+                      ] else ...[
+                        ExternalReferralCard(
+                          onPressed: (referralCode) async {
+                            // Show confirmation dialog
+                            final confirm = await showDialog(
+                              context: context,
+                              builder: (BuildContext ctx) {
+                                return AlcanciaActionDialog(
+                                    acceptText: appLoc.buttonConfirm,
+                                    cancelText: appLoc.buttonCancel,
+                                    acceptColor: alcanciaMidBlue,
+                                    cancelColor: Colors.red,
+                                    acceptAction: () {
+                                      Navigator.of(ctx).pop(true);
+                                    },
+                                    child: Column(
+                                      children: [
                                         Text(
-                                          appLoc.labelConfirmReferralCodeDescription(referralCode),
-                                          style: Theme.of(context).textTheme.bodyText1,
+                                          appLoc.labelConfirmReferralCode,
+                                          style: Theme.of(context).textTheme.titleLarge,
                                         ),
-                                      ] else ...[
-                                        Text(
-                                          appLoc.labelConfirmReferralCodeDescriptionNoCode,
-                                          style: Theme.of(context).textTheme.bodyText1,
-                                        ),
-                                      ]
-                                    ],
-                                  ));
-                            },
-                          );
-                          if (confirm == true) {
-                            await _referralController.subscribeToCampaign(code: referralCode);
-                            final code = await _referralController.getReferralCode();
-                            ref.read(userProvider.notifier).setReferralCode(code);
-                          }
-                        },
-                      ),
+                                        const SizedBox(height: 16),
+                                        if (referralCode != null) ...[
+                                          Text(
+                                            appLoc.labelConfirmReferralCodeDescription(referralCode),
+                                            style: Theme.of(context).textTheme.bodyText1,
+                                          ),
+                                        ] else ...[
+                                          Text(
+                                            appLoc.labelConfirmReferralCodeDescriptionNoCode,
+                                            style: Theme.of(context).textTheme.bodyText1,
+                                          ),
+                                        ]
+                                      ],
+                                    ));
+                              },
+                            );
+                            if (confirm == true) {
+                              await _referralController.subscribeToCampaign(code: referralCode);
+                              ref.invalidate(alcanciaUserProvider);
+                            }
+                          },
+                        ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    }, error: (error, _) {
+      return ErrorScreen(error: error.toString());
+    }, loading: () {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    });
   }
 }
 

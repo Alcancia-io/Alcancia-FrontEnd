@@ -1,4 +1,5 @@
-import 'package:alcancia/src/shared/provider/balance_provider.dart';
+import 'package:alcancia/src/screens/dashboard/dashboard_controller.dart';
+import 'package:alcancia/src/screens/referral/referral_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/alcancia_models.dart';
@@ -24,6 +25,19 @@ class UserState extends StateNotifier<User?> {
   }
 }
 
-final userProvider = StateNotifierProvider<UserState, User?>((ref) {
-  return UserState();
+
+final alcanciaUserProvider = FutureProvider<User>((ref) async {
+  final controller = DashboardController();
+  final referralController = ReferralController();
+  final user = await controller.fetchUser();
+  final txns = await controller.fetchUserTransactions();
+  final balanceHist = await controller.fetchUserBalanceHistory();
+  if (await controller.campaignUserExists()){
+    final refCode = await referralController.getReferralCode();
+    user.referralCode = refCode;
+  }
+  user.transactions = txns;
+  user.balanceHistory = balanceHist;
+
+  return user;
 });

@@ -1,5 +1,7 @@
 import 'dart:convert';
+
 import 'package:alcancia/src/resources/colors/colors.dart';
+import 'package:alcancia/src/screens/error/error_screen.dart';
 import 'package:alcancia/src/screens/metamap/address_controller.dart';
 import 'package:alcancia/src/screens/metamap/metamap_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
@@ -90,221 +92,228 @@ class _AddressScreenState extends ConsumerState<AddressScreen> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final appLocalization = AppLocalizations.of(context)!;
-    final user = ref.watch(userProvider);
-    return GestureDetector(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: Scaffold(
-        appBar: AlcanciaToolbar(
-          state: StateToolbar.logoNoletters,
-          logoHeight: responsiveService.getHeightPixels(40, screenHeight),
-        ),
-        body: SafeArea(
-          bottom: false,
-          child: Form(
-            autovalidateMode: AutovalidateMode.always,
-            child: ListView(
-              padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 32.0, top: 24),
-                  child: Center(
-                    child: Text(appLocalization.labelWeNeedToKnowMore,
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+    final userValue = ref.watch(alcanciaUserProvider);
+    return userValue.when(data: (user) {
+      return GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Scaffold(
+          appBar: AlcanciaToolbar(
+            state: StateToolbar.logoNoletters,
+            logoHeight: responsiveService.getHeightPixels(40, screenHeight),
+          ),
+          body: SafeArea(
+            bottom: false,
+            child: Form(
+              autovalidateMode: AutovalidateMode.always,
+              child: ListView(
+                padding: const EdgeInsets.only(left: 32.0, right: 32.0, bottom: 32.0),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 32.0, top: 24),
+                    child: Center(
+                      child: Text(appLocalization.labelWeNeedToKnowMore,
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                    ),
                   ),
-                ),
-                LabeledTextFormField(
-                  controller: _streetController,
-                  labelText: appLocalization.labelStreet,
-                  inputType: TextInputType.text,
-                  textInputAction: TextInputAction.next,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return appLocalization.errorRequiredField;
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                LabeledTextFormField(
-                  controller: _exNumberController,
-                  labelText: appLocalization.labelExteriorNumber,
-                  inputType: TextInputType.text,
-                  textInputAction: TextInputAction.next,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return appLocalization.errorRequiredField;
-                    } else if (value.length > 25) {
-                      return appLocalization.errorAddressNumberLength;
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                LabeledTextFormField(
-                  controller: _inNumberController,
-                  labelText: appLocalization.labelInteriorNumber,
-                  inputType: TextInputType.text,
-                  textInputAction: TextInputAction.next,
-                  validator: (newValue) {
-                    if (newValue != null && newValue.length > 25) return appLocalization.errorAddressNumberLength;
-                    return null;
-                  },
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                LabeledTextFormField(
-                  controller: _neighborhoodController,
-                  labelText: appLocalization.labelNeighborhood,
-                  inputType: TextInputType.text,
-                  textInputAction: TextInputAction.next,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return appLocalization.errorRequiredField;
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  appLocalization.labelState,
-                ),
-                AlcanciaDropdown(
-                  dropdownItems: states,
-                  itemsFontSize: 15,
-                  itemsAlignment: MainAxisAlignment.start,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).inputDecorationTheme.fillColor,
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                  onChanged: (newValue) {
-                    final selected = states.firstWhere((element) => element["name"] == newValue);
-                    final state = selected["value"];
-                    setState(() {
-                      _selectedState = state!;
-                    });
-                  },
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                LabeledTextFormField(
-                  controller: _zipController,
-                  labelText: appLocalization.labelZipCode,
-                  inputType: TextInputType.text,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  textInputAction: TextInputAction.next,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return appLocalization.errorRequiredField;
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  appLocalization.labelYourProfession,
-                ),
-                AlcanciaDropdown(
-                  dropdownItems: metaMapController.professions,
-                  itemsFontSize: 15,
-                  itemsAlignment: MainAxisAlignment.start,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).inputDecorationTheme.fillColor,
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                  onChanged: (newValue) {
-                    setState(() {
-                      selectedProfession = newValue;
-                    });
-                  },
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                if (_loadingCheckout) ...[
-                  const CircularProgressIndicator(),
-                ] else ...[
-                  AlcanciaButton(
-                    buttonText: appLocalization.buttonNext,
-                    color: alcanciaLightBlue,
-                    width: 304,
-                    height: 64,
-                    onPressed: () async {
-                      final address = Address(
-                        street: _streetController.text,
-                        colonia: _neighborhoodController.text,
-                        extNum: _exNumberController.text,
-                        intNum: _inNumberController.text,
-                        state: _selectedState,
-                        zip: _zipController.text,
-                      );
-
-                      final User newUser = user!;
-                      var jsonAddress = jsonEncode(address.toJson());
-                      selectedProfession = selectedProfession.replaceAll(' ', '');
-                      newUser.profession = selectedProfession;
-                      newUser.address = jsonAddress;
-                      ref.read(userProvider.notifier).setUser(newUser);
-                      try {
-                        await metaMapController.updateUser(address: jsonAddress, profession: selectedProfession);
-                      } catch (e) {
-                        Fluttertoast.showToast(msg: e.toString());
-                        context.go('/');
+                  LabeledTextFormField(
+                    controller: _streetController,
+                    labelText: appLocalization.labelStreet,
+                    inputType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return appLocalization.errorRequiredField;
                       }
-
-                      if (!widget.wrapper['verified']) {
-                        try {
-                          // Metamap flow
-                          await metamapService.showMatiFlow(metamapMexicanINEId, user.id, appLocalization);
-                        } catch (e) {
-                          Fluttertoast.showToast(msg: e.toString());
-                        }
-                        final updatedUser = await addressController.fetchUser();
-                        ref.read(userProvider.notifier).setUser(updatedUser);
-                        context.go('/');
-                      } else {
-                        final txnInput = widget.wrapper['txnInput'] as TransactionInput;
-                        final orderInput = {
-                          "orderInput": {
-                            "from_amount": txnInput.sourceAmount.toString(),
-                            "type": txnInput.txnType.name.toUpperCase(),
-                            "from_currency": "MXN",
-                            "network": txnInput.network,
-                            "to_amount": txnInput.targetAmount.toString(),
-                            "to_currency": txnInput.targetCurrency
-                          }
-                        };
-                        try {
-                          setState(() {
-                            _loadingCheckout = true;
-                          });
-                          final order = await addressController.sendSuarmiOrder(orderInput);
-                          final checkoutData = CheckoutModel(order: order, txnInput: txnInput);
-                          context.pushNamed('checkout', extra: checkoutData);
-                        } catch (e) {
-                          Fluttertoast.showToast(msg: appLocalization.errorSomethingWentWrong, backgroundColor: Colors.red, textColor: Colors.white70);
-                        }
-                        setState(() {
-                          _loadingCheckout = false;
-                        });
-                      }
+                      return null;
                     },
                   ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  LabeledTextFormField(
+                    controller: _exNumberController,
+                    labelText: appLocalization.labelExteriorNumber,
+                    inputType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return appLocalization.errorRequiredField;
+                      } else if (value.length > 25) {
+                        return appLocalization.errorAddressNumberLength;
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  LabeledTextFormField(
+                    controller: _inNumberController,
+                    labelText: appLocalization.labelInteriorNumber,
+                    inputType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    validator: (newValue) {
+                      if (newValue != null && newValue.length > 25) return appLocalization.errorAddressNumberLength;
+                      return null;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  LabeledTextFormField(
+                    controller: _neighborhoodController,
+                    labelText: appLocalization.labelNeighborhood,
+                    inputType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return appLocalization.errorRequiredField;
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    appLocalization.labelState,
+                  ),
+                  AlcanciaDropdown(
+                    dropdownItems: states,
+                    itemsFontSize: 15,
+                    itemsAlignment: MainAxisAlignment.start,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).inputDecorationTheme.fillColor,
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                    onChanged: (newValue) {
+                      final selected = states.firstWhere((element) => element["name"] == newValue);
+                      final state = selected["value"];
+                      setState(() {
+                        _selectedState = state!;
+                      });
+                    },
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  LabeledTextFormField(
+                    controller: _zipController,
+                    labelText: appLocalization.labelZipCode,
+                    inputType: TextInputType.text,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    textInputAction: TextInputAction.next,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return appLocalization.errorRequiredField;
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    appLocalization.labelYourProfession,
+                  ),
+                  AlcanciaDropdown(
+                    dropdownItems: metaMapController.professions,
+                    itemsFontSize: 15,
+                    itemsAlignment: MainAxisAlignment.start,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).inputDecorationTheme.fillColor,
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedProfession = newValue;
+                      });
+                    },
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  if (_loadingCheckout) ...[
+                    const CircularProgressIndicator(),
+                  ] else ...[
+                    AlcanciaButton(
+                      buttonText: appLocalization.buttonNext,
+                      color: alcanciaLightBlue,
+                      width: 304,
+                      height: 64,
+                      onPressed: () async {
+                        final address = Address(
+                          street: _streetController.text,
+                          colonia: _neighborhoodController.text,
+                          extNum: _exNumberController.text,
+                          intNum: _inNumberController.text,
+                          state: _selectedState,
+                          zip: _zipController.text,
+                        );
+
+                        final User newUser = user!;
+                        var jsonAddress = jsonEncode(address.toJson());
+                        selectedProfession = selectedProfession.replaceAll(' ', '');
+                        newUser.profession = selectedProfession;
+                        newUser.address = jsonAddress;
+                        ref.invalidate(alcanciaUserProvider);
+                        try {
+                          await metaMapController.updateUser(address: jsonAddress, profession: selectedProfession);
+                        } catch (e) {
+                          Fluttertoast.showToast(msg: e.toString());
+                          context.go('/');
+                        }
+
+                        if (!widget.wrapper['verified']) {
+                          try {
+                            // Metamap flow
+                            await metamapService.showMatiFlow(metamapMexicanINEId, user.id, appLocalization);
+                          } catch (e) {
+                            Fluttertoast.showToast(msg: e.toString());
+                          }
+                          ref.invalidate(alcanciaUserProvider);
+                          context.go('/');
+                        } else {
+                          final txnInput = widget.wrapper['txnInput'] as TransactionInput;
+                          final orderInput = {
+                            "orderInput": {
+                              "from_amount": txnInput.sourceAmount.toString(),
+                              "type": txnInput.txnType.name.toUpperCase(),
+                              "from_currency": "MXN",
+                              "network": txnInput.network,
+                              "to_amount": txnInput.targetAmount.toString(),
+                              "to_currency": txnInput.targetCurrency
+                            }
+                          };
+                          try {
+                            setState(() {
+                              _loadingCheckout = true;
+                            });
+                            final order = await addressController.sendSuarmiOrder(orderInput);
+                            final checkoutData = CheckoutModel(order: order, txnInput: txnInput);
+                            context.pushNamed('checkout', extra: checkoutData);
+                          } catch (e) {
+                            Fluttertoast.showToast(msg: appLocalization.errorSomethingWentWrong, backgroundColor: Colors.red, textColor: Colors.white70);
+                          }
+                          setState(() {
+                            _loadingCheckout = false;
+                          });
+                        }
+                      },
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    }, error: (error, _) {
+      return ErrorScreen(error: error.toString());
+    }, loading: () {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    });
   }
 }

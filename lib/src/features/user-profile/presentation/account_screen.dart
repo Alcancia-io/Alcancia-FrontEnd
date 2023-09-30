@@ -1,4 +1,3 @@
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:alcancia/src/shared/components/alcancia_action_dialog.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
@@ -7,6 +6,7 @@ import 'package:alcancia/src/shared/provider/auth_service_provider.dart';
 import 'package:alcancia/src/shared/provider/user_provider.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -83,7 +83,7 @@ class AccountScreen extends ConsumerWidget {
                                     await authService.deleteAccount();
                                     await deleteToken();
                                     context.goNamed("welcome");
-                                    ref.read(userProvider.notifier).setUser(null);
+                                    ref.invalidate(alcanciaUserProvider);
                                   } catch (e) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         alcanciaSnackBar(context,

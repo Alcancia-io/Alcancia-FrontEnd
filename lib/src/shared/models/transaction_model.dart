@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:alcancia/src/shared/models/currency_asset.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
-import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Transaction {

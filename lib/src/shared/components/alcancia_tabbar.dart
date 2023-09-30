@@ -1,10 +1,9 @@
-import 'package:alcancia/src/screens/dashboard/dashboard_screen.dart';
-import 'package:alcancia/src/features/transactions-list/presentation/transactions_list_screen.dart';
 import 'package:alcancia/src/features/user-profile/presentation/user_profile_screen.dart';
+import 'package:alcancia/src/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../screens/chart/line_chart_screen.dart';
 

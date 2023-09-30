@@ -1,3 +1,4 @@
+import 'package:alcancia/src/shared/models/balance_history_model.dart';
 import 'package:alcancia/src/shared/models/kyc_status.dart';
 import 'package:alcancia/src/shared/models/transaction_model.dart';
 import 'package:intl/intl.dart';
@@ -20,6 +21,7 @@ class User {
   String? address;
   String? lastUsedBankAccount;
   String? referralCode;
+  List<UserBalanceHistory> balanceHistory;
 
   User({
     required this.id,
@@ -38,6 +40,7 @@ class User {
     this.address,
     this.lastUsedBankAccount,
     this.referralCode,
+    this.balanceHistory = const [],
   });
 
   static final sampleUser = User(

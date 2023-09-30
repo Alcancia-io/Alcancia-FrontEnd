@@ -1,9 +1,6 @@
-import 'package:alcancia/src/resources/colors/colors.dart';
-import 'package:flutter/material.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:badges/badges.dart' as badges;
-import 'package:go_router/go_router.dart';
 
 enum StateToolbar { logoNoletters, logoLetters, titleIcon, profileTitleIcon }
 
