@@ -49,7 +49,7 @@ class TransactionItem extends ConsumerWidget {
       case TransactionType.deposit:
         return Container(
           padding:
-          const EdgeInsets.only(top: 12, bottom: 12, left: 12, right: 12),
+          const EdgeInsets.only(top: 12, bottom: 12, left: 6, right: 6),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -97,7 +97,7 @@ class TransactionItem extends ConsumerWidget {
       case TransactionType.withdraw:
         return Container(
           padding:
-          const EdgeInsets.only(top: 12, bottom: 12, left: 12, right: 12),
+          const EdgeInsets.only(top: 12, bottom: 12, left: 6, right: 6),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -145,7 +145,7 @@ class TransactionItem extends ConsumerWidget {
       case TransactionType.p2p:
         return Container(
           padding:
-          const EdgeInsets.only(top: 12, bottom: 12, left: 12, right: 12),
+          const EdgeInsets.only(top: 12, bottom: 12, left: 6, right: 6),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -187,7 +187,7 @@ class TransactionItem extends ConsumerWidget {
       case TransactionType.unknown:
         return Container(
           padding:
-          const EdgeInsets.only(top: 12, bottom: 12, left: 12, right: 12),
+          const EdgeInsets.only(top: 12, bottom: 12, left: 6, right: 6),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -235,7 +235,7 @@ class TransactionItem extends ConsumerWidget {
       case TransactionType.p2p_ext:
         return Container(
           padding:
-          const EdgeInsets.only(top: 12, bottom: 12, left: 12, right: 12),
+          const EdgeInsets.only(top: 12, bottom: 12, left: 6, right: 6),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
