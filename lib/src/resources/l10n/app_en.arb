@@ -255,5 +255,7 @@
 	"labelConfirmReferralCodeDescriptionNoCode": "This action cannot be undone. Are you sure you don''t want to enter a referral code?",
 	"buttonWinFiveDollars": "Win $5 \uD83E\uDD11",
 	"labelCustomerService": "Customer service",
-	"labelErrorCustomerService": "Failed starting customer service."
+	"labelErrorCustomerService": "Failed starting customer service.",
+	"labelUpdateRequired": "Please update your app to the latest version.",
+	"buttonUpdate": "Update now"
 }

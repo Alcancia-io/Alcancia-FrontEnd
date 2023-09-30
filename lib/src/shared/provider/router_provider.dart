@@ -16,6 +16,7 @@ import 'package:alcancia/src/screens/login/mfa_screen.dart';
 import 'package:alcancia/src/screens/metamap/address_screen.dart';
 import 'package:alcancia/src/screens/onboarding/onboarding_screens.dart';
 import 'package:alcancia/src/screens/referral/referral_screen.dart';
+import 'package:alcancia/src/screens/required_update/required_update_screen.dart';
 import 'package:alcancia/src/screens/success/success_screen.dart';
 import 'package:alcancia/src/screens/successful_transaction/successful_transaction.dart';
 import 'package:alcancia/src/screens/swap/swap_screen.dart';
@@ -31,10 +32,12 @@ import 'package:alcancia/src/shared/models/login_data_model.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
 import 'package:alcancia/src/shared/models/success_screen_model.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
+import 'package:alcancia/src/shared/services/version_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:alcancia/src/screens/transaction_detail/transaction_detail.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../screens/chart/line_chart_screen.dart';
@@ -49,6 +52,23 @@ Future<bool> isUserAuthenticated() async {
   return !result.hasException;
   // print(result.hasException);
 }
+
+Future<String> getCurrentlySupportedAppVersion() async {
+  VersionService service = VersionService();
+  var result = await service.getCurrentlySupportedAppVersion();
+  if (result.hasException) {
+    return Future.error(result.exception?.graphqlErrors[0].message ??
+        "Exception getting latest supported version");
+  }
+  return result.data?['getCurrentlySupportedAppVersion']['version'] as String;
+}
+
+Future<String> getCurrentBuildNumber() async {
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  return packageInfo.buildNumber;
+}
+
+
 
 Future<bool> _finishedOnboarding() async {
   final preferences = await SharedPreferences.getInstance();
@@ -199,6 +219,11 @@ final routerProvider = Provider<GoRouter>(
           path: "/line-chart",
           builder: (context, state) => const LineChartScreen(),
         ),
+        GoRoute(
+          name: "update-required",
+          path: "/update-required",
+          builder: (context, state) => RequiredUpdateScreen(),
+        ),
       ],
       redirect: (context, state) async {
         final loginLoc = state.namedLocation("login");
@@ -220,6 +245,16 @@ final routerProvider = Provider<GoRouter>(
         final finishedOnboarding = await _finishedOnboarding();
         final onboardingLoc = state.namedLocation('onboarding');
         final isOnboarding = state.subloc == onboardingLoc;
+        final requiredUpdateLoc = state.namedLocation('update-required');
+
+        final buildNumber = await getCurrentBuildNumber();
+        String supportedVersion = await getCurrentlySupportedAppVersion();
+        final isSupportedVersion = int.parse(buildNumber) >= int.parse(supportedVersion.split(".").last);
+        if (!isSupportedVersion) return requiredUpdateLoc;
+
+
+
+
         if (!loggedIn && !finishedOnboarding && !isOnboarding)
           return onboardingLoc;
         if (!loggedIn &&
