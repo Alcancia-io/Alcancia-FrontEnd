@@ -54,7 +54,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               right: 24,
             ),
             child: RefreshIndicator(
-              onRefresh: () async { ref.refresh(alcanciaUserProvider); },
+              onRefresh: () async {
+                ref.refresh(alcanciaUserProvider);
+              },
               child: ListView(
                 children: [
                   Container(
@@ -90,7 +92,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                   AlcanciaTransactions(
                     height: screenSize.height * 0.5,
-                    txns: user.transactions ?? [],
                     bottomText: appLoc.labelStartTransactionDashboard,
                   )
                 ],

@@ -8,19 +8,19 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AlcanciaTransactions extends ConsumerWidget {
-  final List<Transaction> txns;
   final double? height;
   final String bottomText;
 
   const AlcanciaTransactions({
     Key? key,
-    required this.txns,
     required this.bottomText,
     this.height,
   }) : super(key: key);
 
   Color emptyTransactionsColor(ThemeData theme) {
-    return theme.brightness == Brightness.dark ? Colors.white70 : Colors.black54;
+    return theme.brightness == Brightness.dark
+        ? Colors.white70
+        : Colors.black54;
   }
 
   @override
@@ -29,12 +29,14 @@ class AlcanciaTransactions extends ConsumerWidget {
     final appTheme = Theme.of(context);
     final appLoc = AppLocalizations.of(context)!;
     return userValue.when(data: (user) {
-      if (txns.isEmpty) {
+      if (user.transactions!.isEmpty) {
         return Container(
           height: height,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: appTheme.brightness == Brightness.dark ? alcanciaCardDark2 : alcanciaCardLight2,
+            color: appTheme.brightness == Brightness.dark
+                ? alcanciaCardDark2
+                : alcanciaCardLight2,
             borderRadius: const BorderRadius.all(
               Radius.circular(8),
             ),
@@ -48,7 +50,6 @@ class AlcanciaTransactions extends ConsumerWidget {
                   "lib/src/resources/images/no_transactions.png",
                   color: emptyTransactionsColor(appTheme),
                   height: 80,
-
                 ),
               ),
               Text(
@@ -71,9 +72,9 @@ class AlcanciaTransactions extends ConsumerWidget {
       return SizedBox(
         height: height,
         child: ListView.builder(
-          itemCount: txns.length,
+          itemCount: user.transactions!.length,
           itemBuilder: (BuildContext context, int index) {
-            var txn = txns[index];
+            var txn = user.transactions![index];
             return AlcanciaTransactionItem(
               user: user,
               txn: txn,
@@ -82,11 +83,9 @@ class AlcanciaTransactions extends ConsumerWidget {
         ),
       );
     }, error: (error, _) {
-      return AlcanciaErrorWidget();
+      return const AlcanciaErrorWidget();
     }, loading: () {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
+      return const SafeArea(child: Center(child: CircularProgressIndicator()));
     });
   }
 }
