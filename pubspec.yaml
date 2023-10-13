@@ -69,6 +69,9 @@ dependencies:
   swipeable_button_view: ^0.0.2
   fl_chart: ^0.63.0
   package_info_plus: ^4.1.0
+  google_sign_in: ^5.4.2
+  firebase_auth: ^4.10.1
+  awesome_dialog: ^3.1.0
 
 flutter_icons:
   image_path: "lib/src/resources/images/app_icon.png"

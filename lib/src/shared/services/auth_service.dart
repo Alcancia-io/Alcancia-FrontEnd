@@ -2,6 +2,8 @@ import 'package:alcancia/src/shared/graphql/mutations/login_mutation.dart';
 import 'package:alcancia/src/shared/graphql/mutations/complete_forgot_password_mutation.dart';
 import 'package:alcancia/src/shared/graphql/queries/index.dart';
 import 'package:alcancia/src/shared/services/graphql_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class CompletePasswordInput {
@@ -16,6 +18,18 @@ class CompletePasswordInput {
       "newPassword": newPassword,
       "verificationCode": verificationCode,
     };
+  }
+}
+
+class ThirdPartyAuthService {
+  signInWithGoogle() async {
+    final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+
+    final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+    final credential = GoogleAuthProvider.credential(
+        accessToken: gAuth.accessToken, idToken: gAuth.idToken);
+
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 }
 
@@ -56,7 +70,8 @@ class AuthService {
       );
 
       if (result.hasException) {
-        return Future.error(result.exception?.graphqlErrors[0].message ?? "Exception");
+        return Future.error(
+            result.exception?.graphqlErrors[0].message ?? "Exception");
       }
     } catch (e) {
       return Future.error(e);
@@ -73,7 +88,8 @@ class AuthService {
       );
 
       if (result.hasException) {
-        return Future.error(result.exception?.graphqlErrors[0].message ?? "Exception");
+        return Future.error(
+            result.exception?.graphqlErrors[0].message ?? "Exception");
       } else if (result.data != null) {
         return result.data!["deleteAccount"] as bool;
       }
@@ -86,17 +102,24 @@ class AuthService {
   Future<QueryResult> completeSignIn(String verificationCode) async {
     final clientResponse = await client;
     return await clientResponse.query(
-      QueryOptions(document: gql(completeSignInQuery), variables: {"verificationCode": verificationCode}),
+      QueryOptions(
+          document: gql(completeSignInQuery),
+          variables: {"verificationCode": verificationCode}),
     );
   }
 
-  Future<QueryResult> login(String email, String password, String deviceToken) async {
+  Future<QueryResult> login(
+      String email, String password, String deviceToken) async {
     final clientResponse = await client;
     return await clientResponse.mutate(
       MutationOptions(
         document: gql(loginMutation),
         variables: {
-          "loginUserInput": {"email": email.toLowerCase(), "password": password, "deviceToken": deviceToken}
+          "loginUserInput": {
+            "email": email.toLowerCase(),
+            "password": password,
+            "deviceToken": deviceToken
+          }
         },
       ),
     );
@@ -113,7 +136,8 @@ class AuthService {
     );
   }
 
-  Future<QueryResult> completeForgotPassword(CompletePasswordInput queryVariables) async {
+  Future<QueryResult> completeForgotPassword(
+      CompletePasswordInput queryVariables) async {
     var clientResponse = await client;
     return clientResponse.mutate(
       MutationOptions(

@@ -39,8 +39,9 @@ import 'package:alcancia/src/screens/transaction_detail/transaction_detail.dart'
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:firebase_auth/firebase_auth.dart' as user_fire;
 import '../../screens/chart/line_chart_screen.dart';
+import '../../screens/registration.dart/registration_stepper.dart';
 
 Future<bool> isUserAuthenticated() async {
   StorageService service = StorageService();
@@ -67,8 +68,6 @@ Future<String> getCurrentBuildNumber() async {
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   return packageInfo.buildNumber;
 }
-
-
 
 Future<bool> _finishedOnboarding() async {
   final preferences = await SharedPreferences.getInstance();
@@ -117,6 +116,12 @@ final routerProvider = Provider<GoRouter>(
           path: "/phone-registration",
           builder: (context, state) => PhoneRegistrationScreen(
               userRegistrationData: state.extra as UserRegistrationModel),
+        ),
+        GoRoute(
+          name: "stepper-registration",
+          path: "/stepper-registration",
+          builder: (context, state) =>
+              RegistrationStepper(user: state.extra as user_fire.User),
         ),
         GoRoute(
           name: "swap",
@@ -246,14 +251,13 @@ final routerProvider = Provider<GoRouter>(
         final onboardingLoc = state.namedLocation('onboarding');
         final isOnboarding = state.subloc == onboardingLoc;
         final requiredUpdateLoc = state.namedLocation('update-required');
-
+        final stepperRegistration = state.namedLocation("stepper-registration");
+        final isStepperRegistration = state.subloc == stepperRegistration;
         final buildNumber = await getCurrentBuildNumber();
         String supportedVersion = await getCurrentlySupportedAppVersion();
-        final isSupportedVersion = int.parse(buildNumber) >= int.parse(supportedVersion.split(".").last);
+        final isSupportedVersion = int.parse(buildNumber) >=
+            int.parse(supportedVersion.split(".").last);
         if (!isSupportedVersion) return requiredUpdateLoc;
-
-
-
 
         if (!loggedIn && !finishedOnboarding && !isOnboarding)
           return onboardingLoc;
@@ -263,6 +267,7 @@ final routerProvider = Provider<GoRouter>(
             !isStartup &&
             !isMfa &&
             !isPhoneRegistration &&
+            !isStepperRegistration &&
             !isOtp &&
             !isForgotPassword &&
             !isOnboarding) return welcomeLoc;

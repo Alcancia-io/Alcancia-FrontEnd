@@ -353,5 +353,8 @@
   "labelCustomerService": "Servicio al cliente",
   "labelErrorCustomerService": "Error al iniciar servicio al cliente.",
 	"labelUpdateRequired": "Por favor actualiza la aplicación para continuar",
-	"buttonUpdate": "Actualizar ahora"
+	"buttonUpdate": "Actualizar ahora",
+	"labelGender": "Gender",
+	"labelAlcanError":"Ocurrió un AlcanError!",
+	"labelEmailUsedFriendlyError":"Ups, al parecer el correo ya se encuentra en uso."
 }

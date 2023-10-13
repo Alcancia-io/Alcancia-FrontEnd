@@ -257,5 +257,8 @@
 	"labelCustomerService": "Customer service",
 	"labelErrorCustomerService": "Failed starting customer service.",
 	"labelUpdateRequired": "Please update your app to the latest version.",
-	"buttonUpdate": "Update now"
+	"buttonUpdate": "Update now",
+	"labelGender": "Gender",
+	"labelAlcanError":"An AlcanError occurred!",
+	"labelEmailUsedFriendlyError":"Oops, apparently the email is already in use."
 }

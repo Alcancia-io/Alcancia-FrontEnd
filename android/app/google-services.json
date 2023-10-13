@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "770633131725-nsr0l8hrbpela99k3o08ud58ifb2mtps.apps.googleusercontent.com",
+          "client_id": "770633131725-ri9f6f2kh2jj0500jgtonsnekfrme9re.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alcancia.alcancia",
+            "certificate_hash": "cc1580991f9e18776748d256b942a4f850e0018b"
+          }
+        },
+        {
+          "client_id": "770633131725-s0iag1968pqrpln6m0ge03ln94oiemf8.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -50,7 +58,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "770633131725-nsr0l8hrbpela99k3o08ud58ifb2mtps.apps.googleusercontent.com",
+          "client_id": "770633131725-djjuquloulf804r1lr7ulrei2kea3o34.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.alcancia.alcancia",
+            "certificate_hash": "cc1580991f9e18776748d256b942a4f850e0018b"
+          }
+        },
+        {
+          "client_id": "770633131725-s0iag1968pqrpln6m0ge03ln94oiemf8.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
