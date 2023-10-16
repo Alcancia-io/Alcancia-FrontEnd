@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:alcancia/main.dart';
 import 'package:alcancia/src/features/registration/presentation/phone_registration_screen.dart';
 import 'package:alcancia/src/screens/login/login_screen.dart';
@@ -14,6 +16,7 @@ import 'package:alcancia/src/screens/error/error_screen.dart';
 import 'package:alcancia/src/screens/forgot_password/forgot_password.dart';
 import 'package:alcancia/src/screens/login/mfa_screen.dart';
 import 'package:alcancia/src/screens/metamap/address_screen.dart';
+import 'package:alcancia/src/screens/network_error/network_error_screen.dart';
 import 'package:alcancia/src/screens/onboarding/onboarding_screens.dart';
 import 'package:alcancia/src/screens/referral/referral_screen.dart';
 import 'package:alcancia/src/screens/required_update/required_update_screen.dart';
@@ -66,6 +69,19 @@ Future<String> getCurrentlySupportedAppVersion() async {
 Future<String> getCurrentBuildNumber() async {
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   return packageInfo.buildNumber;
+}
+
+Future<bool> checkNetwork() async {
+  bool isConnected = false;
+  try {
+    final result = await InternetAddress.lookup('google.com');
+    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      isConnected = true;
+    }
+  } on SocketException catch (_) {
+    isConnected = false;
+  }
+  return isConnected;
 }
 
 
@@ -224,6 +240,11 @@ final routerProvider = Provider<GoRouter>(
           path: "/update-required",
           builder: (context, state) => RequiredUpdateScreen(),
         ),
+        GoRoute(
+          name: "network-error",
+          path: "/network-error",
+          builder: (context, state) => const NetworkErrorScreen(),
+        )
       ],
       redirect: (context, state) async {
         final loginLoc = state.namedLocation("login");
@@ -246,6 +267,11 @@ final routerProvider = Provider<GoRouter>(
         final onboardingLoc = state.namedLocation('onboarding');
         final isOnboarding = state.subloc == onboardingLoc;
         final requiredUpdateLoc = state.namedLocation('update-required');
+        final networkErrorLoc = state.namedLocation('network-error');
+
+
+        final isNetworkConnected = await checkNetwork();
+        if (!isNetworkConnected) return networkErrorLoc;
 
         final buildNumber = await getCurrentBuildNumber();
         String supportedVersion = await getCurrentlySupportedAppVersion();
