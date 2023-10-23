@@ -1,5 +1,6 @@
 import 'package:alcancia/main.dart';
 import 'package:alcancia/src/features/registration/presentation/phone_registration_screen.dart';
+import 'package:alcancia/src/screens/account_verification.dart';
 import 'package:alcancia/src/screens/login/login_screen.dart';
 import 'package:alcancia/src/features/registration/model/graphql_config.dart';
 import 'package:alcancia/src/features/registration/presentation/otp_screen.dart';
@@ -224,6 +225,11 @@ final routerProvider = Provider<GoRouter>(
           path: "/update-required",
           builder: (context, state) => RequiredUpdateScreen(),
         ),
+        GoRoute(
+          name: "account-verification",
+          path: "/account-verification",
+          builder: (context, state) => const AccountVerificationScreen(),
+        ),
       ],
       redirect: (context, state) async {
         final loginLoc = state.namedLocation("login");
@@ -234,6 +240,8 @@ final routerProvider = Provider<GoRouter>(
         final isMfa = state.subloc == mfaLoc;
         final otp = state.namedLocation("otp");
         final isOtp = state.subloc == otp;
+        final accountVerificationLoc = state.namedLocation("account-verification");
+        final isAccountVerification = state.subloc == accountVerificationLoc;
         final phoneRegistration = state.namedLocation("phone-registration");
         final isPhoneRegistration = state.subloc == phoneRegistration;
         final isStartup = state.subloc == welcomeLoc;
@@ -265,7 +273,9 @@ final routerProvider = Provider<GoRouter>(
             !isPhoneRegistration &&
             !isOtp &&
             !isForgotPassword &&
-            !isOnboarding) return welcomeLoc;
+            !isOnboarding &&
+            !isAccountVerification)
+          return welcomeLoc;
         if (loggedIn && (loggingIn || creatingAccount || isStartup))
           return home;
         return null;

@@ -217,8 +217,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ] else ... [
                           AlcanciaButton(
                             color: alcanciaLightBlue,
-                            width: responsiveService.getWidthPixels(
-                                304, screenWidth),
+                            width: double.infinity,
                             height: responsiveService.getHeightPixels(
                                 64, screenHeight),
                             buttonText: appLocalization.buttonLogIn,
@@ -375,23 +374,52 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ),
       );
     } else {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(appLocalization.labelNeedAccount),
-          CupertinoButton(
-            child: Text(
-              appLocalization.buttonRegister,
-              style: const TextStyle(
-                decoration: TextDecoration.underline,
-                fontWeight: FontWeight.bold,
-              ),
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(appLocalization.labelNeedAccount),
+                CupertinoButton(
+                  child: Text(
+                    appLocalization.buttonRegister,
+                    style: const TextStyle(
+                      decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onPressed: () {
+                    context.push("/registration");
+                  },
+                  minSize: 0,
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                ),
+              ],
             ),
-            onPressed: () {
-              context.push("/registration");
-            },
-          ),
-        ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(appLocalization.labelOr),
+                CupertinoButton(
+                  child: Text(
+                    appLocalization.buttonFinishAccountVerification,
+                    style: const TextStyle(
+                      decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onPressed: () {
+                    context.push("/account-verification");
+                  },
+                  minSize: 0,
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                ),
+              ],
+            ),
+          ],
+        ),
       );
     }
   }
