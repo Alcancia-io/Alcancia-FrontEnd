@@ -120,8 +120,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "stepper-registration",
           path: "/stepper-registration",
-          builder: (context, state) =>
-              RegistrationStepper(user: state.extra as user_fire.User),
+          builder: (context, state) => RegistrationStepper(
+              registrationParam: state.extra as RegistrationParam),
         ),
         GoRoute(
           name: "swap",

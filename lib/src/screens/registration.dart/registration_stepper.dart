@@ -16,9 +16,9 @@ import '../../shared/models/kyc_status.dart';
 import '../../shared/models/user_model.dart' as user_model;
 
 class RegistrationStepper extends ConsumerStatefulWidget {
-  const RegistrationStepper({Key? key, required this.user}) : super(key: key);
-
-  final user_fire.User user;
+  const RegistrationStepper({Key? key, required this.registrationParam})
+      : super(key: key);
+  final RegistrationParam registrationParam;
   @override
   ConsumerState<RegistrationStepper> createState() =>
       _RegistrationStepperState();
@@ -26,6 +26,9 @@ class RegistrationStepper extends ConsumerStatefulWidget {
 
 class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
   int currentStep = 0;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
@@ -42,6 +45,12 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
   final _formKeyBirth = GlobalKey<FormState>();
   final _formKeyGender = GlobalKey<FormState>();
   final _formKeyPass = GlobalKey<FormState>();
+  final _formNameReg = GlobalKey<FormState>();
+  final _formLastReg = GlobalKey<FormState>();
+  final _formBirthReg = GlobalKey<FormState>();
+  final _formGenderReg = GlobalKey<FormState>();
+  final _formEmailReg = GlobalKey<FormState>();
+  final _formPassReg = GlobalKey<FormState>();
 
   bool validDate(DateTime date) {
     DateTime adultDate = DateTime(
@@ -75,6 +84,7 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
     final appLocalization = AppLocalizations.of(context)!;
     final selectedDate = ref.watch(selectedDateProvider);
     final selectedGender = ref.watch(selectedGenderProvider);
+
     return Scaffold(
       appBar: AlcanciaToolbar(
         toolbarHeight: size.height / 13,
@@ -82,15 +92,23 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
         logoHeight: size.height / 16,
       ),
       body: Stepper(
-        type: StepperType.horizontal,
-        steps: getSteps(appLocalization, selectedDate, selectedGender),
+        type: widget.registrationParam.isCompleteRegistration == true
+            ? StepperType.vertical
+            : StepperType.horizontal,
+        steps: widget.registrationParam.isCompleteRegistration == true
+            ? getStepsCompleteRegistration(
+                appLocalization, selectedDate, selectedGender)
+            : getSteps(appLocalization, selectedDate, selectedGender),
         currentStep: currentStep,
         onStepContinue: () {
-          if (!validDate(selectedDate) && currentStep == 0) {
-            return;
-          }
-          if (selectedGender == null && currentStep == 1) {
-            return;
+          if (widget.registrationParam.isCompleteRegistration != true) {
+            //Condiciones que solo aplican para Stepper Thirdparty signIn
+            if (!validDate(selectedDate) && currentStep == 0) {
+              return;
+            }
+            if (selectedGender == null && currentStep == 1) {
+              return;
+            }
           }
           final isLastStep = currentStep ==
               getSteps(appLocalization, selectedDate, selectedGender).length -
@@ -102,9 +120,9 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
               final user = user_model.User(
                 id: "",
                 authId: "",
-                name: widget.user.displayName!,
+                name: widget.registrationParam.user!.displayName!,
                 surname: "",
-                email: widget.user.email!,
+                email: widget.registrationParam.user!.email!,
                 gender: selectedGender.string(appLocalization),
                 phoneNumber: "",
                 dob: selectedDate,
@@ -128,11 +146,187 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
           }
         },
         onStepCancel: () =>
-            currentStep == 0 ? null : () => setState(() => currentStep -= 1),
+            currentStep == 0 ? null : setState(() => currentStep--),
       ),
     );
   }
 
+  List<Step> getStepsCompleteRegistration(AppLocalizations appLocalization,
+          DateTime selectedDate, Gender? selectedGender) =>
+      [
+        Step(
+            isActive: currentStep >= 0,
+            title: Text(appLocalization.labelBirthdate),
+            content: Form(
+              key: _formNameReg,
+              autovalidateMode: AutovalidateMode.disabled,
+              child: LabeledTextFormField(
+                controller: nameController,
+                labelText: appLocalization.labelName,
+                inputType: TextInputType.name,
+                autofillHints: const [AutofillHints.givenName],
+                textInputAction: TextInputAction.next,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return appLocalization.errorRequiredField;
+                  }
+                  return null;
+                },
+              ),
+            )),
+        Step(
+            isActive: currentStep >= 0,
+            title: Text(appLocalization.labelBirthdate),
+            content: Form(
+              key: _formLastReg,
+              autovalidateMode: AutovalidateMode.disabled,
+              child: LabeledTextFormField(
+                controller: lastNameController,
+                labelText: appLocalization.labelLastName,
+                inputType: TextInputType.name,
+                autofillHints: const [AutofillHints.familyName],
+                textInputAction: TextInputAction.next,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return appLocalization.errorRequiredField;
+                  }
+                  return null;
+                },
+              ),
+            )),
+        Step(
+            isActive: currentStep >= 0,
+            title: Text(appLocalization.labelBirthdate),
+            content: Form(
+              key: _formBirthReg,
+              autovalidateMode: AutovalidateMode.disabled,
+              child: AlcanciaDatePicker(
+                dateProvider: selectedDateProvider,
+                validator: (selectedDate) {
+                  if (selectedDate != null) {
+                    DateTime adultDate = DateTime(
+                      selectedDate.year + 18,
+                      selectedDate.month,
+                      selectedDate.day,
+                    );
+
+                    if (adultDate.isBefore(DateTime.now())) {
+                      return null;
+                    }
+                    return appLocalization.errorAge;
+                  }
+                  return appLocalization.labelSelectDate;
+                },
+              ),
+            )),
+        Step(
+            isActive: currentStep >= 0,
+            title: Text(appLocalization.labelBirthdate),
+            content: Form(
+              key: _formGenderReg,
+              autovalidateMode: AutovalidateMode.disabled,
+              child: GenderPicker(
+                selectedGenderProvider: selectedGenderProvider,
+                validator: (Gender? gender) {
+                  if (selectedGender == null)
+                    return appLocalization.errorSelectGender;
+                  return null;
+                },
+              ),
+            )),
+        Step(
+            isActive: currentStep >= 0,
+            title: Text(appLocalization.labelBirthdate),
+            content: Form(
+              key: _formEmailReg,
+              autovalidateMode: AutovalidateMode.disabled,
+              child: LabeledTextFormField(
+                controller: emailController,
+                labelText: appLocalization.labelEmail,
+                inputType: TextInputType.emailAddress,
+                autofillHints: const [AutofillHints.email],
+                textInputAction: TextInputAction.next,
+                validator: (value) {
+                  if (ref.watch(emailsInUseProvider).contains(value)) {
+                    return appLocalization.errorEmailInUse;
+                  }
+                  if (value == null || value.isEmpty) {
+                    return appLocalization.errorRequiredField;
+                  } else {
+                    return value.isValidEmail()
+                        ? null
+                        : appLocalization.errorEmailFormat;
+                  }
+                },
+              ),
+            )),
+        Step(
+            isActive: currentStep >= 0,
+            title: Text(appLocalization.labelBirthdate),
+            content: Form(
+              key: _formPassReg,
+              autovalidateMode: AutovalidateMode.disabled,
+              child: Column(
+                children: [
+                  LabeledTextFormField(
+                    controller: passwordController,
+                    labelText: appLocalization.labelPassword,
+                    obscure: obscurePassword,
+                    autofillHints: const [AutofillHints.newPassword],
+                    textInputAction: TextInputAction.next,
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          obscurePassword = !obscurePassword;
+                        });
+                      },
+                      child: Icon(obscurePassword
+                          ? CupertinoIcons.eye
+                          : CupertinoIcons.eye_fill),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return appLocalization.errorRequiredField;
+                      } else {
+                        return value.isValidPassword()
+                            ? null
+                            : appLocalization
+                                .errorInvalidPassword; // TODO: Password validation text
+                      }
+                    },
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  LabeledTextFormField(
+                    controller: confirmPasswordController,
+                    labelText: appLocalization.labelConfirmPassword,
+                    obscure: obscureConfirmPassword,
+                    textInputAction: TextInputAction.done,
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          obscureConfirmPassword = !obscureConfirmPassword;
+                        });
+                      },
+                      child: Icon(obscureConfirmPassword
+                          ? CupertinoIcons.eye
+                          : CupertinoIcons.eye_fill),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return appLocalization.errorRequiredField;
+                      } else if (value != passwordController.text) {
+                        return appLocalization
+                            .errorPasswordMatch; // TODO: Confirm password validation text
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+            )),
+      ];
   List<Step> getSteps(AppLocalizations appLocalization, DateTime selectedDate,
           Gender? selectedGender) =>
       [

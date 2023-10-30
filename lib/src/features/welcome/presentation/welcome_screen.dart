@@ -1,3 +1,4 @@
+import 'package:alcancia/src/features/registration/model/user_registration_model.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:alcancia/src/shared/components/alcancia_logo.dart';
 import 'package:alcancia/src/shared/components/alcancia_square_title.dart';
@@ -100,7 +101,9 @@ class WelcomeScreen extends ConsumerWidget {
                               64, screenHeight),
                           buttonText: appLocalization.buttonRegister,
                           onPressed: () {
-                            context.push('/registration');
+                            context.push('/stepper-registration',
+                                extra: RegistrationParam(
+                                    user: null, isCompleteRegistration: false));
                           },
                         ),
                         Padding(
@@ -132,11 +135,15 @@ class WelcomeScreen extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             AlcanciaSquareTitle(
-                                onTap: () {
-                                  ThirdPartyAuthService().signInWithGoogle();
-                                  context.push("/stepper-registration",
-                                      extra:
-                                          FirebaseAuth.instance.currentUser!);
+                                onTap: () async {
+                                  await ThirdPartyAuthService()
+                                      .signInWithGoogle()
+                                      .then((value) {
+                                    context.push("/stepper-registration",
+                                        extra: RegistrationParam(
+                                            user: value.user!,
+                                            isCompleteRegistration: false));
+                                  });
                                 },
                                 imagePath:
                                     "lib/src/resources/images/icons8-google-48.png"),

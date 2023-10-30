@@ -22,7 +22,7 @@ class CompletePasswordInput {
 }
 
 class ThirdPartyAuthService {
-  signInWithGoogle() async {
+  Future<UserCredential> signInWithGoogle() async {
     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
     final GoogleSignInAuthentication gAuth = await gUser!.authentication;
