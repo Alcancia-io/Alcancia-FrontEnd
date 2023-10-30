@@ -33,6 +33,7 @@ import 'package:alcancia/src/shared/models/otp_data_model.dart';
 import 'package:alcancia/src/shared/models/success_screen_model.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:alcancia/src/shared/services/version_service.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:alcancia/src/screens/transaction_detail/transaction_detail.dart';
@@ -44,12 +45,18 @@ import '../../screens/chart/line_chart_screen.dart';
 
 Future<bool> isUserAuthenticated() async {
   StorageService service = StorageService();
-  var token = await service.readSecureData("token");
-  GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "$token");
-  GraphQLClient client = graphQLConfiguration.clientToQuery();
-  var result =
-      await client.query(QueryOptions(document: gql(isAuthenticatedQuery)));
-  return !result.hasException;
+  try {
+    var token = await service.readSecureData("token");
+    GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "$token");
+    GraphQLClient client = graphQLConfiguration.clientToQuery();
+    var result =
+    await client.query(QueryOptions(document: gql(isAuthenticatedQuery)));
+    return !result.hasException;
+  } catch (e) {
+    await FirebaseCrashlytics.instance.recordError(e, StackTrace.current);
+    await service.deleteSecureData("token");
+    return false;
+  }
   // print(result.hasException);
 }
 
