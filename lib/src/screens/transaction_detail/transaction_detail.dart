@@ -64,6 +64,7 @@ class TransactionDetail extends ConsumerWidget {
                       leftText: appLoc.labelTransactionId,
                       rightText: txn.transactionID
                           .substring(0, txn.transactionID.indexOf('-')),
+                      supportsClipboard: true,
                     ),
                     if (txn.type == TransactionType.deposit) ...[
                       TransactionDetailItem(
