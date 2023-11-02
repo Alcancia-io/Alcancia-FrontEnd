@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../../screens/registration.dart/registration_stepper.dart';
 import '../../registration/presentation/registration_screen.dart';
@@ -150,8 +151,17 @@ class WelcomeScreen extends ConsumerWidget {
                             const SizedBox(
                               width: 25,
                             ),
-                            const AlcanciaSquareTitle(
-                                onTap: null,
+                            AlcanciaSquareTitle(
+                                onTap: () async {
+                                  final credential = await SignInWithApple.getAppleIDCredential(
+                                    scopes: [
+                                      AppleIDAuthorizationScopes.email,
+                                      AppleIDAuthorizationScopes.fullName,
+                                    ],
+                                  );
+                                  print(credential);
+                                  print(credential.email);
+                                },
                                 imagePath:
                                     "lib/src/resources/images/icons8-apple-48.png"),
                           ],
