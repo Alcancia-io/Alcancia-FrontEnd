@@ -262,5 +262,7 @@
 	"buttonFinishAccountVerification": "Finish account verification",
 	"labelVerifyYourAccount": "Verify your account",
 	"labelVerifyYourAccountDescription": "Enter your email and password to continue with verification:",
-	"buttonVerifyAccount": "Verify account"
+	"buttonVerifyAccount": "Verify account",
+	"labelNoInternetConnection": "Please check your connection and try again",
+	"buttonTryAgain": "Try again"
 }

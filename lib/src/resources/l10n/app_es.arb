@@ -358,5 +358,7 @@
 	"buttonFinishAccountVerification": "Finalizar verificación de cuenta",
 	"labelVerifyYourAccount": "Verifica tu cuenta",
 	"labelVerifyYourAccountDescription": "Ingresa tu correo y contraseña para verificar tu cuenta:",
-	"buttonVerifyAccount": "Verificar cuenta"
+	"buttonVerifyAccount": "Verificar cuenta",
+	"labelNoInternetConnection": "Por favor verifica tu conexión e intentalo de nuevo",
+	"buttonTryAgain": "Intentar de nuevo"
 }
