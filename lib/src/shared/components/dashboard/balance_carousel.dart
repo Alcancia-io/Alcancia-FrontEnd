@@ -30,6 +30,14 @@ class _BalanceCarouselState extends State<BalanceCarousel> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final appLoc = AppLocalizations.of(context)!;
+    /*final totalBalanceItem = BalanceItem(
+        title: appLoc.labelTotalBalance,
+        value: widget.balance.total,
+        currency: "USD");
+    final cUSDBalanceItem = BalanceItem(
+        title: appLoc.labelCELOBalance,
+        value: widget.balance.celoBalance,
+        currency: "CUSD");*/
     final usdcBalanceItem = BalanceItem(
         title: appLoc.labelUSDCBalance,
         value: widget.balance.usdcBalance,
