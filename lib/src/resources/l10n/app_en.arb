@@ -258,6 +258,11 @@
 	"labelErrorCustomerService": "Failed starting customer service.",
 	"labelUpdateRequired": "Please update your app to the latest version.",
 	"buttonUpdate": "Update now",
+	"labelOr": "or",
+	"buttonFinishAccountVerification": "Finish account verification",
+	"labelVerifyYourAccount": "Verify your account",
+	"labelVerifyYourAccountDescription": "Enter your email and password to continue with verification:",
+	"buttonVerifyAccount": "Verify account",
 	"labelNoInternetConnection": "Please check your connection and try again",
 	"buttonTryAgain": "Try again"
 }

@@ -354,6 +354,11 @@
   "labelErrorCustomerService": "Error al iniciar servicio al cliente.",
 	"labelUpdateRequired": "Por favor actualiza la aplicación para continuar",
 	"buttonUpdate": "Actualizar ahora",
+	"labelOr": "o",
+	"buttonFinishAccountVerification": "Finalizar verificación de cuenta",
+	"labelVerifyYourAccount": "Verifica tu cuenta",
+	"labelVerifyYourAccountDescription": "Ingresa tu correo y contraseña para verificar tu cuenta:",
+	"buttonVerifyAccount": "Verificar cuenta",
 	"labelNoInternetConnection": "Por favor verifica tu conexión e intentalo de nuevo",
 	"buttonTryAgain": "Intentar de nuevo"
 }
