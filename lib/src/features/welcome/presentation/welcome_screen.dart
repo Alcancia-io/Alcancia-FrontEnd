@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:alcancia/src/features/registration/model/user_registration_model.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
 import 'package:alcancia/src/shared/components/alcancia_logo.dart';
@@ -22,6 +24,7 @@ class WelcomeScreen extends ConsumerWidget {
   final bool? errorEmail;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final brightness = Theme.of(context).brightness;
     final size = MediaQuery.of(context).size;
     final screenHeight = size.height;
     final screenWidth = size.width;
@@ -132,40 +135,62 @@ class WelcomeScreen extends ConsumerWidget {
                             ],
                           ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            AlcanciaSquareTitle(
-                                onTap: () async {
-                                  await ThirdPartyAuthService()
-                                      .signInWithGoogle()
-                                      .then((value) {
-                                    context.push("/stepper-registration",
-                                        extra: RegistrationParam(
-                                            user: value.user!,
-                                            isCompleteRegistration: false));
-                                  });
-                                },
-                                imagePath:
-                                    "lib/src/resources/images/icons8-google-48.png"),
-                            const SizedBox(
-                              width: 25,
+                        if (Platform.isIOS) ... [
+                          SignInWithAppleButton(
+                            onPressed: () async {
+                              final credential = await SignInWithApple.getAppleIDCredential(
+                                scopes: [
+                                  AppleIDAuthorizationScopes.email,
+                                  AppleIDAuthorizationScopes.fullName,
+                                ],
+                              );
+                              print(credential);
+                              print(credential.email);
+                              print(credential.identityToken);
+                            },
+                            style: brightness == Brightness.dark ? SignInWithAppleButtonStyle.white : SignInWithAppleButtonStyle.black,
+                          ),
+                        ] else if (Platform.isAndroid) ... [
+                          OutlinedButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(Colors.white),
                             ),
-                            AlcanciaSquareTitle(
-                                onTap: () async {
-                                  final credential = await SignInWithApple.getAppleIDCredential(
-                                    scopes: [
-                                      AppleIDAuthorizationScopes.email,
-                                      AppleIDAuthorizationScopes.fullName,
-                                    ],
-                                  );
-                                  print(credential);
-                                  print(credential.email);
-                                },
-                                imagePath:
-                                    "lib/src/resources/images/icons8-apple-48.png"),
-                          ],
-                        ),
+                            onPressed: () async {
+                              await ThirdPartyAuthService()
+                                  .signInWithGoogle()
+                                  .then((value) {
+                                context.push("/stepper-registration",
+                                    extra: RegistrationParam(
+                                        user: value.user!,
+                                        isCompleteRegistration: false));
+                              });
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Image(
+                                    image: AssetImage("lib/src/resources/images/icons8-google-48.png"),
+                                    height: 35.0,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 10),
+                                    child: Text(
+                                      'Sign in with Google',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.black54,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ]
                       ],
                     ),
                   )),
