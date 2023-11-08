@@ -65,6 +65,7 @@ class TransactionDetail extends ConsumerWidget {
                       rightText: txn.transactionID
                           .substring(0, txn.transactionID.indexOf('-')),
                       supportsClipboard: true,
+                      underlinedClipboard: true,
                     ),
                     if (txn.type == TransactionType.deposit) ...[
                       TransactionDetailItem(

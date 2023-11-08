@@ -46,7 +46,7 @@ class DepositInfoItem extends StatelessWidget {
             ),
           ),
           if (supportsClipboard) ...[
-            AlcanciaCopyToClipboard(
+            AlcanciaCopyToClipboardButton(
                 displayText: "${title} ${appLoc.alertCopied.toLowerCase()}",
                 textToCopy: subtitle),
           ]

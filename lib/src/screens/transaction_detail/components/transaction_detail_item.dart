@@ -7,12 +7,14 @@ class TransactionDetailItem extends StatelessWidget {
   final String? rightText;
   final Widget? rightIcon;
   final bool supportsClipboard;
+  final bool underlinedClipboard;
   const TransactionDetailItem({
     Key? key,
     required this.leftText,
     this.rightText,
     this.rightIcon,
     this.supportsClipboard = false,
+    this.underlinedClipboard = false,
   }) : super(key: key);
 
   @override
@@ -30,10 +32,20 @@ class TransactionDetailItem extends StatelessWidget {
           if (rightIcon != null) ...[
             rightIcon!,
           ] else if (rightText != null) ...[
-            Text(rightText!),
+            if (supportsClipboard && underlinedClipboard) ...[
+              AlcanciaCopyToClipboardText(
+                displayText: "${leftText} ${appLoc.alertCopied.toLowerCase()}",
+                textToCopy: rightText!,
+              ),
+            ] else ...[
+              Text(
+                rightText!,
+                style: const TextStyle(fontSize: 15),
+              ),
+            ]
           ],
-          if (supportsClipboard) ...[
-            AlcanciaCopyToClipboard(
+          if (supportsClipboard && !underlinedClipboard) ...[
+            AlcanciaCopyToClipboardButton(
                 displayText: "${leftText} ${appLoc.alertCopied.toLowerCase()}",
                 textToCopy: rightText!),
           ]
