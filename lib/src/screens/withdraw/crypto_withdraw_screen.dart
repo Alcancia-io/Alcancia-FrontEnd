@@ -61,7 +61,7 @@ class _CryptoWithdrawScreenState extends ConsumerState<CryptoWithdrawScreen> {
     final appLoc = AppLocalizations.of(context)!;
     final txtTheme = Theme.of(context).textTheme;
     final totalUserBalance = ref.watch(balanceProvider);
-    final balance = totalUserBalance.usdcBalance - 1;
+    final balance = totalUserBalance.total - 1;
 
     if (_isLoading) {
       return const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator())));

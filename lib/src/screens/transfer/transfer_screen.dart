@@ -131,9 +131,7 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
     final appLoc = AppLocalizations.of(context)!;
     final txtTheme = Theme.of(context).textTheme;
     final userBalance = ref.watch(balanceProvider);
-    final balance = sourceCurrency == "usdc"
-        ? userBalance.usdcBalance
-        : userBalance.celoBalance;
+    final balance = userBalance.total;
 
     final screenWidth = MediaQuery.of(context).size.width;
 

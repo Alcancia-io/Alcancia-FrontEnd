@@ -129,13 +129,6 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
     countries.insert(0, code);
   }
 
-  double getBalance(Balance balance, String currency) {
-    if (currency == "USDC") {
-      return balance.usdcBalance;
-    } else {
-      return balance.celoBalance;
-    }
-  }
 
   String getSourceCurrency(String country) {
     if (country == "México") {
@@ -231,10 +224,10 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
                   height: 10,
                 ),
                 if (country == "México") ...[
-                  MXNFields(getBalance(userBalance, sourceMXNCurrency), context,
+                  MXNFields(userBalance.total, context,
                       sourceCurrenciesMXN),
                 ] else if (country == "República Dominicana") ...[
-                  DOPFields(getBalance(userBalance, sourceDOPCurrency), context,
+                  DOPFields(userBalance.total, context,
                       sourceCurrenciesDOP, dopBanks),
                 ],
                 Padding(
