@@ -34,16 +34,7 @@ class _BalanceCarouselState extends State<BalanceCarousel> {
         title: appLoc.labelTotalBalance,
         value: widget.balance.total,
         currency: "USD");
-    final cUSDBalanceItem = BalanceItem(
-        title: appLoc.labelCELOBalance,
-        value: widget.balance.celoBalance,
-        currency: "CUSD");
-    final usdcBalanceItem = BalanceItem(
-        title: appLoc.labelUSDCBalance,
-        value: widget.balance.usdcBalance,
-        currency: "USDC");
-    var carouselItems = [totalBalanceItem, usdcBalanceItem, cUSDBalanceItem];
-    if (widget.balance.celoBalance == 0) carouselItems = [totalBalanceItem];
+    var carouselItems = [totalBalanceItem];
     return Column(
       children: [
         CarouselSlider.builder(
