@@ -12,10 +12,13 @@ class DecimalTextInputFormatter extends TextInputFormatter {
       TextEditingValue oldValue, // unused.
       TextEditingValue newValue,
       ) {
-    TextSelection newSelection = newValue.selection;
-    String truncated = newValue.text;
+    final newVal = newValue.copyWith(
+      text: newValue.text.replaceAll(',', '.'),
+    );
+    TextSelection newSelection = newVal.selection;
+    String truncated = newVal.text;
 
-    String value = newValue.text;
+    String value = newVal.text;
 
     if (value.contains(".") &&
         value.substring(value.indexOf(".") + 1).length > decimalRange) {
@@ -24,7 +27,7 @@ class DecimalTextInputFormatter extends TextInputFormatter {
     } else if (value == ".") {
       truncated = "0.";
 
-      newSelection = newValue.selection.copyWith(
+      newSelection = newVal.selection.copyWith(
         baseOffset: math.min(truncated.length, truncated.length + 1),
         extentOffset: math.min(truncated.length, truncated.length + 1),
       );
