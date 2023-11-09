@@ -107,7 +107,7 @@ class WelcomeScreen extends ConsumerWidget {
                           onPressed: () {
                             context.push('/stepper-registration',
                                 extra: RegistrationParam(
-                                    user: null, isCompleteRegistration: false));
+                                    user: null, isCompleteRegistration: true));
                           },
                         ),
                         Padding(
@@ -135,10 +135,11 @@ class WelcomeScreen extends ConsumerWidget {
                             ],
                           ),
                         ),
-                        if (Platform.isIOS) ... [
+                        if (Platform.isIOS) ...[
                           SignInWithAppleButton(
                             onPressed: () async {
-                              final credential = await SignInWithApple.getAppleIDCredential(
+                              final credential =
+                                  await SignInWithApple.getAppleIDCredential(
                                 scopes: [
                                   AppleIDAuthorizationScopes.email,
                                   AppleIDAuthorizationScopes.fullName,
@@ -148,12 +149,15 @@ class WelcomeScreen extends ConsumerWidget {
                               print(credential.email);
                               print(credential.identityToken);
                             },
-                            style: brightness == Brightness.dark ? SignInWithAppleButtonStyle.white : SignInWithAppleButtonStyle.black,
+                            style: brightness == Brightness.dark
+                                ? SignInWithAppleButtonStyle.white
+                                : SignInWithAppleButtonStyle.black,
                           ),
-                        ] else if (Platform.isAndroid) ... [
+                        ] else if (Platform.isAndroid) ...[
                           OutlinedButton(
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(Colors.white),
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.white),
                             ),
                             onPressed: () async {
                               await ThirdPartyAuthService()
@@ -172,7 +176,8 @@ class WelcomeScreen extends ConsumerWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Image(
-                                    image: AssetImage("lib/src/resources/images/icons8-google-48.png"),
+                                    image: AssetImage(
+                                        "lib/src/resources/images/icons8-google-48.png"),
                                     height: 35.0,
                                   ),
                                   Padding(

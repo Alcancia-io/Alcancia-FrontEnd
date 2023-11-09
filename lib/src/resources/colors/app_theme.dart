@@ -23,17 +23,16 @@ class AlcanciaTheme {
       brightness: Brightness.light,
       scaffoldBackgroundColor: alcanciaBgLight,
       primaryColor: alcanciaBgLight,
+      primarySwatch: const MaterialColor(0xFF4E76E5, color),
       cardColor: alcanciaBgLight,
       backgroundColor: alcanciaBgLight,
       fontFamily: 'Gotham',
       textTheme: _textTheme,
       textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(
-          textStyle: const TextStyle(fontFamily: 'Gotham'),
-          splashFactory: NoSplash.splashFactory,
-          shadowColor: Colors.transparent
-        )
-      ),
+          style: TextButton.styleFrom(
+              textStyle: const TextStyle(fontFamily: 'Gotham'),
+              splashFactory: NoSplash.splashFactory,
+              shadowColor: Colors.transparent)),
       iconTheme: const IconThemeData(color: Colors.black),
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(

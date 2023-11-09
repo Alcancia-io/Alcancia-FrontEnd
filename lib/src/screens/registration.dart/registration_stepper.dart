@@ -4,16 +4,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fx_stepper/fx_stepper.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/registration/data/gender.dart';
 import '../../features/registration/model/user_registration_model.dart';
 import '../../features/registration/presentation/gender_picker.dart';
 import '../../features/registration/presentation/registration_screen.dart';
+import '../../resources/colors/app_theme.dart';
 import '../../resources/colors/colors.dart';
 import '../../shared/components/alcancia_components.dart';
 import '../../shared/components/alcancia_toolbar.dart';
 import '../../shared/models/kyc_status.dart';
 import '../../shared/models/user_model.dart' as user_model;
+import '../../shared/services/responsive_service.dart';
 
 class RegistrationStepper extends ConsumerStatefulWidget {
   const RegistrationStepper({Key? key, required this.registrationParam})
@@ -84,6 +87,9 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
     final appLocalization = AppLocalizations.of(context)!;
     final selectedDate = ref.watch(selectedDateProvider);
     final selectedGender = ref.watch(selectedGenderProvider);
+    final ResponsiveService responsiveService = ResponsiveService();
+    final screenHeight = size.height;
+    final screenWidth = size.width;
 
     return Scaffold(
       appBar: AlcanciaToolbar(
@@ -91,72 +97,169 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
         state: StateToolbar.logoLetters,
         logoHeight: size.height / 16,
       ),
-      body: Stepper(
-        type: widget.registrationParam.isCompleteRegistration == true
-            ? StepperType.vertical
-            : StepperType.horizontal,
-        steps: widget.registrationParam.isCompleteRegistration == true
-            ? getStepsCompleteRegistration(
-                appLocalization, selectedDate, selectedGender)
-            : getSteps(appLocalization, selectedDate, selectedGender),
-        currentStep: currentStep,
-        onStepContinue: () {
-          if (widget.registrationParam.isCompleteRegistration != true) {
-            //Condiciones que solo aplican para Stepper Thirdparty signIn
-            if (!validDate(selectedDate) && currentStep == 0) {
-              return;
-            }
-            if (selectedGender == null && currentStep == 1) {
-              return;
-            }
-          }
-          final isLastStep = currentStep ==
-              getSteps(appLocalization, selectedDate, selectedGender).length -
-                  1;
-          if (isLastStep) {
-            if (_formKeyBirth.currentState!.validate() &&
-                _formKeyGender.currentState!.validate() &&
-                _formKeyPass.currentState!.validate()) {
-              final user = user_model.User(
-                id: "",
-                authId: "",
-                name: widget.registrationParam.user!.displayName!,
-                surname: "",
-                email: widget.registrationParam.user!.email!,
-                gender: selectedGender.string(appLocalization),
-                phoneNumber: "",
-                dob: selectedDate,
-                walletAddress: "",
-                country: '',
-                profession: '',
-                kycStatus: KYCStatus.none,
-              );
-              if (isValid(selectedGender, selectedDate)) {
-                context.push(
-                  "/phone-registration",
-                  extra: UserRegistrationModel(
-                      user: user,
-                      password: passwordController.text,
-                      thirdSignin: true),
-                );
+      body: Theme(
+        data: (MediaQuery.of(context).platformBrightness == Brightness.light)
+            ? AlcanciaTheme.lightTheme
+            : AlcanciaTheme.darkTheme,
+        child: FxStepper(
+          type: FxStepperType.horizontal,
+          steps: widget.registrationParam.isCompleteRegistration == true
+              ? getStepsCompleteRegistration(
+                  appLocalization, selectedDate, selectedGender)
+              : getSteps(appLocalization, selectedDate, selectedGender),
+          currentStep: currentStep,
+          onStepContinue: () {
+            if (widget.registrationParam.isCompleteRegistration != true) {
+              //Condiciones que solo aplican para Stepper Thirdparty signIn
+              if (!validDate(selectedDate) && currentStep == 0) {
+                return;
+              }
+              if (selectedGender == null && currentStep == 1) {
+                return;
               }
             }
-          } else {
-            setState(() => currentStep += 1);
-          }
-        },
-        onStepCancel: () =>
-            currentStep == 0 ? null : setState(() => currentStep--),
+            var isLastStep = false;
+            if (widget.registrationParam.isCompleteRegistration != true) {
+              isLastStep = currentStep ==
+                  getSteps(appLocalization, selectedDate, selectedGender)
+                          .length -
+                      1;
+            } else {
+              isLastStep = currentStep ==
+                  getStepsCompleteRegistration(
+                              appLocalization, selectedDate, selectedGender)
+                          .length -
+                      1;
+            }
+            //Check if third party registration is valid
+            if (isLastStep &&
+                widget.registrationParam.isCompleteRegistration != true) {
+              if (_formKeyBirth.currentState!.validate() &&
+                  _formKeyGender.currentState!.validate() &&
+                  _formKeyPass.currentState!.validate()) {
+                final user = user_model.User(
+                  id: "",
+                  authId: "",
+                  name: widget.registrationParam.user!.displayName!,
+                  surname: "",
+                  email: widget.registrationParam.user!.email!,
+                  gender: selectedGender.string(appLocalization),
+                  phoneNumber: "",
+                  dob: selectedDate,
+                  walletAddress: "",
+                  country: '',
+                  profession: '',
+                  kycStatus: KYCStatus.none,
+                );
+                if (isValid(selectedGender, selectedDate)) {
+                  context.push(
+                    "/phone-registration",
+                    extra: UserRegistrationModel(
+                        user: user,
+                        password: passwordController.text,
+                        thirdSignin: true),
+                  );
+                }
+              }
+            } //Check if comple registration is valid
+            else if (isLastStep &&
+                widget.registrationParam.isCompleteRegistration == true) {
+              if (_formNameReg.currentState!.validate() &&
+                  _formLastReg.currentState!.validate() &&
+                  _formBirthReg.currentState!.validate() &&
+                  _formGenderReg.currentState!.validate() &&
+                  _formEmailReg.currentState!.validate() &&
+                  _formPassReg.currentState!.validate()) {
+                final user = user_model.User(
+                  id: "",
+                  authId: "",
+                  name: nameController.text,
+                  surname: lastNameController.text,
+                  email: emailController.text,
+                  gender: selectedGender.string(appLocalization),
+                  phoneNumber: "",
+                  dob: selectedDate,
+                  walletAddress: "",
+                  country: '',
+                  profession: '',
+                  kycStatus: KYCStatus.none,
+                );
+                if (isValid(selectedGender, selectedDate)) {
+                  context.push("/phone-registration",
+                      extra: UserRegistrationModel(
+                          user: user, password: passwordController.text));
+                }
+              }
+            } else {
+              setState(() => currentStep += 1);
+            }
+          },
+          onStepCancel: () {
+            currentStep == 0 ? null : setState(() => currentStep--);
+          },
+          controlsBuilder: (context, details) {
+            var isLastStep = false;
+            if (widget.registrationParam.isCompleteRegistration != true) {
+              isLastStep = currentStep ==
+                  getSteps(appLocalization, selectedDate, selectedGender)
+                          .length -
+                      1;
+            } else {
+              isLastStep = currentStep ==
+                  getStepsCompleteRegistration(
+                              appLocalization, selectedDate, selectedGender)
+                          .length -
+                      1;
+            }
+
+            return Container(
+              padding: (isLastStep)
+                  ? EdgeInsets.only(top: size.height * 0.5)
+                  : EdgeInsets.only(top: size.height * 0.6),
+              child: Row(
+                children: [
+                  if (currentStep > 0) ...[
+                    Expanded(
+                      child: AlcanciaButton(
+                        width: screenWidth / 2,
+                        height:
+                            responsiveService.getHeightPixels(64, screenHeight),
+                        color: alcanciaLightBlue,
+                        buttonText: appLocalization.buttonBack,
+                        onPressed: details.onStepCancel,
+                      ),
+                    )
+                  ],
+                  const SizedBox(
+                    width: 12,
+                  ),
+                  Expanded(
+                    child: AlcanciaButton(
+                      width: screenWidth / 2,
+                      height:
+                          responsiveService.getHeightPixels(64, screenHeight),
+                      color: alcanciaLightBlue,
+                      buttonText: isLastStep
+                          ? appLocalization.buttonConfirm
+                          : appLocalization.buttonNext,
+                      onPressed: details.onStepContinue,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
 
-  List<Step> getStepsCompleteRegistration(AppLocalizations appLocalization,
+  List<FxStep> getStepsCompleteRegistration(AppLocalizations appLocalization,
           DateTime selectedDate, Gender? selectedGender) =>
       [
-        Step(
+        FxStep(
             isActive: currentStep >= 0,
-            title: Text(appLocalization.labelBirthdate),
+            title: Text(appLocalization.labelName),
             content: Form(
               key: _formNameReg,
               autovalidateMode: AutovalidateMode.disabled,
@@ -174,9 +277,9 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
                 },
               ),
             )),
-        Step(
-            isActive: currentStep >= 0,
-            title: Text(appLocalization.labelBirthdate),
+        FxStep(
+            isActive: currentStep >= 1,
+            title: Text(appLocalization.labelLastName),
             content: Form(
               key: _formLastReg,
               autovalidateMode: AutovalidateMode.disabled,
@@ -194,8 +297,8 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
                 },
               ),
             )),
-        Step(
-            isActive: currentStep >= 0,
+        FxStep(
+            isActive: currentStep >= 2,
             title: Text(appLocalization.labelBirthdate),
             content: Form(
               key: _formBirthReg,
@@ -219,9 +322,9 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
                 },
               ),
             )),
-        Step(
-            isActive: currentStep >= 0,
-            title: Text(appLocalization.labelBirthdate),
+        FxStep(
+            isActive: currentStep >= 3,
+            title: Text(appLocalization.labelGender),
             content: Form(
               key: _formGenderReg,
               autovalidateMode: AutovalidateMode.disabled,
@@ -234,9 +337,9 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
                 },
               ),
             )),
-        Step(
-            isActive: currentStep >= 0,
-            title: Text(appLocalization.labelBirthdate),
+        FxStep(
+            isActive: currentStep >= 4,
+            title: Text(appLocalization.labelEmail),
             content: Form(
               key: _formEmailReg,
               autovalidateMode: AutovalidateMode.disabled,
@@ -260,9 +363,9 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
                 },
               ),
             )),
-        Step(
-            isActive: currentStep >= 0,
-            title: Text(appLocalization.labelBirthdate),
+        FxStep(
+            isActive: currentStep >= 5,
+            title: Text(appLocalization.labelPassword),
             content: Form(
               key: _formPassReg,
               autovalidateMode: AutovalidateMode.disabled,
@@ -327,10 +430,10 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
               ),
             )),
       ];
-  List<Step> getSteps(AppLocalizations appLocalization, DateTime selectedDate,
+  List<FxStep> getSteps(AppLocalizations appLocalization, DateTime selectedDate,
           Gender? selectedGender) =>
       [
-        Step(
+        FxStep(
           isActive: currentStep >= 0,
           title: Text(appLocalization.labelBirthdate),
           content: Form(
@@ -356,7 +459,7 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
             ),
           ),
         ),
-        Step(
+        FxStep(
           isActive: currentStep >= 1,
           title: Text(appLocalization.labelGender),
           content: Form(
@@ -373,7 +476,7 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
             ),
           ),
         ),
-        Step(
+        FxStep(
           isActive: currentStep >= 2,
           title: Text(appLocalization.labelPassword),
           content: Form(

@@ -260,5 +260,6 @@
 	"buttonUpdate": "Update now",
 	"labelGender": "Gender",
 	"labelAlcanError":"An AlcanError occurred!",
-	"labelEmailUsedFriendlyError":"Oops, apparently the email is already in use."
+	"labelEmailUsedFriendlyError":"Oops, apparently the email is already in use.",
+	"buttonBack":"Back"
 }
