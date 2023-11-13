@@ -357,5 +357,7 @@
 	"labelGender": "Gender",
 	"labelAlcanError":"Ocurrió un AlcanError!",
 	"labelEmailUsedFriendlyError":"Ups, al parecer el correo ya se encuentra en uso.",
-	"buttonBack":"Volver"
+	"buttonBack":"Volver",
+	"signupThirdParty":"Registrate con:",
+	"loginThirdParty":"Inicia sesión con:"
 }

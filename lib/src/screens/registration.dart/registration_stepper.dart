@@ -213,9 +213,9 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
             }
 
             return Container(
-              padding: (isLastStep)
-                  ? EdgeInsets.only(top: size.height * 0.5)
-                  : EdgeInsets.only(top: size.height * 0.6),
+              margin: (isLastStep)
+                  ? EdgeInsets.only(top: size.height * 0.45)
+                  : EdgeInsets.only(top: size.height * 0.55),
               child: Row(
                 children: [
                   if (currentStep > 0) ...[

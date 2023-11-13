@@ -261,5 +261,7 @@
 	"labelGender": "Gender",
 	"labelAlcanError":"An AlcanError occurred!",
 	"labelEmailUsedFriendlyError":"Oops, apparently the email is already in use.",
-	"buttonBack":"Back"
+	"buttonBack":"Back",
+	"signupThirdParty":"Sign up with",
+	"loginThirdParty":"Log in with:"
 }

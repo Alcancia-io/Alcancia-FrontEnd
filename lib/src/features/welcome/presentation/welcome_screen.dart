@@ -96,7 +96,9 @@ class WelcomeScreen extends ConsumerWidget {
                                 fontWeight: FontWeight.w400, fontSize: 16),
                           ),
                         ),
-                        const Spacer(),
+                        const SizedBox(
+                          height: 20,
+                        ),
                         AlcanciaButton(
                           color: alcanciaLightBlue,
                           width: responsiveService.getWidthPixels(
@@ -110,51 +112,114 @@ class WelcomeScreen extends ConsumerWidget {
                                     user: null, isCompleteRegistration: true));
                           },
                         ),
+                        const SizedBox(
+                          height: 20,
+                        ),
                         Padding(
                           padding: EdgeInsets.only(
                               top: responsiveService.getHeightPixels(
-                            8,
+                            1,
                             screenHeight,
                           )),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                              Container(
+                                margin: const EdgeInsets.only(right: 10),
+                                height: 1.0,
+                                width: 76.0,
+                                color: brightness == Brightness.light
+                                    ? Colors.black
+                                    : Colors.white,
+                              ),
                               Text(
-                                appLocalization.labelExistingAccount,
+                                appLocalization.signupThirdParty,
                                 textAlign: TextAlign.center,
                               ),
-                              CupertinoButton(
-                                  child: Text(
-                                    appLocalization.buttonLogIn,
-                                    style: const TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  onPressed: () => context.push("/login")),
+                              Container(
+                                margin: const EdgeInsets.only(left: 10),
+                                height: 1.0,
+                                width: 76.0,
+                                color: brightness == Brightness.light
+                                    ? Colors.black
+                                    : Colors.white,
+                              ),
                             ],
                           ),
                         ),
-                        if (Platform.isIOS) ...[
-                          SignInWithAppleButton(
-                            onPressed: () async {
-                              final credential =
-                                  await SignInWithApple.getAppleIDCredential(
-                                scopes: [
-                                  AppleIDAuthorizationScopes.email,
-                                  AppleIDAuthorizationScopes.fullName,
-                                ],
-                              );
-                              print(credential);
-                              print(credential.email);
-                              print(credential.identityToken);
-                            },
-                            style: brightness == Brightness.dark
-                                ? SignInWithAppleButtonStyle.white
-                                : SignInWithAppleButtonStyle.black,
+                        if (!Platform.isIOS) ...[
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextButton(
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Colors.transparent),
+                                ),
+                                onPressed: () async {
+                                  final credential = await SignInWithApple
+                                      .getAppleIDCredential(
+                                    scopes: [
+                                      AppleIDAuthorizationScopes.email,
+                                      AppleIDAuthorizationScopes.fullName,
+                                    ],
+                                  );
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Image(
+                                        image: AssetImage(brightness ==
+                                                Brightness.dark
+                                            ? "lib/src/resources/images/appleIcon.png"
+                                            : "lib/src/resources/images/appleIconBlack.png"),
+                                        height: 37.0,
+                                        width: 37.0,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              TextButton(
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Colors.transparent),
+                                ),
+                                onPressed: () async {
+                                  await ThirdPartyAuthService()
+                                      .signInWithGoogle()
+                                      .then((value) {
+                                    context.push("/stepper-registration",
+                                        extra: RegistrationParam(
+                                            user: value.user!,
+                                            isCompleteRegistration: false));
+                                  });
+                                },
+                                child: const Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Image(
+                                        image: AssetImage(
+                                            "lib/src/resources/images/googleIcon.png"),
+                                        height: 37.0,
+                                        width: 37.0,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ] else if (Platform.isAndroid) ...[
-                          OutlinedButton(
+                        ] else if (!Platform.isAndroid) ...[
+                          TextButton(
                             style: ButtonStyle(
                               backgroundColor:
                                   MaterialStateProperty.all(Colors.white),
@@ -177,25 +242,40 @@ class WelcomeScreen extends ConsumerWidget {
                                 children: <Widget>[
                                   Image(
                                     image: AssetImage(
-                                        "lib/src/resources/images/icons8-google-48.png"),
-                                    height: 35.0,
+                                        "lib/src/resources/images/googleIcon.png"),
+                                    height: 37.0,
+                                    width: 37.0,
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 10),
-                                    child: Text(
-                                      'Sign in with Google',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.black54,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  )
                                 ],
                               ),
                             ),
                           ),
-                        ]
+                        ],
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: responsiveService.getHeightPixels(
+                            0,
+                            screenHeight,
+                          )),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                appLocalization.labelExistingAccount,
+                                textAlign: TextAlign.center,
+                              ),
+                              CupertinoButton(
+                                  child: Text(
+                                    appLocalization.buttonLogIn,
+                                    style: const TextStyle(
+                                        decoration: TextDecoration.underline,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  onPressed: () => context.push("/login")),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   )),
