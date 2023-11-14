@@ -36,6 +36,11 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
   late String sourceAmount = ""; // value entered in text field
   final sourceAmountController = TextEditingController();
 
+  final minMXNAmount = 200;
+  final maxMXNAmount = 50000;
+  final minDOPAmount = 1;
+  final maxDOPAmount = 150000;
+
   // source amount icons
   List<Map> sourceCurrencyCodes = [
     {"name": "MXN", "icon": "lib/src/resources/images/icon_mexico_flag.png"},
@@ -442,17 +447,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                             ? const CircularProgressIndicator()
                             : AlcanciaButton(
                                 buttonText: appLoc.buttonTransfer,
-                                onPressed: sourceAmount.isEmpty ||
-                                        ((sourceCurrency == 'MXN')
-                                                ? 200
-                                                : 600) >
-                                            int.parse(sourceAmount) ||
-                                        ((sourceCurrency == 'MXN')
-                                                ? 50000
-                                                : 150000) <
-                                            int.parse(sourceAmount)
-                                    ? null
-                                    : () async {
+                                onPressed: _enableButton
+                                    ? () async {
                                         Map<String, dynamic> orderInput = {};
                                         TransactionInput? txnInput;
 
@@ -543,7 +539,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                         setState(() {
                                           _loadingCheckout = false;
                                         });
-                                      },
+                                      } : null,
                                 color: alcanciaLightBlue,
                                 width: double.infinity,
                                 height: responsiveService.getHeightPixels(
@@ -573,26 +569,29 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
 
   String validateAmount(
       String sourceAmount, String sourceCurrency, AppLocalizations appLoc) {
-    int minAmount;
-    int maxAmont;
-
-    if (sourceCurrency == 'MXN') {
-      minAmount = 200;
-      maxAmont = 50000;
-    } else {
-      minAmount = 1;
-      maxAmont = 150000;
-    }
 
     int parsedAmount = int.parse(sourceAmount);
 
-    if (parsedAmount < minAmount) {
-      return (sourceCurrency == 'MXN')
-          ? appLoc.errorMinimumDepositAmount
-          : appLoc.errorMinimumDepositAmountDOP;
-    } else if (parsedAmount > maxAmont) {
-      return appLoc.errorMaximumDepositAmount;
+    if (sourceCurrency == 'MXN') {
+      if (int.parse(sourceAmount) < minMXNAmount) return appLoc.errorMinimumDepositAmount;
+      if (int.parse(sourceAmount) > maxMXNAmount) return appLoc.errorMaximumDepositAmount;
+    } else {
+      if (int.parse(sourceAmount) < minDOPAmount) return appLoc.errorMinimumDepositAmountDOP;
+      if (int.parse(sourceAmount) > maxDOPAmount) return appLoc.errorMaximumDepositAmountDOP;
     }
     return '';
   }
+
+  bool get _enableButton {
+    if (sourceAmount.isEmpty) return false;
+    if (sourceCurrency == 'MXN') {
+      if (int.parse(sourceAmount) < minMXNAmount) return false;
+      if (int.parse(sourceAmount) > maxMXNAmount) return false;
+    } else {
+      if (int.parse(sourceAmount) < minDOPAmount) return false;
+      if (int.parse(sourceAmount) > maxDOPAmount) return false;
+    }
+    return true;
+  }
+
 }
