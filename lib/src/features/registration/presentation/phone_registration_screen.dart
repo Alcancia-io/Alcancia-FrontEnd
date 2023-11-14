@@ -163,8 +163,8 @@ class _PhoneRegistrationScreenState
                                         _launchUrl(widget.url2);
                                       },
                                   ),
-                                  const TextSpan(
-                                    text: " y la ",
+                                  TextSpan(
+                                    text: appLocalization.labelAnd,
                                   ),
                                   TextSpan(
                                     text: appLocalization.labelPrivacyPolicy,

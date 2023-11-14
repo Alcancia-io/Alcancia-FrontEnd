@@ -36,6 +36,7 @@
 	"labelDidNotReceiveCode": "Didn''t get a code?",
 	"errorAcceptPrivacyPolicy": "Accept the Privacy Policy.",
 	"labelReadAndAccepted": "I have read and agreed to the ",
+	"labelAnd": "and the ",
 	"labelEnterCodePhone": "Enter the 6 digit code sent to {phoneNumber}",
 	"labelAccountCreated": "Account created successfully",
 	"labelBalance": "Balance",

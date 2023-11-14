@@ -48,6 +48,7 @@
 	"labelDidNotReceiveCode": "¿No recibiste el código?",
 	"errorAcceptPrivacyPolicy": "Acepta la Política de Privacidad.",
 	"labelReadAndAccepted": "He leído y acepto la ",
+	"labelAnd": "y la ",
 	"labelEnterCodePhone": "Ingresa el código de 6 dígitos que enviamos a tu celular {phoneNumber}",
 	"@labelEnterCodePhone": {
 		"description": "Ask user to enter code sent to phone number",
