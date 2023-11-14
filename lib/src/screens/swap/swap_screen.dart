@@ -580,7 +580,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
       minAmount = 200;
       maxAmont = 50000;
     } else {
-      minAmount = 600;
+      minAmount = 1;
       maxAmont = 150000;
     }
 
