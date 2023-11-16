@@ -44,9 +44,9 @@ class Transaction {
         createdAt: createdAt,
         sourceAmount: double.tryParse(json["sourceAmount"].toString()),
         sourceAsset:
-            CurrencyAsset.values.firstWhereOrNull((e) => e.actualAsset.toLowerCase() == sourceAsset.toString().toLowerCase())?.shownAsset ?? sourceAsset,
+            CurrencyAsset.values.firstWhereOrNull((e) => e.actualAsset.toLowerCase() == sourceAsset.toString().toLowerCase())?.shownAsset.toUpperCase() ?? sourceAsset.toString().toUpperCase(),
         targetAsset:
-            CurrencyAsset.values.firstWhereOrNull((e) => e.actualAsset.toLowerCase() == targetAsset.toString().toLowerCase())?.shownAsset ?? targetAsset,
+            CurrencyAsset.values.firstWhereOrNull((e) => e.actualAsset.toLowerCase() == targetAsset.toString().toLowerCase())?.shownAsset.toUpperCase() ?? targetAsset.toString().toUpperCase(),
         amount: double.parse(json["amount"].toString()),
         type: TransactionType.values.firstWhere((e) => e.name.toUpperCase() == json["type"], orElse: () => TransactionType.unknown),
         status: TransactionStatus.values.firstWhere((e) => e.name.toUpperCase() == json["status"], orElse: () => TransactionStatus.unknown),
