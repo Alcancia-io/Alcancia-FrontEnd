@@ -148,7 +148,7 @@ class WelcomeScreen extends ConsumerWidget {
                             ],
                           ),
                         ),
-                        if (!Platform.isIOS) ...[
+                        if (Platform.isIOS) ...[
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -168,7 +168,8 @@ class WelcomeScreen extends ConsumerWidget {
                                   );
                                 },
                                 child: Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 10, 0, 10),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -218,12 +219,11 @@ class WelcomeScreen extends ConsumerWidget {
                               ),
                             ],
                           ),
-                        ] else if (!Platform.isAndroid) ...[
+                        ] else if (Platform.isAndroid) ...[
                           TextButton(
                             style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(Colors.white),
-                            ),
+                                backgroundColor: MaterialStateProperty.all(
+                                    Colors.transparent)),
                             onPressed: () async {
                               await ThirdPartyAuthService()
                                   .signInWithGoogle()

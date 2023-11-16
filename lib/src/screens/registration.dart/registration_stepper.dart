@@ -1,3 +1,4 @@
+import 'package:alcancia/src/features/registration/model/registration_controller.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
 import 'package:firebase_auth/firebase_auth.dart' as user_fire;
 import 'package:flutter/cupertino.dart';
@@ -10,6 +11,7 @@ import '../../features/registration/data/gender.dart';
 import '../../features/registration/model/user_registration_model.dart';
 import '../../features/registration/presentation/gender_picker.dart';
 import '../../features/registration/presentation/registration_screen.dart';
+import '../../features/registration/provider/registration_controller_provider.dart';
 import '../../resources/colors/app_theme.dart';
 import '../../resources/colors/colors.dart';
 import '../../shared/components/alcancia_components.dart';
@@ -45,13 +47,8 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
 
   var signupInput;
 
-  final _formKeyBirth = GlobalKey<FormState>();
-  final _formKeyGender = GlobalKey<FormState>();
-  final _formKeyPass = GlobalKey<FormState>();
-  final _formNameReg = GlobalKey<FormState>();
-  final _formLastReg = GlobalKey<FormState>();
+  final _formBasicInfo = GlobalKey<FormState>();
   final _formBirthReg = GlobalKey<FormState>();
-  final _formGenderReg = GlobalKey<FormState>();
   final _formEmailReg = GlobalKey<FormState>();
   final _formPassReg = GlobalKey<FormState>();
 
@@ -83,6 +80,7 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
 
   @override
   Widget build(BuildContext context) {
+    final registrationController = ref.watch(registrationControllerProvider);
     final size = MediaQuery.of(context).size;
     final appLocalization = AppLocalizations.of(context)!;
     final selectedDate = ref.watch(selectedDateProvider);
@@ -90,7 +88,11 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
     final ResponsiveService responsiveService = ResponsiveService();
     final screenHeight = size.height;
     final screenWidth = size.width;
-
+    var stepCompleteLength = getStepsCompleteRegistration(
+            appLocalization, selectedDate, selectedGender, size)
+        .length;
+    var stepPartialLength =
+        getSteps(appLocalization, selectedDate, selectedGender, size).length;
     return Scaffold(
       appBar: AlcanciaToolbar(
         toolbarHeight: size.height / 13,
@@ -101,272 +103,395 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
         data: (MediaQuery.of(context).platformBrightness == Brightness.light)
             ? AlcanciaTheme.lightTheme
             : AlcanciaTheme.darkTheme,
-        child: FxStepper(
-          type: FxStepperType.horizontal,
-          steps: widget.registrationParam.isCompleteRegistration == true
-              ? getStepsCompleteRegistration(
-                  appLocalization, selectedDate, selectedGender)
-              : getSteps(appLocalization, selectedDate, selectedGender),
-          currentStep: currentStep,
-          onStepContinue: () {
-            if (widget.registrationParam.isCompleteRegistration != true) {
-              //Condiciones que solo aplican para Stepper Thirdparty signIn
-              if (!validDate(selectedDate) && currentStep == 0) {
-                return;
-              }
-              if (selectedGender == null && currentStep == 1) {
-                return;
-              }
-            }
-            var isLastStep = false;
-            if (widget.registrationParam.isCompleteRegistration != true) {
-              isLastStep = currentStep ==
-                  getSteps(appLocalization, selectedDate, selectedGender)
-                          .length -
-                      1;
-            } else {
-              isLastStep = currentStep ==
-                  getStepsCompleteRegistration(
-                              appLocalization, selectedDate, selectedGender)
-                          .length -
-                      1;
-            }
-            //Check if third party registration is valid
-            if (isLastStep &&
-                widget.registrationParam.isCompleteRegistration != true) {
-              if (_formKeyBirth.currentState!.validate() &&
-                  _formKeyGender.currentState!.validate() &&
-                  _formKeyPass.currentState!.validate()) {
-                final user = user_model.User(
-                  id: "",
-                  authId: "",
-                  name: widget.registrationParam.user!.displayName!,
-                  surname: "",
-                  email: widget.registrationParam.user!.email!,
-                  gender: selectedGender.string(appLocalization),
-                  phoneNumber: "",
-                  dob: selectedDate,
-                  walletAddress: "",
-                  country: '',
-                  profession: '',
-                  kycStatus: KYCStatus.none,
-                );
-                if (isValid(selectedGender, selectedDate)) {
-                  context.push(
-                    "/phone-registration",
-                    extra: UserRegistrationModel(
-                        user: user,
-                        password: passwordController.text,
-                        thirdSignin: true),
-                  );
+        child: Stack(children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: FxStepper(
+              type: FxStepperType.horizontal,
+              steps: widget.registrationParam.isCompleteRegistration == true
+                  ? getStepsCompleteRegistration(
+                      appLocalization, selectedDate, selectedGender, size)
+                  : getSteps(
+                      appLocalization, selectedDate, selectedGender, size),
+              currentStep: currentStep,
+              onStepContinue: () {
+                if (widget.registrationParam.isCompleteRegistration != true) {
+                  //Condiciones que solo aplican para Stepper Thirdparty signIn
+                  if (currentStep == 0) {
+                    if (!_formBasicInfo.currentState!.validate()) {
+                      return;
+                    }
+                  }
+                  if (currentStep == 1) {
+                    if (!_formPassReg.currentState!.validate()) {
+                      return;
+                    }
+                  }
                 }
-              }
-            } //Check if comple registration is valid
-            else if (isLastStep &&
-                widget.registrationParam.isCompleteRegistration == true) {
-              if (_formNameReg.currentState!.validate() &&
-                  _formLastReg.currentState!.validate() &&
-                  _formBirthReg.currentState!.validate() &&
-                  _formGenderReg.currentState!.validate() &&
-                  _formEmailReg.currentState!.validate() &&
-                  _formPassReg.currentState!.validate()) {
-                final user = user_model.User(
-                  id: "",
-                  authId: "",
-                  name: nameController.text,
-                  surname: lastNameController.text,
-                  email: emailController.text,
-                  gender: selectedGender.string(appLocalization),
-                  phoneNumber: "",
-                  dob: selectedDate,
-                  walletAddress: "",
-                  country: '',
-                  profession: '',
-                  kycStatus: KYCStatus.none,
-                );
-                if (isValid(selectedGender, selectedDate)) {
-                  context.push("/phone-registration",
-                      extra: UserRegistrationModel(
-                          user: user, password: passwordController.text));
+                if (widget.registrationParam.isCompleteRegistration == true) {
+                  if (currentStep == 0) {
+                    if (!_formEmailReg.currentState!.validate()) {
+                      return;
+                    } else {
+                      registrationController
+                          .checkUserExists(emailController.text);
+                    }
+                  } else if (currentStep == 1) {
+                    if (!_formBasicInfo.currentState!.validate()) {
+                      return;
+                    }
+                  } else if (currentStep == 2) {
+                    if (!_formPassReg.currentState!.validate()) {
+                      return;
+                    }
+                  }
                 }
-              }
-            } else {
-              setState(() => currentStep += 1);
-            }
-          },
-          onStepCancel: () {
-            currentStep == 0 ? null : setState(() => currentStep--);
-          },
-          controlsBuilder: (context, details) {
-            var isLastStep = false;
-            if (widget.registrationParam.isCompleteRegistration != true) {
-              isLastStep = currentStep ==
-                  getSteps(appLocalization, selectedDate, selectedGender)
-                          .length -
-                      1;
-            } else {
-              isLastStep = currentStep ==
-                  getStepsCompleteRegistration(
-                              appLocalization, selectedDate, selectedGender)
-                          .length -
-                      1;
-            }
-
-            return Container(
-              margin: (isLastStep)
-                  ? EdgeInsets.only(top: size.height * 0.45)
-                  : EdgeInsets.only(top: size.height * 0.55),
-              child: Row(
-                children: [
-                  if (currentStep > 0) ...[
-                    Expanded(
-                      child: AlcanciaButton(
-                        width: screenWidth / 2,
-                        height:
-                            responsiveService.getHeightPixels(64, screenHeight),
-                        color: alcanciaLightBlue,
-                        buttonText: appLocalization.buttonBack,
-                        onPressed: details.onStepCancel,
+                var isLastStep = false;
+                if (widget.registrationParam.isCompleteRegistration != true) {
+                  isLastStep = currentStep == stepPartialLength - 1;
+                } else {
+                  isLastStep = currentStep == stepCompleteLength - 1;
+                }
+                //Check if third party registration is valid
+                if (isLastStep &&
+                    widget.registrationParam.isCompleteRegistration != true) {
+                  if (_formBasicInfo.currentState!.validate() &&
+                      _formPassReg.currentState!.validate()) {
+                    final user = user_model.User(
+                      id: "",
+                      authId: "",
+                      name: widget.registrationParam.user!.displayName!,
+                      surname: "",
+                      email: widget.registrationParam.user!.email!,
+                      gender: selectedGender.string(appLocalization),
+                      phoneNumber: "",
+                      dob: selectedDate,
+                      walletAddress: "",
+                      country: '',
+                      profession: '',
+                      kycStatus: KYCStatus.none,
+                    );
+                    if (isValid(selectedGender, selectedDate)) {
+                      context.push(
+                        "/phone-registration",
+                        extra: UserRegistrationModel(
+                            user: user,
+                            password: passwordController.text,
+                            thirdSignin: true),
+                      );
+                    }
+                  }
+                } //Check if comple registration is valid
+                else if (isLastStep &&
+                    widget.registrationParam.isCompleteRegistration == true) {
+                  if (_formBasicInfo.currentState!.validate() &&
+                      _formBirthReg.currentState!.validate() &&
+                      _formEmailReg.currentState!.validate() &&
+                      _formPassReg.currentState!.validate()) {
+                    final user = user_model.User(
+                      id: "",
+                      authId: "",
+                      name: nameController.text,
+                      surname: lastNameController.text,
+                      email: emailController.text,
+                      gender: selectedGender.string(appLocalization),
+                      phoneNumber: "",
+                      dob: selectedDate,
+                      walletAddress: "",
+                      country: '',
+                      profession: '',
+                      kycStatus: KYCStatus.none,
+                    );
+                    if (isValid(selectedGender, selectedDate)) {
+                      context.push("/phone-registration",
+                          extra: UserRegistrationModel(
+                              user: user, password: passwordController.text));
+                    }
+                  }
+                } else {
+                  setState(() => currentStep += 1);
+                }
+              },
+              physics: const ScrollPhysics(),
+              onStepCancel: () {
+                currentStep == 0 ? null : setState(() => currentStep--);
+              },
+              controlsBuilder: (context, details) {
+                var isLastStep = false;
+                EdgeInsets.only(top: size.height * 0.55);
+                if (widget.registrationParam.isCompleteRegistration != true) {
+                  isLastStep = currentStep == stepPartialLength - 1;
+                } else {
+                  isLastStep = currentStep == stepCompleteLength - 1;
+                }
+                return Container(
+                  child: Row(
+                    children: [
+                      if (currentStep > 0) ...[
+                        Expanded(
+                          child: AlcanciaButton(
+                            width: screenWidth / 2,
+                            height: responsiveService.getHeightPixels(
+                                64, screenHeight),
+                            color: alcanciaLightBlue,
+                            buttonText: appLocalization.buttonBack,
+                            onPressed: details.onStepCancel,
+                          ),
+                        )
+                      ],
+                      const SizedBox(
+                        width: 12,
                       ),
-                    )
-                  ],
-                  const SizedBox(
-                    width: 12,
+                      Expanded(
+                        child: AlcanciaButton(
+                          width: screenWidth / 2,
+                          height: responsiveService.getHeightPixels(
+                              64, screenHeight),
+                          color: alcanciaLightBlue,
+                          buttonText: isLastStep
+                              ? appLocalization.buttonConfirm
+                              : appLocalization.buttonNext,
+                          onPressed: details.onStepContinue,
+                        ),
+                      ),
+                    ],
                   ),
-                  Expanded(
-                    child: AlcanciaButton(
-                      width: screenWidth / 2,
-                      height:
-                          responsiveService.getHeightPixels(64, screenHeight),
-                      color: alcanciaLightBlue,
-                      buttonText: isLastStep
-                          ? appLocalization.buttonConfirm
-                          : appLocalization.buttonNext,
-                      onPressed: details.onStepContinue,
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
+                );
+              },
+            ),
+          ),
+        ]),
       ),
     );
   }
 
   List<FxStep> getStepsCompleteRegistration(AppLocalizations appLocalization,
-          DateTime selectedDate, Gender? selectedGender) =>
+          DateTime selectedDate, Gender? selectedGender, Size size) =>
       [
         FxStep(
             isActive: currentStep >= 0,
-            title: Text(appLocalization.labelName),
-            content: Form(
-              key: _formNameReg,
-              autovalidateMode: AutovalidateMode.disabled,
-              child: LabeledTextFormField(
-                controller: nameController,
-                labelText: appLocalization.labelName,
-                inputType: TextInputType.name,
-                autofillHints: const [AutofillHints.givenName],
-                textInputAction: TextInputAction.next,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return appLocalization.errorRequiredField;
-                  }
-                  return null;
-                },
+            title: Text(appLocalization.labelEmail),
+            content: Container(
+              height: size.height - (size.height * 0.35),
+              child: Form(
+                key: _formEmailReg,
+                autovalidateMode: AutovalidateMode.disabled,
+                child: LabeledTextFormField(
+                  controller: emailController,
+                  labelText: appLocalization.labelEmail,
+                  inputType: TextInputType.emailAddress,
+                  autofillHints: const [AutofillHints.email],
+                  textInputAction: TextInputAction.next,
+                  validator: (value) {
+                    if (ref.watch(emailsInUseProvider).contains(value)) {
+                      return appLocalization.errorEmailInUse;
+                    }
+                    if (value == null || value.isEmpty) {
+                      return appLocalization.errorRequiredField;
+                    } else {
+                      return value.isValidEmail()
+                          ? null
+                          : appLocalization.errorEmailFormat;
+                    }
+                  },
+                ),
               ),
             )),
         FxStep(
             isActive: currentStep >= 1,
-            title: Text(appLocalization.labelLastName),
-            content: Form(
-              key: _formLastReg,
-              autovalidateMode: AutovalidateMode.disabled,
-              child: LabeledTextFormField(
-                controller: lastNameController,
-                labelText: appLocalization.labelLastName,
-                inputType: TextInputType.name,
-                autofillHints: const [AutofillHints.familyName],
-                textInputAction: TextInputAction.next,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return appLocalization.errorRequiredField;
-                  }
-                  return null;
-                },
+            title: Text(appLocalization.labelBasicInfo),
+            content: Container(
+              height: size.height - (size.height * 0.35),
+              child: Form(
+                key: _formBasicInfo,
+                autovalidateMode: AutovalidateMode.disabled,
+                child: Column(children: [
+                  LabeledTextFormField(
+                    controller: nameController,
+                    labelText: appLocalization.labelName,
+                    inputType: TextInputType.name,
+                    autofillHints: const [AutofillHints.givenName],
+                    textInputAction: TextInputAction.next,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return appLocalization.errorRequiredField;
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  LabeledTextFormField(
+                    controller: lastNameController,
+                    labelText: appLocalization.labelLastName,
+                    inputType: TextInputType.name,
+                    autofillHints: const [AutofillHints.familyName],
+                    textInputAction: TextInputAction.next,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return appLocalization.errorRequiredField;
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  AlcanciaDatePicker(
+                    dateProvider: selectedDateProvider,
+                    validator: (selectedDate) {
+                      if (selectedDate != null) {
+                        DateTime adultDate = DateTime(
+                          selectedDate.year + 18,
+                          selectedDate.month,
+                          selectedDate.day,
+                        );
+
+                        if (adultDate.isBefore(DateTime.now())) {
+                          return null;
+                        }
+                        return appLocalization.errorAge;
+                      }
+                      return appLocalization.labelSelectDate;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  GenderPicker(
+                    selectedGenderProvider: selectedGenderProvider,
+                    validator: (Gender? gender) {
+                      if (selectedGender == null)
+                        return appLocalization.errorSelectGender;
+                      return null;
+                    },
+                  ),
+                ]),
               ),
             )),
         FxStep(
             isActive: currentStep >= 2,
-            title: Text(appLocalization.labelBirthdate),
-            content: Form(
-              key: _formBirthReg,
-              autovalidateMode: AutovalidateMode.disabled,
-              child: AlcanciaDatePicker(
-                dateProvider: selectedDateProvider,
-                validator: (selectedDate) {
-                  if (selectedDate != null) {
-                    DateTime adultDate = DateTime(
-                      selectedDate.year + 18,
-                      selectedDate.month,
-                      selectedDate.day,
-                    );
-
-                    if (adultDate.isBefore(DateTime.now())) {
-                      return null;
-                    }
-                    return appLocalization.errorAge;
-                  }
-                  return appLocalization.labelSelectDate;
-                },
-              ),
-            )),
-        FxStep(
-            isActive: currentStep >= 3,
-            title: Text(appLocalization.labelGender),
-            content: Form(
-              key: _formGenderReg,
-              autovalidateMode: AutovalidateMode.disabled,
-              child: GenderPicker(
-                selectedGenderProvider: selectedGenderProvider,
-                validator: (Gender? gender) {
-                  if (selectedGender == null)
-                    return appLocalization.errorSelectGender;
-                  return null;
-                },
-              ),
-            )),
-        FxStep(
-            isActive: currentStep >= 4,
-            title: Text(appLocalization.labelEmail),
-            content: Form(
-              key: _formEmailReg,
-              autovalidateMode: AutovalidateMode.disabled,
-              child: LabeledTextFormField(
-                controller: emailController,
-                labelText: appLocalization.labelEmail,
-                inputType: TextInputType.emailAddress,
-                autofillHints: const [AutofillHints.email],
-                textInputAction: TextInputAction.next,
-                validator: (value) {
-                  if (ref.watch(emailsInUseProvider).contains(value)) {
-                    return appLocalization.errorEmailInUse;
-                  }
-                  if (value == null || value.isEmpty) {
-                    return appLocalization.errorRequiredField;
-                  } else {
-                    return value.isValidEmail()
-                        ? null
-                        : appLocalization.errorEmailFormat;
-                  }
-                },
-              ),
-            )),
-        FxStep(
-            isActive: currentStep >= 5,
             title: Text(appLocalization.labelPassword),
-            content: Form(
+            content: Container(
+              height: size.height - (size.height * 0.35),
+              child: Form(
+                key: _formPassReg,
+                autovalidateMode: AutovalidateMode.disabled,
+                child: Column(
+                  children: [
+                    LabeledTextFormField(
+                      controller: passwordController,
+                      labelText: appLocalization.labelPassword,
+                      obscure: obscurePassword,
+                      autofillHints: const [AutofillHints.newPassword],
+                      textInputAction: TextInputAction.next,
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            obscurePassword = !obscurePassword;
+                          });
+                        },
+                        child: Icon(obscurePassword
+                            ? CupertinoIcons.eye
+                            : CupertinoIcons.eye_fill),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return appLocalization.errorRequiredField;
+                        } else {
+                          return value.isValidPassword()
+                              ? null
+                              : appLocalization
+                                  .errorInvalidPassword; // TODO: Password validation text
+                        }
+                      },
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    LabeledTextFormField(
+                      controller: confirmPasswordController,
+                      labelText: appLocalization.labelConfirmPassword,
+                      obscure: obscureConfirmPassword,
+                      textInputAction: TextInputAction.done,
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            obscureConfirmPassword = !obscureConfirmPassword;
+                          });
+                        },
+                        child: Icon(obscureConfirmPassword
+                            ? CupertinoIcons.eye
+                            : CupertinoIcons.eye_fill),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return appLocalization.errorRequiredField;
+                        } else if (value != passwordController.text) {
+                          return appLocalization
+                              .errorPasswordMatch; // TODO: Confirm password validation text
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            )),
+      ];
+  List<FxStep> getSteps(AppLocalizations appLocalization, DateTime selectedDate,
+          Gender? selectedGender, Size size) =>
+      [
+        FxStep(
+          isActive: currentStep >= 0,
+          title: Text(appLocalization.labelBirthdate),
+          content: Container(
+            height: size.height - (size.height * 0.35),
+            child: Form(
+              key: _formBasicInfo,
+              autovalidateMode: AutovalidateMode.disabled,
+              child: Column(children: [
+                AlcanciaDatePicker(
+                  dateProvider: selectedDateProvider,
+                  validator: (selectedDate) {
+                    if (selectedDate != null) {
+                      DateTime adultDate = DateTime(
+                        selectedDate.year + 18,
+                        selectedDate.month,
+                        selectedDate.day,
+                      );
+
+                      if (adultDate.isBefore(DateTime.now())) {
+                        return null;
+                      }
+                      return appLocalization.errorAge;
+                    }
+                    return appLocalization.labelSelectDate;
+                  },
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                GenderPicker(
+                  selectedGenderProvider: selectedGenderProvider,
+                  validator: (Gender? gender) {
+                    if (selectedGender == null) {
+                      return appLocalization.errorSelectGender;
+                    }
+                    return null;
+                  },
+                ),
+              ]),
+            ),
+          ),
+        ),
+        FxStep(
+          isActive: currentStep >= 1,
+          title: Text(appLocalization.labelPassword),
+          content: Container(
+            height: size.height - (size.height * 0.35),
+            child: Form(
               key: _formPassReg,
               autovalidateMode: AutovalidateMode.disabled,
               child: Column(
@@ -428,118 +553,6 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
                   ),
                 ],
               ),
-            )),
-      ];
-  List<FxStep> getSteps(AppLocalizations appLocalization, DateTime selectedDate,
-          Gender? selectedGender) =>
-      [
-        FxStep(
-          isActive: currentStep >= 0,
-          title: Text(appLocalization.labelBirthdate),
-          content: Form(
-            key: _formKeyBirth,
-            autovalidateMode: AutovalidateMode.disabled,
-            child: AlcanciaDatePicker(
-              dateProvider: selectedDateProvider,
-              validator: (selectedDate) {
-                if (selectedDate != null) {
-                  DateTime adultDate = DateTime(
-                    selectedDate.year + 18,
-                    selectedDate.month,
-                    selectedDate.day,
-                  );
-
-                  if (adultDate.isBefore(DateTime.now())) {
-                    return null;
-                  }
-                  return appLocalization.errorAge;
-                }
-                return appLocalization.labelSelectDate;
-              },
-            ),
-          ),
-        ),
-        FxStep(
-          isActive: currentStep >= 1,
-          title: Text(appLocalization.labelGender),
-          content: Form(
-            key: _formKeyGender,
-            autovalidateMode: AutovalidateMode.disabled,
-            child: GenderPicker(
-              selectedGenderProvider: selectedGenderProvider,
-              validator: (Gender? gender) {
-                if (selectedGender == null) {
-                  return appLocalization.errorSelectGender;
-                }
-                return null;
-              },
-            ),
-          ),
-        ),
-        FxStep(
-          isActive: currentStep >= 2,
-          title: Text(appLocalization.labelPassword),
-          content: Form(
-            key: _formKeyPass,
-            autovalidateMode: AutovalidateMode.disabled,
-            child: Column(
-              children: [
-                LabeledTextFormField(
-                  controller: passwordController,
-                  labelText: appLocalization.labelPassword,
-                  obscure: obscurePassword,
-                  autofillHints: const [AutofillHints.newPassword],
-                  textInputAction: TextInputAction.next,
-                  suffixIcon: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        obscurePassword = !obscurePassword;
-                      });
-                    },
-                    child: Icon(obscurePassword
-                        ? CupertinoIcons.eye
-                        : CupertinoIcons.eye_fill),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return appLocalization.errorRequiredField;
-                    } else {
-                      return value.isValidPassword()
-                          ? null
-                          : appLocalization
-                              .errorInvalidPassword; // TODO: Password validation text
-                    }
-                  },
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                LabeledTextFormField(
-                  controller: confirmPasswordController,
-                  labelText: appLocalization.labelConfirmPassword,
-                  obscure: obscureConfirmPassword,
-                  textInputAction: TextInputAction.done,
-                  suffixIcon: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        obscureConfirmPassword = !obscureConfirmPassword;
-                      });
-                    },
-                    child: Icon(obscureConfirmPassword
-                        ? CupertinoIcons.eye
-                        : CupertinoIcons.eye_fill),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return appLocalization.errorRequiredField;
-                    } else if (value != passwordController.text) {
-                      return appLocalization
-                          .errorPasswordMatch; // TODO: Confirm password validation text
-                    }
-                    return null;
-                  },
-                ),
-              ],
             ),
           ),
         ),

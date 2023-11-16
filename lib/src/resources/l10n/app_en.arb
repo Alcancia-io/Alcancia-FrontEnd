@@ -263,5 +263,6 @@
 	"labelEmailUsedFriendlyError":"Oops, apparently the email is already in use.",
 	"buttonBack":"Back",
 	"signupThirdParty":"Sign up with",
-	"loginThirdParty":"Log in with:"
+	"loginThirdParty":"Log in with:",
+	"labelBasicInfo":"Basic info"
 }

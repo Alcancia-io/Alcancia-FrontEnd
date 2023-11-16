@@ -2,6 +2,7 @@ import 'package:alcancia/src/shared/models/user_model.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:alcancia/src/features/registration/data/signup_mutation.dart';
 import 'package:intl/intl.dart';
+import '../../../shared/services/services.dart';
 import 'graphql_config.dart';
 
 class RegistrationController {
@@ -23,12 +24,38 @@ class RegistrationController {
   }
   """;
 
+  static String userExists = """
+query(\$email: String!){
+  userExists(email: \$email)
+}
+""";
+
+  Future<bool> checkUserExists(String email) async {
+    try {
+      GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
+      GraphQLClient client = graphQLConfiguration.clientToQuery();
+      var response = await client.query(QueryOptions(
+          document: gql(userExists),
+          variables: {"email": email.toLowerCase()}));
+      if (response.data != null) {
+        Map<String, dynamic> data = response.data!["userExists"];
+        var res = data as bool;
+        return res;
+      }
+    } catch (error) {
+      return Future.error(error);
+    }
+    return Future.error('Error checking user exists');
+  }
+
   Future<void> resendVerificationCode(String email) async {
     try {
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
       GraphQLClient client = graphQLConfiguration.clientToQuery();
       QueryResult result = await client.query(
-        QueryOptions(document: gql(resendVerificationQuery), variables: {"email": email.toLowerCase()}),
+        QueryOptions(
+            document: gql(resendVerificationQuery),
+            variables: {"email": email.toLowerCase()}),
       );
       if (result.hasException) {
         final e = result.exception?.graphqlErrors[0].message;
@@ -44,7 +71,9 @@ class RegistrationController {
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
       GraphQLClient client = graphQLConfiguration.clientToQuery();
       QueryResult result = await client.query(
-        QueryOptions(document: gql(verifyOTPQuery), variables: {"verificationCode": otp, "email": email.toLowerCase()}),
+        QueryOptions(
+            document: gql(verifyOTPQuery),
+            variables: {"verificationCode": otp, "email": email.toLowerCase()}),
       );
       if (result.hasException) {
         final e = result.exception?.graphqlErrors[0].message;
@@ -70,14 +99,15 @@ class RegistrationController {
     try {
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
       GraphQLClient client = graphQLConfiguration.clientToQuery();
-      QueryResult result = await client
-          .mutate(MutationOptions(document: gql(signupMutation), variables: {"signupUserInput": signupInput}
-              //onCompleted: (resultData) {
-              //  if (resultData != null) {
-              //    context.go("/login");
-              //  }
-              //},
-              ));
+      QueryResult result = await client.mutate(MutationOptions(
+          document: gql(signupMutation),
+          variables: {"signupUserInput": signupInput}
+          //onCompleted: (resultData) {
+          //  if (resultData != null) {
+          //    context.go("/login");
+          //  }
+          //},
+          ));
 
       if (result.hasException) {
         final e = result.exception;

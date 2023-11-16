@@ -359,5 +359,6 @@
 	"labelEmailUsedFriendlyError":"Ups, al parecer el correo ya se encuentra en uso.",
 	"buttonBack":"Volver",
 	"signupThirdParty":"Registrate con:",
-	"loginThirdParty":"Inicia sesión con:"
+	"loginThirdParty":"Inicia sesión con:",
+	"labelBasicInfo":"Info básica"
 }
