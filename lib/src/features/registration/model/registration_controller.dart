@@ -38,9 +38,8 @@ query(\$email: String!){
           document: gql(userExists),
           variables: {"email": email.toLowerCase()}));
       if (response.data != null) {
-        Map<String, dynamic> data = response.data!["userExists"];
-        var res = data as bool;
-        return res;
+        bool data = response.data!["userExists"];
+        return data;
       }
     } catch (error) {
       return Future.error(error);

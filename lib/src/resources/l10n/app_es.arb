@@ -360,5 +360,6 @@
 	"buttonBack":"Volver",
 	"signupThirdParty":"Registrate con:",
 	"loginThirdParty":"Inicia sesión con:",
-	"labelBasicInfo":"Info básica"
+	"labelBasicInfo":"Info básica",
+	"errorEmailInUseMakeLogin": "Este correo ya esta en uso. Haz login."
 }

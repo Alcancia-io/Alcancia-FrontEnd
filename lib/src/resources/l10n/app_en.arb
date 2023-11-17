@@ -264,5 +264,6 @@
 	"buttonBack":"Back",
 	"signupThirdParty":"Sign up with",
 	"loginThirdParty":"Log in with:",
-	"labelBasicInfo":"Basic info"
+	"labelBasicInfo":"Basic info",
+	"errorEmailInUseMakeLogin": "This email is already in use. Log in."
 }

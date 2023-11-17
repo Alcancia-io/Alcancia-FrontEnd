@@ -114,17 +114,45 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
                   : getSteps(
                       appLocalization, selectedDate, selectedGender, size),
               currentStep: currentStep,
-              onStepContinue: () {
+              onStepContinue: () async {
                 if (widget.registrationParam.isCompleteRegistration != true) {
                   //Condiciones que solo aplican para Stepper Thirdparty signIn
                   if (currentStep == 0) {
                     if (!_formBasicInfo.currentState!.validate()) {
                       return;
+                    } else {
+                      setState(() => currentStep += 1);
                     }
-                  }
-                  if (currentStep == 1) {
+                  } else if (currentStep == 1) {
                     if (!_formPassReg.currentState!.validate()) {
                       return;
+                    } else {
+                      if (_formBasicInfo.currentState!.validate() &&
+                          _formPassReg.currentState!.validate()) {
+                        final user = user_model.User(
+                          id: "",
+                          authId: "",
+                          name: widget.registrationParam.user!.displayName!,
+                          surname: "",
+                          email: widget.registrationParam.user!.email!,
+                          gender: selectedGender.string(appLocalization),
+                          phoneNumber: "",
+                          dob: selectedDate,
+                          walletAddress: "",
+                          country: '',
+                          profession: '',
+                          kycStatus: KYCStatus.none,
+                        );
+                        if (isValid(selectedGender, selectedDate)) {
+                          context.push(
+                            "/phone-registration",
+                            extra: UserRegistrationModel(
+                                user: user,
+                                password: passwordController.text,
+                                thirdSignin: true),
+                          );
+                        }
+                      }
                     }
                   }
                 }
@@ -133,83 +161,54 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
                     if (!_formEmailReg.currentState!.validate()) {
                       return;
                     } else {
-                      registrationController
-                          .checkUserExists(emailController.text);
+                      //Check if third party registration is valid
+                      await registrationController
+                          .checkUserExists(emailController.text)
+                          .then((value) {
+                        if (value) {
+                          context.go("/login", extra: emailController.text);
+                          return;
+                        } else {
+                          setState(() => currentStep += 1);
+                        }
+                      });
                     }
                   } else if (currentStep == 1) {
                     if (!_formBasicInfo.currentState!.validate()) {
                       return;
+                    } else {
+                      setState(() => currentStep += 1);
                     }
                   } else if (currentStep == 2) {
                     if (!_formPassReg.currentState!.validate()) {
                       return;
+                    } else {
+                      if (_formBasicInfo.currentState!.validate() &&
+                          _formEmailReg.currentState!.validate() &&
+                          _formPassReg.currentState!.validate()) {
+                        final user = user_model.User(
+                          id: "",
+                          authId: "",
+                          name: nameController.text,
+                          surname: lastNameController.text,
+                          email: emailController.text,
+                          gender: selectedGender.string(appLocalization),
+                          phoneNumber: "",
+                          dob: selectedDate,
+                          walletAddress: "",
+                          country: '',
+                          profession: '',
+                          kycStatus: KYCStatus.none,
+                        );
+                        if (isValid(selectedGender, selectedDate)) {
+                          context.push("/phone-registration",
+                              extra: UserRegistrationModel(
+                                  user: user,
+                                  password: passwordController.text));
+                        }
+                      }
                     }
                   }
-                }
-                var isLastStep = false;
-                if (widget.registrationParam.isCompleteRegistration != true) {
-                  isLastStep = currentStep == stepPartialLength - 1;
-                } else {
-                  isLastStep = currentStep == stepCompleteLength - 1;
-                }
-                //Check if third party registration is valid
-                if (isLastStep &&
-                    widget.registrationParam.isCompleteRegistration != true) {
-                  if (_formBasicInfo.currentState!.validate() &&
-                      _formPassReg.currentState!.validate()) {
-                    final user = user_model.User(
-                      id: "",
-                      authId: "",
-                      name: widget.registrationParam.user!.displayName!,
-                      surname: "",
-                      email: widget.registrationParam.user!.email!,
-                      gender: selectedGender.string(appLocalization),
-                      phoneNumber: "",
-                      dob: selectedDate,
-                      walletAddress: "",
-                      country: '',
-                      profession: '',
-                      kycStatus: KYCStatus.none,
-                    );
-                    if (isValid(selectedGender, selectedDate)) {
-                      context.push(
-                        "/phone-registration",
-                        extra: UserRegistrationModel(
-                            user: user,
-                            password: passwordController.text,
-                            thirdSignin: true),
-                      );
-                    }
-                  }
-                } //Check if comple registration is valid
-                else if (isLastStep &&
-                    widget.registrationParam.isCompleteRegistration == true) {
-                  if (_formBasicInfo.currentState!.validate() &&
-                      _formBirthReg.currentState!.validate() &&
-                      _formEmailReg.currentState!.validate() &&
-                      _formPassReg.currentState!.validate()) {
-                    final user = user_model.User(
-                      id: "",
-                      authId: "",
-                      name: nameController.text,
-                      surname: lastNameController.text,
-                      email: emailController.text,
-                      gender: selectedGender.string(appLocalization),
-                      phoneNumber: "",
-                      dob: selectedDate,
-                      walletAddress: "",
-                      country: '',
-                      profession: '',
-                      kycStatus: KYCStatus.none,
-                    );
-                    if (isValid(selectedGender, selectedDate)) {
-                      context.push("/phone-registration",
-                          extra: UserRegistrationModel(
-                              user: user, password: passwordController.text));
-                    }
-                  }
-                } else {
-                  setState(() => currentStep += 1);
                 }
               },
               physics: const ScrollPhysics(),
@@ -560,8 +559,6 @@ class _RegistrationStepperState extends ConsumerState<RegistrationStepper> {
 
   @override
   void dispose() {
-    passwordController.dispose();
-    confirmPasswordController.dispose();
     super.dispose();
   }
 }

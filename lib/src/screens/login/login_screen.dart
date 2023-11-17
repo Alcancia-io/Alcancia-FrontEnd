@@ -31,8 +31,9 @@ import '../../features/registration/model/user_registration_model.dart';
 import '../../shared/services/auth_service.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({Key? key, this.email}) : super(key: key);
 
+  final String? email;
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
@@ -64,7 +65,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _rememberMe = false;
   bool _obscurePassword = true;
   bool _loading = false;
-
+  bool flagToast = true;
   Future<void> saveUserInfo(String name, String email) async {
     final StorageItem userName = StorageItem("userName", name);
     final StorageItem userEmail = StorageItem("userEmail", email);
@@ -79,6 +80,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     if (userEmail != null) {
       emailController.text = userEmail;
+    } else if (widget.email != null) {
+      emailController.text = widget.email!;
     }
     if (userName != null) {
       setState(() {});
@@ -99,7 +102,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final brightness = Theme.of(context).brightness;
     // for unverified users
     final registrationController = ref.watch(registrationControllerProvider);
-
+    if (widget.email != null && flagToast) {
+      Fluttertoast.showToast(
+          msg: appLocalization.errorEmailInUseMakeLogin,
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      flagToast = false;
+    }
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -267,7 +280,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ],
                           ),
                         ),
-                        if (!Platform.isIOS) ...[
+                        if (Platform.isIOS) ...[
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -337,11 +350,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               ),
                             ],
                           ),
-                        ] else if (!Platform.isAndroid) ...[
+                        ] else if (Platform.isAndroid) ...[
                           TextButton(
                             style: ButtonStyle(
                               backgroundColor:
-                                  MaterialStateProperty.all(Colors.white),
+                                  MaterialStateProperty.all(Colors.transparent),
                             ),
                             onPressed: () async {
                               await ThirdPartyAuthService()
@@ -408,7 +421,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (notVerified) {
         registrationController.resendVerificationCode(emailController.text);
         context.push("/otp", extra: OTPDataModel(email: emailController.text));
-      } else {
         Fluttertoast.showToast(
             msg: e.toString(),
             toastLength: Toast.LENGTH_SHORT,
@@ -511,7 +523,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
             ),
             onPressed: () {
-              context.push("/stepper-registration",
+              context.replace("/stepper-registration",
                   extra: const RegistrationParam(
                       user: null, isCompleteRegistration: true));
             },

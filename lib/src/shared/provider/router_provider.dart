@@ -90,7 +90,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "login",
           path: "/login",
-          builder: (context, state) => const LoginScreen(),
+          builder: (context, state) =>
+              LoginScreen(email: state.extra as String?),
         ),
         GoRoute(
           name: "homescreen",
