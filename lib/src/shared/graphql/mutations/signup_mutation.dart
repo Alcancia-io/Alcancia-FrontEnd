@@ -7,7 +7,7 @@ const String signupMutation = """
 """;
 
 const String confirmSignUpMutation = """
-  mutation(\$input: ConfirmSignUpInput){
+  mutation(\$input: ConfirmSignUpInput!){
     confirmSignUp(input: \$input){
       status
     }
@@ -15,7 +15,7 @@ const String confirmSignUpMutation = """
 """;
 
 const String requestNewVerificationCodeMutation = """
-  mutation(\$input: RequestNewVerificationCodeInput){
+  mutation(\$input: RequestNewVerificationCodeInput!){
     requestNewVerificationCode(input: \$input){
       deliveryMedium
     }
