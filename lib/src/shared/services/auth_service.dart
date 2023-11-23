@@ -29,8 +29,10 @@ class AuthService {
   }
 
   static String deleteAccountQuery = """
-  query {
-    deleteAccount
+  mutation  {
+    deleteUserAccount(){
+      status
+    }
   }
   """;
 
@@ -43,8 +45,8 @@ class AuthService {
   Future<bool> deleteAccount() async {
     try {
       final clientResponse = await client;
-      QueryResult result = await clientResponse.query(
-        QueryOptions(
+      QueryResult result = await clientResponse.mutate(
+        MutationOptions(
           document: gql(deleteAccountQuery),
         ),
       );
