@@ -28,12 +28,6 @@ class AuthService {
     client = graphQLConfig.clientToQuery();
   }
 
-  static String logoutQuery = """
-  query {
-    logout
-  }
-""";
-
   static String deleteAccountQuery = """
   query {
     deleteAccount
@@ -46,23 +40,6 @@ class AuthService {
   }
   """;
 
-  Future<void> logout() async {
-    try {
-      final clientResponse = await client;
-      QueryResult result = await clientResponse.query(
-        QueryOptions(
-          document: gql(logoutQuery),
-        ),
-      );
-
-      if (result.hasException) {
-        return Future.error(result.exception?.graphqlErrors[0].message ?? "Exception");
-      }
-    } catch (e) {
-      return Future.error(e);
-    }
-  }
-
   Future<bool> deleteAccount() async {
     try {
       final clientResponse = await client;
@@ -73,7 +50,8 @@ class AuthService {
       );
 
       if (result.hasException) {
-        return Future.error(result.exception?.graphqlErrors[0].message ?? "Exception");
+        return Future.error(
+            result.exception?.graphqlErrors[0].message ?? "Exception");
       } else if (result.data != null) {
         return result.data!["deleteAccount"] as bool;
       }
@@ -86,17 +64,24 @@ class AuthService {
   Future<QueryResult> completeSignIn(String verificationCode) async {
     final clientResponse = await client;
     return await clientResponse.query(
-      QueryOptions(document: gql(completeSignInQuery), variables: {"verificationCode": verificationCode}),
+      QueryOptions(
+          document: gql(completeSignInQuery),
+          variables: {"verificationCode": verificationCode}),
     );
   }
 
-  Future<QueryResult> login(String email, String password, String deviceToken) async {
+  Future<QueryResult> login(
+      String email, String password, String deviceToken) async {
     final clientResponse = await client;
     return await clientResponse.mutate(
       MutationOptions(
         document: gql(loginMutation),
         variables: {
-          "loginUserInput": {"email": email.toLowerCase(), "password": password, "deviceToken": deviceToken}
+          "loginUserInput": {
+            "email": email.toLowerCase(),
+            "password": password,
+            "deviceToken": deviceToken
+          }
         },
       ),
     );
@@ -113,7 +98,8 @@ class AuthService {
     );
   }
 
-  Future<QueryResult> completeForgotPassword(CompletePasswordInput queryVariables) async {
+  Future<QueryResult> completeForgotPassword(
+      CompletePasswordInput queryVariables) async {
     var clientResponse = await client;
     return clientResponse.mutate(
       MutationOptions(
