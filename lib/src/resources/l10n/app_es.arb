@@ -59,6 +59,7 @@
 			}
 		}
 	},
+	"labelEnterCodePhoneTemp": "Ingresa el código de 6 dígitos que enviamos a tu celular",
 	"labelAccountCreated": "Tu cuenta ha sido creada exitosamente.",
 	"labelBalance": "Balance",
 	"labelBalanceValue": "\\${balance} USDC",

@@ -1,6 +1,9 @@
+import 'package:alcancia/src/shared/graphql/mutations/complete_mfa_sign_in_mutation.dart';
 import 'package:alcancia/src/shared/graphql/mutations/login_mutation.dart';
 import 'package:alcancia/src/shared/graphql/mutations/complete_forgot_password_mutation.dart';
+import 'package:alcancia/src/shared/graphql/mutations/signin_mutation.dart';
 import 'package:alcancia/src/shared/graphql/queries/index.dart';
+import 'package:alcancia/src/shared/models/MFAModel.dart';
 import 'package:alcancia/src/shared/services/graphql_service.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -83,13 +86,21 @@ class AuthService {
     }
   }
 
-  Future<QueryResult> completeSignIn(String verificationCode) async {
+  Future<QueryResult> completeSignIn(
+      MFAInputModel data) async {
     final clientResponse = await client;
-    return await clientResponse.query(
-      QueryOptions(document: gql(completeSignInQuery), variables: {"verificationCode": verificationCode}),
+    return await clientResponse.mutate(
+      MutationOptions(document: gql(completeMFASignInMutation), variables: {
+        "code": data.verificationCode,
+        "email": data.email.toLowerCase(),
+        "token": data.token,
+        "type": data.type,
+        "deviceToken": data.deviceToken
+      }),
     );
   }
 
+  @Deprecated("Use signIn instead")
   Future<QueryResult> login(String email, String password, String deviceToken) async {
     final clientResponse = await client;
     return await clientResponse.mutate(
@@ -97,6 +108,18 @@ class AuthService {
         document: gql(loginMutation),
         variables: {
           "loginUserInput": {"email": email.toLowerCase(), "password": password, "deviceToken": deviceToken}
+        },
+      ),
+    );
+  }
+
+  Future<QueryResult> signIn(String email, String password) async {
+    final clientResponse = await client;
+    return await clientResponse.mutate(
+      MutationOptions(
+        document: gql(signInMutation),
+        variables: {
+          "signInInput": {"email": email.toLowerCase(), "password": password}
         },
       ),
     );
