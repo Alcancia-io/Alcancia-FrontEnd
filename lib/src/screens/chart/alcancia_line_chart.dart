@@ -211,18 +211,20 @@ class _AlcanciaLineChart extends State<AlcanciaLineChart> {
               const SizedBox(
                 height: 27,
               ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 16, left: 6),
-                  child: _LineChart(
-                    isShowingMainData: isShowingMainData,
-                    balanceHist: widget.balanceHist,
+              if (widget.balanceHist.isNotEmpty) ...[
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16, left: 6),
+                    child: _LineChart(
+                      isShowingMainData: isShowingMainData,
+                      balanceHist: widget.balanceHist,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
+                const SizedBox(
+                  height: 10,
+                ),
+              ]
             ],
           ),
           // IconButton(
