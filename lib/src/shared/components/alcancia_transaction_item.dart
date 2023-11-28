@@ -11,7 +11,9 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AlcanciaTransactionItem extends StatelessWidget {
-  const AlcanciaTransactionItem({Key? key, required this.txn, required this.user}) : super(key: key);
+  const AlcanciaTransactionItem(
+      {Key? key, required this.txn, required this.user})
+      : super(key: key);
 
   final Transaction txn;
   final User user;
@@ -31,12 +33,16 @@ class AlcanciaTransactionItem extends StatelessWidget {
         onTap: () {
           context.push('/transaction_detail', extra: txn);
         },
-        child: TransactionItem(txn: txn, user: user,));
+        child: TransactionItem(
+          txn: txn,
+          user: user,
+        ));
   }
 }
 
 class TransactionItem extends ConsumerWidget {
-  const TransactionItem({Key? key, required this.txn, required this.user}) : super(key: key);
+  const TransactionItem({Key? key, required this.txn, required this.user})
+      : super(key: key);
 
   final Transaction txn;
   final User user;
@@ -49,7 +55,7 @@ class TransactionItem extends ConsumerWidget {
       case TransactionType.deposit:
         return Container(
           padding:
-          const EdgeInsets.only(top: 12, bottom: 12, left: 6, right: 6),
+              const EdgeInsets.only(top: 12, bottom: 12, left: 6, right: 6),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -62,7 +68,7 @@ class TransactionItem extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "${txn.type.typeToString(appLoc)} ${txn.sourceAsset}",
+                          "${txn.type.typeToString(appLoc)} ${txn.sourceAsset.toUpperCase()}",
                           style: txtTheme.bodyText2,
                         ),
                         Text(
@@ -82,7 +88,7 @@ class TransactionItem extends ConsumerWidget {
                       children: [
                         Text("\$${txn.sourceAmount?.toStringAsFixed(2)}"),
                         Text(
-                            "\$${txn.amount.toStringAsFixed(2)} ${txn.targetAsset}"),
+                            "\$${txn.amount.toStringAsFixed(2)} ${txn.targetAsset!.toUpperCase()}"),
                       ],
                     ),
                   ),
@@ -97,7 +103,7 @@ class TransactionItem extends ConsumerWidget {
       case TransactionType.withdraw:
         return Container(
           padding:
-          const EdgeInsets.only(top: 12, bottom: 12, left: 6, right: 6),
+              const EdgeInsets.only(top: 12, bottom: 12, left: 6, right: 6),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -110,7 +116,7 @@ class TransactionItem extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "${txn.type.typeToString(appLoc)} ${txn.sourceAsset}",
+                          "${txn.type.typeToString(appLoc)} ${txn.sourceAsset.toUpperCase()}",
                           style: txtTheme.bodyText2,
                         ),
                         Text(
@@ -130,7 +136,7 @@ class TransactionItem extends ConsumerWidget {
                       children: [
                         Text("\$${txn.sourceAmount?.toStringAsFixed(2)}"),
                         Text(
-                            "\$${txn.amount.toStringAsFixed(2)} ${txn.targetAsset}"),
+                            "\$${txn.amount.toStringAsFixed(2)} ${txn.targetAsset!.toUpperCase()}"),
                       ],
                     ),
                   ),
@@ -145,7 +151,7 @@ class TransactionItem extends ConsumerWidget {
       case TransactionType.p2p:
         return Container(
           padding:
-          const EdgeInsets.only(top: 12, bottom: 12, left: 6, right: 6),
+              const EdgeInsets.only(top: 12, bottom: 12, left: 6, right: 6),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -158,7 +164,7 @@ class TransactionItem extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "${txn.type.typeToString(appLoc)} ${txn.sourceAsset}",
+                          "${txn.type.typeToString(appLoc)} ${txn.sourceAsset.toUpperCase()}",
                           style: txtTheme.bodyText2,
                         ),
                         Text(
@@ -174,7 +180,7 @@ class TransactionItem extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.only(right: 6),
                     child: Text(
-                        "\$${txn.amount.toStringAsFixed(2)} ${txn.sourceAsset}"),
+                        "\$${txn.amount.toStringAsFixed(2)} ${txn.sourceAsset!.toUpperCase()}"),
                   ),
                   SvgPicture.asset(
                     "lib/src/resources/images/white_arrow_right.svg",
@@ -187,7 +193,7 @@ class TransactionItem extends ConsumerWidget {
       case TransactionType.unknown:
         return Container(
           padding:
-          const EdgeInsets.only(top: 12, bottom: 12, left: 6, right: 6),
+              const EdgeInsets.only(top: 12, bottom: 12, left: 6, right: 6),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -235,7 +241,7 @@ class TransactionItem extends ConsumerWidget {
       case TransactionType.p2p_ext:
         return Container(
           padding:
-          const EdgeInsets.only(top: 12, bottom: 12, left: 6, right: 6),
+              const EdgeInsets.only(top: 12, bottom: 12, left: 6, right: 6),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -277,4 +283,3 @@ class TransactionItem extends ConsumerWidget {
     }
   }
 }
-
