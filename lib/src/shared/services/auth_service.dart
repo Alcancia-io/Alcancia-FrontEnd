@@ -7,6 +7,8 @@ import 'package:alcancia/src/shared/models/MFAModel.dart';
 import 'package:alcancia/src/shared/services/graphql_service.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
+enum AuthChallengeType { MFA_SETUP, SMS_MFA, SOFTWARE_TOKEN_MFA }
+
 class CompletePasswordInput {
   CompletePasswordInput({this.email, this.newPassword, this.verificationCode});
   String? email = "email";
@@ -66,22 +68,24 @@ class AuthService {
     }
   }
 
-  Future<QueryResult> completeSignIn(
-      MFAInputModel data) async {
+  Future<QueryResult> completeSignIn(MFAInputModel data) async {
     final clientResponse = await client;
     return await clientResponse.mutate(
       MutationOptions(document: gql(completeMFASignInMutation), variables: {
-        "code": data.verificationCode,
-        "email": data.email.toLowerCase(),
-        "token": data.token,
-        "type": data.type,
-        "deviceToken": data.deviceToken
+        "input": {
+          "code": data.verificationCode,
+          "email": data.email.toLowerCase(),
+          "token": data.token,
+          "type": data.type.toString().split('.').last,
+          "deviceToken": data.deviceToken
+        }
       }),
     );
   }
 
   @Deprecated("Use signIn instead")
-  Future<QueryResult> login(String email, String password, String deviceToken) async {
+  Future<QueryResult> login(
+      String email, String password, String deviceToken) async {
     final clientResponse = await client;
     return await clientResponse.mutate(
       MutationOptions(
