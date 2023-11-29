@@ -1,6 +1,6 @@
 const String completeMFASignInMutation = '''
-  mutation(\$completeMFASignInInput: CompleteMFASignInInput!) {
-    completeMFASignIn(input: \$completeMFASignInInput) {
+  mutation(\$input: CompleteMFASignInInput!) {
+    completeMFASignIn(input: \$input) {
       accessToken,
       refreshToken,
       user {

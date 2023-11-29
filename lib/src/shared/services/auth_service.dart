@@ -7,19 +7,14 @@ import 'package:alcancia/src/shared/models/MFAModel.dart';
 import 'package:alcancia/src/shared/services/graphql_service.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-class CompletePasswordInput {
-  CompletePasswordInput({this.email, this.newPassword, this.verificationCode});
+enum AuthChallengeType { MFA_SETUP, SMS_MFA, SOFTWARE_TOKEN_MFA }
+
+class CompleteForgotPasswordInput {
+  CompleteForgotPasswordInput(
+      {this.email, this.newPassword, this.verificationCode});
   String? email = "email";
   String? newPassword = "newPassword";
   String? verificationCode = "123";
-
-  Map<String, dynamic> toMap() {
-    return {
-      "email": email?.toLowerCase(),
-      "newPassword": newPassword,
-      "verificationCode": verificationCode,
-    };
-  }
 }
 
 class AuthService {
@@ -66,22 +61,24 @@ class AuthService {
     }
   }
 
-  Future<QueryResult> completeSignIn(
-      MFAInputModel data) async {
+  Future<QueryResult> completeSignIn(MFAInputModel data) async {
     final clientResponse = await client;
     return await clientResponse.mutate(
       MutationOptions(document: gql(completeMFASignInMutation), variables: {
-        "code": data.verificationCode,
-        "email": data.email.toLowerCase(),
-        "token": data.token,
-        "type": data.type,
-        "deviceToken": data.deviceToken
+        "input": {
+          "code": data.verificationCode,
+          "email": data.email.toLowerCase(),
+          "token": data.token,
+          "type": data.type.toString().split('.').last,
+          "deviceToken": data.deviceToken
+        }
       }),
     );
   }
 
   @Deprecated("Use signIn instead")
-  Future<QueryResult> login(String email, String password, String deviceToken) async {
+  Future<QueryResult> login(
+      String email, String password, String deviceToken) async {
     final clientResponse = await client;
     return await clientResponse.mutate(
       MutationOptions(
@@ -111,22 +108,30 @@ class AuthService {
 
   Future<QueryResult> forgotPassword(String email) async {
     var clientResponse = await client;
-    return clientResponse.query(
-      QueryOptions(
+    return clientResponse.mutate(
+      MutationOptions(
         document: gql(forgotPasswordQuery),
-        variables: {"email": email.toLowerCase()},
+        variables: {
+          "input": {"email": email.toLowerCase()}
+        },
         fetchPolicy: FetchPolicy.noCache,
       ),
     );
   }
 
   Future<QueryResult> completeForgotPassword(
-      CompletePasswordInput queryVariables) async {
+      CompleteForgotPasswordInput queryVariables) async {
     var clientResponse = await client;
     return clientResponse.mutate(
       MutationOptions(
         document: gql(completeForgotPasswordMutation),
-        variables: queryVariables.toMap(),
+        variables: {
+          "input": {
+            "code": queryVariables.verificationCode,
+            "email": queryVariables.email?.toLowerCase(),
+            "newPassword": queryVariables.newPassword,
+          }
+        },
       ),
     );
   }
