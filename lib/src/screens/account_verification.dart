@@ -64,6 +64,11 @@ class _AccountVerificationScreenState extends ConsumerState<AccountVerificationS
     await _storageService.writeSecureData(userEmail);
   }
 
+  Future<void> saveToken(String token) async {
+    final StorageItem storageItem = StorageItem("token", token);
+    await _storageService.writeSecureData(storageItem);
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -188,8 +193,10 @@ class _AccountVerificationScreenState extends ConsumerState<AccountVerificationS
       setState(() {
         _loading = true;
       });
-      final data = await controller.signIn(
-          emailController.text, passwordController.text);
+      final deviceToken = await pushNotifications.messaging.getToken();
+      final data = await controller.login(
+          emailController.text, passwordController.text, deviceToken ?? "");
+      await saveToken(data.token);
       context.push("/mfa", extra: data);
       setState(() {
         _loading = false;
