@@ -1,7 +1,5 @@
 const forgotPasswordQuery = """
-  mutation(\$input: ForgotPasswordInput!) {
-    initiateForgotPasswordRequest(input: \$input){
-      deliveryMedium
-    }
+  query(\$email: String!) {
+    forgotPassword(email: \$email)
   }
 """;

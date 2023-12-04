@@ -1,4 +1,3 @@
-@Deprecated('Use signin_mutation.dart instead')
 const String loginMutation = """
   mutation(\$loginUserInput: LoginUserInput!) {
     login(loginUserInput: \$loginUserInput) {

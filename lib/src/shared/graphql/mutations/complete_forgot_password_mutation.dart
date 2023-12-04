@@ -1,7 +1,5 @@
 const completeForgotPasswordMutation = """
-  mutation(\$input: CompleteForgotPasswordInput!) {
-    completeForgotPasswordRequest(input: \$input){
-      status
-    }
+  mutation complePassword(\$email: String!, \$newPassword: String!, \$verificationCode: String!) {
+    completeForgotPassword(email: \$email, newPassword: \$newPassword, verificationCode: \$verificationCode)
   }
 """;

@@ -1,10 +1,10 @@
 class LoginDataModel {
-  String token;
+  final String token;
+  final String name;
   final String email;
   final String password;
-  final String type;
-  bool rememberMe;
+  final String phoneNumber;
 
-  LoginDataModel(
-      {required this.token, required this.email, required this.password, required this.type, this.rememberMe = false});
+  const LoginDataModel(
+      {required this.token, required this.name, required this.email, required this.password, required this.phoneNumber});
 }
