@@ -290,7 +290,8 @@ final routerProvider = Provider<GoRouter>(
 
         final buildNumber = await getCurrentBuildNumber();
         String supportedVersion = await getCurrentlySupportedAppVersion();
-        final isSupportedVersion = int.parse(buildNumber) >= int.parse(supportedVersion.split(".").last);
+        supportedVersion = supportedVersion.replaceAll("'", "");
+        final isSupportedVersion = int.parse(buildNumber) >= (int.tryParse(supportedVersion.split(".").last) ?? 1000000);
         if (!isSupportedVersion) return requiredUpdateLoc;
 
 

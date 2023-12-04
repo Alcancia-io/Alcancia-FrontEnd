@@ -24,12 +24,21 @@ import 'package:intl/intl_standalone.dart';
 GlobalKey<NavigatorState> navigatorKey =
     GlobalKey(debugLabel: "Main Navigator");
 
+class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext? context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+  }
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initHiveForFlutter();
   if (kReleaseMode) {
     await dotenv.load(fileName: ".env.prod");
   } else {
+    HttpOverrides.global = new MyHttpOverrides();
     await dotenv.load(fileName: ".env.dev");
   }
   try {
