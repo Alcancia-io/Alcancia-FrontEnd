@@ -9,7 +9,7 @@ class LoginController {
     if (response.hasException) {
       return Future.error(response.exception.toString());
     } else if (response.data != null) {
-      return MFAResponseModel.fromMap(response.data!["completeMFASignIn"]);
+      return MFAResponseModel.fromMap(response.data!["completeSignIn"]);
     }
     return Future.error("Unknown MFA error");
   }
@@ -18,8 +18,7 @@ class LoginController {
     AuthService authService = AuthService();
     final response = await authService.signIn(email, password);
     if (response.hasException) {
-      String? error =
-          response.exception?.linkException?.originalException.toString();
+      String? error = response.exception?.linkException?.originalException.toString();
       error ??= response.exception?.graphqlErrors.first.message;
       error ??= response.exception.toString();
       return Future.error(error);
@@ -27,8 +26,7 @@ class LoginController {
       final data = response.data!;
       final token = data["signIn"]["token"] as String;
       final type = data["signIn"]["type"] as String;
-      return LoginDataModel(
-          token: token, email: email, password: password, type: type);
+      return LoginDataModel(token: token, email: email, password: password, type: type);
     }
     return Future.error("Unknown error");
   }
