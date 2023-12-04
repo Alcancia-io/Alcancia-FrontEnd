@@ -8,7 +8,8 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:alcancia/firebase_options.dart';
+import 'package:alcancia/firebase_options-prod.dart' as prod;
+import 'package:alcancia/firebase_options-dev.dart' as dev;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -31,9 +32,17 @@ void main() async {
   } else {
     await dotenv.load(fileName: ".env.dev");
   }
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  try {
+    await Firebase.initializeApp(
+      name: 'Alcancia-${kReleaseMode ? 'prod' : 'dev'}',
+      options: kReleaseMode ? prod.DefaultFirebaseOptions.currentPlatform : dev.DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    if(e is FirebaseException && e.code == 'duplicate-app') {
+      debugPrint("Did you forget to recompile the Runner app, after changing environments?");
+    }
+    rethrow;
+  }
   FlutterError.onError = (errorDetails) {
     if (kReleaseMode) {
       FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
@@ -95,7 +104,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     return GraphQLProvider(
       client: client,
       child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
+        debugShowCheckedModeBanner: true,
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
