@@ -1,14 +1,13 @@
 import 'dart:io';
 
 import 'package:alcancia/src/resources/colors/app_theme.dart';
-import 'package:alcancia/src/screens/error/error_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_error_widget.dart';
 import 'package:alcancia/src/shared/provider/push_notifications_provider.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:alcancia/firebase_options-prod.dart' as prod;
+import 'package:alcancia/firebase_options.dart' as prod;
 import 'package:alcancia/firebase_options-dev.dart' as dev;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -46,6 +45,8 @@ void main() async {
       name: 'Alcancia-${kReleaseMode ? 'prod' : 'dev'}',
       options: kReleaseMode ? prod.DefaultFirebaseOptions.currentPlatform : dev.DefaultFirebaseOptions.currentPlatform,
     );
+    print(prod.DefaultFirebaseOptions.currentPlatform.asMap);
+    print(dev.DefaultFirebaseOptions.currentPlatform.asMap);
   } catch (e) {
     if(e is FirebaseException && e.code == 'duplicate-app') {
       debugPrint("Did you forget to recompile the Runner app, after changing environments?");
