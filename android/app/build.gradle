@@ -76,6 +76,21 @@ android {
         }
     }
 
+    flavorDimensions "mode"
+
+    productFlavors {
+        stage {
+            dimension "mode"
+            resValue "string", "app_name", "Alcancia-ST"
+            versionNameSuffix "-stage"
+            applicationIdSuffix ".stage"
+        }
+        prod {
+            dimension "mode"
+            resValue "string", "app_name", "Alcancia"
+        }
+    }
+
 }
 
 flutter {

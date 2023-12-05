@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:alcancia/firebase_options.dart' as prod;
+import 'package:alcancia/firebase_options-stage.dart' as stage;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -20,7 +21,7 @@ import 'package:intl/intl.dart';
 import 'package:intl/intl_standalone.dart';
 
 GlobalKey<NavigatorState> navigatorKey =
-    GlobalKey(debugLabel: "Main Navigator");
+GlobalKey(debugLabel: "Main Navigator");
 
 class MyHttpOverrides extends HttpOverrides{
   @override
@@ -33,11 +34,12 @@ class MyHttpOverrides extends HttpOverrides{
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initHiveForFlutter();
-  await dotenv.load(fileName: ".env.prod");
+  HttpOverrides.global = new MyHttpOverrides();
+  await dotenv.load(fileName: ".env.dev");
   try {
     await Firebase.initializeApp(
-      name: 'Alcancia',
-      options: prod.DefaultFirebaseOptions.currentPlatform,
+      name: 'Alcancia-stage',
+      options: stage.DefaultFirebaseOptions.currentPlatform,
     );
   } catch (e) {
     if(e is FirebaseException && e.code == 'duplicate-app') {
@@ -77,7 +79,7 @@ class MyApp extends ConsumerStatefulWidget {
 class _MyAppState extends ConsumerState<MyApp> {
   // This widget is the root of your application.
   final PushNotificationProvider pushNotificationProvider =
-      PushNotificationProvider();
+  PushNotificationProvider();
   @override
   void initState() {
     super.initState();
@@ -106,7 +108,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     return GraphQLProvider(
       client: client,
       child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
+        debugShowCheckedModeBanner: true,
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
