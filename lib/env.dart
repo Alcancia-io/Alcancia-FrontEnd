@@ -6,7 +6,7 @@ class Env {
   static var environment = dotenv.env['ENV'] as String;
   static var firebaseAndroidApiKey = dotenv.env['FIREBASE_ANDROID_API_KEY'] as String;
   static var firebaseIosApiKey = dotenv.env['FIREBASE_IOS_API_KEY'] as String;
-  static var firebaseAppIdAndroid = dotenv.env['FIREBASE_APP_ID_ANDROID'] as String;
+  static var firebaseAppIdAndroid = dotenv.env['FIREBASE_ANDROID_APP_ID'] as String;
   static var firebaseAppIdIos = dotenv.env['FIREBASE_IOS_APP_ID'] as String;
   static var firebaseMessageSenderId = dotenv.env['FIREBASE_MESSAGING_SENDER_ID'] as String;
   static var firebaseProjectId = dotenv.env['FIREBASE_PROJECT_ID'] as String;
