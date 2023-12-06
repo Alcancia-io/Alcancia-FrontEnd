@@ -1,15 +1,14 @@
 import 'dart:io';
 
+import 'package:alcancia/env.dart';
 import 'package:alcancia/src/resources/colors/app_theme.dart';
-import 'package:alcancia/src/screens/error/error_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_error_widget.dart';
 import 'package:alcancia/src/shared/provider/push_notifications_provider.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:alcancia/firebase_options-prod.dart' as prod;
-import 'package:alcancia/firebase_options-dev.dart' as dev;
+import 'package:alcancia/firebase_options.dart' as prod;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -35,17 +34,16 @@ class MyHttpOverrides extends HttpOverrides{
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initHiveForFlutter();
-  if (kReleaseMode) {
-    await dotenv.load(fileName: ".env.prod");
-  } else {
+  await dotenv.load(fileName: ".env");
+  if (Env.environment == Environment.stage.name) {
     HttpOverrides.global = new MyHttpOverrides();
-    await dotenv.load(fileName: ".env.dev");
   }
   try {
     await Firebase.initializeApp(
-      name: 'Alcancia-${kReleaseMode ? 'prod' : 'dev'}',
-      options: kReleaseMode ? prod.DefaultFirebaseOptions.currentPlatform : dev.DefaultFirebaseOptions.currentPlatform,
+      name: 'Alcancia',
+      options: prod.DefaultFirebaseOptions.currentPlatform,
     );
+    print(prod.DefaultFirebaseOptions.currentPlatform.asMap);
   } catch (e) {
     if(e is FirebaseException && e.code == 'duplicate-app') {
       debugPrint("Did you forget to recompile the Runner app, after changing environments?");
@@ -113,7 +111,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     return GraphQLProvider(
       client: client,
       child: MaterialApp.router(
-        debugShowCheckedModeBanner: true,
+        debugShowCheckedModeBanner: Env.environment == Environment.stage.name,
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,

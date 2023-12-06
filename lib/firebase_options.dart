@@ -4,11 +4,13 @@ import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
+import 'env.dart';
+
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
 /// Example:
 /// ```dart
-/// import 'firebase_options-prod.dart';
+/// import 'firebase_options.dart';
 /// // ...
 /// await Firebase.initializeApp(
 ///   options: DefaultFirebaseOptions.currentPlatform,
@@ -49,21 +51,21 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCJsVRq5ZUM2BUTIxX5b09uFTY9IM50FqA',
-    appId: '1:770633131725:android:630ce997080e3458d9eb84',
-    messagingSenderId: '770633131725',
-    projectId: 'alcancia-b4b3f',
-    storageBucket: 'alcancia-b4b3f.appspot.com',
+  static FirebaseOptions android = FirebaseOptions(
+    apiKey: Env.firebaseAndroidApiKey,
+    appId: Env.firebaseAppIdAndroid,
+    messagingSenderId: Env.firebaseMessageSenderId,
+    projectId: Env.firebaseProjectId,
+    storageBucket: Env.firebaseStorageBucket,
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCLrh1vb-OSUvE0r9ZKFirL7V3HFdNCxBo',
-    appId: '1:770633131725:ios:e475f46e4cd3f24fd9eb84',
-    messagingSenderId: '770633131725',
-    projectId: 'alcancia-b4b3f',
-    storageBucket: 'alcancia-b4b3f.appspot.com',
-    iosClientId: '770633131725-753kmlr5ersml0rkiee1skuqmth16ejj.apps.googleusercontent.com',
-    iosBundleId: 'io.alcancia.alcancia',
+  static FirebaseOptions ios = FirebaseOptions(
+    apiKey: Env.firebaseIosApiKey,
+    appId: Env.firebaseAppIdIos,
+    messagingSenderId: Env.firebaseMessageSenderId,
+    projectId: Env.firebaseProjectId,
+    storageBucket: Env.firebaseStorageBucket,
+    iosClientId: Env.firebaseIosClientId,
+    iosBundleId: Env.firebaseIosBundleId,
   );
 }

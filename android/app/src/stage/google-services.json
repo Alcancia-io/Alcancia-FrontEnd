@@ -23,6 +23,25 @@
           "other_platform_oauth_client": []
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:985969573040:android:84bc7f6a4aaf6a89dd0f75",
+        "android_client_info": {
+          "package_name": "io.alcancia.alcancia.stage"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDG7SeI2NT2ZRhQfseI2fp3RrvO4Q3K4Yw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
     }
   ],
   "configuration_version": "1"

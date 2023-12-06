@@ -2,22 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CLIENT_ID</key>
-	<string>770633131725-753kmlr5ersml0rkiee1skuqmth16ejj.apps.googleusercontent.com</string>
-	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.770633131725-753kmlr5ersml0rkiee1skuqmth16ejj</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCLrh1vb-OSUvE0r9ZKFirL7V3HFdNCxBo</string>
+	<string>AIzaSyC5-s4PnwY1wADGV_0jCP-559omylJQtjQ</string>
 	<key>GCM_SENDER_ID</key>
-	<string>770633131725</string>
+	<string>985969573040</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>io.alcancia.alcancia</string>
+	<string>io.alcancia.alcancia.stage</string>
 	<key>PROJECT_ID</key>
-	<string>alcancia-b4b3f</string>
+	<string>alcancia-testing</string>
 	<key>STORAGE_BUCKET</key>
-	<string>alcancia-b4b3f.appspot.com</string>
+	<string>alcancia-testing.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:770633131725:ios:e475f46e4cd3f24fd9eb84</string>
+	<string>1:985969573040:ios:10c8d50b73796a22dd0f75</string>
 </dict>
 </plist>
