@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>io.alcancia.alcancia</string>
+	<string>io.alcancia.alcancia.stage</string>
 	<key>PROJECT_ID</key>
 	<string>alcancia-testing</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:985969573040:ios:25cab5bd4ffd3159dd0f75</string>
+	<string>1:985969573040:ios:10c8d50b73796a22dd0f75</string>
 </dict>
 </plist>
