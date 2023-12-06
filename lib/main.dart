@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:alcancia/env.dart';
 import 'package:alcancia/src/resources/colors/app_theme.dart';
 import 'package:alcancia/src/shared/components/alcancia_error_widget.dart';
 import 'package:alcancia/src/shared/provider/push_notifications_provider.dart';
@@ -33,12 +34,16 @@ class MyHttpOverrides extends HttpOverrides{
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initHiveForFlutter();
-  await dotenv.load(fileName: ".env.prod");
+  await dotenv.load(fileName: ".env");
+  if (Env.environment == Environment.stage.name) {
+    HttpOverrides.global = new MyHttpOverrides();
+  }
   try {
     await Firebase.initializeApp(
       name: 'Alcancia',
       options: prod.DefaultFirebaseOptions.currentPlatform,
     );
+    print(prod.DefaultFirebaseOptions.currentPlatform.asMap);
   } catch (e) {
     if(e is FirebaseException && e.code == 'duplicate-app') {
       debugPrint("Did you forget to recompile the Runner app, after changing environments?");
@@ -106,7 +111,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     return GraphQLProvider(
       client: client,
       child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
+        debugShowCheckedModeBanner: Env.environment == Environment.stage.name,
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
