@@ -59,14 +59,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _obscurePassword = true;
   bool _loading = false;
 
-  Future<void> saveUserInfo(String name, String email) async {
-    final StorageItem userName = StorageItem("userName", name);
-    final StorageItem userEmail = StorageItem("userEmail", email);
-
-    await _storageService.writeSecureData(userName);
-    await _storageService.writeSecureData(userEmail);
-  }
-
   readUserInfo() async {
     var userEmail = await _storageService.readSecureData("userEmail");
     userName = await _storageService.readSecureData("userName");
@@ -77,11 +69,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (userName != null) {
       setState(() {});
     }
-  }
-
-  Future<void> saveToken(String token) async {
-    final StorageItem storageItem = StorageItem("token", token);
-    await _storageService.writeSecureData(storageItem);
   }
 
   @override
@@ -249,12 +236,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         _loading = true;
       });
       final deviceToken = await pushNotifications.messaging.getToken();
-      final data = await controller.login(
-          emailController.text, passwordController.text, deviceToken ?? "");
-      await saveToken(data.token);
-      if (_rememberMe) {
-        await saveUserInfo(data.name, data.email);
-      }
+      final data = await controller.signIn(
+          emailController.text, passwordController.text);
+      data.rememberMe = true;
       context.push("/mfa", extra: data);
       setState(() {
         _loading = false;

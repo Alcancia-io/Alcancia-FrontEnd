@@ -38,6 +38,7 @@
 	"labelReadAndAccepted": "I have read and agreed to the ",
 	"labelAnd": "and the ",
 	"labelEnterCodePhone": "Enter the 6 digit code sent to {phoneNumber}",
+	"labelEnterCodePhoneTemp": "Enter the 6 digit code sent to your phone number",
 	"labelAccountCreated": "Account created successfully",
 	"labelBalance": "Balance",
 	"labelBalanceValue": "\\${balance} USDC",
