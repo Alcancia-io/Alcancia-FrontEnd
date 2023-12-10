@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:alcancia/env.dart';
 import 'package:alcancia/src/resources/colors/app_theme.dart';
 import 'package:alcancia/src/shared/components/alcancia_error_widget.dart';
+import 'package:alcancia/src/shared/provider/auth_service_provider.dart';
 import 'package:alcancia/src/shared/provider/push_notifications_provider.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -11,23 +12,24 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:alcancia/firebase_options.dart' as prod;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:alcancia/src/shared/provider/router_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/services.dart';
-import 'package:zendesk_messaging/zendesk_messaging.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:intl/intl.dart';
-import 'package:intl/intl_standalone.dart';
 
 GlobalKey<NavigatorState> navigatorKey =
     GlobalKey(debugLabel: "Main Navigator");
 
-class MyHttpOverrides extends HttpOverrides{
+class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext? context){
+  HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
 
@@ -45,8 +47,9 @@ void main() async {
     );
     print(prod.DefaultFirebaseOptions.currentPlatform.asMap);
   } catch (e) {
-    if(e is FirebaseException && e.code == 'duplicate-app') {
-      debugPrint("Did you forget to recompile the Runner app, after changing environments?");
+    if (e is FirebaseException && e.code == 'duplicate-app') {
+      debugPrint(
+          "Did you forget to recompile the Runner app, after changing environments?");
     }
     rethrow;
   }
@@ -80,6 +83,7 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
+  int attemptsBiometric = 0;
   // This widget is the root of your application.
   final PushNotificationProvider pushNotificationProvider =
       PushNotificationProvider();
@@ -88,6 +92,53 @@ class _MyAppState extends ConsumerState<MyApp> {
     super.initState();
     pushNotificationProvider.initNotifications();
     Intl.systemLocale = Platform.localeName;
+
+    isUserAuthenticated().then((value) async {
+      if (value) {
+        while (attemptsBiometric < 3) {
+          if (await _authenticate()) {
+            return;
+          } else {
+            attemptsBiometric++;
+          }
+        }
+
+        if (attemptsBiometric >= 3) {
+          ref.watch(authServiceProvider).logout();
+          context.go("/");
+        }
+      }
+    });
+  }
+
+  Future<bool> _authenticate() async {
+    try {
+      var localAuth = LocalAuthentication();
+
+      bool canCheckBiometrics = await localAuth.canCheckBiometrics;
+
+      if (canCheckBiometrics) {
+        List<BiometricType> availableBiometrics =
+            await localAuth.getAvailableBiometrics();
+
+        if (availableBiometrics.isNotEmpty) {
+          bool isAuthenticated = await localAuth.authenticate(
+            localizedReason: 'Authenticate to access the app',
+            options: const AuthenticationOptions(
+                useErrorDialogs: true, stickyAuth: false, biometricOnly: false),
+          );
+
+          return isAuthenticated;
+        } else {
+          return false;
+        }
+      } else {
+        return true;
+      }
+    } catch (e) {
+      print('Error during biometric authentication: $e');
+      return false;
+    }
   }
 
   @override
