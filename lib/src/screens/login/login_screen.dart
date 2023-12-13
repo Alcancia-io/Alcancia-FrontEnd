@@ -54,25 +54,29 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final controller = LoginController();
 
   String? userName;
-
+  String? _password;
   bool _rememberMe = false;
   bool _obscurePassword = true;
   bool _loading = false;
 
-  Future<void> saveUserInfo(String name, String email) async {
+  Future<void> saveUserInfo(String name, String email, String pass) async {
     final StorageItem userName = StorageItem("userName", name);
     final StorageItem userEmail = StorageItem("userEmail", email);
-
+    final StorageItem password = StorageItem("password", pass);
     await _storageService.writeSecureData(userName);
     await _storageService.writeSecureData(userEmail);
+    await _storageService.writeSecureData(password);
   }
 
   readUserInfo() async {
     var userEmail = await _storageService.readSecureData("userEmail");
     userName = await _storageService.readSecureData("userName");
-
+    _password = await _storageService.readSecureData("password");
     if (userEmail != null) {
       emailController.text = userEmail;
+    }
+    if (_password != null) {
+      passwordController.text = _password!;
     }
     if (userName != null) {
       setState(() {});
@@ -138,83 +142,80 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 controller: emailController,
                                 labelText: appLocalization.labelEmail,
                                 inputType: TextInputType.emailAddress,
-                                inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r"\s"))],
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.deny(
+                                      RegExp(r"\s"))
+                                ],
                                 validator: (value) {
-                                  if (value == null ||
-                                      value.isEmpty) {
-                                    return appLocalization
-                                        .errorRequiredField;
+                                  if (value == null || value.isEmpty) {
+                                    return appLocalization.errorRequiredField;
                                   } else {
                                     return value.isValidEmail()
                                         ? null
-                                        : appLocalization
-                                            .errorEmailFormat;
+                                        : appLocalization.errorEmailFormat;
                                   }
                                 },
                               ),
                               _buildRememberMe(appLocalization, screenHeight),
+                              LabeledTextFormField(
+                                controller: passwordController,
+                                labelText: appLocalization.labelPassword,
+                                obscure: _obscurePassword,
+                                suffixIcon: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _obscurePassword = !_obscurePassword;
+                                    });
+                                  },
+                                  child: Icon(_obscurePassword
+                                      ? CupertinoIcons.eye
+                                      : CupertinoIcons.eye_fill),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return appLocalization.errorRequiredField;
+                                  }
+                                  return null;
+                                },
+                              ),
                             ],
                           ),
-                        LabeledTextFormField(
-                          controller: passwordController,
-                          labelText: appLocalization.labelPassword,
-                          obscure: _obscurePassword,
-                          suffixIcon: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _obscurePassword = !_obscurePassword;
-                              });
-                            },
-                            child: Icon(_obscurePassword
-                                ? CupertinoIcons.eye
-                                : CupertinoIcons.eye_fill),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return appLocalization
-                                  .errorRequiredField;
-                            }
-                            return null;
-                          },
-                        ),
                         Padding(
                           padding: EdgeInsets.only(
-                              bottom: responsiveService
-                                  .getHeightPixels(6, screenHeight),
-                              top: responsiveService.getHeightPixels(
-                                  6, screenHeight),
+                            bottom: responsiveService.getHeightPixels(
+                                6, screenHeight),
+                            top: responsiveService.getHeightPixels(
+                                6, screenHeight),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               CupertinoButton(
-                                  child: Row(
-                                    children: [
-                                      const Padding(
-                                        padding: EdgeInsets.only(
-                                            right: 4.0),
-                                        child: Icon(CupertinoIcons
-                                            .question_circle),
-                                      ),
-                                      Text(appLocalization
-                                          .labelForgotPassword),
-                                    ],
-                                  ),
-                                  onPressed: () async {
-                                    await _forgotPassword(appLocalization);
-                                  },
+                                child: Row(
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.only(right: 4.0),
+                                      child:
+                                          Icon(CupertinoIcons.question_circle),
+                                    ),
+                                    Text(appLocalization.labelForgotPassword),
+                                  ],
+                                ),
+                                onPressed: () async {
+                                  await _forgotPassword(appLocalization);
+                                },
                               ),
                             ],
                           ),
                         ),
-                        if (_loading) ... [
+                        if (_loading) ...[
                           const Center(
                             child: Padding(
                               padding: EdgeInsets.all(8.0),
                               child: CircularProgressIndicator(),
                             ),
                           ),
-                        ] else ... [
+                        ] else ...[
                           AlcanciaButton(
                             color: alcanciaLightBlue,
                             width: double.infinity,
@@ -223,8 +224,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             buttonText: appLocalization.buttonLogIn,
                             onPressed: () async {
                               await _login(
-                                  pushNotifications,
-                                  registrationController);
+                                  pushNotifications, registrationController);
                             },
                           ),
                         ],
@@ -241,8 +241,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  Future<void> _login(
-      PushNotificationProvider pushNotifications,
+  Future<void> _login(PushNotificationProvider pushNotifications,
       RegistrationController registrationController) async {
     try {
       setState(() {
@@ -253,7 +252,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           emailController.text, passwordController.text, deviceToken ?? "");
       await saveToken(data.token);
       if (_rememberMe) {
-        await saveUserInfo(data.name, data.email);
+        await saveUserInfo(data.name, data.email, data.password);
       }
       context.push("/mfa", extra: data);
       setState(() {
@@ -281,23 +280,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _forgotPassword(appLocalization) async {
-    if (emailController
-        .text.isNotEmpty) {
+    if (emailController.text.isNotEmpty) {
       final StorageItem userEmail =
-      StorageItem("userEmail",
-          emailController.text);
-      await _storageService
-          .writeSecureData(userEmail);
-      context.pushNamed(
-          'forgot-password');
+          StorageItem("userEmail", emailController.text);
+      await _storageService.writeSecureData(userEmail);
+      context.pushNamed('forgot-password');
     } else {
       Fluttertoast.showToast(
-          msg: appLocalization
-              .errorEmailRequired,
-          toastLength:
-          Toast.LENGTH_SHORT,
-          gravity:
-          ToastGravity.BOTTOM,
+          msg: appLocalization.errorEmailRequired,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 2,
           backgroundColor: Colors.red,
           textColor: Colors.white,
@@ -308,25 +300,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget _buildRememberMe(appLocalization, screenHeight) {
     return Padding(
       padding: EdgeInsets.only(
-          bottom: responsiveService
-              .getHeightPixels(
-              6, screenHeight),
-          top: responsiveService
-              .getHeightPixels(
-              6, screenHeight)),
+          bottom: responsiveService.getHeightPixels(6, screenHeight),
+          top: responsiveService.getHeightPixels(6, screenHeight)),
       child: Row(
-        mainAxisAlignment:
-        MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(
             width: 25,
             child: Checkbox(
                 value: _rememberMe,
-                shape:
-                RoundedRectangleBorder(
-                  borderRadius:
-                  BorderRadius.circular(
-                      4),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4),
                 ),
                 onChanged: (value) {
                   setState(() {
@@ -335,10 +319,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 }),
           ),
           Padding(
-            padding: const EdgeInsets.only(
-                left: 8.0),
-            child: Text(appLocalization
-                .labelRememberUser),
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Text(appLocalization.labelRememberUser),
           ),
         ],
       ),
@@ -423,5 +405,4 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       );
     }
   }
-
 }
