@@ -1,5 +1,6 @@
 // Flutter package imports:
 import 'package:alcancia/src/features/registration/model/registration_controller.dart';
+import 'package:alcancia/src/shared/services/biometric_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -135,7 +136,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     Column(
                       children: [
-                        if (userName == null)
+                        if (userName == null) ...[
                           Column(
                             children: [
                               LabeledTextFormField(
@@ -178,57 +179,93 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   return null;
                                 },
                               ),
-                            ],
-                          ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            bottom: responsiveService.getHeightPixels(
-                                6, screenHeight),
-                            top: responsiveService.getHeightPixels(
-                                6, screenHeight),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              CupertinoButton(
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  bottom: responsiveService.getHeightPixels(
+                                      6, screenHeight),
+                                  top: responsiveService.getHeightPixels(
+                                      6, screenHeight),
+                                ),
                                 child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(right: 4.0),
-                                      child:
-                                          Icon(CupertinoIcons.question_circle),
+                                    CupertinoButton(
+                                      child: Row(
+                                        children: [
+                                          const Padding(
+                                            padding:
+                                                EdgeInsets.only(right: 4.0),
+                                            child: Icon(
+                                                CupertinoIcons.question_circle),
+                                          ),
+                                          Text(appLocalization
+                                              .labelForgotPassword),
+                                        ],
+                                      ),
+                                      onPressed: () async {
+                                        await _forgotPassword(appLocalization);
+                                      },
                                     ),
-                                    Text(appLocalization.labelForgotPassword),
                                   ],
                                 ),
-                                onPressed: () async {
-                                  await _forgotPassword(appLocalization);
-                                },
                               ),
+                              if (_loading) ...[
+                                const Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                ),
+                              ] else ...[
+                                AlcanciaButton(
+                                  color: alcanciaLightBlue,
+                                  width: double.infinity,
+                                  height: responsiveService.getHeightPixels(
+                                      64, screenHeight),
+                                  buttonText: appLocalization.buttonLogIn,
+                                  onPressed: () async {
+                                    await _login(pushNotifications,
+                                        registrationController);
+                                  },
+                                ),
+                              ],
                             ],
                           ),
-                        ),
-                        if (_loading) ...[
-                          const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: CircularProgressIndicator(),
-                            ),
-                          ),
+                          _buildFooter(appLocalization: appLocalization),
                         ] else ...[
-                          AlcanciaButton(
-                            color: alcanciaLightBlue,
-                            width: double.infinity,
-                            height: responsiveService.getHeightPixels(
-                                64, screenHeight),
-                            buttonText: appLocalization.buttonLogIn,
-                            onPressed: () async {
-                              await _login(
-                                  pushNotifications, registrationController);
-                            },
-                          ),
-                        ],
-                        _buildFooter(appLocalization: appLocalization),
+                          _buildFooter(appLocalization: appLocalization),
+                          Padding(
+                              padding: EdgeInsets.only(
+                                bottom: responsiveService.getHeightPixels(
+                                    10, screenHeight),
+                                top: responsiveService.getHeightPixels(
+                                    10, screenHeight),
+                              ),
+                              child: null),
+                          if (_loading) ...[
+                            const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: CircularProgressIndicator(),
+                              ),
+                            ),
+                          ] else ...[
+                            AlcanciaButton(
+                              color: alcanciaLightBlue,
+                              width: double.infinity,
+                              height: responsiveService.getHeightPixels(
+                                  64, screenHeight),
+                              buttonText: appLocalization.confirmation,
+                              onPressed: () async {
+                                await BiometricService().authenticate().then(
+                                    (value) => value
+                                        ? _login(pushNotifications,
+                                            registrationController)
+                                        : null);
+                              },
+                            ),
+                          ],
+                        ]
                       ],
                     ),
                   ],

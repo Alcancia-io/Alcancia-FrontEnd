@@ -5,6 +5,7 @@ import 'package:alcancia/src/resources/colors/app_theme.dart';
 import 'package:alcancia/src/shared/components/alcancia_error_widget.dart';
 import 'package:alcancia/src/shared/provider/auth_service_provider.dart';
 import 'package:alcancia/src/shared/provider/push_notifications_provider.dart';
+import 'package:alcancia/src/shared/services/biometric_service.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -96,7 +97,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     isUserAuthenticated().then((value) async {
       if (value) {
         while (attemptsBiometric < 3) {
-          if (await _authenticate()) {
+          if (await BiometricService().authenticate()) {
             return;
           } else {
             attemptsBiometric++;
@@ -109,36 +110,6 @@ class _MyAppState extends ConsumerState<MyApp> {
         }
       }
     });
-  }
-
-  Future<bool> _authenticate() async {
-    try {
-      var localAuth = LocalAuthentication();
-
-      bool canCheckBiometrics = await localAuth.canCheckBiometrics;
-
-      if (canCheckBiometrics) {
-        List<BiometricType> availableBiometrics =
-            await localAuth.getAvailableBiometrics();
-
-        if (availableBiometrics.isNotEmpty) {
-          bool isAuthenticated = await localAuth.authenticate(
-            localizedReason: 'Authenticate to access the app',
-            options: const AuthenticationOptions(
-                useErrorDialogs: true, stickyAuth: false, biometricOnly: false),
-          );
-
-          return isAuthenticated;
-        } else {
-          return false;
-        }
-      } else {
-        return true;
-      }
-    } catch (e) {
-      print('Error during biometric authentication: $e');
-      return false;
-    }
   }
 
   @override
