@@ -157,7 +157,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   }
                                 },
                               ),
-                              _buildRememberMe(appLocalization, screenHeight),
+                              //_buildRememberMe(appLocalization, screenHeight),
                               LabeledTextFormField(
                                 controller: passwordController,
                                 labelText: appLocalization.labelPassword,
@@ -252,10 +252,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ] else ...[
                             AlcanciaButton(
                               color: alcanciaLightBlue,
-                              width: double.infinity,
+                              width: responsiveService.getHeightPixels(
+                                  345, screenHeight),
+                              rounded: true,
+                              foregroundColor: Colors.white,
                               height: responsiveService.getHeightPixels(
                                   64, screenHeight),
-                              buttonText: appLocalization.confirmation,
+                              buttonText: appLocalization.buttonLogIn,
+                              icon: const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    Icons.fingerprint_outlined,
+                                    size: 30,
+                                  )),
                               onPressed: () async {
                                 await BiometricService().authenticate().then(
                                     (value) => value
@@ -288,9 +297,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       final data = await controller.login(
           emailController.text, passwordController.text, deviceToken ?? "");
       await saveToken(data.token);
-      if (_rememberMe) {
-        await saveUserInfo(data.name, data.email, data.password);
-      }
+      await saveUserInfo(data.name, data.email, data.password);
       context.push("/mfa", extra: data);
       setState(() {
         _loading = false;
