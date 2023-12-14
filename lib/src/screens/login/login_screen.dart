@@ -157,7 +157,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   }
                                 },
                               ),
-                              //_buildRememberMe(appLocalization, screenHeight),
+                              const SizedBox(
+                                height: 10,
+                              ),
                               LabeledTextFormField(
                                 controller: passwordController,
                                 labelText: appLocalization.labelPassword,
@@ -383,6 +385,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             setState(() {
               userName = null;
               emailController.text = "";
+              passwordController.text = "";
             });
           },
           child: Row(
