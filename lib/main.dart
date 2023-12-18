@@ -105,8 +105,8 @@ class _MyAppState extends ConsumerState<MyApp> {
         }
 
         if (attemptsBiometric >= 3) {
-          ref.watch(authServiceProvider).logout();
-          context.go("/");
+          await ref.watch(authServiceProvider).logout();
+          context.go("/welcome");
         }
       }
     });

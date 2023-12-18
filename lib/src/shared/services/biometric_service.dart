@@ -15,7 +15,7 @@ class BiometricService {
           bool isAuthenticated = await localAuth.authenticate(
             localizedReason: 'Authenticate to access the app',
             options: const AuthenticationOptions(
-                useErrorDialogs: true, stickyAuth: false, biometricOnly: false),
+                useErrorDialogs: true, stickyAuth: true, biometricOnly: false),
           );
 
           return isAuthenticated;
