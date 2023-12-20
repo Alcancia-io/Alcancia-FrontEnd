@@ -1,6 +1,7 @@
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/provider/auth_service_provider.dart';
 import 'package:alcancia/src/shared/services/biometric_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -46,22 +47,13 @@ class _BiometricAuthenticationScreenState extends ConsumerState<BiometricAuthent
     final appLoc = AppLocalizations.of(context)!;
     final darkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      appBar: AlcanciaToolbar(
-        state: StateToolbar.titleIcon,
-        logoHeight: 38,
-        title: appLoc.labelBiometricAuthentication,
-      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
             padding: const EdgeInsets.all(32.0),
-            child: SvgPicture.asset(
-              'lib/src/resources/images/face_id.svg',
-              height: 150,
-              color: darkMode ? Colors.white : Colors.black,
-            ),
+            child: Icon(CupertinoIcons.lock_fill, size: 128, color: darkMode ? Colors.white : Colors.black),
           ),
           Text(
             appLoc.labelBiometricAuthenticationDescription,
