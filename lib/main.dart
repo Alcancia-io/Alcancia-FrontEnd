@@ -93,23 +93,26 @@ class _MyAppState extends ConsumerState<MyApp> {
     super.initState();
     pushNotificationProvider.initNotifications();
     Intl.systemLocale = Platform.localeName;
+    final biometricService = ref.read(biometricServiceProvider.notifier);
 
-    isUserAuthenticated().then((value) async {
-      if (value) {
-        while (attemptsBiometric < 3) {
-          if (await BiometricService().authenticate()) {
-            return;
-          } else {
-            attemptsBiometric++;
-          }
-        }
-
-        if (attemptsBiometric >= 3) {
-          await ref.watch(authServiceProvider).logout();
-          context.go("/welcome");
-        }
-      }
-    });
+    // isUserAuthenticated().then((value) async {
+    //   if (value) {
+    //     while (attemptsBiometric < 3 && await biometricService.isAppEnrolled()) {
+    //       await biometricService.authenticate();
+    //       final biometricState = ref.read(biometricServiceProvider);
+    //       if (biometricState == true) {
+    //         return;
+    //       } else {
+    //         attemptsBiometric++;
+    //       }
+    //     }
+    //
+    //     if (attemptsBiometric >= 3) {
+    //       await ref.watch(authServiceProvider).logout();
+    //       context.go("/welcome");
+    //     }
+    //   }
+    // });
   }
 
   @override

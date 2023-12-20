@@ -68,6 +68,6 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Why is my app authenticating using face id?</string>
+	<string>Permite el acceso para verificar tu identidad durante el inicio de sesión</string>
 </dict>
 </plist>
