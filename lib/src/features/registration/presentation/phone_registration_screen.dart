@@ -227,7 +227,12 @@ class _PhoneRegistrationScreenState
                                     .state
                                     .add(
                                         widget.userRegistrationData.user.email);
-                                context.pop();
+                                if (widget.userRegistrationData.thirdSignin !=
+                                    true) {
+                                  context.pop();
+                                } else {
+                                  context.replace("/");
+                                }
                               } else {
                                 setState(() {
                                   _error = error;

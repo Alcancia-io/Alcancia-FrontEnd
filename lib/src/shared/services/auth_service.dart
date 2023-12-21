@@ -5,6 +5,8 @@ import 'package:alcancia/src/shared/graphql/mutations/signin_mutation.dart';
 import 'package:alcancia/src/shared/graphql/queries/index.dart';
 import 'package:alcancia/src/shared/models/MFAModel.dart';
 import 'package:alcancia/src/shared/services/graphql_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 enum AuthChallengeType { MFA_SETUP, SMS_MFA, SOFTWARE_TOKEN_MFA }
@@ -15,6 +17,18 @@ class CompleteForgotPasswordInput {
   String? email = "email";
   String? newPassword = "newPassword";
   String? verificationCode = "123";
+}
+
+class ThirdPartyAuthService {
+  Future<UserCredential> signInWithGoogle() async {
+    final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+
+    final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+    final credential = GoogleAuthProvider.credential(
+        accessToken: gAuth.accessToken, idToken: gAuth.idToken);
+
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
 }
 
 class AuthService {

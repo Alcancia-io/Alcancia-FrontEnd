@@ -353,8 +353,8 @@
 	},
 	"labelConfirmReferralCodeDescriptionNoCode": "Esta acción no se puede deshacer. Confirma que no cuentas con un código de amigo.",
 	"buttonWinFiveDollars": "Gana $5 \uD83E\uDD11",
-  "labelCustomerService": "Servicio al cliente",
-  "labelErrorCustomerService": "Error al iniciar servicio al cliente.",
+  	"labelCustomerService": "Servicio al cliente",
+  	"labelErrorCustomerService": "Error al iniciar servicio al cliente.",
 	"labelUpdateRequired": "Por favor actualiza la aplicación para continuar",
 	"buttonUpdate": "Actualizar ahora",
 	"labelOr": "o",
@@ -364,4 +364,12 @@
 	"buttonVerifyAccount": "Verificar cuenta",
 	"labelNoInternetConnection": "Por favor verifica tu conexión e intentalo de nuevo",
 	"buttonTryAgain": "Intentar de nuevo"
+	"labelGender": "Gender",
+	"labelAlcanError":"Ocurrió un AlcanError!",
+	"labelEmailUsedFriendlyError":"Ups, al parecer el correo ya se encuentra en uso.",
+	"buttonBack":"Volver",
+	"signupThirdParty":"Registrate con:",
+	"loginThirdParty":"Inicia sesión con:",
+	"labelBasicInfo":"Info básica",
+	"errorEmailInUseMakeLogin": "Este correo ya esta en uso. Haz login."
 }

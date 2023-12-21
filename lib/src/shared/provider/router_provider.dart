@@ -45,8 +45,9 @@ import 'package:alcancia/src/screens/transaction_detail/transaction_detail.dart'
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:firebase_auth/firebase_auth.dart' as user_fire;
 import '../../screens/chart/line_chart_screen.dart';
+import '../../screens/registration.dart/registration_stepper.dart';
 
 Future<bool> isUserAuthenticated() async {
   StorageService service = StorageService();
@@ -113,7 +114,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "login",
           path: "/login",
-          builder: (context, state) => const LoginScreen(),
+          builder: (context, state) =>
+              LoginScreen(email: state.extra as String?),
         ),
         GoRoute(
           name: "homescreen",
@@ -139,6 +141,12 @@ final routerProvider = Provider<GoRouter>(
           path: "/phone-registration",
           builder: (context, state) => PhoneRegistrationScreen(
               userRegistrationData: state.extra as UserRegistrationModel),
+        ),
+        GoRoute(
+          name: "stepper-registration",
+          path: "/stepper-registration",
+          builder: (context, state) => RegistrationStepper(
+              registrationParam: state.extra as RegistrationParam),
         ),
         GoRoute(
           name: "swap",
@@ -301,6 +309,7 @@ final routerProvider = Provider<GoRouter>(
             !isStartup &&
             !isMfa &&
             !isPhoneRegistration &&
+            !isStepperRegistration &&
             !isOtp &&
             !isForgotPassword &&
             !isOnboarding &&

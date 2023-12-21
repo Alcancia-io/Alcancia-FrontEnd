@@ -268,4 +268,12 @@
 	"buttonVerifyAccount": "Verify account",
 	"labelNoInternetConnection": "Please check your connection and try again",
 	"buttonTryAgain": "Try again"
+	"labelGender": "Gender",
+	"labelAlcanError":"An AlcanError occurred!",
+	"labelEmailUsedFriendlyError":"Oops, apparently the email is already in use.",
+	"buttonBack":"Back",
+	"signupThirdParty":"Sign up with",
+	"loginThirdParty":"Log in with:",
+	"labelBasicInfo":"Basic info",
+	"errorEmailInUseMakeLogin": "This email is already in use. Log in."
 }

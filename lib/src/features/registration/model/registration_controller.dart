@@ -23,6 +23,29 @@ class RegistrationController {
   }
   """;
 
+  static String userExists = """
+query(\$email: String!){
+  userExists(email: \$email)
+}
+""";
+
+  Future<bool> checkUserExists(String email) async {
+    try {
+      GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
+      GraphQLClient client = graphQLConfiguration.clientToQuery();
+      var response = await client.query(QueryOptions(
+          document: gql(userExists),
+          variables: {"email": email.toLowerCase()}));
+      if (response.data != null) {
+        bool data = response.data!["userExists"];
+        return data;
+      }
+    } catch (error) {
+      return Future.error(error);
+    }
+    return Future.error('Error checking user exists');
+  }
+
   Future<void> resendVerificationCode(String email) async {
     try {
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);

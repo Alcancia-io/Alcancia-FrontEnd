@@ -19,7 +19,8 @@ const Color alcanciaMediumRiskLight = Color(0xff7BC458);
 const Color alcanciaMediumRiskDark = Color(0xffA0FF26);
 
 const CupertinoDynamicColor alcanciaWhiteBlack =
-    CupertinoDynamicColor.withBrightness(color: CupertinoColors.white, darkColor: CupertinoColors.black);
+    CupertinoDynamicColor.withBrightness(
+        color: CupertinoColors.white, darkColor: CupertinoColors.black);
 
 const alcanciaWelcomeGradient = [Color(0xffffffff), Color(0xff4E76E5)];
 const alcanciaWelcomeGradientDark = [
@@ -39,3 +40,16 @@ getPattern(BuildContext context) {
     return alcanciaWelcomeGradient;
   }
 }
+
+const Map<int, Color> color = {
+  50: Color.fromRGBO(136, 14, 79, .1),
+  100: Color.fromRGBO(136, 14, 79, .2),
+  200: Color.fromRGBO(136, 14, 79, .3),
+  300: Color.fromRGBO(136, 14, 79, .4),
+  400: Color.fromRGBO(136, 14, 79, .5),
+  500: Color.fromRGBO(136, 14, 79, .6),
+  600: Color.fromRGBO(136, 14, 79, .7),
+  700: Color.fromRGBO(136, 14, 79, .8),
+  800: Color.fromRGBO(136, 14, 79, .9),
+  900: Color.fromRGBO(136, 14, 79, 1),
+};
