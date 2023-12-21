@@ -76,6 +76,22 @@ android {
         }
     }
 
+    
+flavorDimensions "default"
+    productFlavors {
+        dev {
+            dimension "default"
+            versionNameSuffix "--dev"
+        }
+        stage {
+            dimension "default"
+            versionNameSuffix "--stage"
+        }
+        prod {
+            dimension "default"
+        }
+    }
+
 }
 
 flutter {

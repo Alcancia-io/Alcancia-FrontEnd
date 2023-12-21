@@ -29,6 +29,7 @@ import 'package:alcancia/src/screens/withdraw/crypto_withdraw_screen.dart';
 import 'package:alcancia/src/screens/withdraw/withdraw_options_screen.dart';
 import 'package:alcancia/src/screens/withdraw/withdraw_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
+import 'package:alcancia/src/shared/graphql/queries/index.dart';
 import 'package:alcancia/src/shared/graphql/queries/is_authenticated_query.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:alcancia/src/shared/models/checkout_model.dart';
@@ -53,8 +54,7 @@ Future<bool> isUserAuthenticated() async {
     var token = await service.readSecureData("token");
     GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "$token");
     GraphQLClient client = graphQLConfiguration.clientToQuery();
-    var result =
-    await client.query(QueryOptions(document: gql(isAuthenticatedQuery)));
+    var result = await client.query(QueryOptions(document: gql(meQuery)));
     return !result.hasException;
   } catch (e) {
     await FirebaseCrashlytics.instance.recordError(e, StackTrace.current);
@@ -91,8 +91,6 @@ Future<bool> checkNetwork() async {
   }
   return isConnected;
 }
-
-
 
 Future<bool> _finishedOnboarding() async {
   final preferences = await SharedPreferences.getInstance();
@@ -268,7 +266,8 @@ final routerProvider = Provider<GoRouter>(
         final isMfa = state.subloc == mfaLoc;
         final otp = state.namedLocation("otp");
         final isOtp = state.subloc == otp;
-        final accountVerificationLoc = state.namedLocation("account-verification");
+        final accountVerificationLoc =
+            state.namedLocation("account-verification");
         final isAccountVerification = state.subloc == accountVerificationLoc;
         final phoneRegistration = state.namedLocation("phone-registration");
         final isPhoneRegistration = state.subloc == phoneRegistration;
@@ -284,17 +283,15 @@ final routerProvider = Provider<GoRouter>(
         final requiredUpdateLoc = state.namedLocation('update-required');
         final networkErrorLoc = state.namedLocation('network-error');
 
-
         final isNetworkConnected = await checkNetwork();
         if (!isNetworkConnected) return networkErrorLoc;
 
         final buildNumber = await getCurrentBuildNumber();
         String supportedVersion = await getCurrentlySupportedAppVersion();
-        final isSupportedVersion = int.parse(buildNumber) >= int.parse(supportedVersion.split(".").last);
+        supportedVersion = supportedVersion.replaceAll("'", "");
+        final isSupportedVersion = int.parse(buildNumber) >=
+            (int.tryParse(supportedVersion.split(".").last) ?? 1000000);
         if (!isSupportedVersion) return requiredUpdateLoc;
-
-
-
 
         if (!loggedIn && !finishedOnboarding && !isOnboarding)
           return onboardingLoc;
@@ -307,8 +304,7 @@ final routerProvider = Provider<GoRouter>(
             !isOtp &&
             !isForgotPassword &&
             !isOnboarding &&
-            !isAccountVerification)
-          return welcomeLoc;
+            !isAccountVerification) return welcomeLoc;
         if (loggedIn && (loggingIn || creatingAccount || isStartup))
           return home;
         return null;
