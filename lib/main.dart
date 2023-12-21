@@ -1,14 +1,14 @@
 import 'dart:io';
 
+import 'package:alcancia/env.dart';
 import 'package:alcancia/src/resources/colors/app_theme.dart';
-import 'package:alcancia/src/screens/error/error_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_error_widget.dart';
 import 'package:alcancia/src/shared/provider/push_notifications_provider.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:alcancia/firebase_options.dart';
+import 'package:alcancia/firebase_options.dart' as prod;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -23,17 +23,33 @@ import 'package:intl/intl_standalone.dart';
 GlobalKey<NavigatorState> navigatorKey =
     GlobalKey(debugLabel: "Main Navigator");
 
+class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext? context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+  }
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initHiveForFlutter();
-  if (kReleaseMode) {
-    await dotenv.load(fileName: ".env.prod");
-  } else {
-    await dotenv.load(fileName: ".env.dev");
+  await dotenv.load(fileName: ".env");
+  if (Env.environment == Environment.stage.name) {
+    HttpOverrides.global = new MyHttpOverrides();
   }
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  try {
+    await Firebase.initializeApp(
+      name: 'Alcancia',
+      options: prod.DefaultFirebaseOptions.currentPlatform,
+    );
+    print(prod.DefaultFirebaseOptions.currentPlatform.asMap);
+  } catch (e) {
+    if(e is FirebaseException && e.code == 'duplicate-app') {
+      debugPrint("Did you forget to recompile the Runner app, after changing environments?");
+    }
+    rethrow;
+  }
   FlutterError.onError = (errorDetails) {
     if (kReleaseMode) {
       FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
@@ -95,7 +111,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     return GraphQLProvider(
       client: client,
       child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
+        debugShowCheckedModeBanner: Env.environment == Environment.stage.name,
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,

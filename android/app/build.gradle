@@ -76,19 +76,18 @@ android {
         }
     }
 
-    
-flavorDimensions "default"
+    flavorDimensions "mode"
+
     productFlavors {
-        dev {
-            dimension "default"
-            versionNameSuffix "--dev"
-        }
         stage {
-            dimension "default"
-            versionNameSuffix "--stage"
+            dimension "mode"
+            resValue "string", "app_name", "Alcancia-ST"
+            versionNameSuffix "-stage"
+            applicationIdSuffix ".stage"
         }
         prod {
-            dimension "default"
+            dimension "mode"
+            resValue "string", "app_name", "Alcancia"
         }
     }
 

@@ -1,4 +1,4 @@
-package com.alcancia.alcancia
+package io.alcancia.alcancia
 
 import io.flutter.embedding.android.FlutterActivity
 

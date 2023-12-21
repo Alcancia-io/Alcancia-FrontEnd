@@ -15,6 +15,7 @@ class AlcanciaTheme {
 
   static ThemeData get lightTheme {
     return ThemeData(
+      useMaterial3: false,
       splashFactory: NoSplash.splashFactory,
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
@@ -63,6 +64,7 @@ class AlcanciaTheme {
 
   static ThemeData get darkTheme {
     return ThemeData(
+      useMaterial3: false,
       splashFactory: NoSplash.splashFactory,
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
