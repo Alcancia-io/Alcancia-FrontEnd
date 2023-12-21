@@ -13,7 +13,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-
 class AccountScreen extends ConsumerStatefulWidget {
   const AccountScreen({Key? key}) : super(key: key);
 
@@ -45,7 +44,6 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
   Widget build(BuildContext context) {
     final authService = ref.watch(authServiceProvider);
     final biometricService = ref.watch(biometricServiceProvider.notifier);
-    final biometricState = ref.watch(biometricServiceProvider);
     final appLoc = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AlcanciaToolbar(
@@ -88,7 +86,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
               //     ),
               //   ),
               // ),
-              if (supportBiometrics) ... [
+              if (supportBiometrics) ...[
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
@@ -103,27 +101,36 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                           style: Theme.of(context).textTheme.labelLarge,
                         ),
                       ),
-                      CupertinoSwitch(value: biometricEnrolled, onChanged: (enroll) async {
-                        try {
-                          if (enroll) {
-                            await biometricService.authenticate();
-                            if (biometricState == true) {
-                              await biometricService.enrollApp();
-                              setState(() {
-                                biometricEnrolled = true;
-                              });
+                      CupertinoSwitch(
+                          value: biometricEnrolled,
+                          onChanged: (enroll) async {
+                            try {
+                              if (enroll) {
+                                bool biometricState =
+                                    await biometricService.authenticate();
+                                if (biometricState == true) {
+                                  await biometricService
+                                      .enrollApp()
+                                      .whenComplete(() {
+                                    setState(() {
+                                      biometricEnrolled = true;
+                                    });
+                                  });
+                                }
+                              } else {
+                                await biometricService
+                                    .unenrollApp()
+                                    .whenComplete(() {
+                                  setState(() {
+                                    biometricEnrolled = false;
+                                  });
+                                });
+                              }
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  alcanciaSnackBar(context, e.toString()));
                             }
-                          } else {
-                            await biometricService.unenrollApp();
-                            setState(() {
-                              biometricEnrolled = false;
-                            });
-                          }
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              alcanciaSnackBar(context, e.toString()));
-                        }
-                      })
+                          })
                     ],
                   ),
                 ),
@@ -138,7 +145,8 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                       side: const BorderSide(color: Colors.red),
                       buttonText: appLoc.buttonDeleteAccount,
                       fontSize: 18,
-                      padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
+                      padding: const EdgeInsets.only(
+                          left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
                       onPressed: () async {
                         await showDialog(
                             context: context,
@@ -152,7 +160,9 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                                     await authService.deleteAccount();
                                     await deleteToken();
                                     context.goNamed("welcome");
-                                    ref.read(userProvider.notifier).setUser(null);
+                                    ref
+                                        .read(userProvider.notifier)
+                                        .setUser(null);
                                   } catch (e) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         alcanciaSnackBar(context,

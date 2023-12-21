@@ -16,7 +16,8 @@ class _BiometricService extends StateNotifier<bool> {
 
   Future<void> enrollApp() async {
     try {
-      await storageService.writeSecureData(StorageItem("biometric", true.toString()));
+      await storageService
+          .writeSecureData(StorageItem("biometric", true.toString()));
     } catch (e) {
       print('Error during biometric enrollment: $e');
       return Future.error(e);
@@ -25,7 +26,8 @@ class _BiometricService extends StateNotifier<bool> {
 
   Future<void> unenrollApp() async {
     try {
-      await storageService.writeSecureData(StorageItem("biometric", false.toString()));
+      await storageService
+          .writeSecureData(StorageItem("biometric", false.toString()));
     } catch (e) {
       print('Error during biometric unenrollment: $e');
       return Future.error(e);
@@ -41,9 +43,8 @@ class _BiometricService extends StateNotifier<bool> {
     }
   }
 
-  Future<void> authenticate() async {
+  Future<bool> authenticate() async {
     try {
-
       bool canCheckBiometrics = await localAuth.canCheckBiometrics;
 
       if (canCheckBiometrics) {
@@ -58,26 +59,29 @@ class _BiometricService extends StateNotifier<bool> {
           );
 
           state = isAuthenticated;
+          return isAuthenticated;
         } else {
           state = false;
+          return false;
         }
       } else {
         state = true;
+        return true;
       }
     } catch (e) {
       print('Error during biometric authentication: $e');
       state = false;
+      return false;
     }
   }
 
   Future<bool> initialAuthentication() async {
     try {
-
       bool canCheckBiometrics = await localAuth.canCheckBiometrics;
 
       if (canCheckBiometrics) {
         List<BiometricType> availableBiometrics =
-        await localAuth.getAvailableBiometrics();
+            await localAuth.getAvailableBiometrics();
 
         if (availableBiometrics.isNotEmpty) {
           bool isAuthenticated = await localAuth.authenticate(
@@ -100,7 +104,7 @@ class _BiometricService extends StateNotifier<bool> {
   }
 }
 
-final biometricServiceProvider = StateNotifierProvider<_BiometricService, bool>((ref) {
+final biometricServiceProvider =
+    StateNotifierProvider<_BiometricService, bool>((ref) {
   return _BiometricService();
 });
-

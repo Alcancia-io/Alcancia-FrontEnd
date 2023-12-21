@@ -56,7 +56,7 @@ Future<bool> isUserAuthenticated() async {
     GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "$token");
     GraphQLClient client = graphQLConfiguration.clientToQuery();
     var result =
-    await client.query(QueryOptions(document: gql(isAuthenticatedQuery)));
+        await client.query(QueryOptions(document: gql(isAuthenticatedQuery)));
     return !result.hasException;
   } catch (e) {
     await FirebaseCrashlytics.instance.recordError(e, StackTrace.current);
@@ -93,8 +93,6 @@ Future<bool> checkNetwork() async {
   }
   return isConnected;
 }
-
-
 
 Future<bool> _finishedOnboarding() async {
   final preferences = await SharedPreferences.getInstance();
@@ -266,15 +264,17 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "biometric-authentication",
           path: "/biometric-authentication",
-          builder: (context, state) => BiometricAuthenticationScreen(),
+          builder: (context, state) => const BiometricAuthenticationScreen(),
         )
       ],
       redirect: (context, state) async {
         final loggingIn = state.matchedLocation == "/login";
         final isMfa = state.matchedLocation == "/mfa";
         final isOtp = state.matchedLocation == "/otp";
-        final isAccountVerification = state.matchedLocation == "/account-verification";
-        final isPhoneRegistration = state.matchedLocation == "/phone-registration";
+        final isAccountVerification =
+            state.matchedLocation == "/account-verification";
+        final isPhoneRegistration =
+            state.matchedLocation == "/phone-registration";
         final isStartup = state.matchedLocation == "/";
         final creatingAccount = state.matchedLocation == "/registration";
         final loggedIn = await isUserAuthenticated();
@@ -282,19 +282,15 @@ final routerProvider = Provider<GoRouter>(
         final finishedOnboarding = await _finishedOnboarding();
         final isOnboarding = state.matchedLocation == "/onboarding";
 
-
-
         final isNetworkConnected = await checkNetwork();
         if (!isNetworkConnected) return "/network-error";
 
         final buildNumber = await getCurrentBuildNumber();
         String supportedVersion = await getCurrentlySupportedAppVersion();
         supportedVersion = supportedVersion.replaceAll("'", "");
-        final isSupportedVersion = int.parse(buildNumber) >= (int.tryParse(supportedVersion.split(".").last) ?? 1000000);
+        final isSupportedVersion = int.parse(buildNumber) >=
+            (int.tryParse(supportedVersion.split(".").last) ?? 1000000);
         if (!isSupportedVersion) return "/update-required";
-
-
-
 
         if (!loggedIn && !finishedOnboarding && !isOnboarding)
           return "/onboarding";
@@ -307,13 +303,15 @@ final routerProvider = Provider<GoRouter>(
             !isOtp &&
             !isForgotPassword &&
             !isOnboarding &&
-            !isAccountVerification)
-          return "/";
-        if (loggedIn && (loggingIn || creatingAccount || isStartup))
-          if (await biometricService.isAppEnrolled() && !biometricState)
-            return "/biometric-authentication";
-          else
-            return "/homescreen/0";
+            !isAccountVerification) return "/";
+        if (loggedIn &&
+            (loggingIn ||
+                creatingAccount ||
+                isStartup)) if (await biometricService.isAppEnrolled() &&
+            !biometricState)
+          return "/biometric-authentication";
+        else
+          return "/homescreen/0";
         return null;
       },
       errorBuilder: (context, state) => const ErrorScreen(),
