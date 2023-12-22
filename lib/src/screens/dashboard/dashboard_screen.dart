@@ -5,7 +5,6 @@ import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/components/alcancia_transactions_list.dart';
 import 'package:alcancia/src/shared/components/dashboard/dashboard_actions.dart';
-import 'package:alcancia/src/shared/models/kyc_status.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:alcancia/src/shared/provider/transactions_provider.dart';
 import 'package:alcancia/src/shared/services/metamap_service.dart';
@@ -30,6 +29,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   final MetamapService metamapService = MetamapService();
   bool _isLoading = false;
   String _error = "";
+  int attemptsAuth = 0;
 
   Future<void> setUserInformation() async {
     setState(() {
@@ -75,6 +75,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
   void initState() {
     super.initState();
+
     setUserInformation();
     setTimer();
   }

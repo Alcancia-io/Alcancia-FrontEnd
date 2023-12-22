@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:alcancia/main.dart';
 import 'package:alcancia/src/features/registration/presentation/phone_registration_screen.dart';
 import 'package:alcancia/src/screens/account_verification.dart';
+import 'package:alcancia/src/screens/biometric/biometric_authentication_screen.dart';
 import 'package:alcancia/src/screens/login/login_screen.dart';
 import 'package:alcancia/src/features/registration/model/graphql_config.dart';
 import 'package:alcancia/src/features/registration/presentation/otp_screen.dart';
@@ -35,6 +36,7 @@ import 'package:alcancia/src/shared/models/checkout_model.dart';
 import 'package:alcancia/src/shared/models/login_data_model.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
 import 'package:alcancia/src/shared/models/success_screen_model.dart';
+import 'package:alcancia/src/shared/services/biometric_service.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:alcancia/src/shared/services/version_service.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -54,7 +56,7 @@ Future<bool> isUserAuthenticated() async {
     GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "$token");
     GraphQLClient client = graphQLConfiguration.clientToQuery();
     var result =
-    await client.query(QueryOptions(document: gql(isAuthenticatedQuery)));
+        await client.query(QueryOptions(document: gql(isAuthenticatedQuery)));
     return !result.hasException;
   } catch (e) {
     await FirebaseCrashlytics.instance.recordError(e, StackTrace.current);
@@ -92,8 +94,6 @@ Future<bool> checkNetwork() async {
   return isConnected;
 }
 
-
-
 Future<bool> _finishedOnboarding() async {
   final preferences = await SharedPreferences.getInstance();
   final finished = preferences.getBool("finishedOnboarding");
@@ -102,6 +102,9 @@ Future<bool> _finishedOnboarding() async {
 
 final routerProvider = Provider<GoRouter>(
   (ref) {
+    final biometricService = ref.watch(biometricServiceProvider.notifier);
+    final biometricState = ref.watch(biometricServiceProvider);
+
     return GoRouter(
       initialLocation: "/",
       navigatorKey: navigatorKey,
@@ -122,7 +125,7 @@ final routerProvider = Provider<GoRouter>(
           path: "/homescreen/:id",
           builder: (context, state) {
             return AlcanciaTabbar(
-              selectedIndex: int.parse(state.params['id'] as String),
+              selectedIndex: int.parse(state.pathParameters['id'] as String),
             );
           },
         ),
@@ -257,48 +260,40 @@ final routerProvider = Provider<GoRouter>(
           name: "network-error",
           path: "/network-error",
           builder: (context, state) => const NetworkErrorScreen(),
+        ),
+        GoRoute(
+          name: "biometric-authentication",
+          path: "/biometric-authentication",
+          builder: (context, state) => const BiometricAuthenticationScreen(),
         )
       ],
       redirect: (context, state) async {
-        final loginLoc = state.namedLocation("login");
-        final loggingIn = state.subloc == loginLoc;
-        final createAccountLoc = state.namedLocation("registration");
-        final welcomeLoc = state.namedLocation("welcome");
-        final mfaLoc = state.namedLocation("mfa");
-        final isMfa = state.subloc == mfaLoc;
-        final otp = state.namedLocation("otp");
-        final isOtp = state.subloc == otp;
-        final accountVerificationLoc = state.namedLocation("account-verification");
-        final isAccountVerification = state.subloc == accountVerificationLoc;
-        final phoneRegistration = state.namedLocation("phone-registration");
-        final isPhoneRegistration = state.subloc == phoneRegistration;
-        final isStartup = state.subloc == welcomeLoc;
-        final creatingAccount = state.subloc == createAccountLoc;
+        final loggingIn = state.matchedLocation == "/login";
+        final isMfa = state.matchedLocation == "/mfa";
+        final isOtp = state.matchedLocation == "/otp";
+        final isAccountVerification =
+            state.matchedLocation == "/account-verification";
+        final isPhoneRegistration =
+            state.matchedLocation == "/phone-registration";
+        final isStartup = state.matchedLocation == "/";
+        final creatingAccount = state.matchedLocation == "/registration";
         final loggedIn = await isUserAuthenticated();
-        final home = state.namedLocation("homescreen", params: {"id": "0"});
-        final forgotPassword = state.namedLocation('forgot-password');
-        final isForgotPassword = state.subloc == forgotPassword;
+        final isForgotPassword = state.matchedLocation == "/forgot-password";
         final finishedOnboarding = await _finishedOnboarding();
-        final onboardingLoc = state.namedLocation('onboarding');
-        final isOnboarding = state.subloc == onboardingLoc;
-        final requiredUpdateLoc = state.namedLocation('update-required');
-        final networkErrorLoc = state.namedLocation('network-error');
-
+        final isOnboarding = state.matchedLocation == "/onboarding";
 
         final isNetworkConnected = await checkNetwork();
-        if (!isNetworkConnected) return networkErrorLoc;
+        if (!isNetworkConnected) return "/network-error";
 
         final buildNumber = await getCurrentBuildNumber();
         String supportedVersion = await getCurrentlySupportedAppVersion();
         supportedVersion = supportedVersion.replaceAll("'", "");
-        final isSupportedVersion = int.parse(buildNumber) >= (int.tryParse(supportedVersion.split(".").last) ?? 1000000);
-        if (!isSupportedVersion) return requiredUpdateLoc;
-
-
-
+        final isSupportedVersion = int.parse(buildNumber) >=
+            (int.tryParse(supportedVersion.split(".").last) ?? 1000000);
+        if (!isSupportedVersion) return "/update-required";
 
         if (!loggedIn && !finishedOnboarding && !isOnboarding)
-          return onboardingLoc;
+          return "/onboarding";
         if (!loggedIn &&
             !loggingIn &&
             !creatingAccount &&
@@ -308,12 +303,18 @@ final routerProvider = Provider<GoRouter>(
             !isOtp &&
             !isForgotPassword &&
             !isOnboarding &&
-            !isAccountVerification)
-          return welcomeLoc;
-        if (loggedIn && (loggingIn || creatingAccount || isStartup))
-          return home;
+            !isAccountVerification) return "/";
+        if (loggedIn &&
+            (loggingIn ||
+                creatingAccount ||
+                isStartup)) if (await biometricService.isAppEnrolled() &&
+            !biometricState)
+          return "/biometric-authentication";
+        else
+          return "/homescreen/0";
         return null;
       },
+      errorBuilder: (context, state) => const ErrorScreen(),
     );
   },
 );
