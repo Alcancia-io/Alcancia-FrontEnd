@@ -75,36 +75,12 @@ class _BiometricService extends StateNotifier<bool> {
     }
   }
 
-  Future<bool> initialAuthentication() async {
-    try {
-      bool canCheckBiometrics = await localAuth.canCheckBiometrics;
-
-      if (canCheckBiometrics) {
-        List<BiometricType> availableBiometrics =
-            await localAuth.getAvailableBiometrics();
-
-        if (availableBiometrics.isNotEmpty) {
-          bool isAuthenticated = await localAuth.authenticate(
-            localizedReason: 'Authenticate to access the app',
-            options: const AuthenticationOptions(
-                useErrorDialogs: true, stickyAuth: true, biometricOnly: false),
-          );
-
-          return isAuthenticated;
-        } else {
-          return false;
-        }
-      } else {
-        return true;
-      }
-    } catch (e) {
-      print('Error during biometric authentication: $e');
-      return false;
-    }
-  }
 }
 
 final biometricServiceProvider =
     StateNotifierProvider<_BiometricService, bool>((ref) {
   return _BiometricService();
+});
+final biometricLockProvider = StateProvider<bool>((ref) {
+  return false;
 });

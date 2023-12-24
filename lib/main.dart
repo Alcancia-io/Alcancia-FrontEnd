@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:alcancia/env.dart';
 import 'package:alcancia/src/resources/colors/app_theme.dart';
+import 'package:alcancia/src/screens/biometric/biometric_authentication_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_error_widget.dart';
 import 'package:alcancia/src/shared/provider/auth_service_provider.dart';
 import 'package:alcancia/src/shared/provider/push_notifications_provider.dart';
@@ -93,31 +94,12 @@ class _MyAppState extends ConsumerState<MyApp> {
     super.initState();
     pushNotificationProvider.initNotifications();
     Intl.systemLocale = Platform.localeName;
-    final biometricService = ref.read(biometricServiceProvider.notifier);
-
-    // isUserAuthenticated().then((value) async {
-    //   if (value) {
-    //     while (attemptsBiometric < 3 && await biometricService.isAppEnrolled()) {
-    //       await biometricService.authenticate();
-    //       final biometricState = ref.read(biometricServiceProvider);
-    //       if (biometricState == true) {
-    //         return;
-    //       } else {
-    //         attemptsBiometric++;
-    //       }
-    //     }
-    //
-    //     if (attemptsBiometric >= 3) {
-    //       await ref.watch(authServiceProvider).logout();
-    //       context.go("/welcome");
-    //     }
-    //   }
-    // });
   }
 
   @override
   Widget build(BuildContext context) {
     final router = ref.watch(routerProvider);
+    final biometricLock = ref.watch(biometricLockProvider);
     var uri = dotenv.env['API_URL'] as String;
 
     final HttpLink httpLink = HttpLink(
@@ -154,6 +136,16 @@ class _MyAppState extends ConsumerState<MyApp> {
         themeMode: ThemeMode.system,
         routeInformationParser: router.routeInformationParser,
         routeInformationProvider: router.routeInformationProvider,
+        builder: (context, child) {
+          return Stack(
+            children: [
+              child!,
+              if (biometricLock) ...[
+                const BiometricAuthenticationScreen(),
+              ]
+            ],
+          );
+        },
       ),
     );
   }

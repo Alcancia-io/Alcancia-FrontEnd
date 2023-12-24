@@ -275,7 +275,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       size: 30,
                                     )),
                                 onPressed: () async {
-                                  final auth = await biometricService.initialAuthentication();
+                                  final auth = await biometricService.authenticate();
                                   if (auth) {
                                     await _login(pushNotifications,
                                         registrationController);
