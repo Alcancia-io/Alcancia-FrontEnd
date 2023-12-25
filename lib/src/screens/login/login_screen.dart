@@ -273,7 +273,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     padding: EdgeInsets.all(8.0),
                                     child: PlatformBiometricIcon(color: Colors.white,)),
                                 onPressed: () async {
-                                  final auth = await biometricService.initialAuthentication();
+                                  final auth = await biometricService.authenticate();
                                   if (auth) {
                                     await _login(pushNotifications,
                                         registrationController);

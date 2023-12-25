@@ -40,6 +40,7 @@ import 'package:alcancia/src/shared/services/biometric_service.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:alcancia/src/shared/services/version_service.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:alcancia/src/screens/transaction_detail/transaction_detail.dart';
@@ -55,8 +56,7 @@ Future<bool> isUserAuthenticated() async {
     var token = await service.readSecureData("token");
     GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "$token");
     GraphQLClient client = graphQLConfiguration.clientToQuery();
-    var result =
-        await client.query(QueryOptions(document: gql(isAuthenticatedQuery)));
+    var result = await client.query(QueryOptions(document: gql(isAuthenticatedQuery)));
     return !result.hasException;
   } catch (e) {
     await FirebaseCrashlytics.instance.recordError(e, StackTrace.current);
@@ -70,8 +70,7 @@ Future<String> getCurrentlySupportedAppVersion() async {
   VersionService service = VersionService();
   var result = await service.getCurrentlySupportedAppVersion();
   if (result.hasException) {
-    return Future.error(result.exception?.graphqlErrors[0].message ??
-        "Exception getting latest supported version");
+    return Future.error(result.exception?.graphqlErrors[0].message ?? "Exception getting latest supported version");
   }
   return result.data?['getCurrentlySupportedAppVersion']['version'] as String;
 }
@@ -142,8 +141,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "phone-registration",
           path: "/phone-registration",
-          builder: (context, state) => PhoneRegistrationScreen(
-              userRegistrationData: state.extra as UserRegistrationModel),
+          builder: (context, state) =>
+              PhoneRegistrationScreen(userRegistrationData: state.extra as UserRegistrationModel),
         ),
         GoRoute(
           name: "swap",
@@ -153,8 +152,7 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "transaction_detail",
           path: "/transaction_detail",
-          builder: (context, state) =>
-              TransactionDetail(txn: state.extra as Transaction),
+          builder: (context, state) => TransactionDetail(txn: state.extra as Transaction),
         ),
         GoRoute(
           name: "otp",
@@ -166,8 +164,7 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "mfa",
           path: "/mfa",
-          builder: (context, state) =>
-              MFAScreen(data: state.extra as LoginDataModel),
+          builder: (context, state) => MFAScreen(data: state.extra as LoginDataModel),
         ),
         GoRoute(
           name: "checkout",
@@ -206,8 +203,7 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "success",
           path: "/success",
-          builder: (context, state) =>
-              SuccessScreen(model: state.extra as SuccessScreenModel),
+          builder: (context, state) => SuccessScreen(model: state.extra as SuccessScreenModel),
         ),
         GoRoute(
           name: "onboarding",
@@ -271,10 +267,8 @@ final routerProvider = Provider<GoRouter>(
         final loggingIn = state.matchedLocation == "/login";
         final isMfa = state.matchedLocation == "/mfa";
         final isOtp = state.matchedLocation == "/otp";
-        final isAccountVerification =
-            state.matchedLocation == "/account-verification";
-        final isPhoneRegistration =
-            state.matchedLocation == "/phone-registration";
+        final isAccountVerification = state.matchedLocation == "/account-verification";
+        final isPhoneRegistration = state.matchedLocation == "/phone-registration";
         final isStartup = state.matchedLocation == "/";
         final creatingAccount = state.matchedLocation == "/registration";
         final loggedIn = await isUserAuthenticated();
@@ -288,12 +282,11 @@ final routerProvider = Provider<GoRouter>(
         final buildNumber = await getCurrentBuildNumber();
         String supportedVersion = await getCurrentlySupportedAppVersion();
         supportedVersion = supportedVersion.replaceAll("'", "");
-        final isSupportedVersion = int.parse(buildNumber) >=
-            (int.tryParse(supportedVersion.split(".").last) ?? 1000000);
+        final isSupportedVersion =
+            int.parse(buildNumber) >= (int.tryParse(supportedVersion.split(".").last) ?? 1000000);
         if (!isSupportedVersion) return "/update-required";
 
-        if (!loggedIn && !finishedOnboarding && !isOnboarding)
-          return "/onboarding";
+        if (!loggedIn && !finishedOnboarding && !isOnboarding) return "/onboarding";
         if (!loggedIn &&
             !loggingIn &&
             !creatingAccount &&
@@ -304,14 +297,12 @@ final routerProvider = Provider<GoRouter>(
             !isForgotPassword &&
             !isOnboarding &&
             !isAccountVerification) return "/";
-        if (loggedIn &&
-            (loggingIn ||
-                creatingAccount ||
-                isStartup)) if (await biometricService.isAppEnrolled() &&
-            !biometricState)
-          return "/biometric-authentication";
-        else
+        if (loggedIn && (loggingIn || creatingAccount || isStartup)) {
+          if (await biometricService.isAppEnrolled() && !biometricState) {
+            ref.read(biometricLockProvider.notifier).state = true;
+          }
           return "/homescreen/0";
+        }
         return null;
       },
       errorBuilder: (context, state) => const ErrorScreen(),
