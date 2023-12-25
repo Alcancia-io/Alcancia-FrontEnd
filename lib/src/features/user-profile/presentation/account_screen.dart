@@ -1,3 +1,4 @@
+import 'package:alcancia/src/shared/components/biometric_icon.dart';
 import 'package:alcancia/src/shared/services/biometric_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -91,9 +92,9 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Icon(Icons.fingerprint_outlined, size: 32),
+                        child: PlatformBiometricIcon()
                       ),
                       Expanded(
                         child: Text(

@@ -1,5 +1,6 @@
 // Flutter package imports:
 import 'package:alcancia/src/features/registration/model/registration_controller.dart';
+import 'package:alcancia/src/shared/components/biometric_icon.dart';
 import 'package:alcancia/src/shared/services/biometric_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -270,10 +271,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 buttonText: appLocalization.buttonLogIn,
                                 icon: const Padding(
                                     padding: EdgeInsets.all(8.0),
-                                    child: Icon(
-                                      Icons.fingerprint_outlined,
-                                      size: 30,
-                                    )),
+                                    child: PlatformBiometricIcon(color: Colors.white,)),
                                 onPressed: () async {
                                   final auth = await biometricService.initialAuthentication();
                                   if (auth) {
