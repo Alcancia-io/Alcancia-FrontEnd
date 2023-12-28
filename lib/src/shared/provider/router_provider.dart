@@ -62,8 +62,7 @@ Future<bool> isUserAuthenticated() async {
     if (result.hasException) {
       final graphQLErrors = result.exception?.graphqlErrors;
       final linkException = result.exception?.linkException?.originalException;
-      if (graphQLErrors != null && graphQLErrors.isNotEmpty && graphQLErrors[0].message == "Unauthorized") {
-        await service.deleteSecureData("token");
+      if (graphQLErrors != null && graphQLErrors.isNotEmpty) {
         return false;
       } else if (linkException != null && linkException.toString().contains("CERTIFICATE_VERIFY_FAILED")) {
         return Future.error("CERTIFICATE_VERIFY_FAILED");
