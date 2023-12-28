@@ -47,6 +47,7 @@ import 'package:alcancia/src/screens/transaction_detail/transaction_detail.dart'
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../screens/chart/line_chart_screen.dart';
 
@@ -57,11 +58,21 @@ Future<bool> isUserAuthenticated() async {
     GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "$token");
     GraphQLClient client = graphQLConfiguration.clientToQuery();
     var result = await client.query(QueryOptions(document: gql(isAuthenticatedQuery)));
-    return !result.hasException;
+    if (result.hasException) {
+      final graphQLErrors = result.exception?.graphqlErrors;
+      final linkException = result.exception?.linkException?.originalException;
+      if (graphQLErrors != null && graphQLErrors.isNotEmpty && graphQLErrors[0].message == "Unauthorized") {
+        await service.deleteSecureData("token");
+        return false;
+      } else if (linkException != null && linkException.toString().contains("CERTIFICATE_VERIFY_FAILED")) {
+        return Future.error("CERTIFICATE_VERIFY_FAILED");
+      }
+    }
+    return true;
   } catch (e) {
     await FirebaseCrashlytics.instance.recordError(e, StackTrace.current);
     await service.deleteSecureData("token");
-    return false;
+    rethrow;
   }
   // print(result.hasException);
 }
@@ -102,7 +113,6 @@ Future<bool> _finishedOnboarding() async {
 final routerProvider = Provider<GoRouter>(
   (ref) {
     final biometricService = ref.watch(biometricServiceProvider.notifier);
-    final biometricState = ref.watch(biometricServiceProvider);
 
     return GoRouter(
       initialLocation: "/",
@@ -261,49 +271,63 @@ final routerProvider = Provider<GoRouter>(
           name: "biometric-authentication",
           path: "/biometric-authentication",
           builder: (context, state) => const BiometricAuthenticationScreen(),
+        ),
+        GoRoute(
+          name: "certificate-error",
+          path: "/certificate-error",
+          builder: (context, state) => const ErrorScreen(
+            error: "There was an error connecting to the server. Please try again later.",
+          ),
         )
       ],
       redirect: (context, state) async {
-        final loggingIn = state.matchedLocation == "/login";
-        final isMfa = state.matchedLocation == "/mfa";
-        final isOtp = state.matchedLocation == "/otp";
-        final isAccountVerification = state.matchedLocation == "/account-verification";
-        final isPhoneRegistration = state.matchedLocation == "/phone-registration";
-        final isStartup = state.matchedLocation == "/";
-        final creatingAccount = state.matchedLocation == "/registration";
-        final loggedIn = await isUserAuthenticated();
-        final isForgotPassword = state.matchedLocation == "/forgot-password";
-        final finishedOnboarding = await _finishedOnboarding();
-        final isOnboarding = state.matchedLocation == "/onboarding";
+        try {
+          final loggingIn = state.matchedLocation == "/login";
+          final isMfa = state.matchedLocation == "/mfa";
+          final isOtp = state.matchedLocation == "/otp";
+          final isAccountVerification = state.matchedLocation == "/account-verification";
+          final isPhoneRegistration = state.matchedLocation == "/phone-registration";
+          final isStartup = state.matchedLocation == "/";
+          final creatingAccount = state.matchedLocation == "/registration";
+          final loggedIn = await isUserAuthenticated();
+          final isForgotPassword = state.matchedLocation == "/forgot-password";
+          final finishedOnboarding = await _finishedOnboarding();
+          final isOnboarding = state.matchedLocation == "/onboarding";
 
-        final isNetworkConnected = await checkNetwork();
-        if (!isNetworkConnected) return "/network-error";
+          final isNetworkConnected = await checkNetwork();
+          if (!isNetworkConnected) return "/network-error";
 
-        final buildNumber = await getCurrentBuildNumber();
-        String supportedVersion = await getCurrentlySupportedAppVersion();
-        supportedVersion = supportedVersion.replaceAll("'", "");
-        final isSupportedVersion =
-            int.parse(buildNumber) >= (int.tryParse(supportedVersion.split(".").last) ?? 1000000);
-        if (!isSupportedVersion) return "/update-required";
+          final buildNumber = await getCurrentBuildNumber();
+          String supportedVersion = await getCurrentlySupportedAppVersion();
+          supportedVersion = supportedVersion.replaceAll("'", "");
+          final isSupportedVersion =
+              int.parse(buildNumber) >= (int.tryParse(supportedVersion.split(".").last) ?? 1000000);
+          if (!isSupportedVersion) return "/update-required";
 
-        if (!loggedIn && !finishedOnboarding && !isOnboarding) return "/onboarding";
-        if (!loggedIn &&
-            !loggingIn &&
-            !creatingAccount &&
-            !isStartup &&
-            !isMfa &&
-            !isPhoneRegistration &&
-            !isOtp &&
-            !isForgotPassword &&
-            !isOnboarding &&
-            !isAccountVerification) return "/";
-        if (loggedIn && (loggingIn || creatingAccount || isStartup)) {
-          if (await biometricService.isAppEnrolled() && !biometricState) {
-            ref.read(biometricLockProvider.notifier).state = true;
+          if (!loggedIn && !finishedOnboarding && !isOnboarding) return "/onboarding";
+          if (!loggedIn &&
+              !loggingIn &&
+              !creatingAccount &&
+              !isStartup &&
+              !isMfa &&
+              !isPhoneRegistration &&
+              !isOtp &&
+              !isForgotPassword &&
+              !isOnboarding &&
+              !isAccountVerification) return "/";
+          if (loggedIn && (loggingIn || creatingAccount || isStartup)) {
+            final biometricState = ref.read(biometricServiceProvider);
+            if (await biometricService.isAppEnrolled() && !biometricState) {
+              ref.read(biometricLockProvider.notifier).state = true;
+            }
+            return "/homescreen/0";
           }
-          return "/homescreen/0";
+        } catch (e) {
+          if (e.toString().contains("CERTIFICATE_VERIFY_FAILED")) {
+            return "/certificate-error";
+          }
+          return null;
         }
-        return null;
       },
       errorBuilder: (context, state) => const ErrorScreen(),
     );

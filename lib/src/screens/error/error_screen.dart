@@ -41,6 +41,7 @@ class ErrorScreen extends StatelessWidget {
                     child: Text(
                       "Error: $error",
                       style: Theme.of(context).textTheme.bodyText1,
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ],
