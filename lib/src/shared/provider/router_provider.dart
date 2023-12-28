@@ -17,6 +17,7 @@ import 'package:alcancia/src/screens/deposit/deposit_screen.dart';
 import 'package:alcancia/src/screens/error/error_screen.dart';
 import 'package:alcancia/src/screens/forgot_password/forgot_password.dart';
 import 'package:alcancia/src/screens/login/mfa_screen.dart';
+import 'package:alcancia/src/screens/maintenance/maintenance_screen.dart';
 import 'package:alcancia/src/screens/metamap/address_screen.dart';
 import 'package:alcancia/src/screens/network_error/network_error_screen.dart';
 import 'package:alcancia/src/screens/onboarding/onboarding_screens.dart';
@@ -273,11 +274,9 @@ final routerProvider = Provider<GoRouter>(
           builder: (context, state) => const BiometricAuthenticationScreen(),
         ),
         GoRoute(
-          name: "certificate-error",
-          path: "/certificate-error",
-          builder: (context, state) => const ErrorScreen(
-            error: "There was an error connecting to the server. Please try again later.",
-          ),
+          name: "maintenance",
+          path: "/maintenance",
+          builder: (context, state) => const MaintenanceScreen(),
         )
       ],
       redirect: (context, state) async {
@@ -324,7 +323,7 @@ final routerProvider = Provider<GoRouter>(
           }
         } catch (e) {
           if (e.toString().contains("CERTIFICATE_VERIFY_FAILED")) {
-            return "/certificate-error";
+            return "/maintenance";
           }
           return null;
         }
