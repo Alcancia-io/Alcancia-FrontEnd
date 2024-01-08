@@ -42,6 +42,11 @@ void main() async {
   if (Env.environment == Environment.stage.name) {
     HttpOverrides.global = new MyHttpOverrides();
   }
+
+  if (kReleaseMode) {
+    debugPrint = (String? message, {int? wrapWidth}) {};
+  }
+
   try {
     await Firebase.initializeApp(
       name: 'Alcancia',
@@ -49,10 +54,7 @@ void main() async {
     );
     print(prod.DefaultFirebaseOptions.currentPlatform.asMap);
   } catch (e) {
-    if (e is FirebaseException && e.code == 'duplicate-app') {
-      debugPrint(
-          "Did you forget to recompile the Runner app, after changing environments?");
-    }
+    debugPrint(e.toString());
     rethrow;
   }
   FlutterError.onError = (errorDetails) {
