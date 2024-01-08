@@ -158,6 +158,10 @@ app.*.symbols
 **/macos/Flutter/ephemeral
 **/xcuserdata/
 
+#Amplify Stuff
+amplify/
+amplify-configuration.json
+amplifyconfiguration.dart
 # Coverage
 coverage/
 
