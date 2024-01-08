@@ -31,6 +31,7 @@ import 'package:alcancia/src/screens/withdraw/crypto_withdraw_screen.dart';
 import 'package:alcancia/src/screens/withdraw/withdraw_options_screen.dart';
 import 'package:alcancia/src/screens/withdraw/withdraw_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
+import 'package:alcancia/src/shared/graphql/queries/index.dart';
 import 'package:alcancia/src/shared/graphql/queries/is_authenticated_query.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:alcancia/src/shared/models/checkout_model.dart';
@@ -58,6 +59,7 @@ Future<bool> isUserAuthenticated() async {
     var token = await service.readSecureData("token");
     GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "$token");
     GraphQLClient client = graphQLConfiguration.clientToQuery();
+
     var result = await client.query(QueryOptions(document: gql(isAuthenticatedQuery)));
     if (result.hasException) {
       final graphQLErrors = result.exception?.graphqlErrors;
@@ -279,6 +281,7 @@ final routerProvider = Provider<GoRouter>(
         )
       ],
       redirect: (context, state) async {
+
         try {
           final loggingIn = state.matchedLocation == "/login";
           final isMfa = state.matchedLocation == "/mfa";
