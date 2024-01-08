@@ -119,7 +119,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                 LabeledTextFormField(
                   controller: nameController,
                   labelText: appLocalization.labelName,
-                  inputType: TextInputType.name,
+                  inputType: TextInputType.text,
                   autofillHints: const [AutofillHints.givenName],
                   textInputAction: TextInputAction.next,
                   validator: (value) {
@@ -135,7 +135,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                 LabeledTextFormField(
                   controller: lastNameController,
                   labelText: appLocalization.labelLastName,
-                  inputType: TextInputType.name,
+                  inputType: TextInputType.text,
                   autofillHints: const [AutofillHints.familyName],
                   textInputAction: TextInputAction.next,
                   validator: (value) {

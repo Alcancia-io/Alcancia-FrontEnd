@@ -363,5 +363,9 @@
 	"labelVerifyYourAccountDescription": "Ingresa tu correo y contraseña para verificar tu cuenta:",
 	"buttonVerifyAccount": "Verificar cuenta",
 	"labelNoInternetConnection": "Por favor verifica tu conexión e intentalo de nuevo",
-	"buttonTryAgain": "Intentar de nuevo"
+	"buttonTryAgain": "Intentar de nuevo",
+	"labelUseBiometrics": "Usar autenticación biométrica",
+	"labelBiometricAuthentication": "Autenticación biométrica",
+	"labelBiometricAuthenticationDescription": "Utiliza tu huella digital o reconocimiento facial para iniciar sesión en tu cuenta",
+	"labelMaintenance": "Estamos realizando mantenimiento en nuestros servidores. Por favor intente más tarde."
 }

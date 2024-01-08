@@ -5,10 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 
-class ErrorScreen extends StatelessWidget {
-  const ErrorScreen({Key? key, this.error}) : super(key: key);
-
-  final String? error;
+class MaintenanceScreen extends StatelessWidget {
+  const MaintenanceScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,20 +27,12 @@ class ErrorScreen extends StatelessWidget {
               const Spacer(),
               Column(
                 children: [
-                  Lottie.asset("lib/src/resources/lottie/error.json",
+                  Lottie.asset("lib/src/resources/lottie/warning.json",
                       repeat: false, height: screenSize.height / 5),
                   Text(
-                    appLoc.errorSomethingWentWrong,
+                    appLoc.labelMaintenance,
                     style: Theme.of(context).textTheme.titleLarge,
                     textAlign: TextAlign.center,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "Error: $error",
-                      style: Theme.of(context).textTheme.bodyText1,
-                      textAlign: TextAlign.center,
-                    ),
                   ),
                 ],
               ),
@@ -50,8 +40,8 @@ class ErrorScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: AlcanciaButton(
-                    buttonText: appLoc.goBackToMainMenu,
-                    onPressed: () => context.go('/'),
+                  buttonText: appLoc.buttonTryAgain,
+                  onPressed: () => context.go('/'),
                   width: double.infinity,
                   height: 64,
                 ),

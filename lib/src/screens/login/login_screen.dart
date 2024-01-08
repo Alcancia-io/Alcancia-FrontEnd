@@ -1,5 +1,7 @@
 // Flutter package imports:
 import 'package:alcancia/src/features/registration/model/registration_controller.dart';
+import 'package:alcancia/src/shared/components/biometric_icon.dart';
+import 'package:alcancia/src/shared/services/biometric_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -35,7 +37,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    readUserInfo();
+    final biometricService = ref.read(biometricServiceProvider.notifier);
+    biometricService.isAppEnrolled().then((value) {
+      setState(() {
+        _biometricEnrolled = value;
+      });
+      readUserInfo();
+    });
   }
 
   @override
@@ -54,17 +62,33 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final controller = LoginController();
 
   String? userName;
-
   bool _rememberMe = false;
   bool _obscurePassword = true;
   bool _loading = false;
 
+  bool _biometricEnrolled = false;
+
+  Future<void> saveUserInfo(String name, String email, String pass) async {
+    final StorageItem userName = StorageItem("userName", name);
+    final StorageItem userEmail = StorageItem("userEmail", email);
+    final StorageItem password = StorageItem("password", pass);
+    await _storageService.writeSecureData(userName);
+    await _storageService.writeSecureData(userEmail);
+    await _storageService.writeSecureData(password);
+  }
+
   readUserInfo() async {
     var userEmail = await _storageService.readSecureData("userEmail");
     userName = await _storageService.readSecureData("userName");
-
+    var password = null;
+    if (_biometricEnrolled) {
+      password = await _storageService.readSecureData("password");
+    }
     if (userEmail != null) {
       emailController.text = userEmail;
+    }
+    if (password != null) {
+      passwordController.text = password!;
     }
     if (userName != null) {
       setState(() {});
@@ -77,6 +101,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     final appLocalization = AppLocalizations.of(context)!;
     final pushNotifications = ref.watch(pushNotificationProvider);
+    final biometricService = ref.watch(biometricServiceProvider.notifier);
 
     // for unverified users
     final registrationController = ref.watch(registrationControllerProvider);
@@ -118,104 +143,221 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     Column(
                       children: [
-                        if (userName == null)
-                          Column(
-                            children: [
-                              LabeledTextFormField(
-                                controller: emailController,
-                                labelText: appLocalization.labelEmail,
-                                inputType: TextInputType.emailAddress,
-                                inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r"\s"))],
-                                validator: (value) {
-                                  if (value == null ||
-                                      value.isEmpty) {
-                                    return appLocalization
-                                        .errorRequiredField;
-                                  } else {
-                                    return value.isValidEmail()
-                                        ? null
-                                        : appLocalization
-                                            .errorEmailFormat;
+                        if (userName == null) ...[
+                          AutofillGroup(
+                            child: Column(
+                              children: [
+                                LabeledTextFormField(
+                                  controller: emailController,
+                                  labelText: appLocalization.labelEmail,
+                                  inputType: TextInputType.emailAddress,
+                                  autofillHints: const [
+                                    AutofillHints.email,
+                                    AutofillHints.username
+                                  ],
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.deny(
+                                        RegExp(r"\s"))
+                                  ],
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return appLocalization.errorRequiredField;
+                                    } else {
+                                      return value.isValidEmail()
+                                          ? null
+                                          : appLocalization.errorEmailFormat;
+                                    }
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                LabeledTextFormField(
+                                  controller: passwordController,
+                                  labelText: appLocalization.labelPassword,
+                                  autofillHints: const [AutofillHints.password],
+                                  obscure: _obscurePassword,
+                                  suffixIcon: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _obscurePassword = !_obscurePassword;
+                                      });
+                                    },
+                                    child: Icon(_obscurePassword
+                                        ? CupertinoIcons.eye
+                                        : CupertinoIcons.eye_fill),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return appLocalization.errorRequiredField;
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    bottom: responsiveService.getHeightPixels(
+                                        6, screenHeight),
+                                    top: responsiveService.getHeightPixels(
+                                        6, screenHeight),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      CupertinoButton(
+                                        child: Row(
+                                          children: [
+                                            const Padding(
+                                              padding:
+                                                  EdgeInsets.only(right: 4.0),
+                                              child: Icon(CupertinoIcons
+                                                  .question_circle),
+                                            ),
+                                            Text(appLocalization
+                                                .labelForgotPassword),
+                                          ],
+                                        ),
+                                        onPressed: () async {
+                                          await _forgotPassword(
+                                              appLocalization);
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                if (_loading) ...[
+                                  const Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  ),
+                                ] else ...[
+                                  AlcanciaButton(
+                                    color: alcanciaLightBlue,
+                                    width: double.infinity,
+                                    height: responsiveService.getHeightPixels(
+                                        64, screenHeight),
+                                    buttonText: appLocalization.buttonLogIn,
+                                    onPressed: () async {
+                                      await _login(pushNotifications,
+                                          registrationController);
+                                    },
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                          _buildFooter(appLocalization: appLocalization),
+                        ] else ...[
+                          if (_biometricEnrolled) ...[
+                            if (_loading) ...[
+                              const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                            ] else ...[
+                              AlcanciaButton(
+                                color: alcanciaLightBlue,
+                                width: responsiveService.getHeightPixels(
+                                    345, screenHeight),
+                                rounded: true,
+                                foregroundColor: Colors.white,
+                                height: responsiveService.getHeightPixels(
+                                    64, screenHeight),
+                                buttonText: appLocalization.buttonLogIn,
+                                icon: const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: PlatformBiometricIcon(
+                                      color: Colors.white,
+                                    )),
+                                onPressed: () async {
+                                  final auth =
+                                      await biometricService.authenticate();
+                                  if (auth) {
+                                    await _login(pushNotifications,
+                                        registrationController);
                                   }
                                 },
                               ),
-                              _buildRememberMe(appLocalization, screenHeight),
                             ],
-                          ),
-                        LabeledTextFormField(
-                          controller: passwordController,
-                          labelText: appLocalization.labelPassword,
-                          obscure: _obscurePassword,
-                          suffixIcon: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _obscurePassword = !_obscurePassword;
-                              });
-                            },
-                            child: Icon(_obscurePassword
-                                ? CupertinoIcons.eye
-                                : CupertinoIcons.eye_fill),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return appLocalization
-                                  .errorRequiredField;
-                            }
-                            return null;
-                          },
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              bottom: responsiveService
-                                  .getHeightPixels(6, screenHeight),
-                              top: responsiveService.getHeightPixels(
-                                  6, screenHeight),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              CupertinoButton(
-                                  child: Row(
-                                    children: [
-                                      const Padding(
-                                        padding: EdgeInsets.only(
-                                            right: 4.0),
-                                        child: Icon(CupertinoIcons
-                                            .question_circle),
-                                      ),
-                                      Text(appLocalization
-                                          .labelForgotPassword),
-                                    ],
+                          ] else ...[
+                            LabeledTextFormField(
+                              controller: passwordController,
+                              labelText: appLocalization.labelPassword,
+                              autofillHints: const [AutofillHints.password],
+                              obscure: _obscurePassword,
+                              suffixIcon: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _obscurePassword = !_obscurePassword;
+                                  });
+                                },
+                                child: Icon(_obscurePassword
+                                    ? CupertinoIcons.eye
+                                    : CupertinoIcons.eye_fill),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return appLocalization.errorRequiredField;
+                                }
+                                return null;
+                              },
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                bottom: responsiveService.getHeightPixels(
+                                    6, screenHeight),
+                                top: responsiveService.getHeightPixels(
+                                    6, screenHeight),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  CupertinoButton(
+                                    child: Row(
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.only(right: 4.0),
+                                          child: Icon(
+                                              CupertinoIcons.question_circle),
+                                        ),
+                                        Text(appLocalization
+                                            .labelForgotPassword),
+                                      ],
+                                    ),
+                                    onPressed: () async {
+                                      await _forgotPassword(appLocalization);
+                                    },
                                   ),
-                                  onPressed: () async {
-                                    await _forgotPassword(appLocalization);
-                                  },
+                                ],
+                              ),
+                            ),
+                            if (_loading) ...[
+                              const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                            ] else ...[
+                              AlcanciaButton(
+                                color: alcanciaLightBlue,
+                                width: double.infinity,
+                                height: responsiveService.getHeightPixels(
+                                    64, screenHeight),
+                                buttonText: appLocalization.buttonLogIn,
+                                onPressed: () async {
+                                  await _login(pushNotifications,
+                                      registrationController);
+                                },
                               ),
                             ],
-                          ),
-                        ),
-                        if (_loading) ... [
-                          const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: CircularProgressIndicator(),
-                            ),
-                          ),
-                        ] else ... [
-                          AlcanciaButton(
-                            color: alcanciaLightBlue,
-                            width: double.infinity,
-                            height: responsiveService.getHeightPixels(
-                                64, screenHeight),
-                            buttonText: appLocalization.buttonLogIn,
-                            onPressed: () async {
-                              await _login(
-                                  pushNotifications,
-                                  registrationController);
-                            },
-                          ),
-                        ],
-                        _buildFooter(appLocalization: appLocalization),
+                          ],
+                          _buildFooter(appLocalization: appLocalization),
+                        ]
                       ],
                     ),
                   ],
@@ -228,8 +370,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  Future<void> _login(
-      PushNotificationProvider pushNotifications,
+  Future<void> _login(PushNotificationProvider pushNotifications,
       RegistrationController registrationController) async {
     try {
       setState(() {
@@ -265,23 +406,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _forgotPassword(appLocalization) async {
-    if (emailController
-        .text.isNotEmpty) {
+    if (emailController.text.isNotEmpty) {
       final StorageItem userEmail =
-      StorageItem("userEmail",
-          emailController.text);
-      await _storageService
-          .writeSecureData(userEmail);
-      context.pushNamed(
-          'forgot-password');
+          StorageItem("userEmail", emailController.text);
+      await _storageService.writeSecureData(userEmail);
+      context.pushNamed('forgot-password');
     } else {
       Fluttertoast.showToast(
-          msg: appLocalization
-              .errorEmailRequired,
-          toastLength:
-          Toast.LENGTH_SHORT,
-          gravity:
-          ToastGravity.BOTTOM,
+          msg: appLocalization.errorEmailRequired,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 2,
           backgroundColor: Colors.red,
           textColor: Colors.white,
@@ -292,25 +426,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget _buildRememberMe(appLocalization, screenHeight) {
     return Padding(
       padding: EdgeInsets.only(
-          bottom: responsiveService
-              .getHeightPixels(
-              6, screenHeight),
-          top: responsiveService
-              .getHeightPixels(
-              6, screenHeight)),
+          bottom: responsiveService.getHeightPixels(6, screenHeight),
+          top: responsiveService.getHeightPixels(6, screenHeight)),
       child: Row(
-        mainAxisAlignment:
-        MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(
             width: 25,
             child: Checkbox(
                 value: _rememberMe,
-                shape:
-                RoundedRectangleBorder(
-                  borderRadius:
-                  BorderRadius.circular(
-                      4),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4),
                 ),
                 onChanged: (value) {
                   setState(() {
@@ -319,10 +445,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 }),
           ),
           Padding(
-            padding: const EdgeInsets.only(
-                left: 8.0),
-            child: Text(appLocalization
-                .labelRememberUser),
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Text(appLocalization.labelRememberUser),
           ),
         ],
       ),
@@ -341,6 +465,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             setState(() {
               userName = null;
               emailController.text = "";
+              passwordController.text = "";
             });
           },
           child: Row(
@@ -407,5 +532,4 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       );
     }
   }
-
 }

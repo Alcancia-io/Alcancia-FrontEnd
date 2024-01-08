@@ -86,6 +86,8 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.12.0):
     - GoogleUtilities/Logger
+  - local_auth_ios (0.0.1):
+    - Flutter
   - metamap_plugin_flutter (4.1.2):
     - Flutter
     - MetaMapSDK (= 3.17.0)
@@ -149,6 +151,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
+  - local_auth_ios (from `.symlinks/plugins/local_auth_ios/ios`)
   - metamap_plugin_flutter (from `.symlinks/plugins/metamap_plugin_flutter/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
@@ -201,6 +204,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
+  local_auth_ios:
+    :path: ".symlinks/plugins/local_auth_ios/ios"
   metamap_plugin_flutter:
     :path: ".symlinks/plugins/metamap_plugin_flutter/ios"
   package_info_plus:
@@ -234,6 +239,7 @@ SPEC CHECKSUMS:
   fluttertoast: 31b00dabfa7fb7bacd9e7dbee580d7a2ff4bf265
   GoogleDataTransport: 54dee9d48d14580407f8f5fbf2f496e92437a2f2
   GoogleUtilities: 0759d1a57ebb953965c2dfe0ba4c82e95ccc2e34
+  local_auth_ios: c6cf091ded637a88f24f86a8875d8b0f526e2605
   metamap_plugin_flutter: d96422ebd067bcce50da1285260ff96ecc598814
   MetaMapSDK: e5afc1efc81a200490bd414c38c1ad51193a9126
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5

@@ -1,3 +1,6 @@
+import 'package:alcancia/src/shared/components/biometric_icon.dart';
+import 'package:alcancia/src/shared/services/biometric_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:alcancia/src/shared/components/alcancia_action_dialog.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
@@ -9,14 +12,39 @@ import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-
-class AccountScreen extends ConsumerWidget {
+class AccountScreen extends ConsumerStatefulWidget {
   const AccountScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AccountScreen> createState() => _AccountScreenState();
+}
+
+class _AccountScreenState extends ConsumerState<AccountScreen> {
+  bool biometricEnrolled = false;
+  bool supportBiometrics = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final biometricService = ref.read(biometricServiceProvider.notifier);
+    biometricService.isAppEnrolled().then((value) {
+      setState(() {
+        biometricEnrolled = value;
+      });
+    });
+    biometricService.deviceSupportsBiometrics().then((value) {
+      setState(() {
+        supportBiometrics = value;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final authService = ref.watch(authServiceProvider);
+    final biometricService = ref.watch(biometricServiceProvider.notifier);
     final appLoc = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AlcanciaToolbar(
@@ -59,6 +87,55 @@ class AccountScreen extends ConsumerWidget {
               //     ),
               //   ),
               // ),
+              if (supportBiometrics) ...[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        child: PlatformBiometricIcon()
+                      ),
+                      Expanded(
+                        child: Text(
+                          appLoc.labelUseBiometrics,
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
+                      ),
+                      CupertinoSwitch(
+                          value: biometricEnrolled,
+                          onChanged: (enroll) async {
+                            try {
+                              if (enroll) {
+                                bool biometricState =
+                                    await biometricService.authenticate();
+                                if (biometricState == true) {
+                                  await biometricService
+                                      .enrollApp()
+                                      .whenComplete(() {
+                                    setState(() {
+                                      biometricEnrolled = true;
+                                    });
+                                  });
+                                }
+                              } else {
+                                await biometricService
+                                    .unenrollApp()
+                                    .whenComplete(() {
+                                  setState(() {
+                                    biometricEnrolled = false;
+                                  });
+                                });
+                              }
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  alcanciaSnackBar(context, e.toString()));
+                            }
+                          })
+                    ],
+                  ),
+                ),
+              ],
               const Spacer(),
               Center(
                 child: Padding(
@@ -69,7 +146,8 @@ class AccountScreen extends ConsumerWidget {
                       side: const BorderSide(color: Colors.red),
                       buttonText: appLoc.buttonDeleteAccount,
                       fontSize: 18,
-                      padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
+                      padding: const EdgeInsets.only(
+                          left: 24.0, right: 24.0, top: 4.0, bottom: 4.0),
                       onPressed: () async {
                         await showDialog(
                             context: context,
@@ -83,7 +161,9 @@ class AccountScreen extends ConsumerWidget {
                                     await authService.deleteAccount();
                                     await deleteToken();
                                     context.goNamed("welcome");
-                                    ref.read(userProvider.notifier).setUser(null);
+                                    ref
+                                        .read(userProvider.notifier)
+                                        .setUser(null);
                                   } catch (e) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         alcanciaSnackBar(context,

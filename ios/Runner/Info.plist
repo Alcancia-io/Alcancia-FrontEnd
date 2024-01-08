@@ -67,5 +67,7 @@
 	<false/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Permite el acceso para verificar tu identidad durante el inicio de sesión</string>
 </dict>
 </plist>
