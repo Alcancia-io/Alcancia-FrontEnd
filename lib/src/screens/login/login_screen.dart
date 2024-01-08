@@ -66,11 +66,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _obscurePassword = true;
   bool _loading = false;
 
-<<<<<<< HEAD
-=======
   bool _biometricEnrolled = false;
 
->>>>>>> stage
   Future<void> saveUserInfo(String name, String email, String pass) async {
     final StorageItem userName = StorageItem("userName", name);
     final StorageItem userEmail = StorageItem("userEmail", email);

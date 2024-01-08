@@ -59,13 +59,8 @@ Future<bool> isUserAuthenticated() async {
     var token = await service.readSecureData("token");
     GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "$token");
     GraphQLClient client = graphQLConfiguration.clientToQuery();
-<<<<<<< HEAD
-
-    var result = await client.query(QueryOptions(document: gql(isAuthenticatedQuery)));
-=======
     var result =
         await client.query(QueryOptions(document: gql(isAuthenticatedQuery)));
->>>>>>> stage
     if (result.hasException) {
       final graphQLErrors = result.exception?.graphqlErrors;
       final linkException = result.exception?.linkException?.originalException;
