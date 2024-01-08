@@ -11,11 +11,12 @@ class BiometricAuthenticationScreen extends ConsumerStatefulWidget {
   const BiometricAuthenticationScreen({super.key});
 
   @override
-  ConsumerState<BiometricAuthenticationScreen> createState() => _BiometricAuthenticationScreenState();
+  ConsumerState<BiometricAuthenticationScreen> createState() =>
+      _BiometricAuthenticationScreenState();
 }
 
-class _BiometricAuthenticationScreenState extends ConsumerState<BiometricAuthenticationScreen> {
-
+class _BiometricAuthenticationScreenState
+    extends ConsumerState<BiometricAuthenticationScreen> {
   @override
   void initState() {
     super.initState();
@@ -52,7 +53,8 @@ class _BiometricAuthenticationScreenState extends ConsumerState<BiometricAuthent
         children: [
           Padding(
             padding: const EdgeInsets.all(32.0),
-            child: Icon(CupertinoIcons.lock_fill, size: 128, color: darkMode ? Colors.white : Colors.black),
+            child: Icon(CupertinoIcons.lock_fill,
+                size: 128, color: darkMode ? Colors.white : Colors.black),
           ),
           Text(
             appLoc.labelBiometricAuthenticationDescription,
