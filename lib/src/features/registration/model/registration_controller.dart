@@ -66,7 +66,6 @@ class RegistrationController {
     final signupInput = {
       "birthdate": DateFormat('yyyy-MM-dd').format(user.dob),
       "country": user.country,
-      "deviceToken": "",
       "email": user.email.toLowerCase(),
       "gender": user.gender,
       "lastName": user.surname,
