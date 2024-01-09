@@ -58,7 +58,9 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
   @override
   void dispose() {
     _refreshTimer.cancel();
-    ZendeskMessaging.logoutUser();
+    if (isLogin) {
+      ZendeskMessaging.logoutUser().onError((error, stacktrace) => debugPrint('Error logging out of Zendesk: ${error.toString()}'));
+    }
     super.dispose();
   }
 

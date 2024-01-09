@@ -1,6 +1,5 @@
 import 'package:alcancia/main.dart';
 import 'package:alcancia/src/screens/deposit/crypto_deposit_screen.dart';
-import 'package:alcancia/src/screens/deposit/deposit_option.dart';
 import 'package:alcancia/src/screens/deposit/deposit_screen.dart';
 import 'package:alcancia/src/screens/swap/swap_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
@@ -26,7 +25,7 @@ void main() {
         findsOneWidget); // Replace 'Deposit' with the expected title
 
     // Verify that both DepositOptions are displayed.
-    expect(find.byType(DepositOption), findsNWidgets(2));
+    expect(find.byType(DepositScreen), findsNWidgets(2));
 
     // Verify that the AppBar contains the title.
     expect(find.text('Deposit'), findsOneWidget);

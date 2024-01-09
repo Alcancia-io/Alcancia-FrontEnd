@@ -267,5 +267,10 @@
 	"labelVerifyYourAccountDescription": "Enter your email and password to continue with verification:",
 	"buttonVerifyAccount": "Verify account",
 	"labelNoInternetConnection": "Please check your connection and try again",
-	"buttonTryAgain": "Try again"
+	"buttonTryAgain": "Try again",
+	"labelUseBiometrics": "Use biometrics",
+	"labelBiometricAuthentication": "Biometric authentication",
+	"labelBiometricAuthenticationDescription": "Use your fingerprint or face to log in to your account",
+	"labelMaintenance": "We are currently performing maintenance on our servers. Please try again later."
+
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:alcancia/main.dart';
 import 'package:alcancia/src/features/registration/presentation/phone_registration_screen.dart';
 import 'package:alcancia/src/screens/account_verification.dart';
+import 'package:alcancia/src/screens/biometric/biometric_authentication_screen.dart';
 import 'package:alcancia/src/screens/login/login_screen.dart';
 import 'package:alcancia/src/features/registration/model/graphql_config.dart';
 import 'package:alcancia/src/features/registration/presentation/otp_screen.dart';
@@ -16,6 +17,7 @@ import 'package:alcancia/src/screens/deposit/deposit_screen.dart';
 import 'package:alcancia/src/screens/error/error_screen.dart';
 import 'package:alcancia/src/screens/forgot_password/forgot_password.dart';
 import 'package:alcancia/src/screens/login/mfa_screen.dart';
+import 'package:alcancia/src/screens/maintenance/maintenance_screen.dart';
 import 'package:alcancia/src/screens/metamap/address_screen.dart';
 import 'package:alcancia/src/screens/network_error/network_error_screen.dart';
 import 'package:alcancia/src/screens/onboarding/onboarding_screens.dart';
@@ -36,15 +38,18 @@ import 'package:alcancia/src/shared/models/checkout_model.dart';
 import 'package:alcancia/src/shared/models/login_data_model.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
 import 'package:alcancia/src/shared/models/success_screen_model.dart';
+import 'package:alcancia/src/shared/services/biometric_service.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:alcancia/src/shared/services/version_service.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:alcancia/src/screens/transaction_detail/transaction_detail.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../screens/chart/line_chart_screen.dart';
 
@@ -54,12 +59,22 @@ Future<bool> isUserAuthenticated() async {
     var token = await service.readSecureData("token");
     GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "$token");
     GraphQLClient client = graphQLConfiguration.clientToQuery();
-    var result = await client.query(QueryOptions(document: gql(meQuery)));
-    return !result.hasException;
+
+    var result = await client.query(QueryOptions(document: gql(isAuthenticatedQuery)));
+    if (result.hasException) {
+      final graphQLErrors = result.exception?.graphqlErrors;
+      final linkException = result.exception?.linkException?.originalException;
+      if (graphQLErrors != null && graphQLErrors.isNotEmpty) {
+        return false;
+      } else if (linkException != null && linkException.toString().contains("CERTIFICATE_VERIFY_FAILED")) {
+        return Future.error("CERTIFICATE_VERIFY_FAILED");
+      }
+    }
+    return true;
   } catch (e) {
     await FirebaseCrashlytics.instance.recordError(e, StackTrace.current);
     await service.deleteSecureData("token");
-    return false;
+    rethrow;
   }
   // print(result.hasException);
 }
@@ -68,8 +83,7 @@ Future<String> getCurrentlySupportedAppVersion() async {
   VersionService service = VersionService();
   var result = await service.getCurrentlySupportedAppVersion();
   if (result.hasException) {
-    return Future.error(result.exception?.graphqlErrors[0].message ??
-        "Exception getting latest supported version");
+    return Future.error(result.exception?.graphqlErrors[0].message ?? "Exception getting latest supported version");
   }
   return result.data?['getCurrentlySupportedAppVersion']['version'] as String;
 }
@@ -100,6 +114,8 @@ Future<bool> _finishedOnboarding() async {
 
 final routerProvider = Provider<GoRouter>(
   (ref) {
+    final biometricService = ref.watch(biometricServiceProvider.notifier);
+
     return GoRouter(
       initialLocation: "/",
       navigatorKey: navigatorKey,
@@ -120,7 +136,7 @@ final routerProvider = Provider<GoRouter>(
           path: "/homescreen/:id",
           builder: (context, state) {
             return AlcanciaTabbar(
-              selectedIndex: int.parse(state.params['id'] as String),
+              selectedIndex: int.parse(state.pathParameters['id'] as String),
             );
           },
         ),
@@ -137,8 +153,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "phone-registration",
           path: "/phone-registration",
-          builder: (context, state) => PhoneRegistrationScreen(
-              userRegistrationData: state.extra as UserRegistrationModel),
+          builder: (context, state) =>
+              PhoneRegistrationScreen(userRegistrationData: state.extra as UserRegistrationModel),
         ),
         GoRoute(
           name: "swap",
@@ -148,8 +164,7 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "transaction_detail",
           path: "/transaction_detail",
-          builder: (context, state) =>
-              TransactionDetail(txn: state.extra as Transaction),
+          builder: (context, state) => TransactionDetail(txn: state.extra as Transaction),
         ),
         GoRoute(
           name: "otp",
@@ -161,8 +176,7 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "mfa",
           path: "/mfa",
-          builder: (context, state) =>
-              MFAScreen(data: state.extra as LoginDataModel),
+          builder: (context, state) => MFAScreen(data: state.extra as LoginDataModel),
         ),
         GoRoute(
           name: "checkout",
@@ -201,8 +215,7 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "success",
           path: "/success",
-          builder: (context, state) =>
-              SuccessScreen(model: state.extra as SuccessScreenModel),
+          builder: (context, state) => SuccessScreen(model: state.extra as SuccessScreenModel),
         ),
         GoRoute(
           name: "onboarding",
@@ -255,60 +268,69 @@ final routerProvider = Provider<GoRouter>(
           name: "network-error",
           path: "/network-error",
           builder: (context, state) => const NetworkErrorScreen(),
+        ),
+        GoRoute(
+          name: "biometric-authentication",
+          path: "/biometric-authentication",
+          builder: (context, state) => const BiometricAuthenticationScreen(),
+        ),
+        GoRoute(
+          name: "maintenance",
+          path: "/maintenance",
+          builder: (context, state) => const MaintenanceScreen(),
         )
       ],
       redirect: (context, state) async {
-        final loginLoc = state.namedLocation("login");
-        final loggingIn = state.subloc == loginLoc;
-        final createAccountLoc = state.namedLocation("registration");
-        final welcomeLoc = state.namedLocation("welcome");
-        final mfaLoc = state.namedLocation("mfa");
-        final isMfa = state.subloc == mfaLoc;
-        final otp = state.namedLocation("otp");
-        final isOtp = state.subloc == otp;
-        final accountVerificationLoc =
-            state.namedLocation("account-verification");
-        final isAccountVerification = state.subloc == accountVerificationLoc;
-        final phoneRegistration = state.namedLocation("phone-registration");
-        final isPhoneRegistration = state.subloc == phoneRegistration;
-        final isStartup = state.subloc == welcomeLoc;
-        final creatingAccount = state.subloc == createAccountLoc;
-        final loggedIn = await isUserAuthenticated();
-        final home = state.namedLocation("homescreen", params: {"id": "0"});
-        final forgotPassword = state.namedLocation('forgot-password');
-        final isForgotPassword = state.subloc == forgotPassword;
-        final finishedOnboarding = await _finishedOnboarding();
-        final onboardingLoc = state.namedLocation('onboarding');
-        final isOnboarding = state.subloc == onboardingLoc;
-        final requiredUpdateLoc = state.namedLocation('update-required');
-        final networkErrorLoc = state.namedLocation('network-error');
 
-        final isNetworkConnected = await checkNetwork();
-        if (!isNetworkConnected) return networkErrorLoc;
+        try {
+          final loggingIn = state.matchedLocation == "/login";
+          final isMfa = state.matchedLocation == "/mfa";
+          final isOtp = state.matchedLocation == "/otp";
+          final isAccountVerification = state.matchedLocation == "/account-verification";
+          final isPhoneRegistration = state.matchedLocation == "/phone-registration";
+          final isStartup = state.matchedLocation == "/";
+          final creatingAccount = state.matchedLocation == "/registration";
+          final loggedIn = await isUserAuthenticated();
+          final isForgotPassword = state.matchedLocation == "/forgot-password";
+          final finishedOnboarding = await _finishedOnboarding();
+          final isOnboarding = state.matchedLocation == "/onboarding";
 
-        final buildNumber = await getCurrentBuildNumber();
-        String supportedVersion = await getCurrentlySupportedAppVersion();
-        supportedVersion = supportedVersion.replaceAll("'", "");
-        final isSupportedVersion = int.parse(buildNumber) >=
-            (int.tryParse(supportedVersion.split(".").last) ?? 1000000);
-        if (!isSupportedVersion) return requiredUpdateLoc;
+          final isNetworkConnected = await checkNetwork();
+          if (!isNetworkConnected) return "/network-error";
 
-        if (!loggedIn && !finishedOnboarding && !isOnboarding)
-          return onboardingLoc;
-        if (!loggedIn &&
-            !loggingIn &&
-            !creatingAccount &&
-            !isStartup &&
-            !isMfa &&
-            !isPhoneRegistration &&
-            !isOtp &&
-            !isForgotPassword &&
-            !isOnboarding &&
-            !isAccountVerification) return welcomeLoc;
-        if (loggedIn && (loggingIn || creatingAccount || isStartup))
-          return home;
-        return null;
+          final buildNumber = await getCurrentBuildNumber();
+          String supportedVersion = await getCurrentlySupportedAppVersion();
+          supportedVersion = supportedVersion.replaceAll("'", "");
+          final isSupportedVersion =
+              int.parse(buildNumber) >= (int.tryParse(supportedVersion.split(".").last) ?? 1000000);
+          if (!isSupportedVersion) return "/update-required";
+
+          if (!loggedIn && !finishedOnboarding && !isOnboarding) return "/onboarding";
+          if (!loggedIn &&
+              !loggingIn &&
+              !creatingAccount &&
+              !isStartup &&
+              !isMfa &&
+              !isPhoneRegistration &&
+              !isOtp &&
+              !isForgotPassword &&
+              !isOnboarding &&
+              !isAccountVerification) return "/";
+          if (loggedIn && (loggingIn || creatingAccount || isStartup)) {
+            final biometricState = ref.read(biometricServiceProvider);
+            if (await biometricService.isAppEnrolled() && !biometricState) {
+              ref.read(biometricLockProvider.notifier).state = true;
+            }
+            return "/homescreen/0";
+          }
+        } catch (e) {
+          if (e.toString().contains("CERTIFICATE_VERIFY_FAILED")) {
+            return "/maintenance";
+          }
+          return null;
+        }
       },
+      errorBuilder: (context, state) => const ErrorScreen(),
     );
   },
 );
