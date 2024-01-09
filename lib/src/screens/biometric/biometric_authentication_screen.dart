@@ -1,6 +1,8 @@
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
+import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import 'package:alcancia/src/shared/provider/auth_service_provider.dart';
 import 'package:alcancia/src/shared/services/biometric_service.dart';
+import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,6 +40,8 @@ class _BiometricAuthenticationScreenState
 
     if (attemptsBiometric >= 3) {
       await ref.read(authServiceProvider).logout();
+      final StorageService storageService = StorageService();
+      await storageService.deleteSecureData("token");
       context.go("/welcome");
     }
   }
