@@ -1,4 +1,4 @@
-import 'package:alcancia/src/shared/graphql/mutations/update_user_mutation.dart';
+import 'package:alcancia/src/shared/graphql/mutations/update_authenticated_user_mutation.dart';
 import 'package:alcancia/src/shared/graphql/queries/campaing_user_exists_query.dart';
 import 'package:alcancia/src/shared/graphql/queries/get_authenticated_user_query.dart';
 import 'package:alcancia/src/shared/graphql/queries/get_referral_code_query.dart';
@@ -60,7 +60,7 @@ class UserService {
     final clientResponse = await client;
     return await clientResponse.query(
       QueryOptions(
-        document: gql(updateUserMutation),
+        document: gql(updateAuthenticatedUserMutation),
         variables: {"updateUserInput": info},
       ),
     );
