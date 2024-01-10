@@ -32,13 +32,14 @@ import 'package:alcancia/src/screens/withdraw/withdraw_options_screen.dart';
 import 'package:alcancia/src/screens/withdraw/withdraw_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
 import 'package:alcancia/src/shared/graphql/queries/index.dart';
-import 'package:alcancia/src/shared/graphql/queries/is_authenticated_query.dart';
+import 'package:alcancia/src/shared/graphql/queries/get_authenticated_user_query.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:alcancia/src/shared/models/checkout_model.dart';
 import 'package:alcancia/src/shared/models/login_data_model.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
 import 'package:alcancia/src/shared/models/success_screen_model.dart';
 import 'package:alcancia/src/shared/services/biometric_service.dart';
+import 'package:alcancia/src/shared/services/services.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:alcancia/src/shared/services/version_service.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -55,12 +56,9 @@ import '../../screens/chart/line_chart_screen.dart';
 
 Future<bool> isUserAuthenticated() async {
   StorageService service = StorageService();
+  UserService userService = UserService();
   try {
-    var token = await service.readSecureData("token");
-    GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "$token");
-    GraphQLClient client = graphQLConfiguration.clientToQuery();
-
-    var result = await client.query(QueryOptions(document: gql(isAuthenticatedQuery)));
+    var result = await userService.getUser();
     if (result.hasException) {
       final graphQLErrors = result.exception?.graphqlErrors;
       final linkException = result.exception?.linkException?.originalException;

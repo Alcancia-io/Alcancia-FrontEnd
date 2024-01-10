@@ -1,6 +1,6 @@
-const String meQuery = """
+const String getAuthenticatedUserQuery = """
   query {
-    me {
+    getAuthenticatedUser {
       id,
       authId,
       surname,

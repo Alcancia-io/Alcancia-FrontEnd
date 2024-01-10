@@ -1,8 +1,8 @@
 import 'package:alcancia/src/shared/graphql/mutations/update_user_mutation.dart';
 import 'package:alcancia/src/shared/graphql/queries/campaing_user_exists_query.dart';
+import 'package:alcancia/src/shared/graphql/queries/get_authenticated_user_query.dart';
 import 'package:alcancia/src/shared/graphql/queries/get_referral_code_query.dart';
 import 'package:alcancia/src/shared/graphql/queries/index.dart';
-import 'package:alcancia/src/shared/graphql/queries/me_query.dart';
 import 'package:alcancia/src/shared/graphql/queries/user_phone_number_search_query.dart';
 import 'package:alcancia/src/shared/graphql/queries/walletbalance_query.dart';
 import 'package:alcancia/src/shared/models/balance_history_model.dart';
@@ -24,7 +24,7 @@ class UserService {
     var clientResponse = await client;
     return await clientResponse.query(
       QueryOptions(
-        document: gql(meQuery),
+        document: gql(getAuthenticatedUserQuery),
       ),
     );
   }
