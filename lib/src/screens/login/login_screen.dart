@@ -34,6 +34,9 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
+
+  bool _biometricEnrolled = false;
+
   @override
   void initState() {
     super.initState();
@@ -371,12 +374,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       setState(() {
         _loading = true;
       });
-      final deviceToken = await pushNotifications.messaging.getToken();
 
-      final data = await controller.login(
-          emailController.text, passwordController.text, deviceToken ?? "");
-      await saveToken(data.token);
-      await saveUserInfo(data.name, data.email, data.password);
+      final data = await controller.signIn(
+          emailController.text, passwordController.text);
       data.rememberMe = true;
       context.push("/mfa", extra: data);
       setState(() {

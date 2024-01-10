@@ -1,8 +1,10 @@
 import 'package:alcancia/src/shared/graphql/mutations/complete_mfa_sign_in_mutation.dart';
+import 'package:alcancia/src/shared/graphql/mutations/delete_account_mutation.dart';
 import 'package:alcancia/src/shared/graphql/mutations/login_mutation.dart';
 import 'package:alcancia/src/shared/graphql/mutations/complete_forgot_password_mutation.dart';
 import 'package:alcancia/src/shared/graphql/mutations/signin_mutation.dart';
 import 'package:alcancia/src/shared/graphql/queries/index.dart';
+import 'package:alcancia/src/shared/graphql/queries/logout_query.dart';
 import 'package:alcancia/src/shared/models/MFAModel.dart';
 import 'package:alcancia/src/shared/services/graphql_service.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -25,27 +27,31 @@ class AuthService {
     graphQLConfig = GraphQLConfig();
     client = graphQLConfig.clientToQuery();
   }
+  
 
-  static String deleteAccountQuery = """
-  mutation  {
-    deleteUserAccount(){
-      status
+  Future<void> logout() async {
+    try {
+      final clientResponse = await client;
+      QueryResult result = await clientResponse.query(
+        QueryOptions(
+          document: gql(logoutQuery),
+        ),
+      );
+
+      if (result.hasException) {
+        return Future.error(result.exception?.graphqlErrors[0].message ?? "Exception");
+      }
+    } catch (e) {
+      return Future.error(e);
     }
   }
-  """;
-
-  static String completeSignInQuery = """
-  query(\$verificationCode: String!){
-    completeSignIn(verificationCode: \$verificationCode)
-  }
-  """;
 
   Future<bool> deleteAccount() async {
     try {
       final clientResponse = await client;
       QueryResult result = await clientResponse.mutate(
         MutationOptions(
-          document: gql(deleteAccountQuery),
+          document: gql(deleteAccountMutation),
         ),
       );
 
@@ -135,4 +141,6 @@ class AuthService {
       ),
     );
   }
+
+
 }
