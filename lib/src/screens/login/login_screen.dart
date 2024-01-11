@@ -376,7 +376,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       setState(() {
         _loading = true;
       });
-      final deviceToken = await pushNotifications.messaging.getToken();
       final data = await controller.signIn(
           emailController.text, passwordController.text);
       data.rememberMe = true;
