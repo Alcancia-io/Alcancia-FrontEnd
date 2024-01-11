@@ -7,10 +7,14 @@ class TransferController {
   Future<MinimalUser> searchUser({required String phoneNumber}) async {
     UserService userService = UserService();
     try {
-      final response = await userService.searchUserFromPhoneNumber(phoneNumber: phoneNumber);
-      if (response.hasException) return Future.error("${_exceptionHandler.handleException(response.exception!)}");
+      final response =
+          await userService.searchUserFromPhoneNumber(phoneNumber: phoneNumber);
+      if (response.hasException)
+        return Future.error(
+            "${_exceptionHandler.handleException(response.exception!)}");
       if (response.data != null) {
-        Map<String, dynamic> data = response.data!["userPhoneNumberSearch"];
+        Map<String, dynamic> data =
+            response.data!["searchUserByTelephoneNumber"];
         final user = MinimalUser.fromJSON(data);
         return user;
       }
@@ -20,7 +24,10 @@ class TransferController {
     return Future.error('Error getting user');
   }
 
-  Future<TransferResponse> transferFunds({required String amount, required String destUserId, required String token}) async {
+  Future<TransferResponse> transferFunds(
+      {required String amount,
+      required String destUserId,
+      required String token}) async {
     TransactionsService transactionService = TransactionsService();
     try {
       final transferInput = {
@@ -31,7 +38,9 @@ class TransferController {
         },
       };
       final response = await transactionService.transferFunds(transferInput);
-      if (response.hasException) return Future.error("${_exceptionHandler.handleException(response.exception!)}");
+      if (response.hasException)
+        return Future.error(
+            "${_exceptionHandler.handleException(response.exception!)}");
       if (response.data != null) {
         Map<String, dynamic> data = response.data!["transferFunds"];
         final transferResponse = TransferResponse.fromJSON(data);
