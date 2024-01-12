@@ -43,7 +43,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
 
   // source amount icons
   List<Map> sourceCurrencyCodes = [
-    {"name": "MXN", "icon": "lib/src/resources/images/icon_mexico_flag.png"},
+    //{"name": "MXN", "icon": "lib/src/resources/images/icon_mexico_flag.png"},
     {"name": "DOP", "icon": "lib/src/resources/images/icon_dominican_flag.png"},
   ];
 
@@ -156,10 +156,12 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     } else {
       sourceCurrency = sourceCurrencyCodes.first['name'];
     }
-    final sourceCurrencyIndex = sourceCurrencyCodes
-        .indexWhere((element) => element['name'] == sourceCurrency);
-    final code = sourceCurrencyCodes.removeAt(sourceCurrencyIndex);
-    sourceCurrencyCodes.insert(0, code);
+    if (sourceCurrencyCodes.length > 1) {
+      final sourceCurrencyIndex = sourceCurrencyCodes
+          .indexWhere((element) => element['name'] == sourceCurrency);
+      final code = sourceCurrencyCodes.removeAt(sourceCurrencyIndex);
+      sourceCurrencyCodes.insert(0, code);
+    }
   }
 
   @override

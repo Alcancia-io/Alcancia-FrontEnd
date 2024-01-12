@@ -1,6 +1,7 @@
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/screens/dashboard/dashboard_controller.dart';
 import 'package:alcancia/src/shared/components/alcancia_button.dart';
+import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
 import 'package:alcancia/src/shared/models/kyc_status.dart';
 import 'package:alcancia/src/shared/models/user_model.dart';
 import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
