@@ -348,18 +348,18 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                 ),
                               ],
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16.0),
-                              child: Text(
-                                "*1 USDC = ${(sourceCurrency == "MXN" ? suarmiUSDCExchage : alcanciaUSDCExchange).toStringAsFixed(2)} $sourceCurrency",
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.grey[700],
-                                  fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                            ),
+                            // Padding(
+                            //   padding: const EdgeInsets.only(top: 16.0),
+                            //   child: Text(
+                            //     "*1 USDC = ${(sourceCurrency == "MXN" ? suarmiUSDCExchage : alcanciaUSDCExchange).toStringAsFixed(2)} $sourceCurrency",
+                            //     style: TextStyle(
+                            //       fontSize: 13,
+                            //       fontWeight: FontWeight.normal,
+                            //       color: Colors.grey[700],
+                            //       fontStyle: FontStyle.italic,
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
