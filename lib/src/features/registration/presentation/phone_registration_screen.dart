@@ -1,6 +1,7 @@
 import 'package:alcancia/src/features/registration/presentation/registration_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_container.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
+import 'package:alcancia/src/shared/provider/push_notifications_provider.dart';
 import 'package:alcancia/src/shared/services/exception_service.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +57,7 @@ class _PhoneRegistrationScreenState
     final appLocalization = AppLocalizations.of(context)!;
     final selectedCountry = ref.watch(selectedCountryProvider);
     final registrationController = ref.watch(registrationControllerProvider);
+    final pushNotifications = ref.watch(pushNotificationProvider);
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -201,9 +203,10 @@ class _PhoneRegistrationScreenState
                                   phoneNumber;
                               widget.userRegistrationData.user.country =
                                   selectedCountry.code;
+                              final deviceToken = await pushNotifications.messaging.getToken();
                               await registrationController.signUp(
                                   widget.userRegistrationData.user,
-                                  widget.userRegistrationData.password);
+                                  widget.userRegistrationData.password, deviceToken ?? "");
                               timer.setPresetMinuteTime(1, add: false);
                               timer.onResetTimer();
                               timer.onStartTimer();

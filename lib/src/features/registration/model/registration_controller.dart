@@ -43,8 +43,8 @@ class RegistrationController {
     }
   }
 
-  Future<void> verifyOTP(String otp, String email) async {
-    var confirmSignUpInput = {"code": otp, "email": email, "deviceToken": ""};
+  Future<void> verifyOTP(String otp, String email, String deviceToken) async {
+    var confirmSignUpInput = {"code": otp, "email": email, "deviceToken": deviceToken};
     try {
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
       GraphQLClient client = graphQLConfiguration.clientToQuery();
@@ -62,11 +62,10 @@ class RegistrationController {
     }
   }
 
-  Future<void> signUp(User user, String password) async {
+  Future<void> signUp(User user, String password, String deviceToken) async {
     final signupInput = {
       "birthdate": DateFormat('yyyy-MM-dd').format(user.dob),
       "country": user.country,
-      "deviceToken": "",
       "email": user.email.toLowerCase(),
       "gender": user.gender,
       "lastName": user.surname,
