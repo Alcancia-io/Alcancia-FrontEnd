@@ -164,6 +164,7 @@ app.*.symbols
 
 #Amplify Stuff
 amplify/
+amplify/.config/
 amplify-configuration.json
 amplifyconfiguration.dart
 # Coverage
