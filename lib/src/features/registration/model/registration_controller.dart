@@ -66,7 +66,7 @@ class RegistrationController {
     }
   }
 
-  Future<void> signUp(User user, String password) async {
+  Future<void> signUp(User user, String password, String deviceToken) async {
     final signupInput = {
       "birthdate": DateFormat('yyyy-MM-dd').format(user.dob),
       "country": user.country,

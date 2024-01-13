@@ -39,7 +39,6 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
     final registrationController = ref.watch(registrationControllerProvider);
     final appLocalization = AppLocalizations.of(context)!;
     final pushNotifications = ref.watch(pushNotificationProvider);
-
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(

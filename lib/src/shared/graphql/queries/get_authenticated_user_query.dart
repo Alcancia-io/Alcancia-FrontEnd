@@ -1,9 +1,20 @@
 const String getAuthenticatedUserQuery = """
   query {
     getAuthenticatedUser {
-      id
-      name
-      email
+      id,
+      authId,
+      surname,
+      gender,
+      country,
+      phoneNumber,
+      dob,
+      name,
+      email,
+      walletAddress,
+      kycStatus,
+      profession,
+      address,
+      lastUsedBankAccount,
     }
   }
 """;

@@ -256,7 +256,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                                 cancelText: appLoc.buttonCancel,
                                 acceptAction: () async {
                                   try {
-                                    await UserState().logout();
+                                    await authService.logout();
                                     await deleteToken();
                                     ref
                                         .read(userProvider.notifier)
