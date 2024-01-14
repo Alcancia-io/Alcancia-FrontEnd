@@ -59,7 +59,8 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
   void dispose() {
     _refreshTimer.cancel();
     if (isLogin) {
-      ZendeskMessaging.logoutUser().onError((error, stacktrace) => debugPrint('Error logging out of Zendesk: ${error.toString()}'));
+      ZendeskMessaging.logoutUser().onError((error, stacktrace) =>
+          debugPrint('Error logging out of Zendesk: ${error.toString()}'));
     }
     super.dispose();
   }
@@ -256,7 +257,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                                 cancelText: appLoc.buttonCancel,
                                 acceptAction: () async {
                                   try {
-                                    await UserState().logout();
+                                    await authService.logout();
                                     await deleteToken();
                                     ref
                                         .read(userProvider.notifier)
