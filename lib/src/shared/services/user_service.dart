@@ -72,7 +72,9 @@ class UserService {
     return await clientResponse.query(
       QueryOptions(
         document: gql(userPhoneNumberSearchQuery),
-        variables: {"phoneNumber": phoneNumber},
+        variables: {
+          "SearchUserByTelephoneNumberInput": {"telephoneNumber": phoneNumber}
+        },
       ),
     );
   }
