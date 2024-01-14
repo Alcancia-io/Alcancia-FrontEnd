@@ -27,7 +27,6 @@ class AuthService {
     graphQLConfig = GraphQLConfig();
     client = graphQLConfig.clientToQuery();
   }
-  
 
   Future<void> logout() async {
     try {
@@ -39,18 +38,13 @@ class AuthService {
       );
 
       if (result.hasException) {
-        return Future.error(result.exception?.graphqlErrors[0].message ?? "Exception");
+        return Future.error(
+            result.exception?.graphqlErrors[0].message ?? "Exception");
       }
     } catch (e) {
       return Future.error(e);
     }
   }
-
-  static String logoutQuery = """
-  query {
-    logout
-  }
-""";
 
   Future<bool> deleteAccount() async {
     try {
@@ -86,24 +80,6 @@ class AuthService {
         }
       }),
     );
-  }
-
-  Future<void> logout() async {
-    try {
-      final clientResponse = await client;
-      QueryResult result = await clientResponse.query(
-        QueryOptions(
-          document: gql(logoutQuery),
-        ),
-      );
-
-      if (result.hasException) {
-        return Future.error(
-            result.exception?.graphqlErrors[0].message ?? "Exception");
-      }
-    } catch (e) {
-      return Future.error(e);
-    }
   }
 
   @Deprecated("Use signIn instead")
@@ -165,6 +141,4 @@ class AuthService {
       ),
     );
   }
-
-
 }
