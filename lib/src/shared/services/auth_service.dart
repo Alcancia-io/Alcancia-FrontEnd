@@ -27,7 +27,6 @@ class AuthService {
     graphQLConfig = GraphQLConfig();
     client = graphQLConfig.clientToQuery();
   }
-  
 
   Future<void> logout() async {
     try {
@@ -39,7 +38,8 @@ class AuthService {
       );
 
       if (result.hasException) {
-        return Future.error(result.exception?.graphqlErrors[0].message ?? "Exception");
+        return Future.error(
+            result.exception?.graphqlErrors[0].message ?? "Exception");
       }
     } catch (e) {
       return Future.error(e);
@@ -141,6 +141,4 @@ class AuthService {
       ),
     );
   }
-
-
 }

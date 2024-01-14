@@ -59,6 +59,7 @@ Future<bool> isUserAuthenticated() async {
   UserService userService = UserService();
   try {
     var result = await userService.getUser();
+
     if (result.hasException) {
       final graphQLErrors = result.exception?.graphqlErrors;
       final linkException = result.exception?.linkException?.originalException;

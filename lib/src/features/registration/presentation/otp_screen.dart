@@ -39,6 +39,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
     final registrationController = ref.watch(registrationControllerProvider);
     final appLocalization = AppLocalizations.of(context)!;
     final pushNotifications = ref.watch(pushNotificationProvider);
+
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -153,7 +154,6 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                           onPressed: () async {
                             _setLoading(true);
                             try {
-
                               final deviceToken =
                                   await pushNotifications.messaging.getToken();
                               await registrationController.verifyOTP(

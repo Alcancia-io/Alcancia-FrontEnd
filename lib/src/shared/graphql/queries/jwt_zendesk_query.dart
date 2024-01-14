@@ -1,7 +1,7 @@
 const String jwtZendeskQuery = """
   query {
-    generateUserToken {
-      jwt
+    getUserSupportToken{
+      token
     }
   }
 """;
