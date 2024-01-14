@@ -153,10 +153,13 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                           onPressed: () async {
                             _setLoading(true);
                             try {
-                              final deviceToken = await pushNotifications.messaging.getToken();
+
+                              final deviceToken =
+                                  await pushNotifications.messaging.getToken();
                               await registrationController.verifyOTP(
                                   _codeController.text,
-                                  widget.otpDataModel.email, deviceToken ?? "");
+                                  widget.otpDataModel.email,
+                                  deviceToken);
                               ScaffoldMessenger.of(context).showSnackBar(
                                   alcanciaSnackBar(context,
                                       appLocalization.labelAccountCreated));

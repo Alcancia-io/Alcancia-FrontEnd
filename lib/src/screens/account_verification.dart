@@ -28,10 +28,12 @@ class AccountVerificationScreen extends ConsumerStatefulWidget {
   const AccountVerificationScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<AccountVerificationScreen> createState() => _AccountVerificationScreenState();
+  ConsumerState<AccountVerificationScreen> createState() =>
+      _AccountVerificationScreenState();
 }
 
-class _AccountVerificationScreenState extends ConsumerState<AccountVerificationScreen> {
+class _AccountVerificationScreenState
+    extends ConsumerState<AccountVerificationScreen> {
   @override
   void initState() {
     super.initState();
@@ -51,7 +53,6 @@ class _AccountVerificationScreenState extends ConsumerState<AccountVerificationS
   final passwordController = TextEditingController();
 
   final controller = LoginController();
-
 
   bool _obscurePassword = true;
   bool _loading = false;
@@ -78,7 +79,11 @@ class _AccountVerificationScreenState extends ConsumerState<AccountVerificationS
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
-        appBar: AlcanciaToolbar(state: StateToolbar.logoLetters, logoHeight: screenHeight / 12, toolbarHeight: screenHeight / 11,),
+        appBar: AlcanciaToolbar(
+          state: StateToolbar.logoLetters,
+          logoHeight: screenHeight / 12,
+          toolbarHeight: screenHeight / 11,
+        ),
         resizeToAvoidBottomInset: true,
         body: SafeArea(
           child: Padding(
@@ -97,10 +102,9 @@ class _AccountVerificationScreenState extends ConsumerState<AccountVerificationS
                       ),
                     ),
                     Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20.0),
-                        child: Text(
-                          appLocalization.labelVerifyYourAccountDescription
-                        ),
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
+                      child: Text(
+                          appLocalization.labelVerifyYourAccountDescription),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 50.0),
@@ -110,21 +114,23 @@ class _AccountVerificationScreenState extends ConsumerState<AccountVerificationS
                             controller: emailController,
                             labelText: appLocalization.labelEmail,
                             inputType: TextInputType.emailAddress,
-                            inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r"\s"))],
+                            inputFormatters: [
+                              FilteringTextInputFormatter.deny(RegExp(r"\s"))
+                            ],
                             validator: (value) {
-                              if (value == null ||
-                                  value.isEmpty) {
-                                return appLocalization
-                                    .errorRequiredField;
+                              if (value == null || value.isEmpty) {
+                                return appLocalization.errorRequiredField;
                               } else {
                                 return value.isValidEmail()
                                     ? null
-                                    : appLocalization
-                                    .errorEmailFormat;
+                                    : appLocalization.errorEmailFormat;
                               }
                             },
                           ),
-                          SizedBox(height: responsiveService.getHeightPixels(16, screenHeight),),
+                          SizedBox(
+                            height: responsiveService.getHeightPixels(
+                                16, screenHeight),
+                          ),
                           LabeledTextFormField(
                             controller: passwordController,
                             labelText: appLocalization.labelPassword,
@@ -141,8 +147,7 @@ class _AccountVerificationScreenState extends ConsumerState<AccountVerificationS
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return appLocalization
-                                    .errorRequiredField;
+                                return appLocalization.errorRequiredField;
                               }
                               return null;
                             },
@@ -150,24 +155,23 @@ class _AccountVerificationScreenState extends ConsumerState<AccountVerificationS
                         ],
                       ),
                     ),
-                    if (_loading) ... [
+                    if (_loading) ...[
                       const Center(
                         child: Padding(
                           padding: EdgeInsets.all(8.0),
                           child: CircularProgressIndicator(),
                         ),
                       ),
-                    ] else ... [
+                    ] else ...[
                       AlcanciaButton(
                         color: alcanciaLightBlue,
                         width: double.infinity,
-                        height: responsiveService.getHeightPixels(
-                            64, screenHeight),
+                        height:
+                            responsiveService.getHeightPixels(64, screenHeight),
                         buttonText: appLocalization.buttonVerifyAccount,
                         onPressed: () async {
                           await _login(
-                              pushNotifications,
-                              registrationController);
+                              pushNotifications, registrationController);
                         },
                       ),
                     ]
@@ -181,8 +185,7 @@ class _AccountVerificationScreenState extends ConsumerState<AccountVerificationS
     );
   }
 
-  Future<void> _login(
-      PushNotificationProvider pushNotifications,
+  Future<void> _login(PushNotificationProvider pushNotifications,
       RegistrationController registrationController) async {
     try {
       setState(() {
@@ -198,7 +201,7 @@ class _AccountVerificationScreenState extends ConsumerState<AccountVerificationS
       setState(() {
         _loading = false;
       });
-      final notVerified = e.toString().contains("UserNotConfirmedException");
+      final notVerified = e.toString().contains("USER_NOT_CONFIRMED_ERROR");
       if (notVerified) {
         registrationController.resendVerificationCode(emailController.text);
         context.push("/otp", extra: OTPDataModel(email: emailController.text));
