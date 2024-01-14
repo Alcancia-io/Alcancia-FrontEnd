@@ -113,6 +113,10 @@ unlinked_spec.ds
 # Coverage
 coverage/
 
+
+# FVM
+.fvm/
+
 # Symbols
 app.*.symbols
 
@@ -160,6 +164,7 @@ app.*.symbols
 
 #Amplify Stuff
 amplify/
+amplify/.config/
 amplify-configuration.json
 amplifyconfiguration.dart
 # Coverage

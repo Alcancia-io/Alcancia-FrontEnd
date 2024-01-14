@@ -43,8 +43,12 @@ class RegistrationController {
     }
   }
 
-  Future<void> verifyOTP(String otp, String email, String deviceToken) async {
-    var confirmSignUpInput = {"code": otp, "email": email, "deviceToken": deviceToken};
+  Future<void> verifyOTP(String otp, String email, String? deviceToken) async {
+    var confirmSignUpInput = {
+      "code": otp,
+      "email": email,
+      "deviceToken": deviceToken ?? "NoDeviceTokenProvided"
+    };
     try {
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: token);
       GraphQLClient client = graphQLConfiguration.clientToQuery();

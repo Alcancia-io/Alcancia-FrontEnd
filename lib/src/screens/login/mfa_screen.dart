@@ -27,11 +27,13 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
   bool _loading = false;
   final StorageService _storageService = StorageService();
 
-  final timer = StopWatchTimer(mode: StopWatchMode.countDown, presetMillisecond: 60000);
+  final timer =
+      StopWatchTimer(mode: StopWatchMode.countDown, presetMillisecond: 60000);
 
   saveTokens(String accessToken, String refreshToken) async {
     final StorageItem accessTokenStorage = StorageItem("token", accessToken);
-    final StorageItem refreshTokenStorage = StorageItem("refreshToken", refreshToken);
+    final StorageItem refreshTokenStorage =
+        StorageItem("refreshToken", refreshToken);
     await _storageService.writeSecureData(accessTokenStorage);
     await _storageService.writeSecureData(refreshTokenStorage);
   }
@@ -72,7 +74,8 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
                   child: Text(
                     appLoc.labelVerifyIdentity,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 35),
                   ),
                 ),
                 Padding(
@@ -96,7 +99,8 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                     initialData: 0,
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       final value = snapshot.data;
-                      final displayTime = StopWatchTimer.getDisplayTime(value, hours: false, milliSecond: false);
+                      final displayTime = StopWatchTimer.getDisplayTime(value,
+                          hours: false, milliSecond: false);
                       return Column(
                         children: [
                           Center(
@@ -104,7 +108,8 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                               decoration: ShapeDecoration(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(100),
-                                      side: const BorderSide(color: alcanciaLightBlue))),
+                                      side: const BorderSide(
+                                          color: alcanciaLightBlue))),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
@@ -116,7 +121,8 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                                     ),
                                     Text(
                                       displayTime,
-                                      style: const TextStyle(color: alcanciaLightBlue),
+                                      style: const TextStyle(
+                                          color: alcanciaLightBlue),
                                     ),
                                   ],
                                 ),
@@ -130,7 +136,8 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                               TextButton(
                                 onPressed: value <= 0
                                     ? () async {
-                                        final data = await loginController.signIn(
+                                        final data =
+                                            await loginController.signIn(
                                           widget.data.email,
                                           widget.data.password,
                                         );
@@ -139,7 +146,8 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                                         timer.onStartTimer();
                                       }
                                     : null,
-                                style: TextButton.styleFrom(foregroundColor: alcanciaLightBlue),
+                                style: TextButton.styleFrom(
+                                    foregroundColor: alcanciaLightBlue),
                                 child: Text(
                                   appLoc.buttonResend,
                                   style: const TextStyle(
@@ -171,16 +179,22 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                             onPressed: () async {
                               _setLoading(true);
                               try {
-                                final deviceToken = await pushNotifications.messaging.getToken();
+                                final deviceToken = await pushNotifications
+                                    .messaging
+                                    .getToken();
                                 final mfaInput = MFAInputModel(
                                     verificationCode: codeController.text,
                                     email: widget.data.email,
                                     token: widget.data.token,
                                     type: widget.data.type,
                                     deviceToken: deviceToken ?? "");
-                                final mfaResponse = await loginController.completeSignIn(mfaInput);
-                                await saveUserInfo(mfaResponse.userName, mfaResponse.userEmail);
-                                await saveTokens(mfaResponse.accessToken, mfaResponse.refreshToken);
+                                final mfaResponse = await loginController
+                                    .completeSignIn(mfaInput);
+                                await saveUserInfo(mfaResponse.userName,
+                                    mfaResponse.userEmail);
+                                await saveTokens(mfaResponse.accessToken,
+                                    mfaResponse.refreshToken);
+
                                 context.go("/homescreen/0");
                               } catch (err) {
                                 setState(() {
@@ -191,7 +205,8 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                             },
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 15.0, left: 7.0, right: 7.0),
+                            padding: const EdgeInsets.only(
+                                top: 15.0, left: 7.0, right: 7.0),
                             child: Text(
                               error,
                               style: const TextStyle(color: Colors.red),

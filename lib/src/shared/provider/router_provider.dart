@@ -64,7 +64,8 @@ Future<bool> isUserAuthenticated() async {
       final linkException = result.exception?.linkException?.originalException;
       if (graphQLErrors != null && graphQLErrors.isNotEmpty) {
         return false;
-      } else if (linkException != null && linkException.toString().contains("CERTIFICATE_VERIFY_FAILED")) {
+      } else if (linkException != null &&
+          linkException.toString().contains("CERTIFICATE_VERIFY_FAILED")) {
         return Future.error("CERTIFICATE_VERIFY_FAILED");
       }
     }
@@ -81,7 +82,8 @@ Future<String> getCurrentlySupportedAppVersion() async {
   VersionService service = VersionService();
   var result = await service.getCurrentlySupportedAppVersion();
   if (result.hasException) {
-    return Future.error(result.exception?.graphqlErrors[0].message ?? "Exception getting latest supported version");
+    return Future.error(result.exception?.graphqlErrors[0].message ??
+        "Exception getting latest supported version");
   }
   return result.data?['getCurrentlySupportedAppVersion']['version'] as String;
 }
@@ -151,8 +153,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "phone-registration",
           path: "/phone-registration",
-          builder: (context, state) =>
-              PhoneRegistrationScreen(userRegistrationData: state.extra as UserRegistrationModel),
+          builder: (context, state) => PhoneRegistrationScreen(
+              userRegistrationData: state.extra as UserRegistrationModel),
         ),
         GoRoute(
           name: "swap",
@@ -162,7 +164,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "transaction_detail",
           path: "/transaction_detail",
-          builder: (context, state) => TransactionDetail(txn: state.extra as Transaction),
+          builder: (context, state) =>
+              TransactionDetail(txn: state.extra as Transaction),
         ),
         GoRoute(
           name: "otp",
@@ -174,7 +177,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "mfa",
           path: "/mfa",
-          builder: (context, state) => MFAScreen(data: state.extra as LoginDataModel),
+          builder: (context, state) =>
+              MFAScreen(data: state.extra as LoginDataModel),
         ),
         GoRoute(
           name: "checkout",
@@ -213,7 +217,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "success",
           path: "/success",
-          builder: (context, state) => SuccessScreen(model: state.extra as SuccessScreenModel),
+          builder: (context, state) =>
+              SuccessScreen(model: state.extra as SuccessScreenModel),
         ),
         GoRoute(
           name: "onboarding",
@@ -279,13 +284,14 @@ final routerProvider = Provider<GoRouter>(
         )
       ],
       redirect: (context, state) async {
-
         try {
           final loggingIn = state.matchedLocation == "/login";
           final isMfa = state.matchedLocation == "/mfa";
           final isOtp = state.matchedLocation == "/otp";
-          final isAccountVerification = state.matchedLocation == "/account-verification";
-          final isPhoneRegistration = state.matchedLocation == "/phone-registration";
+          final isAccountVerification =
+              state.matchedLocation == "/account-verification";
+          final isPhoneRegistration =
+              state.matchedLocation == "/phone-registration";
           final isStartup = state.matchedLocation == "/";
           final creatingAccount = state.matchedLocation == "/registration";
           final loggedIn = await isUserAuthenticated();
@@ -299,11 +305,12 @@ final routerProvider = Provider<GoRouter>(
           final buildNumber = await getCurrentBuildNumber();
           String supportedVersion = await getCurrentlySupportedAppVersion();
           supportedVersion = supportedVersion.replaceAll("'", "");
-          final isSupportedVersion =
-              int.parse(buildNumber) >= (int.tryParse(supportedVersion.split(".").last) ?? 1000000);
+          final isSupportedVersion = int.parse(buildNumber) >=
+              (int.tryParse(supportedVersion.split(".").last) ?? 1000000);
           if (!isSupportedVersion) return "/update-required";
 
-          if (!loggedIn && !finishedOnboarding && !isOnboarding) return "/onboarding";
+          if (!loggedIn && !finishedOnboarding && !isOnboarding)
+            return "/onboarding";
           if (!loggedIn &&
               !loggingIn &&
               !creatingAccount &&

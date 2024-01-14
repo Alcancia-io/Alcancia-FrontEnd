@@ -1,5 +1,8 @@
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
+import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import 'package:alcancia/src/shared/provider/auth_service_provider.dart';
+import 'package:alcancia/src/shared/services/biometric_service.dart';
+import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:alcancia/src/shared/services/biometric_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,11 +14,12 @@ class BiometricAuthenticationScreen extends ConsumerStatefulWidget {
   const BiometricAuthenticationScreen({super.key});
 
   @override
-  ConsumerState<BiometricAuthenticationScreen> createState() => _BiometricAuthenticationScreenState();
+  ConsumerState<BiometricAuthenticationScreen> createState() =>
+      _BiometricAuthenticationScreenState();
 }
 
-class _BiometricAuthenticationScreenState extends ConsumerState<BiometricAuthenticationScreen> {
-
+class _BiometricAuthenticationScreenState
+    extends ConsumerState<BiometricAuthenticationScreen> {
   @override
   void initState() {
     super.initState();
@@ -37,6 +41,8 @@ class _BiometricAuthenticationScreenState extends ConsumerState<BiometricAuthent
 
     if (attemptsBiometric >= 3) {
       await ref.read(authServiceProvider).logout();
+      final StorageService storageService = StorageService();
+      await storageService.deleteSecureData("token");
       context.go("/welcome");
     }
   }
@@ -52,7 +58,8 @@ class _BiometricAuthenticationScreenState extends ConsumerState<BiometricAuthent
         children: [
           Padding(
             padding: const EdgeInsets.all(32.0),
-            child: Icon(CupertinoIcons.lock_fill, size: 128, color: darkMode ? Colors.white : Colors.black),
+            child: Icon(CupertinoIcons.lock_fill,
+                size: 128, color: darkMode ? Colors.white : Colors.black),
           ),
           Text(
             appLoc.labelBiometricAuthenticationDescription,

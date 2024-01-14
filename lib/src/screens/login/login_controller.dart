@@ -20,7 +20,8 @@ class LoginController {
     if (response.hasException) {
       String? error =
           response.exception?.linkException?.originalException.toString();
-      error ??= response.exception?.graphqlErrors.first.message;
+      error ??= response.exception?.graphqlErrors.first.extensions?["exception"]
+          ?["code"];
       error ??= response.exception.toString();
       return Future.error(error);
     } else if (response.data != null) {
