@@ -34,6 +34,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
+
   bool _biometricEnrolled = false;
 
   @override

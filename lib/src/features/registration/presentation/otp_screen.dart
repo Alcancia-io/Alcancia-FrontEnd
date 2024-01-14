@@ -153,6 +153,7 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                           onPressed: () async {
                             _setLoading(true);
                             try {
+
                               final deviceToken =
                                   await pushNotifications.messaging.getToken();
                               await registrationController.verifyOTP(
