@@ -34,6 +34,9 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
+
+  bool _biometricEnrolled = false;
+
   @override
   void initState() {
     super.initState();
@@ -65,8 +68,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _rememberMe = false;
   bool _obscurePassword = true;
   bool _loading = false;
-
-  bool _biometricEnrolled = false;
 
   Future<void> saveUserInfo(String name, String email, String pass) async {
     final StorageItem userName = StorageItem("userName", name);

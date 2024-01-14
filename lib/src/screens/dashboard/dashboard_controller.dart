@@ -28,7 +28,7 @@ class DashboardController {
     try {
       var response = await userService.getUser();
       if (response.data != null) {
-        Map<String, dynamic> data = response.data!["me"];
+        Map<String, dynamic> data = response.data!["getAuthenticatedUser"];
         final user = User.fromJSON(data);
         return user;
       }
