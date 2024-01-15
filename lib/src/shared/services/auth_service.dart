@@ -106,7 +106,10 @@ class AuthService {
       MutationOptions(
         document: gql(signInMutation),
         variables: {
-          "signInInput": {"email": email.toLowerCase(), "password": password}
+          "signInInput": {
+            "email": email.toLowerCase(),
+            "password": password,
+          }
         },
       ),
     );
