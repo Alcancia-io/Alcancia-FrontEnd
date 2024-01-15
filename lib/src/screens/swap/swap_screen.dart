@@ -149,9 +149,9 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     getCeloAPY();
     getUsdcAPY();
     final user = ref.read(userProvider);
-    if (user?.country == "MX") {
+    if (user?.country == "MX" && false) { // TEMPORARY DISABLE MXN
       sourceCurrency = "MXN";
-    } else if (user?.country == "DO") {
+    } else if (user?.country == "DO" && false) { // TEMPORARY DISABLE MXN
       sourceCurrency = "DOP";
     } else {
       sourceCurrency = sourceCurrencyCodes.first['name'];
@@ -348,18 +348,18 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                 ),
                               ],
                             ),
-                            // Padding(
-                            //   padding: const EdgeInsets.only(top: 16.0),
-                            //   child: Text(
-                            //     "*1 USDC = ${(sourceCurrency == "MXN" ? suarmiUSDCExchage : alcanciaUSDCExchange).toStringAsFixed(2)} $sourceCurrency",
-                            //     style: TextStyle(
-                            //       fontSize: 13,
-                            //       fontWeight: FontWeight.normal,
-                            //       color: Colors.grey[700],
-                            //       fontStyle: FontStyle.italic,
-                            //     ),
-                            //   ),
-                            // ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: Text(
+                                "*1 USDC = ${(sourceCurrency == "MXN" ? suarmiUSDCExchage : alcanciaUSDCExchange).toStringAsFixed(2)} $sourceCurrency",
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.grey[700],
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
