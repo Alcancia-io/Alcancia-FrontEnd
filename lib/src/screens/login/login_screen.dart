@@ -62,7 +62,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final passwordController = TextEditingController();
 
   final controller = LoginController();
-
+  String? password;
   String? userName;
   bool _rememberMe = false;
   bool _obscurePassword = true;
@@ -80,7 +80,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   readUserInfo() async {
     var userEmail = await _storageService.readSecureData("userEmail");
     userName = await _storageService.readSecureData("userName");
-    var password = null;
+
     if (_biometricEnrolled) {
       password = await _storageService.readSecureData("password");
     }
@@ -143,7 +143,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     Column(
                       children: [
-                        if (userName == null) ...[
+                        if (userName == null || password == null) ...[
                           AutofillGroup(
                             child: Column(
                               children: [
