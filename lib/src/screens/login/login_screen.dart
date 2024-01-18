@@ -68,15 +68,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _obscurePassword = true;
   bool _loading = false;
 
-  Future<void> saveUserInfo(String name, String email, String pass) async {
-    final StorageItem userName = StorageItem("userName", name);
-    final StorageItem userEmail = StorageItem("userEmail", email);
-    final StorageItem password = StorageItem("password", pass);
-    await _storageService.writeSecureData(userName);
-    await _storageService.writeSecureData(userEmail);
-    await _storageService.writeSecureData(password);
-  }
-
   readUserInfo() async {
     var userEmail = await _storageService.readSecureData("userEmail");
     userName = await _storageService.readSecureData("userName");
