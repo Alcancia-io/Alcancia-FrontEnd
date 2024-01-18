@@ -45,10 +45,11 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
     timer.onStartTimer();
   }
 
-  Future<void> saveUserInfo(String name, String email) async {
+  Future<void> saveUserInfo(String name, String email, String pass) async {
     final StorageItem userName = StorageItem("userName", name);
     final StorageItem userEmail = StorageItem("userEmail", email);
-
+    final StorageItem password = StorageItem("password", pass);
+    await _storageService.writeSecureData(password);
     await _storageService.writeSecureData(userName);
     await _storageService.writeSecureData(userEmail);
   }
@@ -190,8 +191,10 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                                     deviceToken: deviceToken ?? "");
                                 final mfaResponse = await loginController
                                     .completeSignIn(mfaInput);
-                                await saveUserInfo(mfaResponse.userName,
-                                    mfaResponse.userEmail);
+                                await saveUserInfo(
+                                    mfaResponse.userName,
+                                    mfaResponse.userEmail,
+                                    widget.data.password);
                                 await saveTokens(mfaResponse.accessToken,
                                     mfaResponse.refreshToken);
 
