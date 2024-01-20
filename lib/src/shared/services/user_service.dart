@@ -73,7 +73,7 @@ class UserService {
       QueryOptions(
         document: gql(userPhoneNumberSearchQuery),
         variables: {
-          "input": {"telephoneNumber": phoneNumber}
+          "searchUserByTelephoneNumberInput": {"telephoneNumber": phoneNumber}
         },
       ),
     );
