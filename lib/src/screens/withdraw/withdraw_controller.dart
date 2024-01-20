@@ -20,7 +20,8 @@ class WithdrawController {
     };
   }
 
-  Map<String, Map<String, String>> alcanciaQuoteInput({required String targetCurrency}) {
+  Map<String, Map<String, String>> alcanciaQuoteInput(
+      {required String targetCurrency}) {
     return {
       "quoteInput": {
         "from_amount": "1",
@@ -31,7 +32,8 @@ class WithdrawController {
   }
 
   Future<double> getAlcanciaExchange(String targetCurrency) async {
-    var response = await _swapService.getAlcanciaQuote(alcanciaQuoteInput(targetCurrency: targetCurrency));
+    var response = await _swapService
+        .getAlcanciaQuote(alcanciaQuoteInput(targetCurrency: targetCurrency));
     if (response.hasException) {
       var exception = _exceptionHandler.handleException(response.exception);
       throw Exception(exception);
@@ -41,7 +43,8 @@ class WithdrawController {
   }
 
   Future<String> getSuarmiExchange({required String sourceCurrency}) async {
-    final response = await _swapService.getSuarmiQuote(suarmiQuoteInput(sourceCurrency: sourceCurrency));
+    final response = await _swapService
+        .getSuarmiQuote(suarmiQuoteInput(sourceCurrency: sourceCurrency));
     if (response.hasException) {
       var exception = _exceptionHandler.handleException(response.exception);
       throw Exception(exception);
@@ -59,13 +62,15 @@ class WithdrawController {
     return AlcanciaOrder.fromJson(data);
   }
 
-  Future<ExternalWithdrawal> sendExternalWithdrawal({required String amount, required String address}) async {
-    final response = await _cryptoWalletService.sendExternalWithdraw(amount: amount, address: address);
+  Future<ExternalWithdrawal> sendExternalWithdrawal(
+      {required String amount, required String address}) async {
+    final response = await _cryptoWalletService.sendExternalWithdraw(
+        amount: amount, address: address);
     if (response.hasException) {
       var exception = _exceptionHandler.handleException(response.exception);
       throw Exception(exception);
     }
-    final data = response.data?['alcanciaExternalWithdraw'];
+    final data = response.data?['executeCryptoWithdrawal'];
     return ExternalWithdrawal.fromJSON(data);
   }
 }

@@ -1,4 +1,4 @@
-import 'package:alcancia/src/shared/graphql/queries/external_withdraw_query.dart';
+import 'package:alcancia/src/shared/graphql/mutations/external_withdraw_query.dart';
 import 'package:alcancia/src/shared/services/graphql_service.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -11,14 +11,17 @@ class CryptoWalletService {
     client = graphQLConfig.clientToQuery();
   }
 
-  Future<QueryResult> sendExternalWithdraw({required String amount, required String address}) async {
+  Future<QueryResult> sendExternalWithdraw(
+      {required String amount, required String address}) async {
     final clientResponse = await client;
-    return await clientResponse.query(
-      QueryOptions(
+    return await clientResponse.mutate(
+      MutationOptions(
         document: gql(externalWithdrawQuery),
         variables: {
-          "amount": amount,
-          "receiverAddress": address,
+          "cryptoWithdrawalInput": {
+            "amount": double.parse(amount),
+            "receiverAddress": address,
+          }
         },
       ),
     );
