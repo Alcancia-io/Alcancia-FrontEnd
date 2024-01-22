@@ -88,8 +88,9 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
             textColor: Colors.white,
             fontSize: 16.0);
       } else {
+        String lastNumbers = response.data?['forgotPassword'] as String;
         _phoneNumEnding =
-            (response.data?['forgotPassword'] as String).substring(6);
+            (lastNumbers).substring(lastNumbers.length - 4, lastNumbers.length);
       }
     } catch (e) {
       _state.error = e.toString();
@@ -152,7 +153,9 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
       return const Scaffold(
           body: SafeArea(child: Center(child: CircularProgressIndicator())));
     if (_state.error != null)
-      return ErrorScreen(error: _state.error,);
+      return ErrorScreen(
+        error: _state.error,
+      );
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
