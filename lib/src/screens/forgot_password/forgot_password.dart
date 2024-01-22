@@ -188,7 +188,8 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                 AlcanciaContainer(
                   top: 16,
                   child: Text(
-                    appLoc.labelEnterCodePhone(_phoneNumEnding),
+                    appLoc.labelEnterCodePhone(
+                        _phoneNumEnding), //TODO: Add Phone or email masked value for User reference
                     style: txtTheme.bodyText1,
                   ),
                 ),
