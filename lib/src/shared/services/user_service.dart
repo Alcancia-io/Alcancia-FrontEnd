@@ -61,7 +61,7 @@ class UserService {
     return await clientResponse.query(
       QueryOptions(
         document: gql(updateAuthenticatedUserMutation),
-        variables: {"updateUserInput": info},
+        variables: {"updateAuthenticatedUserInput": info},
       ),
     );
   }
