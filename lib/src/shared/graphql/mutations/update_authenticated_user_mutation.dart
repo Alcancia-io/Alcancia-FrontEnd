@@ -1,5 +1,7 @@
 const String updateAuthenticatedUserMutation = """
   mutation(\$updateAuthenticatedUserInput: UpdateAuthenticatedUserInput!) {
-    updateAuthenticatedUser(updateAuthenticatedUserInput: \$updateAuthenticatedUserInput)
+    updateAuthenticatedUser(input: \$updateAuthenticatedUserInput){
+      id
+    }
   }
 """;

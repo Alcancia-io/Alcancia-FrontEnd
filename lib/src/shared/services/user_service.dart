@@ -58,8 +58,8 @@ class UserService {
 
   Future<QueryResult> updateUser({required Map<String, dynamic> info}) async {
     final clientResponse = await client;
-    return await clientResponse.query(
-      QueryOptions(
+    return await clientResponse.mutate(
+      MutationOptions(
         document: gql(updateAuthenticatedUserMutation),
         variables: {"updateAuthenticatedUserInput": info},
       ),
