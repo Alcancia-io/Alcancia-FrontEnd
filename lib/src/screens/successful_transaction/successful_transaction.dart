@@ -67,9 +67,8 @@ class SuccessfulTransaction extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(appLoc.targetPhone, style: txtTheme.subtitle2),
-                                  Text("transferResponse.destPhoneNumber", style: txtTheme.subtitle2),
-                                  Text(transferResponse.receiverName, style: txtTheme.subtitle2)
+                                  Text(appLoc.recipientName, style: txtTheme.subtitle2),
+                                  Text(transferResponse.receiverName + " " + transferResponse.receiverLastName, style: txtTheme.subtitle2)
                                 ],
                               ),
                             ),

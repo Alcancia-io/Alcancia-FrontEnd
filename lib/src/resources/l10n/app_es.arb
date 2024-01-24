@@ -367,5 +367,6 @@
 	"labelUseBiometrics": "Usar autenticación biométrica",
 	"labelBiometricAuthentication": "Autenticación biométrica",
 	"labelBiometricAuthenticationDescription": "Utiliza tu huella digital o reconocimiento facial para iniciar sesión en tu cuenta",
-	"labelMaintenance": "Estamos realizando mantenimiento en nuestros servidores. Por favor intente más tarde."
+	"labelMaintenance": "Estamos realizando mantenimiento en nuestros servidores. Por favor intente más tarde.",
+	"recipientName": "Nombre del destinatario"
 }
