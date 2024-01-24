@@ -90,9 +90,10 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
 
     try {
       transferResponse = await transferController.transferFunds(
-        amount: amount.toStringAsFixed(2),
+        amount: double.parse(amount.toStringAsFixed(2)),
         destUserId: destUserId,
       );
+      context.goNamed('successful-transaction', extra: transferResponse);
     } catch (transferError) {
       setState(() {
         _transferError = transferError.toString();
@@ -102,10 +103,6 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
     setState(() {
       _loading = false;
     });
-
-    if (_transferError.isEmpty) {
-      context.goNamed('successful-transaction', extra: transferResponse);
-    }
   }
 
   @override

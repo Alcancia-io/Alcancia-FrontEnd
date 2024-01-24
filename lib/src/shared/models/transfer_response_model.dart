@@ -1,5 +1,5 @@
 class TransferResponse {
-  final String amount;
+  final double amount;
   final DateTime createdAt;
   final String id;
   final String receiverId;
@@ -22,7 +22,7 @@ class TransferResponse {
   factory TransferResponse.fromJSON(Map<String, dynamic> map) {
     final date = DateTime.parse(map["createdAt"]);
     return TransferResponse(
-      amount: map["amount"],
+      amount: double.parse(map["amount"].toString()),
       createdAt: date,
       id: map["id"],
       receiverId: map["receiverId"],
