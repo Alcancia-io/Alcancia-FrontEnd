@@ -27,7 +27,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
   final suarmiService = SwapService();
 
   final List<Map> countries = [
-    {"name": "México", "icon": "lib/src/resources/images/icon_mexico_flag.png"},
+    //{"name": "México", "icon": "lib/src/resources/images/icon_mexico_flag.png"},
     {
       "name": "República Dominicana",
       "icon": "lib/src/resources/images/icon_dominican_flag.png"
@@ -123,10 +123,12 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
     } else {
       country = countries.first['name'];
     }
-    final countryIndex =
-        countries.indexWhere((element) => element['name'] == country);
-    final code = countries.removeAt(countryIndex);
-    countries.insert(0, code);
+    if (countries.length > 1) {
+      final countryIndex =
+      countries.indexWhere((element) => element['name'] == country);
+      final code = countries.removeAt(countryIndex);
+      countries.insert(0, code);
+    }
   }
 
 
