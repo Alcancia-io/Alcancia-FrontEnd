@@ -92,7 +92,6 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
       transferResponse = await transferController.transferFunds(
         amount: amount.toStringAsFixed(2),
         destUserId: destUserId,
-        token: currency,
       );
     } catch (transferError) {
       setState(() {

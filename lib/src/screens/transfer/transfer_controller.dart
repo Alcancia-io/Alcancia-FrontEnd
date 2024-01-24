@@ -26,15 +26,13 @@ class TransferController {
 
   Future<TransferResponse> transferFunds(
       {required String amount,
-      required String destUserId,
-      required String token}) async {
+      required String destUserId}) async {
     TransactionsService transactionService = TransactionsService();
     try {
       final transferInput = {
-        "transferData": {
+        "input": {
           "amount": amount,
-          "destUserId": destUserId,
-          "token": token,
+          "receiverId": destUserId,
         },
       };
       final response = await transactionService.transferFunds(transferInput);
@@ -42,7 +40,7 @@ class TransferController {
         return Future.error(
             "${_exceptionHandler.handleException(response.exception!)}");
       if (response.data != null) {
-        Map<String, dynamic> data = response.data!["transferFunds"];
+        Map<String, dynamic> data = response.data!["P2pTransferResponse"];
         final transferResponse = TransferResponse.fromJSON(data);
         return transferResponse;
       }
