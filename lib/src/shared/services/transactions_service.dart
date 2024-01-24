@@ -1,6 +1,6 @@
 import 'package:alcancia/src/shared/graphql/mutations/cancel_transaction_mutation.dart';
 import 'package:alcancia/src/shared/graphql/queries/transactions_query.dart';
-import 'package:alcancia/src/shared/graphql/queries/transfer_funds_query.dart';
+import 'package:alcancia/src/shared/graphql/queries/execute_p2p_tranfer_mutation.dart';
 import 'package:alcancia/src/shared/services/graphql_service.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -40,9 +40,9 @@ class TransactionsService {
 
   Future<QueryResult> transferFunds(Map<String, dynamic> transferInput) async {
     var clientResponse = await client;
-    return await clientResponse.query(
-      QueryOptions(
-        document: gql(transferFundsQuery),
+    return await clientResponse.mutate(
+      MutationOptions(
+        document: gql(executeP2PTransferMutation),
         variables: transferInput,
         fetchPolicy: FetchPolicy.noCache,
       ),
