@@ -13,7 +13,7 @@ class ExternalWithdrawal {
 
   factory ExternalWithdrawal.fromJSON(Map<String, dynamic> map) {
     return ExternalWithdrawal(
-      amount: map["amount"],
+      amount: map["amount"]?.toString() ?? "",
       receiverAddress: map["receiverAddress"],
       senderAddress: map["senderAddress"],
       token: map["token"],
