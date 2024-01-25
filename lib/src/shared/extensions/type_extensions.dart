@@ -12,6 +12,8 @@ extension TypeToString on TransactionType {
         return appLoc.labelDetailTransfer;
       case TransactionType.p2p_ext:
         return appLoc.labelDetailCryptoWithdrawal;
+      case TransactionType.crypto_withdrawal:
+        return appLoc.labelDetailCryptoWithdrawal;
       case TransactionType.unknown:
         return appLoc.unknown;
     }
