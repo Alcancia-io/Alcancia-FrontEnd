@@ -1,4 +1,11 @@
-enum TransactionType { deposit, withdraw, p2p, p2p_ext, unknown }
+enum TransactionType {
+  deposit,
+  withdraw,
+  p2p,
+  p2p_ext,
+  crypto_withdrawal,
+  unknown
+}
 
 enum TransactionMethod { alcancia, suarmi }
 
