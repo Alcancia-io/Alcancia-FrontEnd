@@ -78,14 +78,16 @@ void main() async {
     DeviceOrientation
         .portraitUp, // Locks the device orientation to portrait mode
   ]);
-
-  final firebaseRemoteConfigService = FirebaseRemoteConfigService(
-      firebaseRemoteConfig: FirebaseRemoteConfig.instance);
-  await firebaseRemoteConfigService.init();
-  runApp(ProviderScope(overrides: [
-    firebaseRemoteConfigServiceProvider
-        .overrideWith((ref) => firebaseRemoteConfigService)
-  ], child: const MyApp()));
+  var remoteConfig = FirebaseRemoteConfig.instance;
+  await remoteConfig.setConfigSettings(RemoteConfigSettings(
+    fetchTimeout: const Duration(minutes: 1),
+    minimumFetchInterval: const Duration(hours: 1),
+  ));
+  await remoteConfig.setDefaults(const {
+    "name_test": "prueba",
+  });
+  await remoteConfig.fetchAndActivate();
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends ConsumerStatefulWidget {
