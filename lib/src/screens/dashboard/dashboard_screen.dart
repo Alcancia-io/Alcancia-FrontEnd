@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:alcancia/firebase_remote_config.dart';
 import 'package:alcancia/src/screens/dashboard/dashboard_controller.dart';
 import 'package:alcancia/src/screens/error/error_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
@@ -8,6 +9,7 @@ import 'package:alcancia/src/shared/components/dashboard/dashboard_actions.dart'
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:alcancia/src/shared/provider/transactions_provider.dart';
 import 'package:alcancia/src/shared/services/metamap_service.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -30,6 +32,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   bool _isLoading = false;
   String _error = "";
   int attemptsAuth = 0;
+  var name = "";
 
   Future<void> setUserInformation() async {
     setState(() {
@@ -78,6 +81,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
     setUserInformation();
     setTimer();
+    var remoteConfig = FirebaseRemoteConfig.instance;
+    name = remoteConfig.getString("name_test");
+    remoteConfig.onConfigUpdated.listen((event) async {
+      await remoteConfig.activate();
+      setState(() {
+        name = remoteConfig.getString("name_test");
+        print("Nombre eeeeeesss:" + name);
+      });
+    });
   }
 
   @override
@@ -103,7 +115,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       appBar: AlcanciaToolbar(
         state: StateToolbar.profileTitleIcon,
         logoHeight: 38,
-        userName: user!.name,
+        userName: name,
       ),
       body: SafeArea(
         child: Container(

@@ -21,9 +21,11 @@ class FirebaseRemoteConfigService {
     }
   }
 
-  bool getLiveBool() => firebaseRemoteConfig.getBool("test_bool");
+  //bool getLiveBool() => firebaseRemoteConfig.getBool("test_bool");
 }
 
-final firebaseRemoteConfigServiceProvider = Provider((ref) =>
-    FirebaseRemoteConfigService(
-        firebaseRemoteConfig: FirebaseRemoteConfig.instance));
+final firebaseRemoteConfigServiceProvider =
+    StateProvider<FirebaseRemoteConfigService>((ref) {
+  return FirebaseRemoteConfigService(
+      firebaseRemoteConfig: FirebaseRemoteConfig.instance);
+});
