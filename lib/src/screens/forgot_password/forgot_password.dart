@@ -88,8 +88,9 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
             textColor: Colors.white,
             fontSize: 16.0);
       } else {
-        _phoneNumEnding = (response.data?["initiateForgotPasswordRequest"]
-            ["deliveryMedium"] as String);
+        String lastNumbers = response.data?['forgotPassword'] as String;
+        _phoneNumEnding =
+            (lastNumbers).substring(lastNumbers.length - 4, lastNumbers.length);
       }
     } catch (e) {
       _state.error = e.toString();
