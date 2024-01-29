@@ -81,7 +81,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   readUserInfo() async {
     var userEmail = await _storageService.readSecureData("userEmail");
     userName = await _storageService.readSecureData("userName");
-    var password = null;
+    password = null;
     if (_biometricEnrolled) {
       password = await _storageService.readSecureData("password");
     }
