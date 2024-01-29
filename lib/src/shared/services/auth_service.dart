@@ -1,22 +1,22 @@
+import 'package:alcancia/src/shared/graphql/mutations/complete_mfa_sign_in_mutation.dart';
+import 'package:alcancia/src/shared/graphql/mutations/delete_account_mutation.dart';
 import 'package:alcancia/src/shared/graphql/mutations/login_mutation.dart';
 import 'package:alcancia/src/shared/graphql/mutations/complete_forgot_password_mutation.dart';
+import 'package:alcancia/src/shared/graphql/mutations/signin_mutation.dart';
 import 'package:alcancia/src/shared/graphql/queries/index.dart';
+import 'package:alcancia/src/shared/graphql/queries/logout_query.dart';
+import 'package:alcancia/src/shared/models/MFAModel.dart';
 import 'package:alcancia/src/shared/services/graphql_service.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-class CompletePasswordInput {
-  CompletePasswordInput({this.email, this.newPassword, this.verificationCode});
+enum AuthChallengeType { MFA_SETUP, SMS_MFA, SOFTWARE_TOKEN_MFA }
+
+class CompleteForgotPasswordInput {
+  CompleteForgotPasswordInput(
+      {this.email, this.newPassword, this.verificationCode});
   String? email = "email";
   String? newPassword = "newPassword";
   String? verificationCode = "123";
-
-  Map<String, dynamic> toMap() {
-    return {
-      "email": email?.toLowerCase(),
-      "newPassword": newPassword,
-      "verificationCode": verificationCode,
-    };
-  }
 }
 
 class AuthService {
@@ -28,24 +28,6 @@ class AuthService {
     client = graphQLConfig.clientToQuery();
   }
 
-  static String logoutQuery = """
-  query {
-    logout
-  }
-""";
-
-  static String deleteAccountQuery = """
-  query {
-    deleteAccount
-  }
-  """;
-
-  static String completeSignInQuery = """
-  query(\$verificationCode: String!){
-    completeSignIn(verificationCode: \$verificationCode)
-  }
-  """;
-
   Future<void> logout() async {
     try {
       final clientResponse = await client;
@@ -56,7 +38,8 @@ class AuthService {
       );
 
       if (result.hasException) {
-        return Future.error(result.exception?.graphqlErrors[0].message ?? "Exception");
+        return Future.error(
+            result.exception?.graphqlErrors[0].message ?? "Exception");
       }
     } catch (e) {
       return Future.error(e);
@@ -66,14 +49,15 @@ class AuthService {
   Future<bool> deleteAccount() async {
     try {
       final clientResponse = await client;
-      QueryResult result = await clientResponse.query(
-        QueryOptions(
-          document: gql(deleteAccountQuery),
+      QueryResult result = await clientResponse.mutate(
+        MutationOptions(
+          document: gql(deleteAccountMutation),
         ),
       );
 
       if (result.hasException) {
-        return Future.error(result.exception?.graphqlErrors[0].message ?? "Exception");
+        return Future.error(
+            result.exception?.graphqlErrors[0].message ?? "Exception");
       } else if (result.data != null) {
         return result.data!["deleteAccount"] as bool;
       }
@@ -83,20 +67,49 @@ class AuthService {
     }
   }
 
-  Future<QueryResult> completeSignIn(String verificationCode) async {
+  Future<QueryResult> completeSignIn(MFAInputModel data) async {
     final clientResponse = await client;
-    return await clientResponse.query(
-      QueryOptions(document: gql(completeSignInQuery), variables: {"verificationCode": verificationCode}),
+    return await clientResponse.mutate(
+      MutationOptions(document: gql(completeMFASignInMutation), variables: {
+        "input": {
+          "code": data.verificationCode,
+          "email": data.email.toLowerCase(),
+          "token": data.token,
+          "type": data.type.toString().split('.').last,
+          "deviceToken": data.deviceToken
+        }
+      }),
     );
   }
 
-  Future<QueryResult> login(String email, String password, String deviceToken) async {
+  @Deprecated("Use signIn instead")
+  Future<QueryResult> login(
+      String email, String password, String deviceToken) async {
     final clientResponse = await client;
     return await clientResponse.mutate(
       MutationOptions(
         document: gql(loginMutation),
         variables: {
-          "loginUserInput": {"email": email.toLowerCase(), "password": password, "deviceToken": deviceToken}
+          "loginUserInput": {
+            "email": email.toLowerCase(),
+            "password": password,
+            "deviceToken": deviceToken
+          }
+        },
+      ),
+    );
+  }
+
+  Future<QueryResult> signIn(String email, String password) async {
+    final clientResponse = await client;
+    return await clientResponse.mutate(
+      MutationOptions(
+        document: gql(signInMutation),
+        variables: {
+          "signInInput": {
+            "email": email.toLowerCase(),
+            "password": password,
+          }
         },
       ),
     );
@@ -104,21 +117,30 @@ class AuthService {
 
   Future<QueryResult> forgotPassword(String email) async {
     var clientResponse = await client;
-    return clientResponse.query(
-      QueryOptions(
+    return clientResponse.mutate(
+      MutationOptions(
         document: gql(forgotPasswordQuery),
-        variables: {"email": email.toLowerCase()},
+        variables: {
+          "input": {"email": email.toLowerCase()}
+        },
         fetchPolicy: FetchPolicy.noCache,
       ),
     );
   }
 
-  Future<QueryResult> completeForgotPassword(CompletePasswordInput queryVariables) async {
+  Future<QueryResult> completeForgotPassword(
+      CompleteForgotPasswordInput queryVariables) async {
     var clientResponse = await client;
     return clientResponse.mutate(
       MutationOptions(
         document: gql(completeForgotPasswordMutation),
-        variables: queryVariables.toMap(),
+        variables: {
+          "input": {
+            "code": queryVariables.verificationCode,
+            "email": queryVariables.email?.toLowerCase(),
+            "newPassword": queryVariables.newPassword,
+          }
+        },
       ),
     );
   }

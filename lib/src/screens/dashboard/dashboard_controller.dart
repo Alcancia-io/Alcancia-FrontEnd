@@ -28,7 +28,7 @@ class DashboardController {
     try {
       var response = await userService.getUser();
       if (response.data != null) {
-        Map<String, dynamic> data = response.data!["me"];
+        Map<String, dynamic> data = response.data!["getAuthenticatedUser"];
         final user = User.fromJSON(data);
         return user;
       }
@@ -43,7 +43,7 @@ class DashboardController {
     try {
       var response = await userService.getUserToken();
       if (response.data != null) {
-        var resp = response.data!["generateUserToken"];
+        var resp = response.data!["getUserSupportToken"];
         final jwt = JWTZendesk.fromJson(resp);
         return jwt;
       }
@@ -55,14 +55,14 @@ class DashboardController {
 
   Future<Balance> fetchUserBalance() async {
     UserService userService = UserService();
-      var response = await userService.getUserBalance();
-      if (response.data != null) {
-        final balanceData = response.data!["getWalletBalance"];
-        final balance = Balance.fromMap(balanceData);
-        return balance;
-      } else {
-        return Future.error('Error getting balance: ${response}');
-      }
+    var response = await userService.getUserBalance();
+    if (response.data != null) {
+      final balanceData = response.data!["getWalletBalance"];
+      final balance = Balance.fromMap(balanceData);
+      return balance;
+    } else {
+      return Future.error('Error getting balance: ${response}');
+    }
   }
 
   Future<List<UserBalanceHistory>> fetchUserBalanceHistory() async {

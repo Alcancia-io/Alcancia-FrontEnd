@@ -38,6 +38,7 @@
 	"labelReadAndAccepted": "I have read and agreed to the ",
 	"labelAnd": "and the ",
 	"labelEnterCodePhone": "Enter the 6 digit code sent to {phoneNumber}",
+	"labelEnterCodePhoneTemp": "Enter the 6 digit code sent to your phone number",
 	"labelAccountCreated": "Account created successfully",
 	"labelBalance": "Balance",
 	"labelBalanceValue": "\\${balance} USDC",
@@ -270,6 +271,6 @@
 	"labelUseBiometrics": "Use biometrics",
 	"labelBiometricAuthentication": "Biometric authentication",
 	"labelBiometricAuthenticationDescription": "Use your fingerprint or face to log in to your account",
-	"labelMaintenance": "We are currently performing maintenance on our servers. Please try again later."
-
+	"labelMaintenance": "We are currently performing maintenance on our servers. Please try again later.",
+	"recipientName": "Recipient''s name"
 }

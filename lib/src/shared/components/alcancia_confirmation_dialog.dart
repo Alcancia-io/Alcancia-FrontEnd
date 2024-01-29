@@ -71,7 +71,7 @@ class AlcanciaConfirmationDialog extends StatelessWidget {
                       children: [
                         Text(appLoc.targetPhone, style: txtTheme.subtitle2),
                         Text(targetUser.phoneNumber, style: txtTheme.subtitle2),
-                        Text(targetUser.name, style: txtTheme.subtitle2),
+                        Text("${targetUser.name} ${targetUser.surname}", style: txtTheme.subtitle2),
                       ],
                     ),
                   ),

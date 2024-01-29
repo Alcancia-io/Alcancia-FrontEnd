@@ -280,6 +280,48 @@ class TransactionItem extends ConsumerWidget {
             ],
           ),
         );
+      case TransactionType.crypto_withdrawal:
+        return Container(
+          padding:
+              const EdgeInsets.only(top: 12, bottom: 12, left: 6, right: 6),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  txn.iconForTxnStatus(user.id),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 6),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${txn.type.typeToString(appLoc)} ${txn.sourceAsset}",
+                          style: txtTheme.bodyText2,
+                        ),
+                        Text(
+                          txn.createdAt.formattedLocalString(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: Text(
+                        "\$${txn.amount.toStringAsFixed(2)} ${txn.sourceAsset}"),
+                  ),
+                  SvgPicture.asset(
+                    "lib/src/resources/images/white_arrow_right.svg",
+                  )
+                ],
+              ),
+            ],
+          ),
+        );
     }
   }
 }

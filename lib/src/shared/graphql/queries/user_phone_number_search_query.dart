@@ -1,6 +1,6 @@
 const String userPhoneNumberSearchQuery = """
-  query(\$phoneNumber: String!){
-    userPhoneNumberSearch(phoneNumber: \$phoneNumber) {
+  query(\$searchUserByTelephoneNumberInput: SearchUserByTelephoneNumberInput!){
+    searchUserByTelephoneNumber(input: \$searchUserByTelephoneNumberInput) {
       id,
       surname,
       phoneNumber,

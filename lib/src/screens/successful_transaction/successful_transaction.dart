@@ -67,9 +67,8 @@ class SuccessfulTransaction extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(appLoc.targetPhone, style: txtTheme.subtitle2),
-                                  Text(transferResponse.destPhoneNumber, style: txtTheme.subtitle2),
-                                  Text(transferResponse.destUserName, style: txtTheme.subtitle2)
+                                  Text(appLoc.recipientName, style: txtTheme.subtitle2),
+                                  Text("${transferResponse.receiverName} ${transferResponse.receiverLastName}", style: txtTheme.subtitle2)
                                 ],
                               ),
                             ),
@@ -79,7 +78,7 @@ class SuccessfulTransaction extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(appLoc.transactionDate, style: txtTheme.subtitle2),
-                                  Text(transferResponse.txnDate.formattedLocalString(), style: txtTheme.subtitle2)
+                                  Text(transferResponse.createdAt.formattedLocalString(), style: txtTheme.subtitle2)
                                 ],
                               ),
                             ),
@@ -89,7 +88,7 @@ class SuccessfulTransaction extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(appLoc.idReference, style: txtTheme.subtitle2),
-                                  Text(transferResponse.txnId, style: txtTheme.subtitle2),
+                                  Text(transferResponse.id, style: txtTheme.subtitle2),
                                 ],
                               ),
                             ),

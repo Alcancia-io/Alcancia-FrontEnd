@@ -1,4 +1,5 @@
 import 'package:alcancia/src/screens/login/login_controller.dart';
+import 'package:alcancia/src/shared/models/MFAModel.dart';
 import 'package:alcancia/src/shared/models/login_data_model.dart';
 import 'package:alcancia/src/shared/provider/push_notifications_provider.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +13,8 @@ import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MFAScreen extends ConsumerStatefulWidget {
-  const MFAScreen({Key? key, required this.data}) : super(key: key);
-  final LoginDataModel data;
+  MFAScreen({Key? key, required this.data}) : super(key: key);
+  LoginDataModel data;
 
   @override
   ConsumerState<MFAScreen> createState() => _MFAScreenState();
@@ -29,9 +30,12 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
   final timer =
       StopWatchTimer(mode: StopWatchMode.countDown, presetMillisecond: 60000);
 
-  saveToken(String token) async {
-    final StorageItem storageItem = StorageItem("token", token);
-    await _storageService.writeSecureData(storageItem);
+  saveTokens(String accessToken, String refreshToken) async {
+    final StorageItem accessTokenStorage = StorageItem("token", accessToken);
+    final StorageItem refreshTokenStorage =
+        StorageItem("refreshToken", refreshToken);
+    await _storageService.writeSecureData(accessTokenStorage);
+    await _storageService.writeSecureData(refreshTokenStorage);
   }
 
   @override
@@ -39,6 +43,15 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
     // TODO: implement initState
     super.initState();
     timer.onStartTimer();
+  }
+
+  Future<void> saveUserInfo(String name, String email, String pass) async {
+    final StorageItem userName = StorageItem("userName", name);
+    final StorageItem userEmail = StorageItem("userEmail", email);
+    final StorageItem password = StorageItem("password", pass);
+    await _storageService.writeSecureData(password);
+    await _storageService.writeSecureData(userName);
+    await _storageService.writeSecureData(userEmail);
   }
 
   @override
@@ -67,11 +80,11 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                   ),
                 ),
                 Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20.0),
-                    child: Text(
-                      appLoc.labelEnterCodePhone(widget.data.phoneNumber
-                          .substring(widget.data.phoneNumber.length - 4)),
-                    )),
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: Text(
+                    appLoc.labelEnterCodePhoneTemp,
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 40.0),
                   child: LabeledTextFormField(
@@ -124,15 +137,12 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                               TextButton(
                                 onPressed: value <= 0
                                     ? () async {
-                                        final deviceToken =
-                                            await pushNotifications.messaging
-                                                .getToken();
                                         final data =
-                                            await loginController.login(
-                                                widget.data.email,
-                                                widget.data.password,
-                                                deviceToken ?? "");
-                                        saveToken(data.token);
+                                            await loginController.signIn(
+                                          widget.data.email,
+                                          widget.data.password,
+                                        );
+                                        widget.data.token = data.token;
                                         timer.onResetTimer();
                                         timer.onStartTimer();
                                       }
@@ -170,9 +180,25 @@ class _MFAScreenState extends ConsumerState<MFAScreen> {
                             onPressed: () async {
                               _setLoading(true);
                               try {
-                                final completed = await loginController
-                                    .completeSignIn(codeController.text);
-                                if (completed) context.go("/homescreen/0");
+                                final deviceToken = await pushNotifications
+                                    .messaging
+                                    .getToken();
+                                final mfaInput = MFAInputModel(
+                                    verificationCode: codeController.text,
+                                    email: widget.data.email,
+                                    token: widget.data.token,
+                                    type: widget.data.type,
+                                    deviceToken: deviceToken ?? "");
+                                final mfaResponse = await loginController
+                                    .completeSignIn(mfaInput);
+                                await saveUserInfo(
+                                    mfaResponse.userName,
+                                    mfaResponse.userEmail,
+                                    widget.data.password);
+                                await saveTokens(mfaResponse.accessToken,
+                                    mfaResponse.refreshToken);
+
+                                context.go("/homescreen/0");
                               } catch (err) {
                                 setState(() {
                                   error = appLoc.labelErrorOtp;

@@ -1,32 +1,35 @@
 class TransferResponse {
-  final String amount;
-  final String destinationWallet;
+  final double amount;
+  final DateTime createdAt;
+  final String id;
+  final String receiverId;
+  final String receiverLastName;
+  final String receiverName;
+  final String senderId;
   final String token;
-  final DateTime txnDate;
-  final String destPhoneNumber;
-  final String destUserName;
-  final String txnId;
 
   TransferResponse({
     required this.amount,
-    required this.destinationWallet,
+    required this.createdAt,
+    required this.id,
+    required this.receiverId,
+    required this.receiverLastName,
+    required this.receiverName,
+    required this.senderId,
     required this.token,
-    required this.txnDate,
-    required this.destPhoneNumber,
-    required this.destUserName,
-    required this.txnId,
   });
 
   factory TransferResponse.fromJSON(Map<String, dynamic> map) {
     final date = DateTime.parse(map["createdAt"]);
     return TransferResponse(
-      amount: map["amount"],
-      destinationWallet: map["destWallet"],
+      amount: double.parse(map["amount"].toString()),
+      createdAt: date,
+      id: map["id"],
+      receiverId: map["receiverId"],
+      receiverLastName: map["receiverLastName"],
+      receiverName: map["receiverName"],
+      senderId: map["senderId"],
       token: map["token"],
-      txnDate: date,
-      destPhoneNumber: map["destPhoneNumber"],
-      destUserName: map["destUserName"],
-      txnId: map["id"],
     );
   }
 }

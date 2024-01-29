@@ -5,7 +5,6 @@ import 'package:alcancia/src/features/registration/presentation/phone_registrati
 import 'package:alcancia/src/screens/account_verification.dart';
 import 'package:alcancia/src/screens/biometric/biometric_authentication_screen.dart';
 import 'package:alcancia/src/screens/login/login_screen.dart';
-import 'package:alcancia/src/features/registration/model/graphql_config.dart';
 import 'package:alcancia/src/features/registration/presentation/otp_screen.dart';
 import 'package:alcancia/src/features/user-profile/presentation/account_screen.dart';
 import 'package:alcancia/src/features/welcome/presentation/welcome_screen.dart';
@@ -31,13 +30,13 @@ import 'package:alcancia/src/screens/withdraw/crypto_withdraw_screen.dart';
 import 'package:alcancia/src/screens/withdraw/withdraw_options_screen.dart';
 import 'package:alcancia/src/screens/withdraw/withdraw_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
-import 'package:alcancia/src/shared/graphql/queries/is_authenticated_query.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:alcancia/src/shared/models/checkout_model.dart';
 import 'package:alcancia/src/shared/models/login_data_model.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
 import 'package:alcancia/src/shared/models/success_screen_model.dart';
 import 'package:alcancia/src/shared/services/biometric_service.dart';
+import 'package:alcancia/src/shared/services/services.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:alcancia/src/shared/services/version_service.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -45,7 +44,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:alcancia/src/screens/transaction_detail/transaction_detail.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -54,17 +52,16 @@ import '../../screens/chart/line_chart_screen.dart';
 
 Future<bool> isUserAuthenticated() async {
   StorageService service = StorageService();
+  UserService userService = UserService();
   try {
-    var token = await service.readSecureData("token");
-    GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "$token");
-    GraphQLClient client = graphQLConfiguration.clientToQuery();
-    var result = await client.query(QueryOptions(document: gql(isAuthenticatedQuery)));
+    var result = await userService.getUser();
     if (result.hasException) {
       final graphQLErrors = result.exception?.graphqlErrors;
       final linkException = result.exception?.linkException?.originalException;
       if (graphQLErrors != null && graphQLErrors.isNotEmpty) {
         return false;
       } else if (linkException != null && linkException.toString().contains("CERTIFICATE_VERIFY_FAILED")) {
+
         return Future.error("CERTIFICATE_VERIFY_FAILED");
       }
     }
@@ -301,7 +298,6 @@ final routerProvider = Provider<GoRouter>(
           final isSupportedVersion =
               int.parse(buildNumber) >= (int.tryParse(supportedVersion.split(".").last) ?? 1000000);
           if (!isSupportedVersion) return "/update-required";
-
           if (!loggedIn && !finishedOnboarding && !isOnboarding) return "/onboarding";
           if (!loggedIn &&
               !loggingIn &&

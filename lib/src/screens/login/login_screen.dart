@@ -34,6 +34,8 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
+  bool _biometricEnrolled = false;
+
   @override
   void initState() {
     super.initState();
@@ -60,13 +62,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final passwordController = TextEditingController();
 
   final controller = LoginController();
-
+  String? password;
   String? userName;
   bool _rememberMe = false;
   bool _obscurePassword = true;
   bool _loading = false;
-
-  bool _biometricEnrolled = false;
 
   Future<void> saveUserInfo(String name, String email, String pass) async {
     final StorageItem userName = StorageItem("userName", name);
@@ -80,7 +80,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   readUserInfo() async {
     var userEmail = await _storageService.readSecureData("userEmail");
     userName = await _storageService.readSecureData("userName");
-    var password = null;
+    password = null;
+
     if (_biometricEnrolled) {
       password = await _storageService.readSecureData("password");
     }
@@ -93,11 +94,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (userName != null) {
       setState(() {});
     }
-  }
-
-  Future<void> saveToken(String token) async {
-    final StorageItem storageItem = StorageItem("token", token);
-    await _storageService.writeSecureData(storageItem);
   }
 
   @override
@@ -148,7 +144,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     Column(
                       children: [
-                        if (userName == null) ...[
+                        if (userName == null || password == null) ...[
                           AutofillGroup(
                             child: Column(
                               children: [
@@ -299,13 +295,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return appLocalization
-                                      .errorRequiredField;
+                                  return appLocalization.errorRequiredField;
                                 }
                                 return null;
                               },
                             ),
-
                             Padding(
                               padding: EdgeInsets.only(
                                 bottom: responsiveService
@@ -320,11 +314,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     child: Row(
                                       children: [
                                         const Padding(
-                                          padding: EdgeInsets.only(
-                                              right: 4.0),
-                                          child: Icon(CupertinoIcons
-                                              .question_circle),
-                                        ),
+                                          padding: EdgeInsets.only(right: 4.0),
+                                          child: Icon(
+                                              CupertinoIcons.question_circle),
                                         Text(appLocalization
                                             .labelForgotPassword),
                                       ],
@@ -336,7 +328,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 ],
                               ),
                             ),
-                            if (_loading) ... [
+                            if (_loading) ...[
                               const Center(
                                 child: Padding(
                                   padding: EdgeInsets.all(8.0),
@@ -378,11 +370,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       setState(() {
         _loading = true;
       });
-      final deviceToken = await pushNotifications.messaging.getToken();
-      final data = await controller.login(
-          emailController.text, passwordController.text, deviceToken ?? "");
-      await saveToken(data.token);
-      await saveUserInfo(data.name, data.email, data.password);
+      final data = await controller.signIn(
+          emailController.text, passwordController.text);
+      data.rememberMe = true;
       context.push("/mfa", extra: data);
       setState(() {
         _loading = false;

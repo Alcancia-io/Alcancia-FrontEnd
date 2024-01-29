@@ -3,6 +3,7 @@ import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_snack_bar.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
+import 'package:alcancia/src/shared/provider/push_notifications_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,8 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
   Widget build(BuildContext context) {
     final registrationController = ref.watch(registrationControllerProvider);
     final appLocalization = AppLocalizations.of(context)!;
+    final pushNotifications = ref.watch(pushNotificationProvider);
+
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -151,9 +154,12 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
                           onPressed: () async {
                             _setLoading(true);
                             try {
+                              final deviceToken =
+                                  await pushNotifications.messaging.getToken();
                               await registrationController.verifyOTP(
                                   _codeController.text,
-                                  widget.otpDataModel.email);
+                                  widget.otpDataModel.email,
+                                  deviceToken);
                               ScaffoldMessenger.of(context).showSnackBar(
                                   alcanciaSnackBar(context,
                                       appLocalization.labelAccountCreated));
