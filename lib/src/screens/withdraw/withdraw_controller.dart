@@ -73,4 +73,14 @@ class WithdrawController {
     final data = response.data?['executeCryptoWithdrawal'];
     return ExternalWithdrawal.fromJSON(data);
   }
+
+  Future<double> getCryptoWithdrawalFee() async {
+    final response = await _cryptoWalletService.getCryptoWithdrawalFee();
+    if (response.hasException) {
+      var exception = _exceptionHandler.handleException(response.exception);
+      throw Exception(exception);
+    }
+    final data = response.data?['getCryptoWithdrawalFee'];
+    return double.tryParse(data['fee'].toString()) ?? 1;
+  }
 }
