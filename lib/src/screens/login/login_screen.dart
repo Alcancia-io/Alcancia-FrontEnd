@@ -251,7 +251,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                           _buildFooter(appLocalization: appLocalization),
                         ] else ...[
-                          if (_biometricEnrolled) ...[
+                          if (_biometricEnrolled) ... [
                             if (_loading) ...[
                               const Center(
                                 child: Padding(
@@ -284,7 +284,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 },
                               ),
                             ],
-                          ] else ...[
+                          ] else ... [
                             LabeledTextFormField(
                               controller: passwordController,
                               labelText: appLocalization.labelPassword,
