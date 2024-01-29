@@ -68,6 +68,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _obscurePassword = true;
   bool _loading = false;
 
+
   Future<void> saveUserInfo(String name, String email, String pass) async {
     final StorageItem userName = StorageItem("userName", name);
     final StorageItem userEmail = StorageItem("userEmail", email);
@@ -80,7 +81,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   readUserInfo() async {
     var userEmail = await _storageService.readSecureData("userEmail");
     userName = await _storageService.readSecureData("userName");
-    password = null;
+    var password = null;
     if (_biometricEnrolled) {
       password = await _storageService.readSecureData("password");
     }

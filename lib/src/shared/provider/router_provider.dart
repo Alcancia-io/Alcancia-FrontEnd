@@ -59,7 +59,6 @@ Future<bool> isUserAuthenticated() async {
   UserService userService = UserService();
   try {
     var result = await userService.getUser();
-
     if (result.hasException) {
       final graphQLErrors = result.exception?.graphqlErrors;
       final linkException = result.exception?.linkException?.originalException;
@@ -83,8 +82,7 @@ Future<String> getCurrentlySupportedAppVersion() async {
   VersionService service = VersionService();
   var result = await service.getCurrentlySupportedAppVersion();
   if (result.hasException) {
-    return Future.error(result.exception?.graphqlErrors[0].message ??
-        "Exception getting latest supported version");
+    return Future.error(result.exception?.graphqlErrors[0].message ?? "Exception getting latest supported version");
   }
   return result.data?['getCurrentlySupportedAppVersion']['version'] as String;
 }
@@ -154,8 +152,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "phone-registration",
           path: "/phone-registration",
-          builder: (context, state) => PhoneRegistrationScreen(
-              userRegistrationData: state.extra as UserRegistrationModel),
+          builder: (context, state) =>
+              PhoneRegistrationScreen(userRegistrationData: state.extra as UserRegistrationModel),
         ),
         GoRoute(
           name: "swap",
@@ -165,8 +163,7 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "transaction_detail",
           path: "/transaction_detail",
-          builder: (context, state) =>
-              TransactionDetail(txn: state.extra as Transaction),
+          builder: (context, state) => TransactionDetail(txn: state.extra as Transaction),
         ),
         GoRoute(
           name: "otp",
@@ -178,8 +175,7 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "mfa",
           path: "/mfa",
-          builder: (context, state) =>
-              MFAScreen(data: state.extra as LoginDataModel),
+          builder: (context, state) => MFAScreen(data: state.extra as LoginDataModel),
         ),
         GoRoute(
           name: "checkout",
@@ -218,8 +214,7 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "success",
           path: "/success",
-          builder: (context, state) =>
-              SuccessScreen(model: state.extra as SuccessScreenModel),
+          builder: (context, state) => SuccessScreen(model: state.extra as SuccessScreenModel),
         ),
         GoRoute(
           name: "onboarding",
