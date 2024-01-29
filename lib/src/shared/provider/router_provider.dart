@@ -40,11 +40,13 @@ import 'package:alcancia/src/shared/services/services.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:alcancia/src/shared/services/version_service.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:alcancia/src/screens/transaction_detail/transaction_detail.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../screens/chart/line_chart_screen.dart';
 
@@ -58,8 +60,8 @@ Future<bool> isUserAuthenticated() async {
       final linkException = result.exception?.linkException?.originalException;
       if (graphQLErrors != null && graphQLErrors.isNotEmpty) {
         return false;
-      } else if (linkException != null &&
-          linkException.toString().contains("CERTIFICATE_VERIFY_FAILED")) {
+      } else if (linkException != null && linkException.toString().contains("CERTIFICATE_VERIFY_FAILED")) {
+
         return Future.error("CERTIFICATE_VERIFY_FAILED");
       }
     }
@@ -278,10 +280,8 @@ final routerProvider = Provider<GoRouter>(
           final loggingIn = state.matchedLocation == "/login";
           final isMfa = state.matchedLocation == "/mfa";
           final isOtp = state.matchedLocation == "/otp";
-          final isAccountVerification =
-              state.matchedLocation == "/account-verification";
-          final isPhoneRegistration =
-              state.matchedLocation == "/phone-registration";
+          final isAccountVerification = state.matchedLocation == "/account-verification";
+          final isPhoneRegistration = state.matchedLocation == "/phone-registration";
           final isStartup = state.matchedLocation == "/";
           final creatingAccount = state.matchedLocation == "/registration";
           final loggedIn = await isUserAuthenticated();
@@ -295,12 +295,10 @@ final routerProvider = Provider<GoRouter>(
           final buildNumber = await getCurrentBuildNumber();
           String supportedVersion = await getCurrentlySupportedAppVersion();
           supportedVersion = supportedVersion.replaceAll("'", "");
-          final isSupportedVersion = int.parse(buildNumber) >=
-              (int.tryParse(supportedVersion.split(".").last) ?? 1000000);
+          final isSupportedVersion =
+              int.parse(buildNumber) >= (int.tryParse(supportedVersion.split(".").last) ?? 1000000);
           if (!isSupportedVersion) return "/update-required";
-
-          if (!loggedIn && !finishedOnboarding && !isOnboarding)
-            return "/onboarding";
+          if (!loggedIn && !finishedOnboarding && !isOnboarding) return "/onboarding";
           if (!loggedIn &&
               !loggingIn &&
               !creatingAccount &&

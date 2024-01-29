@@ -1,6 +1,8 @@
+
 import 'package:alcancia/src/shared/provider/auth_service_provider.dart';
 import 'package:alcancia/src/shared/services/biometric_service.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
+import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,6 +19,7 @@ class BiometricAuthenticationScreen extends ConsumerStatefulWidget {
 
 class _BiometricAuthenticationScreenState
     extends ConsumerState<BiometricAuthenticationScreen> {
+
   @override
   void initState() {
     super.initState();
@@ -55,8 +58,8 @@ class _BiometricAuthenticationScreenState
         children: [
           Padding(
             padding: const EdgeInsets.all(32.0),
-            child: Icon(CupertinoIcons.lock_fill,
-                size: 128, color: darkMode ? Colors.white : Colors.black),
+            child: Icon(CupertinoIcons.lock_fill, size: 128, color: darkMode ? Colors.white : Colors.black),
+
           ),
           Text(
             appLoc.labelBiometricAuthenticationDescription,
