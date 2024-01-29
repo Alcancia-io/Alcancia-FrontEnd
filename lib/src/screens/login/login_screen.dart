@@ -68,6 +68,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _obscurePassword = true;
   bool _loading = false;
 
+
   Future<void> saveUserInfo(String name, String email, String pass) async {
     final StorageItem userName = StorageItem("userName", name);
     final StorageItem userEmail = StorageItem("userEmail", email);
@@ -250,7 +251,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                           _buildFooter(appLocalization: appLocalization),
                         ] else ...[
-                          if (_biometricEnrolled) ...[
+                          if (_biometricEnrolled) ... [
                             if (_loading) ...[
                               const Center(
                                 child: Padding(
@@ -283,7 +284,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 },
                               ),
                             ],
-                          ] else ...[
+                          ] else ... [
                             LabeledTextFormField(
                               controller: passwordController,
                               labelText: appLocalization.labelPassword,

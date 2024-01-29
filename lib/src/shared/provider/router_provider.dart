@@ -5,7 +5,6 @@ import 'package:alcancia/src/features/registration/presentation/phone_registrati
 import 'package:alcancia/src/screens/account_verification.dart';
 import 'package:alcancia/src/screens/biometric/biometric_authentication_screen.dart';
 import 'package:alcancia/src/screens/login/login_screen.dart';
-import 'package:alcancia/src/features/registration/model/graphql_config.dart';
 import 'package:alcancia/src/features/registration/presentation/otp_screen.dart';
 import 'package:alcancia/src/features/user-profile/presentation/account_screen.dart';
 import 'package:alcancia/src/features/welcome/presentation/welcome_screen.dart';
@@ -31,8 +30,6 @@ import 'package:alcancia/src/screens/withdraw/crypto_withdraw_screen.dart';
 import 'package:alcancia/src/screens/withdraw/withdraw_options_screen.dart';
 import 'package:alcancia/src/screens/withdraw/withdraw_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_tabbar.dart';
-import 'package:alcancia/src/shared/graphql/queries/index.dart';
-import 'package:alcancia/src/shared/graphql/queries/get_authenticated_user_query.dart';
 import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:alcancia/src/shared/models/checkout_model.dart';
 import 'package:alcancia/src/shared/models/login_data_model.dart';
@@ -43,14 +40,11 @@ import 'package:alcancia/src/shared/services/services.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:alcancia/src/shared/services/version_service.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:alcancia/src/screens/transaction_detail/transaction_detail.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../screens/chart/line_chart_screen.dart';
 
@@ -59,7 +53,6 @@ Future<bool> isUserAuthenticated() async {
   UserService userService = UserService();
   try {
     var result = await userService.getUser();
-
     if (result.hasException) {
       final graphQLErrors = result.exception?.graphqlErrors;
       final linkException = result.exception?.linkException?.originalException;
@@ -83,8 +76,7 @@ Future<String> getCurrentlySupportedAppVersion() async {
   VersionService service = VersionService();
   var result = await service.getCurrentlySupportedAppVersion();
   if (result.hasException) {
-    return Future.error(result.exception?.graphqlErrors[0].message ??
-        "Exception getting latest supported version");
+    return Future.error(result.exception?.graphqlErrors[0].message ?? "Exception getting latest supported version");
   }
   return result.data?['getCurrentlySupportedAppVersion']['version'] as String;
 }
@@ -154,8 +146,8 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "phone-registration",
           path: "/phone-registration",
-          builder: (context, state) => PhoneRegistrationScreen(
-              userRegistrationData: state.extra as UserRegistrationModel),
+          builder: (context, state) =>
+              PhoneRegistrationScreen(userRegistrationData: state.extra as UserRegistrationModel),
         ),
         GoRoute(
           name: "swap",
@@ -165,8 +157,7 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "transaction_detail",
           path: "/transaction_detail",
-          builder: (context, state) =>
-              TransactionDetail(txn: state.extra as Transaction),
+          builder: (context, state) => TransactionDetail(txn: state.extra as Transaction),
         ),
         GoRoute(
           name: "otp",
@@ -178,8 +169,7 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "mfa",
           path: "/mfa",
-          builder: (context, state) =>
-              MFAScreen(data: state.extra as LoginDataModel),
+          builder: (context, state) => MFAScreen(data: state.extra as LoginDataModel),
         ),
         GoRoute(
           name: "checkout",
@@ -218,8 +208,7 @@ final routerProvider = Provider<GoRouter>(
         GoRoute(
           name: "success",
           path: "/success",
-          builder: (context, state) =>
-              SuccessScreen(model: state.extra as SuccessScreenModel),
+          builder: (context, state) => SuccessScreen(model: state.extra as SuccessScreenModel),
         ),
         GoRoute(
           name: "onboarding",
