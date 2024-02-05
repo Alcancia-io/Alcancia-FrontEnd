@@ -6,6 +6,7 @@ import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/components/alcancia_transactions_list.dart';
 import 'package:alcancia/src/shared/components/dashboard/dashboard_actions.dart';
+import 'package:alcancia/src/shared/models/remote_config_data.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:alcancia/src/shared/provider/transactions_provider.dart';
 import 'package:alcancia/src/shared/services/metamap_service.dart';
@@ -81,21 +82,45 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
     setUserInformation();
     setTimer();
-    var remoteConfig = FirebaseRemoteConfig.instance;
+    /*var remoteConfig = FirebaseRemoteConfig.instance;
     name = remoteConfig.getString("name_test");
     remoteConfig.onConfigUpdated.listen((event) async {
       await remoteConfig.activate();
       setState(() {
         name = remoteConfig.getString("name_test");
-        print("Nombre eeeeeesss:" + name);
       });
-    });
+    });*/ //Test remote config
+    fetchRemoteConfig();
   }
 
   @override
   void dispose() {
     timer?.cancel();
     super.dispose();
+  }
+
+  Future<void> fetchRemoteConfig() async {
+    var remoteConfigProvider = FirebaseRemoteConfigServiceProvider(
+        remoteConfig: FirebaseRemoteConfig.instance);
+    String configJson = remoteConfigProvider.getAppVariables();
+
+    if (configJson.isNotEmpty) {
+      RemoteConfigData remoteConfigData =
+          remoteConfigProvider.parseRemoteConfigData(configJson);
+
+      // Access the retrieved data
+      print('MinimumAppVersion: ${remoteConfigData.minimumAppVersion}');
+      print('DO Enabled: ${remoteConfigData.doConfig.enabled}');
+
+      // Access currencies
+      remoteConfigData.doConfig.currencies.forEach((key, value) {
+        print('Currency: $key');
+        print('Enabled: ${value.enabled}');
+        // Access other currency details
+      });
+    } else {
+      print('Config JSON is empty or not available.');
+    }
   }
 
   @override
@@ -115,7 +140,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       appBar: AlcanciaToolbar(
         state: StateToolbar.profileTitleIcon,
         logoHeight: 38,
-        userName: name,
+        userName: user?.name,
       ),
       body: SafeArea(
         child: Container(

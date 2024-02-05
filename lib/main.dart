@@ -5,6 +5,7 @@ import 'package:alcancia/firebase_remote_config.dart';
 import 'package:alcancia/src/resources/colors/app_theme.dart';
 import 'package:alcancia/src/screens/biometric/biometric_authentication_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_error_widget.dart';
+import 'package:alcancia/src/shared/models/remote_config_data.dart';
 import 'package:alcancia/src/shared/provider/auth_service_provider.dart';
 import 'package:alcancia/src/shared/provider/push_notifications_provider.dart';
 import 'package:alcancia/src/shared/services/biometric_service.dart';
@@ -78,15 +79,11 @@ void main() async {
     DeviceOrientation
         .portraitUp, // Locks the device orientation to portrait mode
   ]);
-  var remoteConfig = FirebaseRemoteConfig.instance;
-  await remoteConfig.setConfigSettings(RemoteConfigSettings(
-    fetchTimeout: const Duration(minutes: 1),
-    minimumFetchInterval: const Duration(hours: 1),
-  ));
-  await remoteConfig.setDefaults(const {
-    "name_test": "prueba",
-  });
-  await remoteConfig.fetchAndActivate();
+  final FirebaseRemoteConfigServiceProvider
+      firebaseRemoteConfigServiceProvider = FirebaseRemoteConfigServiceProvider(
+          remoteConfig: FirebaseRemoteConfig.instance);
+  firebaseRemoteConfigServiceProvider.init();
+
   runApp(const ProviderScope(child: MyApp()));
 }
 
