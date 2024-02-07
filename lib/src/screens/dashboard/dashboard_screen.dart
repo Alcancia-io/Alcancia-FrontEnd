@@ -105,19 +105,23 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     String configJson = remoteConfigProvider.getAppVariables();
 
     if (configJson.isNotEmpty) {
-      RemoteConfigData remoteConfigData =
-          remoteConfigProvider.parseRemoteConfigData(configJson);
+      try {
+        RemoteConfigData remoteConfigData =
+            remoteConfigProvider.parseRemoteConfigData(configJson);
 
-      // Access the retrieved data
-      print('MinimumAppVersion: ${remoteConfigData.minimumAppVersion}');
-      print('DO Enabled: ${remoteConfigData.doConfig.enabled}');
+        // Access the retrieved data
+        print('MinimumAppVersion: ${remoteConfigData.minimumAppVersion}');
+        print('DO Enabled: ${remoteConfigData.doConfig.enabled}');
 
-      // Access currencies
-      remoteConfigData.doConfig.currencies.forEach((key, value) {
-        print('Currency: $key');
-        print('Enabled: ${value.enabled}');
-        // Access other currency details
-      });
+        // Access currencies
+        remoteConfigData.doConfig.currencies.forEach((key, value) {
+          print('Currency: $key');
+          print('Enabled: ${value.enabled}');
+          // Access other currency details
+        });
+      } on Exception catch (e) {
+        throw e;
+      }
     } else {
       print('Config JSON is empty or not available.');
     }

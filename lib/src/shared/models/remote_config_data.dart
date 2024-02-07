@@ -33,7 +33,7 @@ class DataObject {
 
     return DataObject(
       enabled: json['enabled'] ?? false,
-      currencies: currencyMap,
+      currencies: currencyMap.cast<String, Currency>(),
     );
   }
 }
@@ -44,7 +44,7 @@ class Currency {
   final String icon;
   final int minAmount;
   final int maxAmount;
-  final Map<String, Bank> banks;
+  final Map<String, Bank> bank;
 
   Currency({
     required this.enabled,
@@ -52,7 +52,7 @@ class Currency {
     required this.icon,
     required this.minAmount,
     required this.maxAmount,
-    required this.banks,
+    required this.bank,
   });
 
   factory Currency.fromJson(Map<String, dynamic> json) {
@@ -66,7 +66,7 @@ class Currency {
       icon: json['icon'] ?? '',
       minAmount: json['minAmount'] ?? 0,
       maxAmount: json['maxAmount'] ?? 0,
-      banks: bankMap,
+      bank: bankMap.cast<String, Bank>(),
     );
   }
 }
