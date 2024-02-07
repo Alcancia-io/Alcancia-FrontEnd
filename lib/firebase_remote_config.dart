@@ -59,7 +59,11 @@ class FirebaseRemoteConfigServiceProvider {
 
   RemoteConfigData parseRemoteConfigData(json) {
     final Map<String, dynamic> data = jsonDecode(json);
-    return RemoteConfigData.fromJson(data['config'] ?? {});
+    try {
+      return RemoteConfigData.fromJson(data['config'] ?? {});
+    } catch (e) {
+      throw e;
+    }
   }
 }
 
