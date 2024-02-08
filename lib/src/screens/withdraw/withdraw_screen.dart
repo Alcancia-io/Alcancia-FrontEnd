@@ -1,3 +1,6 @@
+import 'dart:ffi';
+
+import 'package:alcancia/firebase_remote_config.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/screens/error/error_screen.dart';
 import 'package:alcancia/src/screens/withdraw/withdraw_controller.dart';
@@ -5,6 +8,7 @@ import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/components/decimal_input_formatter.dart';
+import 'package:alcancia/src/shared/models/remote_config_data.dart';
 import 'package:alcancia/src/shared/models/success_screen_model.dart';
 import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
@@ -26,7 +30,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
   final controller = WithdrawController();
   final suarmiService = SwapService();
 
-  final List<Map> countries = [
+  /*final List<Map> countries = [
     {"name": "México", "icon": "lib/src/resources/images/icon_mexico_flag.png"},
     {
       "name": "República Dominicana",
@@ -65,9 +69,17 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
   ];
   late String selectedBank = dopBanks.first['name'];
 
-  late String sourceMXNCurrency = sourceCurrenciesMXN.first['name'];
-  late String sourceDOPCurrency = sourceCurrenciesDOP.first['name'];
-
+  */
+  late List<Map> countries;
+  late String country;
+  late List<Map> sourceCurrencies;
+  late List<Map> listBanks;
+  late String selectedBank;
+  late String sourceCurrency;
+  late RemoteConfigData remoteConfigDataSet;
+  late CountryConfig sourceCurrenciesObjt;
+  late String sourceMXNCurrency = sourceCurrencies.first['name'];
+  late String sourceDOPCurrency = sourceCurrencies.first['name'];
   final _clabeTextController = TextEditingController();
   final _accountTextController = TextEditingController();
   final _amountTextController = TextEditingController();
@@ -76,7 +88,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
   bool _loadingButton = false;
   String _error = "";
   String _orderError = "";
-
+  late String countryCode = "";
   double suarmiUSDCExchange = 0;
   double suarmiCELOExchange = 0;
   double targetAmount = 0;
@@ -112,23 +124,52 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
   void initState() {
     super.initState();
     getExchange();
+
     final user = ref.read(userProvider);
+    remoteConfigDataSet = ref.read(remoteConfigDataStateProvider);
     if (user?.lastUsedBankAccount != null) {
       _clabeTextController.text = user!.lastUsedBankAccount!;
     }
+
     if (user?.country == "MX") {
       country = "México";
+      countryCode = user!.country;
     } else if (user?.country == "DO") {
       country = "República Dominicana";
+      countryCode = user!.country;
     } else {
       country = countries.first['name'];
+      countryCode = "DO";
     }
+
+    countries = remoteConfigDataSet.countryConfig.entries
+        .map((e) => {"name": e.key, "icon": e.value.icon})
+        .toList();
     final countryIndex =
-        countries.indexWhere((element) => element['name'] == country);
+        countries.indexWhere((element) => element['name'] == countryCode);
     final code = countries.removeAt(countryIndex);
     countries.insert(0, code);
-  }
 
+    sourceCurrenciesObjt = remoteConfigDataSet.countryConfig.entries
+        .firstWhere(
+          (e) => e.key == countryCode,
+          orElse: () => MapEntry(
+              '', CountryConfig(icon: '', enabled: false, currencies: {})),
+        )
+        .value;
+
+    sourceCurrencies = sourceCurrenciesObjt.currencies.entries
+        .map((e) => {"name": e.key, "icon": e.value.icon})
+        .toList();
+
+    listBanks = sourceCurrenciesObjt.currencies.entries
+        .firstWhere((e) => e.key == sourceDOPCurrency)
+        .value
+        .banks
+        .entries
+        .map((en) => {"name": en.key})
+        .toList();
+  }
 
   String getSourceCurrency(String country) {
     if (country == "México") {
@@ -224,11 +265,10 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
                   height: 10,
                 ),
                 if (country == "México") ...[
-                  MXNFields(userBalance.total, context,
-                      sourceCurrenciesMXN),
+                  MXNFields(userBalance.total, context, sourceCurrencies),
                 ] else if (country == "República Dominicana") ...[
-                  DOPFields(userBalance.total, context,
-                      sourceCurrenciesDOP, dopBanks),
+                  DOPFields(
+                      userBalance.total, context, sourceCurrencies, listBanks),
                 ],
                 Padding(
                   padding: const EdgeInsets.only(top: 24),
@@ -308,7 +348,8 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
     }
     try {
       await controller.sendOrder(orderInput);
-      context.go("/success", extra: SuccessScreenModel(title: appLoc.labelWithdrawalSent));
+      context.go("/success",
+          extra: SuccessScreenModel(title: appLoc.labelWithdrawalSent));
     } catch (e) {
       setState(() {
         _orderError = e.toString();
@@ -322,6 +363,13 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
           ? double.parse(_amountTextController.text) / getExchangeRate(country)
           : 0;
       _targetTextController.text = targetAmount.toStringAsFixed(3);
+      listBanks = sourceCurrenciesObjt.currencies.entries
+          .firstWhere((e) => e.key == value)
+          .value
+          .banks
+          .entries
+          .map((en) => {"name": en.key})
+          .toList();
     });
   }
 
@@ -431,7 +479,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
             ),
             AlcanciaDropdown(
               itemsAlignment: MainAxisAlignment.start,
-              dropdownItems: sourceCurrenciesDOP,
+              dropdownItems: sourceCurrencies,
               decoration: BoxDecoration(
                 color: Theme.of(context).inputDecorationTheme.fillColor,
                 borderRadius: BorderRadius.circular(7),

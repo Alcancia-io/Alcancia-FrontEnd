@@ -58,9 +58,22 @@ class FirebaseRemoteConfigServiceProvider {
   String getAppVariables() => remoteConfig.getString("app_variables");
 
   RemoteConfigData parseRemoteConfigData(json) {
-    final Map<String, dynamic> data = jsonDecode(json);
     try {
-      return RemoteConfigData.fromJson(data['config'] ?? {});
+      final Map<String, dynamic> data = jsonDecode(json);
+      final Map<String, dynamic>? configData = data['config'];
+
+      if (configData != null) {
+        final Map<String, dynamic>? countryConfigJson = configData['country'];
+        if (countryConfigJson != null) {
+          return RemoteConfigData.fromJson(countryConfigJson);
+        } else {
+          throw FormatException(
+              "Invalid JSON format: 'country' key not found or null");
+        }
+      } else {
+        throw FormatException(
+            "Invalid JSON format: 'config' key not found or null");
+      }
     } catch (e) {
       throw e;
     }
@@ -68,7 +81,11 @@ class FirebaseRemoteConfigServiceProvider {
 }
 
 final firebaseRemoteConfigServiceProvider =
-    StateProvider<FirebaseRemoteConfigServiceProvider>((ref) {
+    Provider<FirebaseRemoteConfigServiceProvider>((ref) {
   return FirebaseRemoteConfigServiceProvider(
       remoteConfig: FirebaseRemoteConfig.instance);
+});
+
+final remoteConfigDataStateProvider = StateProvider<RemoteConfigData>((ref) {
+  return RemoteConfigData(countryConfig: {});
 });

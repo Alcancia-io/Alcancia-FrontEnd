@@ -100,24 +100,27 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
   Future<void> fetchRemoteConfig() async {
-    var remoteConfigProvider = FirebaseRemoteConfigServiceProvider(
-        remoteConfig: FirebaseRemoteConfig.instance);
-    String configJson = remoteConfigProvider.getAppVariables();
-
+    String configJson = "";
+    var remoteConfigProvider = ref.read(firebaseRemoteConfigServiceProvider);
+    await remoteConfigProvider.remoteConfig.fetchAndActivate();
+    remoteConfigProvider.remoteConfig.onConfigUpdated.listen((event) {
+      configJson = remoteConfigProvider.getAppVariables();
+      RemoteConfigData remoteConfigData =
+          remoteConfigProvider.parseRemoteConfigData(configJson);
+      ref.read(remoteConfigDataStateProvider.notifier).state = remoteConfigData;
+    });
+    configJson = remoteConfigProvider.getAppVariables();
     if (configJson.isNotEmpty) {
       try {
         RemoteConfigData remoteConfigData =
             remoteConfigProvider.parseRemoteConfigData(configJson);
+        ref.read(remoteConfigDataStateProvider.notifier).state =
+            remoteConfigData;
 
-        // Access the retrieved data
-        print('MinimumAppVersion: ${remoteConfigData.minimumAppVersion}');
-        print('DO Enabled: ${remoteConfigData.doConfig.enabled}');
-
-        // Access currencies
-        remoteConfigData.doConfig.currencies.forEach((key, value) {
-          print('Currency: $key');
+        // Access countries
+        remoteConfigData.countryConfig.forEach((key, value) {
+          print('Country: $key');
           print('Enabled: ${value.enabled}');
-          // Access other currency details
         });
       } on Exception catch (e) {
         throw e;
