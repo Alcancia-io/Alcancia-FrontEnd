@@ -65,7 +65,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
     {"name": "Banco Lafise"},
     {"name": "Qik"},
   ];
-  late String selectedBank = dopBanks.first['name'];
+  
 
   */
   late List<Map> countries;
@@ -78,6 +78,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
   late CountryConfig sourceCurrenciesObjt;
   late String sourceMXNCurrency = sourceCurrencies.first['name'];
   late String sourceDOPCurrency = sourceCurrencies.first['name'];
+
   final _clabeTextController = TextEditingController();
   final _accountTextController = TextEditingController();
   final _amountTextController = TextEditingController();
@@ -165,6 +166,8 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         .entries
         .map((en) => {"name": en.key})
         .toList();
+
+    selectedBank = listBanks.first['name'];
   }
 
   String getSourceCurrency(String country) {
