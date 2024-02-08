@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:alcancia/firebase_remote_config.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/screens/error/error_screen.dart';
@@ -133,20 +131,18 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
 
     if (user?.country == "MX") {
       country = "México";
-      countryCode = user!.country;
     } else if (user?.country == "DO") {
       country = "República Dominicana";
       countryCode = user!.country;
     } else {
       country = countries.first['name'];
-      countryCode = "DO";
     }
 
     countries = remoteConfigDataSet.countryConfig.entries
-        .map((e) => {"name": e.key, "icon": e.value.icon})
+        .map((e) => {"name": getCountryFromCode(e.key), "icon": e.value.icon})
         .toList();
     final countryIndex =
-        countries.indexWhere((element) => element['name'] == countryCode);
+        countries.indexWhere((element) => element['name'] == country);
     final code = countries.removeAt(countryIndex);
     countries.insert(0, code);
 
@@ -575,5 +571,15 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         ),
       ],
     );
+  }
+}
+
+getCountryFromCode(String key) {
+  if (key == "DO") {
+    return "República Dominicana";
+  } else if (key == "MX") {
+    return "México";
+  } else {
+    return "País no definido";
   }
 }
