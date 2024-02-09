@@ -59,7 +59,7 @@ class Checkout extends StatelessWidget {
                       appLoc.alertDepositConfirmed,
                     ),
                   );
-                  context.go('/');
+                  context.go('/homescreen/0');
                 },
               )
             ],
