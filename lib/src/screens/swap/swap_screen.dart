@@ -94,8 +94,19 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
       _isLoading = true;
     });
     try {
-      var mxnExchangeRate = await swapController.getSuarmiExchange("USDC");
-      var mxnCeloRate = await swapController.getSuarmiExchange("cUSD");
+      var remoteConfigData = ref.read(remoteConfigDataStateProvider);
+      bool isMxEnabled = remoteConfigData.countryConfig.entries
+          .firstWhere(((element) => element.key == "MX"))
+          .value
+          .enabled;
+
+      var mxnExchangeRate = "";
+      var mxnCeloRate = "";
+      if (isMxEnabled) {
+        mxnExchangeRate = await swapController.getSuarmiExchange("USDC");
+        mxnCeloRate = await swapController.getSuarmiExchange("cUSD");
+      }
+
       var dopExchangeRate = await swapController.getAlcanciaExchange("USDC");
       setState(() {
         suarmiUSDCExchage = 1.0 / double.parse(mxnExchangeRate);

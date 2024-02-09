@@ -99,10 +99,19 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
   Future<void> getExchange([double? exchangeUSD]) async {
     _isLoading = true;
     try {
-      var mxnExchangeRate =
-          await controller.getSuarmiExchange(sourceCurrency: "USDC");
-      var mxnCeloRate =
-          await controller.getSuarmiExchange(sourceCurrency: "cUSD");
+      bool isMxEnabled = remoteConfigDataSet.countryConfig.entries
+          .firstWhere((e) => e.key == "MX")
+          .value
+          .enabled;
+      var mxnExchangeRate = "";
+      var mxnCeloRate = "";
+      if (isMxEnabled) {
+        mxnExchangeRate =
+            await controller.getSuarmiExchange(sourceCurrency: "USDC");
+        mxnCeloRate =
+            await controller.getSuarmiExchange(sourceCurrency: "cUSD");
+      }
+
       var dopExchangeRate = await controller.getAlcanciaExchange("USDC");
       setState(() {
         suarmiUSDCExchange = 1.0 / double.parse(mxnExchangeRate);
