@@ -140,7 +140,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     if (sourceCurrency == "DOP") {
       targetAmount = double.parse(sourceAmount) / alcanciaUSDCExchange;
     } else if (sourceCurrency == "USD") {
-      targetAmount = double.parse(sourceAmount) * 1;
+      targetAmount = double.parse(sourceAmount) * 0.98;
     } else {
       targetAmount = double.parse(sourceAmount) /
           (targetCurrency == "USDC" ? suarmiUSDCExchage : suarmiCeloExchange);
@@ -379,7 +379,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                             Padding(
                               padding: const EdgeInsets.only(top: 16.0),
                               child: Text(
-                                "*1 USDC = ${(sourceCurrency == "MXN" ? suarmiUSDCExchage : ((sourceCurrency == "USD") ? 1 : alcanciaUSDCExchange)).toStringAsFixed(2)} $sourceCurrency",
+                                "*1 USDC = ${(sourceCurrency == "MXN" ? suarmiUSDCExchage : ((sourceCurrency == "USD") ? 0.98 : alcanciaUSDCExchange)).toStringAsFixed(2)} $sourceCurrency",
                                 style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.normal,
@@ -535,12 +535,16 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                             txnType: TransactionType.deposit,
                                             sourceAmount:
                                                 double.parse(sourceAmount),
-                                            targetAmount: (double.parse(
-                                                    sourceAmountController
-                                                        .text) /
-                                                (sourceCurrency == "USD"
-                                                    ? 1
-                                                    : alcanciaUSDCExchange)),
+                                            targetAmount: (sourceCurrency ==
+                                                    "USD"
+                                                ? (double.parse(
+                                                        sourceAmountController
+                                                            .text) *
+                                                    0.98) //TODO: CHANGE TO REMOTE CONFIG VALUE
+                                                : (double.parse(
+                                                        sourceAmountController
+                                                            .text) /
+                                                    alcanciaUSDCExchange)),
                                             targetCurrency:
                                                 targetCurrency == 'USDC'
                                                     ? 'USDC'
