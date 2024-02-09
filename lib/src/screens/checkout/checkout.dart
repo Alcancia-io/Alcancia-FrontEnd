@@ -45,7 +45,8 @@ class Checkout extends StatelessWidget {
                     txnInput: checkoutData.txnInput,
                     concept: (checkoutData.order.concept == null)
                         ? ""
-                        : checkoutData.order.concept!),
+                        : checkoutData.order.concept!,
+                    bankInfo: checkoutData.bank),
               ),
               AlcanciaButton(
                 height: responsiveService.getHeightPixels(64, screenHeight),
@@ -74,11 +75,11 @@ class OrderInformation extends StatelessWidget {
     super.key,
     required this.txnInput,
     required this.concept,
+    this.bankInfo,
   });
-
+  final Map<String, String>? bankInfo;
   final TransactionInput txnInput;
   String concept;
-  late AccountInfo bankInfo;
 
   @override
   Widget build(BuildContext context) {
@@ -86,11 +87,11 @@ class OrderInformation extends StatelessWidget {
     final textStyle = Theme.of(context).textTheme.bodyLarge;
     final total = txnInput.sourceAmount;
 
-    if (txnInput.txnMethod == TransactionMethod.alcancia) {
+    /*if (txnInput.txnMethod == TransactionMethod.alcancia) {
       bankInfo = AccountInfo.DOPInfo;
     } else {
       bankInfo = AccountInfo.MXNInfo;
-    }
+    }*/ //Deleted since remote config
 
     return Container(
       width: double.infinity,
@@ -113,45 +114,45 @@ class OrderInformation extends StatelessWidget {
               children: [
                 DepositInfoItem(
                   title: appLoc.labelBank,
-                  subtitle: bankInfo.bank,
-                  padding: EdgeInsets.only(bottom: 18),
+                  subtitle: bankInfo!["name"].toString(),
+                  padding: const EdgeInsets.only(bottom: 18),
                 ),
                 DepositInfoItem(
                   title: appLoc.labelBeneficiary,
-                  subtitle: bankInfo.beneficiary,
+                  subtitle: bankInfo!["info1"].toString(),
                   supportsClipboard: true,
-                  padding: EdgeInsets.only(bottom: 18),
+                  padding: const EdgeInsets.only(bottom: 18),
                 ),
-                if (bankInfo.rnc != null) ...[
+                if (bankInfo?["info2"] != null) ...[
                   DepositInfoItem(
                     title: appLoc.labelRNC,
-                    subtitle: bankInfo.rnc!,
+                    subtitle: bankInfo!["info2"].toString(),
                     supportsClipboard: true,
-                    padding: EdgeInsets.only(bottom: 18),
+                    padding: const EdgeInsets.only(bottom: 18),
                   ),
                 ],
-                if (bankInfo.accountNumber != null) ...[
+                if (bankInfo?["info3"] != null) ...[
                   DepositInfoItem(
                     title: appLoc.labelAccountNumber,
-                    subtitle: bankInfo.accountNumber!,
+                    subtitle: bankInfo!["info3"].toString(),
                     supportsClipboard: true,
-                    padding: EdgeInsets.only(bottom: 18),
+                    padding: const EdgeInsets.only(bottom: 18),
                   ),
                 ],
-                if (bankInfo.tipoCuenta != null) ...[
+                if (bankInfo?["info4"] != null) ...[
                   DepositInfoItem(
                     title: appLoc.labelAccountType,
-                    subtitle: bankInfo.tipoCuenta!,
+                    subtitle: bankInfo!["info4"].toString(),
                     supportsClipboard: true,
                     padding: EdgeInsets.only(bottom: 18),
                   ),
                 ],
-                if (bankInfo.clabe != null) ...[
+                if (bankInfo?["CLABE"] != null) ...[
                   DepositInfoItem(
                     title: appLoc.labelCLABE,
-                    subtitle: bankInfo.clabe!,
+                    subtitle: bankInfo!["CLABE"].toString()!,
                     supportsClipboard: true,
-                    padding: EdgeInsets.only(bottom: 18),
+                    padding: const EdgeInsets.only(bottom: 18),
                   ),
                 ],
                 DepositInfoItem(

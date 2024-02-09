@@ -1,3 +1,6 @@
+import 'dart:ffi';
+
+import 'package:alcancia/firebase_remote_config.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/screens/error/error_screen.dart';
 import 'package:alcancia/src/screens/investment_info/investment_info.dart';
@@ -10,6 +13,7 @@ import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/constants.dart';
 import 'package:alcancia/src/shared/models/checkout_model.dart';
 import 'package:alcancia/src/shared/models/kyc_status.dart';
+import 'package:alcancia/src/shared/models/remote_config_data.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/provider/user_provider.dart';
 import 'package:alcancia/src/shared/services/exception_service.dart';
@@ -135,6 +139,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     double targetAmount = 0.0;
     if (sourceCurrency == "DOP") {
       targetAmount = double.parse(sourceAmount) / alcanciaUSDCExchange;
+    } else if (sourceCurrency == "USD") {
+      targetAmount = double.parse(sourceAmount) * 1;
     } else {
       targetAmount = double.parse(sourceAmount) /
           (targetCurrency == "USDC" ? suarmiUSDCExchage : suarmiCeloExchange);
@@ -149,13 +155,34 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     getCeloAPY();
     getUsdcAPY();
     final user = ref.read(userProvider);
-    if (user?.country == "MX" && false) { // TEMPORARY DISABLE MXN
+    final remoteConfigData = ref.read(remoteConfigDataStateProvider);
+    if (user?.country == "MX" && false) {
+      // TEMPORARY DISABLE MXN
       sourceCurrency = "MXN";
-    } else if (user?.country == "DO" && false) { // TEMPORARY DISABLE MXN
+    } else if (user?.country == "DO" && false) {
+      // TEMPORARY DISABLE MXN
       sourceCurrency = "DOP";
     } else {
       sourceCurrency = sourceCurrencyCodes.first['name'];
     }
+    sourceCurrencyCodes = remoteConfigData.countryConfig.entries
+        .firstWhere(
+          (e) => e.key == user!.country && e.value.enabled == true,
+          orElse: () => MapEntry(
+              '',
+              CountryConfig(
+                  icon: '',
+                  enabled: false,
+                  currencies: {},
+                  cryptoCurrencies: {},
+                  banksWithdraw: null)),
+        )
+        .value
+        .currencies
+        .entries
+        .where((element) => element.value.enabled == true)
+        .map((e) => {"name": e.key, "icon": getIconByCurrencyFlag(e.key)})
+        .toList();
     if (sourceCurrencyCodes.length > 1) {
       final sourceCurrencyIndex = sourceCurrencyCodes
           .indexWhere((element) => element['name'] == sourceCurrency);
@@ -171,7 +198,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     final txtTheme = Theme.of(context).textTheme;
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-
+    var remoteConfigData =
+        ref.watch(remoteConfigDataStateProvider.notifier).state;
     // investment info
     final usdcInfo = [
       {"bold": appLoc.labelUsdcAsset, "regular": appLoc.descriptionUsdcAsset},
@@ -351,7 +379,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                             Padding(
                               padding: const EdgeInsets.only(top: 16.0),
                               child: Text(
-                                "*1 USDC = ${(sourceCurrency == "MXN" ? suarmiUSDCExchage : alcanciaUSDCExchange).toStringAsFixed(2)} $sourceCurrency",
+                                "*1 USDC = ${(sourceCurrency == "MXN" ? suarmiUSDCExchage : ((sourceCurrency == "USD") ? 1 : alcanciaUSDCExchange)).toStringAsFixed(2)} $sourceCurrency",
                                 style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.normal,
@@ -461,9 +489,17 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                             sourceAmount:
                                                 double.parse(sourceAmount),
                                             targetAmount: double.parse(
-                                                getTargetAmount(sourceAmount, targetCurrency, sourceCurrency)),
-                                            targetCurrency: targetCurrency == 'USDC' ? 'USDC' : 'mcUSD',
-                                            network: targetCurrency == 'USDC' ? 'MATIC' : 'CELO',
+                                                getTargetAmount(
+                                                    sourceAmount,
+                                                    targetCurrency,
+                                                    sourceCurrency)),
+                                            targetCurrency:
+                                                targetCurrency == 'USDC'
+                                                    ? 'USDC'
+                                                    : 'mcUSD',
+                                            network: targetCurrency == 'USDC'
+                                                ? 'MATIC'
+                                                : 'CELO',
                                           );
                                           Map wrapper = {
                                             "verified": true,
@@ -491,15 +527,24 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                               }
                                             };
                                           }
-                                        } else if (sourceCurrency == "DOP") {
+                                        } else if (sourceCurrency == "DOP" ||
+                                            sourceCurrency == "USD") {
                                           txnInput = TransactionInput(
                                             txnMethod:
                                                 TransactionMethod.alcancia,
                                             txnType: TransactionType.deposit,
-                                            sourceAmount: double.parse(sourceAmount),
-                                            targetAmount:
-                                                (double.parse(sourceAmountController.text) / (alcanciaUSDCExchange)),
-                                            targetCurrency: targetCurrency == 'USDC' ? 'USDC' : 'mcUSD',
+                                            sourceAmount:
+                                                double.parse(sourceAmount),
+                                            targetAmount: (double.parse(
+                                                    sourceAmountController
+                                                        .text) /
+                                                (sourceCurrency == "USD"
+                                                    ? 1
+                                                    : alcanciaUSDCExchange)),
+                                            targetCurrency:
+                                                targetCurrency == 'USDC'
+                                                    ? 'USDC'
+                                                    : 'mcUSD',
                                             network: 'ALCANCIA',
                                           );
                                           orderInput = {
@@ -526,9 +571,53 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                           print(txnInput == null);
                                           final order = await swapController
                                               .sendOrder(orderInput);
+                                          //Begin remote config
+                                          var sourceCurrenciesObjt =
+                                              remoteConfigData
+                                                  .countryConfig.entries
+                                                  .firstWhere(
+                                                    (e) =>
+                                                        e.key ==
+                                                            user!.country &&
+                                                        e.value.enabled == true,
+                                                    orElse: () => MapEntry(
+                                                        '',
+                                                        CountryConfig(
+                                                            icon: '',
+                                                            enabled: false,
+                                                            currencies: {},
+                                                            banksWithdraw: null,
+                                                            cryptoCurrencies: {})),
+                                                  )
+                                                  .value;
+                                          if (sourceCurrenciesObjt
+                                              .currencies.isEmpty) {
+                                            throw "Error al obtener currency config.";
+                                          }
+                                          var bankData = sourceCurrenciesObjt
+                                              .currencies.entries
+                                              .firstWhere((e) =>
+                                                  e.key == sourceCurrency &&
+                                                  e.value.enabled == true)
+                                              .value
+                                              .banks
+                                              .entries
+                                              .where((element) =>
+                                                  element.value.enabled == true)
+                                              .map((en) => {
+                                                    "name": en.key,
+                                                    "info1": en.value.info1,
+                                                    "info2": en.value.info2,
+                                                    "info3": en.value.info3,
+                                                    "info4": en.value.info4,
+                                                  })
+                                              .toList()[0];
+
+                                          //End remote config
                                           final checkoutData = CheckoutModel(
                                               order: order,
-                                              txnInput: txnInput!);
+                                              txnInput: txnInput!,
+                                              bank: bankData);
                                           context.pushNamed("checkout",
                                               extra: checkoutData);
                                         } catch (e) {
@@ -541,7 +630,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                         setState(() {
                                           _loadingCheckout = false;
                                         });
-                                      } : null,
+                                      }
+                                    : null,
                                 color: alcanciaLightBlue,
                                 width: double.infinity,
                                 height: responsiveService.getHeightPixels(
@@ -571,15 +661,18 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
 
   String validateAmount(
       String sourceAmount, String sourceCurrency, AppLocalizations appLoc) {
-
     int parsedAmount = int.parse(sourceAmount);
 
     if (sourceCurrency == 'MXN') {
-      if (int.parse(sourceAmount) < minMXNAmount) return appLoc.errorMinimumDepositAmount;
-      if (int.parse(sourceAmount) > maxMXNAmount) return appLoc.errorMaximumDepositAmount;
+      if (int.parse(sourceAmount) < minMXNAmount)
+        return appLoc.errorMinimumDepositAmount;
+      if (int.parse(sourceAmount) > maxMXNAmount)
+        return appLoc.errorMaximumDepositAmount;
     } else {
-      if (int.parse(sourceAmount) < minDOPAmount) return appLoc.errorMinimumDepositAmountDOP;
-      if (int.parse(sourceAmount) > maxDOPAmount) return appLoc.errorMaximumDepositAmountDOP;
+      if (int.parse(sourceAmount) < minDOPAmount)
+        return appLoc.errorMinimumDepositAmountDOP;
+      if (int.parse(sourceAmount) > maxDOPAmount)
+        return appLoc.errorMaximumDepositAmountDOP;
     }
     return '';
   }
@@ -595,5 +688,16 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     }
     return true;
   }
+}
 
+getIconByCurrencyFlag(String icon) {
+  if (icon == "DOP") {
+    return "lib/src/resources/images/icon_dominican_flag.png";
+  } else if (icon == "USD") {
+    return "lib/src/resources/images/icon_us_flag.png";
+  } else if (icon == "MXN") {
+    return "lib/src/resources/images/icon_mexico_flag.png";
+  } else {
+    return "Map the source currency!";
+  }
 }

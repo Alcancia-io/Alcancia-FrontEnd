@@ -152,7 +152,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   controller: emailController,
                                   labelText: appLocalization.labelEmail,
                                   inputType: TextInputType.emailAddress,
-                                  autofillHints: const [AutofillHints.email, AutofillHints.username],
+                                  autofillHints: const [
+                                    AutofillHints.email,
+                                    AutofillHints.username
+                                  ],
                                   inputFormatters: [
                                     FilteringTextInputFormatter.deny(
                                         RegExp(r"\s"))
@@ -208,15 +211,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                             const Padding(
                                               padding:
                                                   EdgeInsets.only(right: 4.0),
-                                              child: Icon(
-                                                  CupertinoIcons.question_circle),
+                                              child: Icon(CupertinoIcons
+                                                  .question_circle),
                                             ),
                                             Text(appLocalization
                                                 .labelForgotPassword),
                                           ],
                                         ),
                                         onPressed: () async {
-                                          await _forgotPassword(appLocalization);
+                                          await _forgotPassword(
+                                              appLocalization);
                                         },
                                       ),
                                     ],
@@ -247,7 +251,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                           _buildFooter(appLocalization: appLocalization),
                         ] else ...[
-                          if (_biometricEnrolled) ... [
+                          if (_biometricEnrolled) ...[
                             if (_loading) ...[
                               const Center(
                                 child: Padding(
@@ -267,9 +271,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 buttonText: appLocalization.buttonLogIn,
                                 icon: const Padding(
                                     padding: EdgeInsets.all(8.0),
-                                    child: PlatformBiometricIcon(color: Colors.white,)),
+                                    child: PlatformBiometricIcon(
+                                      color: Colors.white,
+                                    )),
                                 onPressed: () async {
-                                  final auth = await biometricService.authenticate();
+                                  final auth =
+                                      await biometricService.authenticate();
                                   if (auth) {
                                     await _login(pushNotifications,
                                         registrationController);
@@ -277,7 +284,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 },
                               ),
                             ],
-                          ] else ... [
+                          ] else ...[
                             LabeledTextFormField(
                               controller: passwordController,
                               labelText: appLocalization.labelPassword,
@@ -302,8 +309,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ),
                             Padding(
                               padding: EdgeInsets.only(
-                                bottom: responsiveService
-                                    .getHeightPixels(6, screenHeight),
+                                bottom: responsiveService.getHeightPixels(
+                                    6, screenHeight),
                                 top: responsiveService.getHeightPixels(
                                     6, screenHeight),
                               ),
@@ -317,6 +324,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                           padding: EdgeInsets.only(right: 4.0),
                                           child: Icon(
                                               CupertinoIcons.question_circle),
+                                        ),
                                         Text(appLocalization
                                             .labelForgotPassword),
                                       ],
@@ -335,7 +343,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   child: CircularProgressIndicator(),
                                 ),
                               ),
-                            ] else ... [
+                            ] else ...[
                               AlcanciaButton(
                                 color: alcanciaLightBlue,
                                 width: double.infinity,
@@ -343,8 +351,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     64, screenHeight),
                                 buttonText: appLocalization.buttonLogIn,
                                 onPressed: () async {
-                                  await _login(
-                                      pushNotifications,
+                                  await _login(pushNotifications,
                                       registrationController);
                                 },
                               ),

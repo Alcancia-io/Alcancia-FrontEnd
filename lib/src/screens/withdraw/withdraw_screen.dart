@@ -94,8 +94,9 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
 
   // alcancia exchanges
   var alcanciaUSDCExchange = 1.0;
+  late double alcanciaUSDExchange;
 
-  Future<void> getExchange() async {
+  Future<void> getExchange([double? exchangeUSD]) async {
     _isLoading = true;
     try {
       var mxnExchangeRate =
@@ -107,6 +108,9 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         suarmiUSDCExchange = 1.0 / double.parse(mxnExchangeRate);
         suarmiCELOExchange = 1.0 / double.parse(mxnCeloRate);
         alcanciaUSDCExchange = 1 / dopExchangeRate;
+        if (exchangeUSD != null) {
+          alcanciaUSDExchange = exchangeUSD;
+        }
       });
     } catch (e) {
       _error = e.toString();
@@ -122,7 +126,6 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
   @override
   void initState() {
     super.initState();
-    getExchange();
 
     final user = ref.read(userProvider);
     remoteConfigDataSet = ref.read(remoteConfigDataStateProvider);
@@ -140,6 +143,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
     }
 
     countries = remoteConfigDataSet.countryConfig.entries
+        .where((element) => element.value.enabled == true)
         .map((e) => {"name": getCountryFromCode(e.key), "icon": e.value.icon})
         .toList();
     final countryIndex =
@@ -149,25 +153,33 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
 
     sourceCurrenciesObjt = remoteConfigDataSet.countryConfig.entries
         .firstWhere(
-          (e) => e.key == countryCode,
+          (e) => e.key == countryCode && e.value.enabled == true,
           orElse: () => MapEntry(
-              '', CountryConfig(icon: '', enabled: false, currencies: {})),
+              '',
+              CountryConfig(
+                  icon: '',
+                  enabled: false,
+                  currencies: {},
+                  cryptoCurrencies: {},
+                  banksWithdraw: null)),
         )
         .value;
 
-    sourceCurrencies = sourceCurrenciesObjt.currencies.entries
+    sourceCurrencies = sourceCurrenciesObjt.cryptoCurrencies.entries
+        .where((element) => element.value.enabled == true)
         .map((e) => {"name": e.key, "icon": e.value.icon})
         .toList();
 
-    listBanks = sourceCurrenciesObjt.currencies.entries
-        .firstWhere((e) => e.key == sourceDOPCurrency)
-        .value
-        .banks
-        .entries
-        .map((en) => {"name": en.key})
-        .toList();
+    listBanks =
+        sourceCurrenciesObjt.banksWithdraw!.map((e) => {"name": e}).toList();
 
     selectedBank = listBanks.first['name'];
+
+    var exchangeUSD = sourceCurrenciesObjt.currencies.entries
+        .firstWhere((e) => e.key == "USD")
+        .value
+        .exchangeRate;
+    getExchange(exchangeUSD);
   }
 
   String getSourceCurrency(String country) {
@@ -358,17 +370,18 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
 
   void updateTargetAmount(String value) {
     setState(() {
-      targetAmount = value.isNotEmpty
-          ? double.parse(_amountTextController.text) / getExchangeRate(country)
-          : 0;
+      if (sourceDOPCurrency == "USD") {
+        targetAmount = value.isNotEmpty
+            ? double.parse(_amountTextController.text) * alcanciaUSDExchange
+            : 0;
+      } else {
+        targetAmount = value.isNotEmpty
+            ? double.parse(_amountTextController.text) /
+                getExchangeRate(country)
+            : 0;
+      }
+
       _targetTextController.text = targetAmount.toStringAsFixed(3);
-      listBanks = sourceCurrenciesObjt.currencies.entries
-          .firstWhere((e) => e.key == value)
-          .value
-          .banks
-          .entries
-          .map((en) => {"name": en.key})
-          .toList();
     });
   }
 
