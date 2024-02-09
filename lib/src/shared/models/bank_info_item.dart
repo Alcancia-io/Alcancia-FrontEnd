@@ -22,6 +22,14 @@ class AccountInfo {
     tipoCuenta: 'Cuenta de ahorros',
   );
 
+  static AccountInfo USDInfo = AccountInfo._(
+    bank: "BHD",
+    beneficiary: "BAPLTECH SRL",
+    rnc: "1-32-75385-2",
+    accountNumber: "34609980023",
+    tipoCuenta: 'Cuenta de ahorros',
+  );
+
   static AccountInfo MXNInfo = AccountInfo._(
     bank: "Sistema de Transferencias y Pagos (STP)",
     beneficiary: "Bctech Solutions SAPI de CV",

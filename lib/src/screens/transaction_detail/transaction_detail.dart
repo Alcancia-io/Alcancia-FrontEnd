@@ -1,3 +1,4 @@
+import 'package:alcancia/firebase_remote_config.dart';
 import 'package:alcancia/src/screens/transaction_detail/transaction_detail_controller.dart';
 import 'package:alcancia/src/shared/components/deposit_info_item.dart';
 import 'package:alcancia/src/shared/extensions/datetime_extensions.dart';
@@ -26,6 +27,7 @@ class TransactionDetail extends ConsumerWidget {
     final ctx = Theme.of(context);
     final appLoc = AppLocalizations.of(context)!;
     final user = ref.watch(userProvider)!;
+    final remoteConfigData = ref.read(remoteConfigDataStateProvider);
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -166,8 +168,22 @@ class TransactionDetail extends ConsumerWidget {
   }
 
   Widget BankInfo(AppLocalizations appLoc) {
-    final info =
-        txn.sourceAsset == 'MXN' ? AccountInfo.MXNInfo : AccountInfo.DOPInfo;
+    AccountInfo info = AccountInfo.MXNInfo;
+
+    switch (txn.sourceAsset) {
+      case 'MXN':
+        info = AccountInfo.MXNInfo;
+        break;
+      case 'DOP':
+        info = AccountInfo.DOPInfo;
+        break;
+      case 'USD':
+        info = AccountInfo.USDInfo;
+        break;
+      default:
+        // Handle other cases if needed
+        break;
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
