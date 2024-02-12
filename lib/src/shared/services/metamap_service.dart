@@ -11,7 +11,8 @@ import '../../features/registration/model/graphql_config.dart';
 class MetamapService {
   final metamapClientId = dotenv.env['METAMAP_CLIENT_ID'] as String;
   final metamapDomicanFlowId = dotenv.env['DOMINICAN_FLOW_ID'] as String;
-  final metamapMexicanResidentId = dotenv.env['MEXICO_RESIDENTS_FLOW_ID'] as String;
+  final metamapMexicanResidentId =
+      dotenv.env['MEXICO_RESIDENTS_FLOW_ID'] as String;
   final metamapMexicanINEId = dotenv.env['MEXICO_INE_FLOW_ID'] as String;
 
   Future<bool> cancelKycStatus() async {
@@ -20,7 +21,8 @@ class MetamapService {
       var token = await service.readSecureData("token");
       GraphQLConfig graphQLConfiguration = GraphQLConfig(token: "$token");
       GraphQLClient client = graphQLConfiguration.clientToQuery();
-      QueryResult result = await client.query(QueryOptions(document: gql(kycCancelQuery)));
+      QueryResult result =
+          await client.query(QueryOptions(document: gql(kycCancelQuery)));
       if (result.hasException) {
         final error = result.exception;
         return Future.error(error!);
@@ -33,11 +35,17 @@ class MetamapService {
     }
   }
 
-  Future<void> showMatiFlow(String flowId, String uid, AppLocalizations appLoc) async {
-    await MetaMapFlutter.showMetaMapFlow(metamapClientId, flowId, {"uid": uid, "buttonColor": "#4E76E5"});
+  Future<void> showMatiFlow(
+      String flowId, String uid, AppLocalizations appLoc) async {
+    await MetaMapFlutter.showMetaMapFlow(
+        clientId: metamapClientId,
+        flowId: flowId,
+        metadata: {"uid": uid, "buttonColor": "#4E76E5"});
     final result = await MetaMapFlutter.resultCompleter.future;
     await Fluttertoast.showToast(
-        msg: result is ResultSuccess ? appLoc.alertVerificationCompleted : appLoc.alertVerificationCanceled,
+        msg: result is ResultSuccess
+            ? appLoc.alertVerificationCompleted
+            : appLoc.alertVerificationCanceled,
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM);
     if (result is ResultCancelled) {
