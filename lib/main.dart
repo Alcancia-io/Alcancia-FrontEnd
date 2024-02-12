@@ -1,13 +1,16 @@
 import 'dart:io';
 
 import 'package:alcancia/env.dart';
+import 'package:alcancia/firebase_remote_config.dart';
 import 'package:alcancia/src/resources/colors/app_theme.dart';
 import 'package:alcancia/src/screens/biometric/biometric_authentication_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_error_widget.dart';
+import 'package:alcancia/src/shared/models/remote_config_data.dart';
 import 'package:alcancia/src/shared/provider/auth_service_provider.dart';
 import 'package:alcancia/src/shared/provider/push_notifications_provider.dart';
 import 'package:alcancia/src/shared/services/biometric_service.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -76,6 +79,11 @@ void main() async {
     DeviceOrientation
         .portraitUp, // Locks the device orientation to portrait mode
   ]);
+  final FirebaseRemoteConfigServiceProvider
+      firebaseRemoteConfigServiceProvider = FirebaseRemoteConfigServiceProvider(
+          remoteConfig: FirebaseRemoteConfig.instance);
+  firebaseRemoteConfigServiceProvider.init();
+
   runApp(const ProviderScope(child: MyApp()));
 }
 
