@@ -38,9 +38,7 @@ class MetamapService {
   Future<void> showMatiFlow(
       String flowId, String uid, AppLocalizations appLoc) async {
     await MetaMapFlutter.showMetaMapFlow(
-        clientId: metamapClientId,
-        flowId: flowId,
-        metadata: {"uid": uid, "buttonColor": "#4E76E5"});
+        metamapClientId, flowId, {"uid": uid, "buttonColor": "#4E76E5"});
     final result = await MetaMapFlutter.resultCompleter.future;
     await Fluttertoast.showToast(
         msg: result is ResultSuccess
