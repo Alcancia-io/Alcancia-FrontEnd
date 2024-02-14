@@ -11,6 +11,7 @@ import 'package:alcancia/src/shared/components/alcancia_container.dart';
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/constants.dart';
+import 'package:alcancia/src/shared/extensions/type_extensions.dart';
 import 'package:alcancia/src/shared/models/checkout_model.dart';
 import 'package:alcancia/src/shared/models/kyc_status.dart';
 import 'package:alcancia/src/shared/models/remote_config_data.dart';
@@ -37,8 +38,8 @@ class SwapScreen extends ConsumerStatefulWidget {
 
 class _SwapScreenState extends ConsumerState<SwapScreen> {
   // source amount vars
-  late String sourceAmount = ""; // value entered in text field
   final sourceAmountController = TextEditingController();
+  final targetAmountController = TextEditingController();
 
   final minMXNAmount = 200;
   final maxMXNAmount = 50000;
@@ -145,7 +146,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     }
   }
 
-  String getTargetAmount(
+  String calculateTargetAmount(
       String sourceAmount, String targetCurrency, String sourceCurrency) {
     double targetAmount = 0.0;
     if (sourceCurrency == "DOP") {
@@ -156,8 +157,23 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
       targetAmount = double.parse(sourceAmount) /
           (targetCurrency == "USDC" ? suarmiUSDCExchage : suarmiCeloExchange);
     }
-    return targetAmount.toStringAsFixed(4);
+    return targetAmount.formatQuantity(4);
   }
+
+  String calculateSourceAmount(
+      String targetAmount, String targetCurrency, String sourceCurrency) {
+    double sourceAmount = 0.0;
+    if (sourceCurrency == "DOP") {
+      sourceAmount = double.parse(targetAmount) * alcanciaUSDCExchange;
+    } else if (sourceCurrency == "USD") {
+      sourceAmount = double.parse(targetAmount) / 0.98;
+    } else {
+      sourceAmount = double.parse(targetAmount) *
+          (targetCurrency == "USDC" ? suarmiUSDCExchage : suarmiCeloExchange);
+    }
+    return sourceAmount.formatQuantity(4);
+  }
+
 
   @override
   void initState() {
@@ -334,7 +350,13 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                       controller: sourceAmountController,
                                       onChanged: (text) {
                                         setState(() {
-                                          sourceAmount = text;
+                                          if (text.isEmpty) {
+                                            targetAmountController.text = "";
+                                          } else {
+                                            targetAmountController.text =
+                                                calculateTargetAmount(
+                                                    text, targetCurrency, sourceCurrency);
+                                          }
                                         });
                                       },
                                     ),
@@ -346,7 +368,10 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                               padding: const EdgeInsets.only(top: 8, bottom: 8),
                               child: Center(
                                   child: SvgPicture.asset(
-                                      "lib/src/resources/images/arrow_down_purple.svg")),
+                                      "lib/src/resources/images/arrow_down_purple.svg",
+                                    height: 30,
+                                  ),
+                              ),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -366,23 +391,32 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                   },
                                 ),
                                 // here is where target amount is display
-                                Container(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: Theme.of(context).primaryColor,
-                                  ),
+                                AlcanciaContainer(
                                   height: responsiveService.getHeightPixels(
                                       45, screenHeight),
                                   width: responsiveService.getWidthPixels(
                                       150, screenWidth),
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    sourceAmount == ""
-                                        ? ""
-                                        : getTargetAmount(sourceAmount,
-                                            targetCurrency, sourceCurrency),
-                                    style: txtTheme.bodyText1,
+                                  child: TextField(
+                                    style: const TextStyle(fontSize: 15),
+                                    decoration: InputDecoration(
+                                      fillColor:
+                                      Theme.of(context).primaryColor,
+                                    ),
+                                    inputFormatters: <TextInputFormatter>[
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
+                                    keyboardType: TextInputType.number,
+                                    controller: targetAmountController,
+                                    onChanged: (text) {
+                                      setState(() {
+                                        if (text.isEmpty) {
+                                          sourceAmountController.text = "";
+                                        } else {
+                                          sourceAmountController.text = calculateSourceAmount(
+                                              text, targetCurrency, sourceCurrency);
+                                        }
+                                      });
+                                    },
                                   ),
                                 ),
                               ],
@@ -390,7 +424,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                             Padding(
                               padding: const EdgeInsets.only(top: 16.0),
                               child: Text(
-                                "*1 USDC = ${(sourceCurrency == "MXN" ? suarmiUSDCExchage : ((sourceCurrency == "USD") ? 0.98 : alcanciaUSDCExchange)).toStringAsFixed(2)} $sourceCurrency",
+                                "*1 USDC = ${(sourceCurrency == "MXN" ? suarmiUSDCExchage : ((sourceCurrency == "USD") ? 0.98 : alcanciaUSDCExchange)).formatQuantity(2)} $sourceCurrency",
                                 style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.normal,
@@ -498,12 +532,9 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                             txnMethod: TransactionMethod.suarmi,
                                             txnType: TransactionType.deposit,
                                             sourceAmount:
-                                                double.parse(sourceAmount),
+                                                double.parse(sourceAmountController.text),
                                             targetAmount: double.parse(
-                                                getTargetAmount(
-                                                    sourceAmount,
-                                                    targetCurrency,
-                                                    sourceCurrency)),
+                                                targetAmountController.text),
                                             targetCurrency:
                                                 targetCurrency == 'USDC'
                                                     ? 'USDC'
@@ -545,7 +576,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                                 TransactionMethod.alcancia,
                                             txnType: TransactionType.deposit,
                                             sourceAmount:
-                                                double.parse(sourceAmount),
+                                                double.parse(sourceAmountController.text),
                                             targetAmount: (sourceCurrency ==
                                                     "USD"
                                                 ? (double.parse(
@@ -653,12 +684,12 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                     64, screenHeight),
                               ),
                       ),
-                      if (sourceAmount.isNotEmpty) ...[
+                      if (sourceAmountController.text.isNotEmpty) ...[
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
                             validateAmount(
-                                sourceAmount, sourceCurrency, appLoc),
+                                sourceAmountController.text, sourceCurrency, appLoc),
                             style: const TextStyle(color: Colors.red),
                           ),
                         ),
@@ -676,30 +707,29 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
 
   String validateAmount(
       String sourceAmount, String sourceCurrency, AppLocalizations appLoc) {
-    int parsedAmount = int.parse(sourceAmount);
 
     if (sourceCurrency == 'MXN') {
-      if (int.parse(sourceAmount) < minMXNAmount)
+      if (double.parse(sourceAmount) < minMXNAmount)
         return appLoc.errorMinimumDepositAmount;
-      if (int.parse(sourceAmount) > maxMXNAmount)
+      if (double.parse(sourceAmount) > maxMXNAmount)
         return appLoc.errorMaximumDepositAmount;
     } else {
-      if (int.parse(sourceAmount) < minDOPAmount)
+      if (double.parse(sourceAmount) < minDOPAmount)
         return appLoc.errorMinimumDepositAmountDOP;
-      if (int.parse(sourceAmount) > maxDOPAmount)
+      if (double.parse(sourceAmount) > maxDOPAmount)
         return appLoc.errorMaximumDepositAmountDOP;
     }
     return '';
   }
 
   bool get _enableButton {
-    if (sourceAmount.isEmpty) return false;
+    if (sourceAmountController.text.isEmpty) return false;
     if (sourceCurrency == 'MXN') {
-      if (int.parse(sourceAmount) < minMXNAmount) return false;
-      if (int.parse(sourceAmount) > maxMXNAmount) return false;
+      if (double.parse(sourceAmountController.text) < minMXNAmount) return false;
+      if (double.parse(sourceAmountController.text) > maxMXNAmount) return false;
     } else {
-      if (int.parse(sourceAmount) < minDOPAmount) return false;
-      if (int.parse(sourceAmount) > maxDOPAmount) return false;
+      if (double.parse(sourceAmountController.text) < minDOPAmount) return false;
+      if (double.parse(sourceAmountController.text) > maxDOPAmount) return false;
     }
     return true;
   }
