@@ -1,6 +1,6 @@
 final getCurrentlySupportedAppVersionQuery = '''
   query {
-    getCurrentlySupportedAppVersion {
+    getCurrentlySupportedAppVersionGraphQLObject {
       version
     }
   }

@@ -174,7 +174,6 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     return sourceAmount.formatQuantity(4);
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -355,7 +354,9 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                           } else {
                                             targetAmountController.text =
                                                 calculateTargetAmount(
-                                                    text, targetCurrency, sourceCurrency);
+                                                    text,
+                                                    targetCurrency,
+                                                    sourceCurrency);
                                           }
                                         });
                                       },
@@ -367,10 +368,10 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                             Padding(
                               padding: const EdgeInsets.only(top: 8, bottom: 8),
                               child: Center(
-                                  child: SvgPicture.asset(
-                                      "lib/src/resources/images/arrow_down_purple.svg",
-                                    height: 30,
-                                  ),
+                                child: SvgPicture.asset(
+                                  "lib/src/resources/images/arrow_down_purple.svg",
+                                  height: 30,
+                                ),
                               ),
                             ),
                             Row(
@@ -399,8 +400,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                   child: TextField(
                                     style: const TextStyle(fontSize: 15),
                                     decoration: InputDecoration(
-                                      fillColor:
-                                      Theme.of(context).primaryColor,
+                                      fillColor: Theme.of(context).primaryColor,
                                     ),
                                     inputFormatters: <TextInputFormatter>[
                                       FilteringTextInputFormatter.digitsOnly
@@ -412,8 +412,11 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                         if (text.isEmpty) {
                                           sourceAmountController.text = "";
                                         } else {
-                                          sourceAmountController.text = calculateSourceAmount(
-                                              text, targetCurrency, sourceCurrency);
+                                          sourceAmountController.text =
+                                              calculateSourceAmount(
+                                                  text,
+                                                  targetCurrency,
+                                                  sourceCurrency);
                                         }
                                       });
                                     },
@@ -424,7 +427,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                             Padding(
                               padding: const EdgeInsets.only(top: 16.0),
                               child: Text(
-                                "*1 USDC = ${(sourceCurrency == "MXN" ? suarmiUSDCExchage : ((sourceCurrency == "USD") ? 0.98 : alcanciaUSDCExchange)).formatQuantity(2)} $sourceCurrency",
+                                generateCurrency(sourceCurrency,
+                                    suarmiUSDCExchage, alcanciaUSDCExchange),
                                 style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.normal,
@@ -531,8 +535,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                           txnInput = TransactionInput(
                                             txnMethod: TransactionMethod.suarmi,
                                             txnType: TransactionType.deposit,
-                                            sourceAmount:
-                                                double.parse(sourceAmountController.text),
+                                            sourceAmount: double.parse(
+                                                sourceAmountController.text),
                                             targetAmount: double.parse(
                                                 targetAmountController.text),
                                             targetCurrency:
@@ -575,8 +579,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                             txnMethod:
                                                 TransactionMethod.alcancia,
                                             txnType: TransactionType.deposit,
-                                            sourceAmount:
-                                                double.parse(sourceAmountController.text),
+                                            sourceAmount: double.parse(
+                                                sourceAmountController.text),
                                             targetAmount: (sourceCurrency ==
                                                     "USD"
                                                 ? (double.parse(
@@ -688,8 +692,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            validateAmount(
-                                sourceAmountController.text, sourceCurrency, appLoc),
+                            validateAmount(sourceAmountController.text,
+                                sourceCurrency, appLoc),
                             style: const TextStyle(color: Colors.red),
                           ),
                         ),
@@ -707,7 +711,6 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
 
   String validateAmount(
       String sourceAmount, String sourceCurrency, AppLocalizations appLoc) {
-
     if (sourceCurrency == 'MXN') {
       if (double.parse(sourceAmount) < minMXNAmount)
         return appLoc.errorMinimumDepositAmount;
@@ -725,13 +728,28 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
   bool get _enableButton {
     if (sourceAmountController.text.isEmpty) return false;
     if (sourceCurrency == 'MXN') {
-      if (double.parse(sourceAmountController.text) < minMXNAmount) return false;
-      if (double.parse(sourceAmountController.text) > maxMXNAmount) return false;
+      if (double.parse(sourceAmountController.text) < minMXNAmount)
+        return false;
+      if (double.parse(sourceAmountController.text) > maxMXNAmount)
+        return false;
     } else {
-      if (double.parse(sourceAmountController.text) < minDOPAmount) return false;
-      if (double.parse(sourceAmountController.text) > maxDOPAmount) return false;
+      if (double.parse(sourceAmountController.text) < minDOPAmount)
+        return false;
+      if (double.parse(sourceAmountController.text) > maxDOPAmount)
+        return false;
     }
     return true;
+  }
+}
+
+String generateCurrency(String sourceCurrency, double suarmiUSDCExchage,
+    double alcanciaUSDCExchange) {
+  if (sourceCurrency == "MXN") {
+    return "*1 USDC = ${suarmiUSDCExchage.formatQuantity(2)} $sourceCurrency";
+  } else if (sourceCurrency == "USD") {
+    return "*1 USD = ${(0.98).formatQuantity(2)} USDC";
+  } else {
+    return "*1 USDC = ${alcanciaUSDCExchange.formatQuantity(2)} $sourceCurrency";
   }
 }
 
