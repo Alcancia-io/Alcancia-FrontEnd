@@ -168,7 +168,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     if (sourceCurrency == "DOP") {
       sourceAmount = double.parse(targetAmount) * alcanciaUSDCExchange;
     } else if (sourceCurrency == "USD") {
-      sourceAmount = double.parse(targetAmount) / alcanciaUSDtoUSDCRate;
+      sourceAmount = double.parse(targetAmount) +
+          double.parse(targetAmount) * (1 - alcanciaUSDtoUSDCRate);
     } else {
       sourceAmount = double.parse(targetAmount) *
           (targetCurrency == "USDC" ? suarmiUSDCExchage : suarmiCeloExchange);
@@ -326,6 +327,11 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                       setState(() {
                                         sourceCurrency = newValue;
                                         getCurrencyRate();
+                                        sourceAmountController.text =
+                                            calculateSourceAmount(
+                                                targetAmountController.text,
+                                                targetCurrency,
+                                                sourceCurrency);
                                         // when this components intis, we will exchange rate from suarmi and cryptopay
                                       });
                                     },
