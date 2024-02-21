@@ -174,7 +174,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         )
         .value;
 
-    sourceCurrencies = sourceCurrenciesObjt.cryptoCurrencies.entries
+    sourceCurrencies = sourceCurrenciesObjt.currencies.entries
         .where((element) => element.value.enabled == true)
         .map((e) => {"name": e.key, "icon": e.value.icon})
         .toList();
@@ -472,7 +472,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         ),
         LabeledTextFormField(
           controller: _targetTextController,
-          labelText: appLoc.labelAmountMXN,
+          labelText: "${appLoc.labelAmount} $sourceMXNCurrency",
           inputType: TextInputType.number,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           enabled: false,
@@ -586,7 +586,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         ),
         LabeledTextFormField(
           controller: _targetTextController,
-          labelText: appLoc.labelAmountDOP,
+          labelText: "${appLoc.labelAmount} $sourceDOPCurrency",
           inputType: TextInputType.number,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           enabled: false,

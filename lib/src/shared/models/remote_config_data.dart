@@ -62,13 +62,13 @@ class CryptoCurrency {
   final String icon;
   final int minAmount;
   final int maxAmount;
-
-  CryptoCurrency({
-    required this.enabled,
-    required this.icon,
-    required this.minAmount,
-    required this.maxAmount,
-  });
+  final double depositRate;
+  CryptoCurrency(
+      {required this.enabled,
+      required this.icon,
+      required this.minAmount,
+      required this.maxAmount,
+      required this.depositRate});
 
   factory CryptoCurrency.fromJson(Map<String, dynamic> json) {
     return CryptoCurrency(
@@ -76,6 +76,7 @@ class CryptoCurrency {
       icon: json['icon'],
       minAmount: json['minAmount'],
       maxAmount: json['maxAmount'],
+      depositRate: json['depositRate'] as double,
     );
   }
 }
