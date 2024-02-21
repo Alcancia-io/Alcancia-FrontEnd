@@ -211,7 +211,7 @@
 	"labelBank": "Bank",
 	"labelAccountNumber": "Account number",
 	"labelCedula": "Cedula",
-	"labelAmountDOP": "Amount in DOP",
+	"labelAmount": "Amount in",
 	"errorCedulaLength": "The cedula must consist of 11 digits",
 	"errorEmailRequired": "Email is required",
 	"alertErrorForgotPasswordCode": "There was an error sending the code, please check your email and try again",

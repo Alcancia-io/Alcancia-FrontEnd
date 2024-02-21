@@ -1,3 +1,6 @@
+import 'dart:ffi';
+
+import 'package:alcancia/firebase_remote_config.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/screens/error/error_screen.dart';
 import 'package:alcancia/src/screens/investment_info/investment_info.dart';
@@ -8,8 +11,10 @@ import 'package:alcancia/src/shared/components/alcancia_container.dart';
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/constants.dart';
+import 'package:alcancia/src/shared/extensions/type_extensions.dart';
 import 'package:alcancia/src/shared/models/checkout_model.dart';
 import 'package:alcancia/src/shared/models/kyc_status.dart';
+import 'package:alcancia/src/shared/models/remote_config_data.dart';
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:alcancia/src/shared/provider/user_provider.dart';
 import 'package:alcancia/src/shared/services/exception_service.dart';
@@ -33,8 +38,8 @@ class SwapScreen extends ConsumerStatefulWidget {
 
 class _SwapScreenState extends ConsumerState<SwapScreen> {
   // source amount vars
-  late String sourceAmount = ""; // value entered in text field
   final sourceAmountController = TextEditingController();
+  final targetAmountController = TextEditingController();
 
   final minMXNAmount = 200;
   final maxMXNAmount = 50000;
@@ -72,7 +77,9 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
 
   // alcancia exchange
   var alcanciaUSDCExchange = 1.0;
+  var alcanciaUSDtoUSDCRate = 0.0;
 
+  late MapEntry<String, CountryConfig> remoteConfigCountry;
   // state
   bool _isLoading = false;
   bool _loadingCheckout = false;
@@ -90,8 +97,19 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
       _isLoading = true;
     });
     try {
-      var mxnExchangeRate = await swapController.getSuarmiExchange("USDC");
-      var mxnCeloRate = await swapController.getSuarmiExchange("cUSD");
+      var remoteConfigData = ref.read(remoteConfigDataStateProvider);
+      bool isMxEnabled = remoteConfigData.countryConfig.entries
+          .firstWhere(((element) => element.key == "MX"))
+          .value
+          .enabled;
+
+      var mxnExchangeRate = "";
+      var mxnCeloRate = "";
+      if (isMxEnabled) {
+        mxnExchangeRate = await swapController.getSuarmiExchange("USDC");
+        mxnCeloRate = await swapController.getSuarmiExchange("cUSD");
+      }
+
       var dopExchangeRate = await swapController.getAlcanciaExchange("USDC");
       setState(() {
         suarmiUSDCExchage = 1.0 / double.parse(mxnExchangeRate);
@@ -130,16 +148,33 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     }
   }
 
-  String getTargetAmount(
+  String calculateTargetAmount(
       String sourceAmount, String targetCurrency, String sourceCurrency) {
     double targetAmount = 0.0;
     if (sourceCurrency == "DOP") {
       targetAmount = double.parse(sourceAmount) / alcanciaUSDCExchange;
+    } else if (sourceCurrency == "USD") {
+      targetAmount = double.parse(sourceAmount) * alcanciaUSDtoUSDCRate;
     } else {
       targetAmount = double.parse(sourceAmount) /
           (targetCurrency == "USDC" ? suarmiUSDCExchage : suarmiCeloExchange);
     }
-    return targetAmount.toStringAsFixed(4);
+    return targetAmount.formatQuantity(4);
+  }
+
+  String calculateSourceAmount(
+      String targetAmount, String targetCurrency, String sourceCurrency) {
+    double sourceAmount = 0.0;
+    if (sourceCurrency == "DOP") {
+      sourceAmount = double.parse(targetAmount) * alcanciaUSDCExchange;
+    } else if (sourceCurrency == "USD") {
+      sourceAmount = double.parse(targetAmount) +
+          double.parse(targetAmount) * (1 - alcanciaUSDtoUSDCRate);
+    } else {
+      sourceAmount = double.parse(targetAmount) *
+          (targetCurrency == "USDC" ? suarmiUSDCExchage : suarmiCeloExchange);
+    }
+    return sourceAmount.formatQuantity(4);
   }
 
   @override
@@ -149,13 +184,31 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     getCeloAPY();
     getUsdcAPY();
     final user = ref.read(userProvider);
-    if (user?.country == "MX" && false) { // TEMPORARY DISABLE MXN
+    final remoteConfigData = ref.read(remoteConfigDataStateProvider);
+    if (user?.country == "MX" && false) {
+      // TEMPORARY DISABLE MXN
       sourceCurrency = "MXN";
-    } else if (user?.country == "DO" && false) { // TEMPORARY DISABLE MXN
+    } else if (user?.country == "DO" && false) {
+      // TEMPORARY DISABLE MXN
       sourceCurrency = "DOP";
     } else {
       sourceCurrency = sourceCurrencyCodes.first['name'];
     }
+    remoteConfigCountry = remoteConfigData.countryConfig.entries.firstWhere(
+      (e) => e.key == user!.country && e.value.enabled == true,
+      orElse: () => MapEntry(
+          '',
+          CountryConfig(
+              icon: '',
+              enabled: false,
+              currencies: {},
+              cryptoCurrencies: {},
+              banksWithdraw: null)),
+    );
+    sourceCurrencyCodes = remoteConfigCountry.value.currencies.entries
+        .where((element) => element.value.enabled == true)
+        .map((e) => {"name": e.key, "icon": getIconByCurrencyFlag(e.key)})
+        .toList();
     if (sourceCurrencyCodes.length > 1) {
       final sourceCurrencyIndex = sourceCurrencyCodes
           .indexWhere((element) => element['name'] == sourceCurrency);
@@ -171,7 +224,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     final txtTheme = Theme.of(context).textTheme;
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-
+    var remoteConfigData =
+        ref.watch(remoteConfigDataStateProvider.notifier).state;
     // investment info
     final usdcInfo = [
       {"bold": appLoc.labelUsdcAsset, "regular": appLoc.descriptionUsdcAsset},
@@ -272,6 +326,12 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                     onChanged: (newValue) {
                                       setState(() {
                                         sourceCurrency = newValue;
+                                        getCurrencyRate();
+                                        sourceAmountController.text =
+                                            calculateSourceAmount(
+                                                targetAmountController.text,
+                                                targetCurrency,
+                                                sourceCurrency);
                                         // when this components intis, we will exchange rate from suarmi and cryptopay
                                       });
                                     },
@@ -295,7 +355,15 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                       controller: sourceAmountController,
                                       onChanged: (text) {
                                         setState(() {
-                                          sourceAmount = text;
+                                          if (text.isEmpty) {
+                                            targetAmountController.text = "";
+                                          } else {
+                                            targetAmountController.text =
+                                                calculateTargetAmount(
+                                                    text,
+                                                    targetCurrency,
+                                                    sourceCurrency);
+                                          }
                                         });
                                       },
                                     ),
@@ -306,8 +374,11 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                             Padding(
                               padding: const EdgeInsets.only(top: 8, bottom: 8),
                               child: Center(
-                                  child: SvgPicture.asset(
-                                      "lib/src/resources/images/arrow_down_purple.svg")),
+                                child: SvgPicture.asset(
+                                  "lib/src/resources/images/arrow_down_purple.svg",
+                                  height: 30,
+                                ),
+                              ),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -322,28 +393,40 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                       : targetDOPCurrencies,
                                   onChanged: (newTargetCurrency) {
                                     setState(() {
+                                      getCurrencyRate();
                                       targetCurrency = newTargetCurrency;
                                     });
                                   },
                                 ),
                                 // here is where target amount is display
-                                Container(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: Theme.of(context).primaryColor,
-                                  ),
+                                AlcanciaContainer(
                                   height: responsiveService.getHeightPixels(
                                       45, screenHeight),
                                   width: responsiveService.getWidthPixels(
                                       150, screenWidth),
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    sourceAmount == ""
-                                        ? ""
-                                        : getTargetAmount(sourceAmount,
-                                            targetCurrency, sourceCurrency),
-                                    style: txtTheme.bodyText1,
+                                  child: TextField(
+                                    style: const TextStyle(fontSize: 15),
+                                    decoration: InputDecoration(
+                                      fillColor: Theme.of(context).primaryColor,
+                                    ),
+                                    inputFormatters: <TextInputFormatter>[
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
+                                    keyboardType: TextInputType.number,
+                                    controller: targetAmountController,
+                                    onChanged: (text) {
+                                      setState(() {
+                                        if (text.isEmpty) {
+                                          sourceAmountController.text = "";
+                                        } else {
+                                          sourceAmountController.text =
+                                              calculateSourceAmount(
+                                                  text,
+                                                  targetCurrency,
+                                                  sourceCurrency);
+                                        }
+                                      });
+                                    },
                                   ),
                                 ),
                               ],
@@ -351,7 +434,11 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                             Padding(
                               padding: const EdgeInsets.only(top: 16.0),
                               child: Text(
-                                "*1 USDC = ${(sourceCurrency == "MXN" ? suarmiUSDCExchage : alcanciaUSDCExchange).toStringAsFixed(2)} $sourceCurrency",
+                                generateCurrency(
+                                    sourceCurrency,
+                                    suarmiUSDCExchage,
+                                    alcanciaUSDCExchange,
+                                    alcanciaUSDtoUSDCRate),
                                 style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.normal,
@@ -458,12 +545,17 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                           txnInput = TransactionInput(
                                             txnMethod: TransactionMethod.suarmi,
                                             txnType: TransactionType.deposit,
-                                            sourceAmount:
-                                                double.parse(sourceAmount),
+                                            sourceAmount: double.parse(
+                                                sourceAmountController.text),
                                             targetAmount: double.parse(
-                                                getTargetAmount(sourceAmount, targetCurrency, sourceCurrency)),
-                                            targetCurrency: targetCurrency == 'USDC' ? 'USDC' : 'mcUSD',
-                                            network: targetCurrency == 'USDC' ? 'MATIC' : 'CELO',
+                                                targetAmountController.text),
+                                            targetCurrency:
+                                                targetCurrency == 'USDC'
+                                                    ? 'USDC'
+                                                    : 'mcUSD',
+                                            network: targetCurrency == 'USDC'
+                                                ? 'MATIC'
+                                                : 'CELO',
                                           );
                                           Map wrapper = {
                                             "verified": true,
@@ -491,15 +583,28 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                               }
                                             };
                                           }
-                                        } else if (sourceCurrency == "DOP") {
+                                        } else if (sourceCurrency == "DOP" ||
+                                            sourceCurrency == "USD") {
                                           txnInput = TransactionInput(
                                             txnMethod:
                                                 TransactionMethod.alcancia,
                                             txnType: TransactionType.deposit,
-                                            sourceAmount: double.parse(sourceAmount),
-                                            targetAmount:
-                                                (double.parse(sourceAmountController.text) / (alcanciaUSDCExchange)),
-                                            targetCurrency: targetCurrency == 'USDC' ? 'USDC' : 'mcUSD',
+                                            sourceAmount: double.parse(
+                                                sourceAmountController.text),
+                                            targetAmount: (sourceCurrency ==
+                                                    "USD"
+                                                ? (double.parse(
+                                                        sourceAmountController
+                                                            .text) *
+                                                    alcanciaUSDtoUSDCRate) //TODO: CHANGE TO REMOTE CONFIG VALUE
+                                                : (double.parse(
+                                                        sourceAmountController
+                                                            .text) /
+                                                    alcanciaUSDCExchange)),
+                                            targetCurrency:
+                                                targetCurrency == 'USDC'
+                                                    ? 'USDC'
+                                                    : 'mcUSD',
                                             network: 'ALCANCIA',
                                           );
                                           orderInput = {
@@ -526,9 +631,53 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                           print(txnInput == null);
                                           final order = await swapController
                                               .sendOrder(orderInput);
+                                          //Begin remote config
+                                          var sourceCurrenciesObjt =
+                                              remoteConfigData
+                                                  .countryConfig.entries
+                                                  .firstWhere(
+                                                    (e) =>
+                                                        e.key ==
+                                                            user!.country &&
+                                                        e.value.enabled == true,
+                                                    orElse: () => MapEntry(
+                                                        '',
+                                                        CountryConfig(
+                                                            icon: '',
+                                                            enabled: false,
+                                                            currencies: {},
+                                                            banksWithdraw: null,
+                                                            cryptoCurrencies: {})),
+                                                  )
+                                                  .value;
+                                          if (sourceCurrenciesObjt
+                                              .currencies.isEmpty) {
+                                            throw "Error al obtener currency config.";
+                                          }
+                                          var bankData = sourceCurrenciesObjt
+                                              .currencies.entries
+                                              .firstWhere((e) =>
+                                                  e.key == sourceCurrency &&
+                                                  e.value.enabled == true)
+                                              .value
+                                              .banks
+                                              .entries
+                                              .where((element) =>
+                                                  element.value.enabled == true)
+                                              .map((en) => {
+                                                    "name": en.key,
+                                                    "info1": en.value.info1,
+                                                    "info2": en.value.info2,
+                                                    "info3": en.value.info3,
+                                                    "info4": en.value.info4,
+                                                  })
+                                              .toList()[0];
+
+                                          //End remote config
                                           final checkoutData = CheckoutModel(
                                               order: order,
-                                              txnInput: txnInput!);
+                                              txnInput: txnInput!,
+                                              bank: bankData);
                                           context.pushNamed("checkout",
                                               extra: checkoutData);
                                         } catch (e) {
@@ -541,19 +690,20 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                         setState(() {
                                           _loadingCheckout = false;
                                         });
-                                      } : null,
+                                      }
+                                    : null,
                                 color: alcanciaLightBlue,
                                 width: double.infinity,
                                 height: responsiveService.getHeightPixels(
                                     64, screenHeight),
                               ),
                       ),
-                      if (sourceAmount.isNotEmpty) ...[
+                      if (sourceAmountController.text.isNotEmpty) ...[
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            validateAmount(
-                                sourceAmount, sourceCurrency, appLoc),
+                            validateAmount(sourceAmountController.text,
+                                sourceCurrency, appLoc),
                             style: const TextStyle(color: Colors.red),
                           ),
                         ),
@@ -569,31 +719,74 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     );
   }
 
+  void getCurrencyRate() {
+    alcanciaUSDtoUSDCRate = remoteConfigCountry.value.cryptoCurrencies.entries
+        .firstWhere((e) => e.value.enabled == true && e.key == targetCurrency,
+            orElse: () => MapEntry(
+                '',
+                CryptoCurrency(
+                  depositRate: 0.0,
+                  enabled: true,
+                  icon: "null",
+                  maxAmount: 0,
+                  minAmount: 0,
+                )))
+        .value
+        .depositRate;
+  }
+
   String validateAmount(
       String sourceAmount, String sourceCurrency, AppLocalizations appLoc) {
-
-    int parsedAmount = int.parse(sourceAmount);
-
     if (sourceCurrency == 'MXN') {
-      if (int.parse(sourceAmount) < minMXNAmount) return appLoc.errorMinimumDepositAmount;
-      if (int.parse(sourceAmount) > maxMXNAmount) return appLoc.errorMaximumDepositAmount;
+      if (double.parse(sourceAmount) < minMXNAmount)
+        return appLoc.errorMinimumDepositAmount;
+      if (double.parse(sourceAmount) > maxMXNAmount)
+        return appLoc.errorMaximumDepositAmount;
     } else {
-      if (int.parse(sourceAmount) < minDOPAmount) return appLoc.errorMinimumDepositAmountDOP;
-      if (int.parse(sourceAmount) > maxDOPAmount) return appLoc.errorMaximumDepositAmountDOP;
+      if (double.parse(sourceAmount) < minDOPAmount)
+        return appLoc.errorMinimumDepositAmountDOP;
+      if (double.parse(sourceAmount) > maxDOPAmount)
+        return appLoc.errorMaximumDepositAmountDOP;
     }
     return '';
   }
 
   bool get _enableButton {
-    if (sourceAmount.isEmpty) return false;
+    if (sourceAmountController.text.isEmpty) return false;
     if (sourceCurrency == 'MXN') {
-      if (int.parse(sourceAmount) < minMXNAmount) return false;
-      if (int.parse(sourceAmount) > maxMXNAmount) return false;
+      if (double.parse(sourceAmountController.text) < minMXNAmount)
+        return false;
+      if (double.parse(sourceAmountController.text) > maxMXNAmount)
+        return false;
     } else {
-      if (int.parse(sourceAmount) < minDOPAmount) return false;
-      if (int.parse(sourceAmount) > maxDOPAmount) return false;
+      if (double.parse(sourceAmountController.text) < minDOPAmount)
+        return false;
+      if (double.parse(sourceAmountController.text) > maxDOPAmount)
+        return false;
     }
     return true;
   }
+}
 
+String generateCurrency(String sourceCurrency, double suarmiUSDCExchage,
+    double alcanciaUSDCExchange, double alcanciaUSDtoUSDCRate) {
+  if (sourceCurrency == "MXN") {
+    return "*1 USDC = ${suarmiUSDCExchage.formatQuantity(2)} $sourceCurrency";
+  } else if (sourceCurrency == "USD") {
+    return "*1 USD = ${alcanciaUSDtoUSDCRate.formatQuantity(2)} USDC";
+  } else {
+    return "*1 USDC = ${alcanciaUSDCExchange.formatQuantity(2)} $sourceCurrency";
+  }
+}
+
+getIconByCurrencyFlag(String icon) {
+  if (icon == "DOP") {
+    return "lib/src/resources/images/icon_dominican_flag.png";
+  } else if (icon == "USD") {
+    return "lib/src/resources/images/icon_us_flag.png";
+  } else if (icon == "MXN") {
+    return "lib/src/resources/images/icon_mexico_flag.png";
+  } else {
+    return "Map the source currency!";
+  }
 }

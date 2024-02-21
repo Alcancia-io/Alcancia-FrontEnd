@@ -1,3 +1,4 @@
+import 'package:alcancia/firebase_remote_config.dart';
 import 'package:alcancia/src/resources/colors/colors.dart';
 import 'package:alcancia/src/screens/error/error_screen.dart';
 import 'package:alcancia/src/screens/withdraw/withdraw_controller.dart';
@@ -5,6 +6,7 @@ import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_dropdown.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/components/decimal_input_formatter.dart';
+import 'package:alcancia/src/shared/models/remote_config_data.dart';
 import 'package:alcancia/src/shared/models/success_screen_model.dart';
 import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
@@ -26,8 +28,8 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
   final controller = WithdrawController();
   final suarmiService = SwapService();
 
-  final List<Map> countries = [
-    //{"name": "México", "icon": "lib/src/resources/images/icon_mexico_flag.png"},
+  /*final List<Map> countries = [
+    {"name": "México", "icon": "lib/src/resources/images/icon_mexico_flag.png"},
     {
       "name": "República Dominicana",
       "icon": "lib/src/resources/images/icon_dominican_flag.png"
@@ -63,10 +65,19 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
     {"name": "Banco Lafise"},
     {"name": "Qik"},
   ];
-  late String selectedBank = dopBanks.first['name'];
+  
 
-  late String sourceMXNCurrency = sourceCurrenciesMXN.first['name'];
-  late String sourceDOPCurrency = sourceCurrenciesDOP.first['name'];
+  */
+  late List<Map> countries;
+  late String country;
+  late List<Map> sourceCurrencies;
+  late List<Map> listBanks;
+  late String selectedBank;
+  late String sourceCurrency;
+  late RemoteConfigData remoteConfigDataSet;
+  late CountryConfig sourceCurrenciesObjt;
+  late String sourceMXNCurrency = sourceCurrencies.first['name'];
+  late String sourceDOPCurrency = sourceCurrencies.first['name'];
 
   final _clabeTextController = TextEditingController();
   final _accountTextController = TextEditingController();
@@ -76,26 +87,39 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
   bool _loadingButton = false;
   String _error = "";
   String _orderError = "";
-
+  late String countryCode = "";
   double suarmiUSDCExchange = 0;
   double suarmiCELOExchange = 0;
   double targetAmount = 0;
 
   // alcancia exchanges
   var alcanciaUSDCExchange = 1.0;
+  late double alcanciaUSDExchange;
 
-  Future<void> getExchange() async {
+  Future<void> getExchange([double? exchangeUSD]) async {
     _isLoading = true;
     try {
-      var mxnExchangeRate =
-          await controller.getSuarmiExchange(sourceCurrency: "USDC");
-      var mxnCeloRate =
-          await controller.getSuarmiExchange(sourceCurrency: "cUSD");
+      bool isMxEnabled = remoteConfigDataSet.countryConfig.entries
+          .firstWhere((e) => e.key == "MX")
+          .value
+          .enabled;
+      var mxnExchangeRate = "";
+      var mxnCeloRate = "";
+      if (isMxEnabled) {
+        mxnExchangeRate =
+            await controller.getSuarmiExchange(sourceCurrency: "USDC");
+        mxnCeloRate =
+            await controller.getSuarmiExchange(sourceCurrency: "cUSD");
+      }
+
       var dopExchangeRate = await controller.getAlcanciaExchange("USDC");
       setState(() {
         suarmiUSDCExchange = 1.0 / double.parse(mxnExchangeRate);
         suarmiCELOExchange = 1.0 / double.parse(mxnCeloRate);
         alcanciaUSDCExchange = 1 / dopExchangeRate;
+        if (exchangeUSD != null) {
+          alcanciaUSDExchange = exchangeUSD;
+        }
       });
     } catch (e) {
       _error = e.toString();
@@ -111,26 +135,61 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
   @override
   void initState() {
     super.initState();
-    getExchange();
+
     final user = ref.read(userProvider);
+    remoteConfigDataSet = ref.read(remoteConfigDataStateProvider);
     if (user?.lastUsedBankAccount != null) {
       _clabeTextController.text = user!.lastUsedBankAccount!;
     }
+
     if (user?.country == "MX") {
       country = "México";
     } else if (user?.country == "DO") {
       country = "República Dominicana";
+      countryCode = user!.country;
     } else {
       country = countries.first['name'];
     }
-    if (countries.length > 1) {
-      final countryIndex =
-      countries.indexWhere((element) => element['name'] == country);
-      final code = countries.removeAt(countryIndex);
-      countries.insert(0, code);
-    }
-  }
 
+    countries = remoteConfigDataSet.countryConfig.entries
+        .where((element) => element.value.enabled == true)
+        .map((e) => {"name": getCountryFromCode(e.key), "icon": e.value.icon})
+        .toList();
+    final countryIndex =
+        countries.indexWhere((element) => element['name'] == country);
+    final code = countries.removeAt(countryIndex);
+    countries.insert(0, code);
+
+    sourceCurrenciesObjt = remoteConfigDataSet.countryConfig.entries
+        .firstWhere(
+          (e) => e.key == countryCode && e.value.enabled == true,
+          orElse: () => MapEntry(
+              '',
+              CountryConfig(
+                  icon: '',
+                  enabled: false,
+                  currencies: {},
+                  cryptoCurrencies: {},
+                  banksWithdraw: null)),
+        )
+        .value;
+
+    sourceCurrencies = sourceCurrenciesObjt.currencies.entries
+        .where((element) => element.value.enabled == true)
+        .map((e) => {"name": e.key, "icon": e.value.icon})
+        .toList();
+
+    listBanks =
+        sourceCurrenciesObjt.banksWithdraw!.map((e) => {"name": e}).toList();
+
+    selectedBank = listBanks.first['name'];
+
+    var exchangeUSD = sourceCurrenciesObjt.currencies.entries
+        .firstWhere((e) => e.key == "USD")
+        .value
+        .exchangeRate;
+    getExchange(exchangeUSD);
+  }
 
   String getSourceCurrency(String country) {
     if (country == "México") {
@@ -226,11 +285,10 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
                   height: 10,
                 ),
                 if (country == "México") ...[
-                  MXNFields(userBalance.total, context,
-                      sourceCurrenciesMXN),
+                  MXNFields(userBalance.total, context, sourceCurrencies),
                 ] else if (country == "República Dominicana") ...[
-                  DOPFields(userBalance.total, context,
-                      sourceCurrenciesDOP, dopBanks),
+                  DOPFields(
+                      userBalance.total, context, sourceCurrencies, listBanks),
                 ],
                 Padding(
                   padding: const EdgeInsets.only(top: 24),
@@ -310,7 +368,8 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
     }
     try {
       await controller.sendOrder(orderInput);
-      context.go("/success", extra: SuccessScreenModel(title: appLoc.labelWithdrawalSent));
+      context.go("/success",
+          extra: SuccessScreenModel(title: appLoc.labelWithdrawalSent));
     } catch (e) {
       setState(() {
         _orderError = e.toString();
@@ -320,9 +379,17 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
 
   void updateTargetAmount(String value) {
     setState(() {
-      targetAmount = value.isNotEmpty
-          ? double.parse(_amountTextController.text) / getExchangeRate(country)
-          : 0;
+      if (sourceDOPCurrency == "USD") {
+        targetAmount = value.isNotEmpty
+            ? double.parse(_amountTextController.text) * alcanciaUSDExchange
+            : 0;
+      } else {
+        targetAmount = value.isNotEmpty
+            ? double.parse(_amountTextController.text) /
+                getExchangeRate(country)
+            : 0;
+      }
+
       _targetTextController.text = targetAmount.toStringAsFixed(3);
     });
   }
@@ -405,7 +472,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         ),
         LabeledTextFormField(
           controller: _targetTextController,
-          labelText: appLoc.labelAmountMXN,
+          labelText: "${appLoc.labelAmount} $sourceMXNCurrency",
           inputType: TextInputType.number,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           enabled: false,
@@ -433,7 +500,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
             ),
             AlcanciaDropdown(
               itemsAlignment: MainAxisAlignment.start,
-              dropdownItems: sourceCurrenciesDOP,
+              dropdownItems: sourceCurrencies,
               decoration: BoxDecoration(
                 color: Theme.of(context).inputDecorationTheme.fillColor,
                 borderRadius: BorderRadius.circular(7),
@@ -519,7 +586,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         ),
         LabeledTextFormField(
           controller: _targetTextController,
-          labelText: appLoc.labelAmountDOP,
+          labelText: "${appLoc.labelAmount} $sourceDOPCurrency",
           inputType: TextInputType.number,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           enabled: false,
@@ -529,5 +596,15 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         ),
       ],
     );
+  }
+}
+
+getCountryFromCode(String key) {
+  if (key == "DO") {
+    return "República Dominicana";
+  } else if (key == "MX") {
+    return "México";
+  } else {
+    return "País no definido";
   }
 }

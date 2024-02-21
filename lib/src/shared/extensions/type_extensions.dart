@@ -1,5 +1,6 @@
 import 'package:alcancia/src/shared/models/transaction_input_model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 
 extension TypeToString on TransactionType {
   String typeToString(AppLocalizations appLoc) {
@@ -17,5 +18,13 @@ extension TypeToString on TransactionType {
       case TransactionType.unknown:
         return appLoc.unknown;
     }
+  }
+}
+
+extension DoubleExtension on double {
+  String formatQuantity(int maxDigits) {
+    RegExp regex = RegExp(r"([.]*0+)(?!.*\d)");
+
+    return toStringAsFixed(maxDigits).replaceAll(regex, '');
   }
 }

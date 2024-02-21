@@ -1,13 +1,16 @@
 import 'dart:async';
+import 'package:alcancia/firebase_remote_config.dart';
 import 'package:alcancia/src/screens/dashboard/dashboard_controller.dart';
 import 'package:alcancia/src/screens/error/error_screen.dart';
 import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/components/alcancia_transactions_list.dart';
 import 'package:alcancia/src/shared/components/dashboard/dashboard_actions.dart';
+import 'package:alcancia/src/shared/models/remote_config_data.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
 import 'package:alcancia/src/shared/provider/transactions_provider.dart';
 import 'package:alcancia/src/shared/services/metamap_service.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -30,6 +33,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   bool _isLoading = false;
   String _error = "";
   int attemptsAuth = 0;
+  var name = "";
 
   Future<void> setUserInformation() async {
     setState(() {
@@ -78,12 +82,52 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
     setUserInformation();
     setTimer();
+    /*var remoteConfig = FirebaseRemoteConfig.instance;
+    name = remoteConfig.getString("name_test");
+    remoteConfig.onConfigUpdated.listen((event) async {
+      await remoteConfig.activate();
+      setState(() {
+        name = remoteConfig.getString("name_test");
+      });
+    });*/ //Test remote config
+    fetchRemoteConfig();
   }
 
   @override
   void dispose() {
     timer?.cancel();
     super.dispose();
+  }
+
+  Future<void> fetchRemoteConfig() async {
+    String configJson = "";
+    var remoteConfigProvider = ref.read(firebaseRemoteConfigServiceProvider);
+    await remoteConfigProvider.remoteConfig.fetchAndActivate();
+    remoteConfigProvider.remoteConfig.onConfigUpdated.listen((event) {
+      configJson = remoteConfigProvider.getAppVariables();
+      RemoteConfigData remoteConfigData =
+          remoteConfigProvider.parseRemoteConfigData(configJson);
+      ref.read(remoteConfigDataStateProvider.notifier).state = remoteConfigData;
+    });
+    configJson = remoteConfigProvider.getAppVariables();
+    if (configJson.isNotEmpty) {
+      try {
+        RemoteConfigData remoteConfigData =
+            remoteConfigProvider.parseRemoteConfigData(configJson);
+        ref.read(remoteConfigDataStateProvider.notifier).state =
+            remoteConfigData;
+
+        // Access countries
+        remoteConfigData.countryConfig.forEach((key, value) {
+          print('Country: $key');
+          print('Enabled: ${value.enabled}');
+        });
+      } on Exception catch (e) {
+        throw e;
+      }
+    } else {
+      print('Config JSON is empty or not available.');
+    }
   }
 
   @override
@@ -103,7 +147,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       appBar: AlcanciaToolbar(
         state: StateToolbar.profileTitleIcon,
         logoHeight: 38,
-        userName: user!.name,
+        userName: user?.name,
       ),
       body: SafeArea(
         child: Container(

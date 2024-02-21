@@ -1,4 +1,5 @@
 import 'package:alcancia/src/shared/graphql/mutations/external_withdraw_query.dart';
+import 'package:alcancia/src/shared/graphql/queries/get_crypto_withdrawal_fee_query.dart';
 import 'package:alcancia/src/shared/services/graphql_service.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -23,6 +24,15 @@ class CryptoWalletService {
             "receiverAddress": address,
           }
         },
+      ),
+    );
+  }
+
+  Future<QueryResult> getCryptoWithdrawalFee() async {
+    final clientResponse = await client;
+    return await clientResponse.mutate(
+      MutationOptions(
+        document: gql(getCryptoWithdrawalQuery),
       ),
     );
   }

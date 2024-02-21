@@ -5,9 +5,11 @@ import 'package:alcancia/src/shared/components/alcancia_components.dart';
 import 'package:alcancia/src/shared/components/alcancia_toolbar.dart';
 import 'package:alcancia/src/shared/components/decimal_input_formatter.dart';
 import 'package:alcancia/src/shared/extensions/string_extensions.dart';
+import 'package:alcancia/src/shared/models/storage_item.dart';
 import 'package:alcancia/src/shared/models/success_screen_model.dart';
 import 'package:alcancia/src/shared/provider/alcancia_providers.dart';
 import 'package:alcancia/src/shared/provider/balance_provider.dart';
+import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,11 +31,14 @@ class _CryptoWithdrawScreenState extends ConsumerState<CryptoWithdrawScreen> {
   bool _enableButton = false;
 
   final walletController = WithdrawController();
+  final _storageService = StorageService();
   final _formKey = GlobalKey<FormState>();
 
   final _walletAddressController = TextEditingController();
   final _networkController = TextEditingController(text: "POLYGON");
   final _amountTextController = TextEditingController();
+
+  double _fee = 0;
 
 
   Future<void> sendOrder(AppLocalizations appLoc) async {
@@ -56,12 +61,50 @@ class _CryptoWithdrawScreenState extends ConsumerState<CryptoWithdrawScreen> {
     });
   }
 
+  Future<void> getCryptoWithdrawalFee() async {
+    try {
+      _isLoading = true;
+      final latestFeeString = await _storageService.readSecureData("cryptoWithdrawalFee");
+      final latestFeeExpirationString = await _storageService.readSecureData("cryptoWithdrawalFeeExpiration");
+      final latestFee = latestFeeString != null ? double.parse(latestFeeString) : null;
+      final latestFeeExpiration = latestFeeExpirationString != null ? DateTime.parse(latestFeeExpirationString) : null;
+      final validFee = latestFeeExpiration != null && latestFeeExpiration.isAfter(DateTime.now());
+      if (latestFee != null && validFee) {
+          setState(() {
+            _isLoading = false;
+            _fee = latestFee;
+          });
+      } else {
+        final fee = await walletController.getCryptoWithdrawalFee();
+        StorageItem feeItem = StorageItem("cryptoWithdrawalFee", fee.toString());
+        StorageItem feeExpirationItem = StorageItem("cryptoWithdrawalFeeExpiration", DateTime.now().add(const Duration(days: 1)).toString());
+        await _storageService.writeSecureData(feeItem);
+        await _storageService.writeSecureData(feeExpirationItem);
+        setState(() {
+          _isLoading = false;
+          _fee = fee;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _error = e.toString();
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCryptoWithdrawalFee();
+  }
+
   @override
   Widget build(BuildContext context) {
     final appLoc = AppLocalizations.of(context)!;
     final txtTheme = Theme.of(context).textTheme;
     final totalUserBalance = ref.watch(balanceProvider);
-    final balance = totalUserBalance.total - 1;
+    final balance = totalUserBalance.total - _fee;
 
     if (_isLoading) {
       return const Scaffold(body: SafeArea(child: Center(child: CircularProgressIndicator())));
@@ -140,7 +183,7 @@ class _CryptoWithdrawScreenState extends ConsumerState<CryptoWithdrawScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(appLoc.labelWithdrawalFee, style: txtTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700)),
-                  Text("1 USDC", style: txtTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700)),
+                  Text("$_fee USDC", style: txtTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700)),
                 ],
               ),
               const SizedBox(
