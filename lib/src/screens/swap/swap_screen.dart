@@ -77,7 +77,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
 
   // alcancia exchange
   var alcanciaUSDCExchange = 1.0;
-  var alcanciaUSDtoUSDCRate = 0.0;
+  var alcanciaUSDtoUSDCRate = 1.0;
 
   late MapEntry<String, CountryConfig> remoteConfigCountry;
   // state
@@ -185,15 +185,6 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     getUsdcAPY();
     final user = ref.read(userProvider);
     final remoteConfigData = ref.read(remoteConfigDataStateProvider);
-    if (user?.country == "MX" && false) {
-      // TEMPORARY DISABLE MXN
-      sourceCurrency = "MXN";
-    } else if (user?.country == "DO" && false) {
-      // TEMPORARY DISABLE MXN
-      sourceCurrency = "DOP";
-    } else {
-      sourceCurrency = sourceCurrencyCodes.first['name'];
-    }
     remoteConfigCountry = remoteConfigData.countryConfig.entries.firstWhere(
       (e) => e.key == user!.country && e.value.enabled == true,
       orElse: () => MapEntry(
@@ -205,16 +196,28 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
               cryptoCurrencies: {},
               banksWithdraw: null)),
     );
-    sourceCurrencyCodes = remoteConfigCountry.value.currencies.entries
-        .where((element) => element.value.enabled == true)
-        .map((e) => {"name": e.key, "icon": getIconByCurrencyFlag(e.key)})
-        .toList();
+
+    if (user?.country == "MX" && false) {
+      // TEMPORARY DISABLE MXN
+      sourceCurrency = "MXN";
+    } else if (user?.country == "DO" && false) {
+      // TEMPORARY DISABLE MXN
+      sourceCurrency = "DOP";
+    } else {
+      sourceCurrencyCodes = remoteConfigCountry.value.currencies.entries
+          .where((element) => element.value.enabled == true)
+          .map((e) => {"name": e.key, "icon": getIconByCurrencyFlag(e.key)})
+          .toList();
+      sourceCurrency = sourceCurrencyCodes.first['name'] ?? 'USD';
+    }
+
     if (sourceCurrencyCodes.length > 1) {
       final sourceCurrencyIndex = sourceCurrencyCodes
           .indexWhere((element) => element['name'] == sourceCurrency);
       final code = sourceCurrencyCodes.removeAt(sourceCurrencyIndex);
       sourceCurrencyCodes.insert(0, code);
     }
+    getCurrencyRate();
   }
 
   @override

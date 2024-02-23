@@ -144,6 +144,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
 
     if (user?.country == "MX") {
       country = "México";
+      countryCode = user!.country;
     } else if (user?.country == "DO") {
       country = "República Dominicana";
       countryCode = user!.country;
