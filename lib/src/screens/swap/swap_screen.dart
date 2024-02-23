@@ -197,20 +197,6 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
               banksWithdraw: null)),
     );
 
-    if (user?.country == "MX" && false) {
-      // TEMPORARY DISABLE MXN
-      sourceCurrency = "MXN";
-    } else if (user?.country == "DO" && false) {
-      // TEMPORARY DISABLE MXN
-      sourceCurrency = "DOP";
-    } else {
-      sourceCurrencyCodes = remoteConfigCountry.value.currencies.entries
-          .where((element) => element.value.enabled == true)
-          .map((e) => {"name": e.key, "icon": getIconByCurrencyFlag(e.key)})
-          .toList();
-      sourceCurrency = sourceCurrencyCodes.first['name'] ?? 'USD';
-    }
-
     if (sourceCurrencyCodes.length > 1) {
       final sourceCurrencyIndex = sourceCurrencyCodes
           .indexWhere((element) => element['name'] == sourceCurrency);
