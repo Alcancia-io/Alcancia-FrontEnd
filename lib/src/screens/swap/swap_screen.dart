@@ -187,9 +187,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     } else if (user?.country == "DO") {
       // TEMPORARY DISABLE MXN
       sourceCurrency = "DOP";
-    } else {
-      sourceCurrency = sourceCurrencyCodes.first['name'];
-    }
+    } else {}
     getExchange();
     getCeloAPY();
     getUsdcAPY();
@@ -216,6 +214,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
       final code = sourceCurrencyCodes.removeAt(sourceCurrencyIndex);
       sourceCurrencyCodes.insert(0, code);
     }
+    sourceCurrency = sourceCurrencyCodes.first['name'];
     getCurrencyRate();
   }
 
