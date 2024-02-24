@@ -181,13 +181,6 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
   void initState() {
     super.initState();
     final user = ref.read(userProvider);
-    if (user?.country == "MX") {
-      // TEMPORARY DISABLE MXN
-      sourceCurrency = "MXN";
-    } else if (user?.country == "DO") {
-      // TEMPORARY DISABLE MXN
-      sourceCurrency = "DOP";
-    } else {}
     getExchange();
     getCeloAPY();
     getUsdcAPY();
