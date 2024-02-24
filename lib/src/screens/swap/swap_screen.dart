@@ -180,10 +180,19 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
   @override
   void initState() {
     super.initState();
+    final user = ref.read(userProvider);
+    if (user?.country == "MX") {
+      // TEMPORARY DISABLE MXN
+      sourceCurrency = "MXN";
+    } else if (user?.country == "DO") {
+      // TEMPORARY DISABLE MXN
+      sourceCurrency = "DOP";
+    } else {
+      sourceCurrency = sourceCurrencyCodes.first['name'];
+    }
     getExchange();
     getCeloAPY();
     getUsdcAPY();
-    final user = ref.read(userProvider);
     final remoteConfigData = ref.read(remoteConfigDataStateProvider);
     remoteConfigCountry = remoteConfigData.countryConfig.entries.firstWhere(
       (e) => e.key == user!.country && e.value.enabled == true,
@@ -196,7 +205,10 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
               cryptoCurrencies: {},
               banksWithdraw: null)),
     );
-
+    sourceCurrencyCodes = remoteConfigCountry.value.currencies.entries
+        .where((element) => element.value.enabled == true)
+        .map((e) => {"name": e.key, "icon": e.value.icon})
+        .toList();
     if (sourceCurrencyCodes.length > 1) {
       final sourceCurrencyIndex = sourceCurrencyCodes
           .indexWhere((element) => element['name'] == sourceCurrency);
