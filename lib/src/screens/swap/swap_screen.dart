@@ -193,7 +193,6 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     getExchange();
     getCeloAPY();
     getUsdcAPY();
-
     final remoteConfigData = ref.read(remoteConfigDataStateProvider);
     remoteConfigCountry = remoteConfigData.countryConfig.entries.firstWhere(
       (e) => e.key == user!.country && e.value.enabled == true,
