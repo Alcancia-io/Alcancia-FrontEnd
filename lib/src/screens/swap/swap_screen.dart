@@ -206,7 +206,10 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
               cryptoCurrencies: {},
               banksWithdraw: null)),
     );
-
+    sourceCurrencyCodes = remoteConfigCountry.value.currencies.entries
+        .where((element) => element.value.enabled == true)
+        .map((e) => {"name": e.key, "icon": e.value.icon})
+        .toList();
     if (sourceCurrencyCodes.length > 1) {
       final sourceCurrencyIndex = sourceCurrencyCodes
           .indexWhere((element) => element['name'] == sourceCurrency);
