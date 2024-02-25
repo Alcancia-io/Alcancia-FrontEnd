@@ -187,14 +187,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     final remoteConfigData = ref.read(remoteConfigDataStateProvider);
     remoteConfigCountry = remoteConfigData.countryConfig.entries.firstWhere(
       (e) => e.key == user!.country && e.value.enabled == true,
-      orElse: () => MapEntry(
-          '',
-          CountryConfig(
-              icon: '',
-              enabled: false,
-              currencies: {},
-              cryptoCurrencies: {},
-              banksWithdraw: null)),
+      orElse: () => remoteConfigData.countryConfig.entries.first,
     );
     sourceCurrencyCodes = remoteConfigCountry.value.currencies.entries
         .where((element) => element.value.enabled == true)

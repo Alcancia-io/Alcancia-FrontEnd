@@ -103,8 +103,8 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
           .firstWhere((e) => e.key == "MX")
           .value
           .enabled;
-      var mxnExchangeRate = "";
-      var mxnCeloRate = "";
+      var mxnExchangeRate = "0.0";
+      var mxnCeloRate = "0.0";
       if (isMxEnabled) {
         mxnExchangeRate =
             await controller.getSuarmiExchange(sourceCurrency: "USDC");
@@ -142,36 +142,18 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
       _clabeTextController.text = user!.lastUsedBankAccount!;
     }
 
-    if (user?.country == "MX") {
-      country = "México";
-      countryCode = user!.country;
-    } else if (user?.country == "DO") {
-      country = "República Dominicana";
-      countryCode = user!.country;
-    } else {
-      country = countries.first['name'];
-    }
+    country = getCountryFromCode(user!.country);
+    countryCode = user.country;
 
     countries = remoteConfigDataSet.countryConfig.entries
         .where((element) => element.value.enabled == true)
         .map((e) => {"name": getCountryFromCode(e.key), "icon": e.value.icon})
         .toList();
-    final countryIndex =
-        countries.indexWhere((element) => element['name'] == country);
-    final code = countries.removeAt(countryIndex);
-    countries.insert(0, code);
 
     sourceCurrenciesObjt = remoteConfigDataSet.countryConfig.entries
         .firstWhere(
           (e) => e.key == countryCode && e.value.enabled == true,
-          orElse: () => MapEntry(
-              '',
-              CountryConfig(
-                  icon: '',
-                  enabled: false,
-                  currencies: {},
-                  cryptoCurrencies: {},
-                  banksWithdraw: null)),
+          orElse: () => remoteConfigDataSet.countryConfig.entries.first,
         )
         .value;
 
