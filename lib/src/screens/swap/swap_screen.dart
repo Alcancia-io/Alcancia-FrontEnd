@@ -193,13 +193,14 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
         .where((element) => element.value.enabled == true)
         .map((e) => {"name": e.key, "icon": e.value.icon})
         .toList();
+
+    sourceCurrency = sourceCurrencyCodes.first['name'];
     if (sourceCurrencyCodes.length > 1) {
       final sourceCurrencyIndex = sourceCurrencyCodes
           .indexWhere((element) => element['name'] == sourceCurrency);
       final code = sourceCurrencyCodes.removeAt(sourceCurrencyIndex);
       sourceCurrencyCodes.insert(0, code);
     }
-    sourceCurrency = sourceCurrencyCodes.first['name'];
     getCurrencyRate();
   }
 
