@@ -29,6 +29,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+String exchangeDisclaimer = "";
+
+final exchangeDisclaimerProvider =
+    StateProvider<String>((ref) => exchangeDisclaimer);
+
 class SwapScreen extends ConsumerStatefulWidget {
   const SwapScreen({Key? key}) : super(key: key);
 
@@ -116,6 +121,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
         suarmiCeloExchange = 1.0 / double.parse(mxnCeloRate);
         alcanciaUSDCExchange = dopExchangeRate;
       });
+      exchangeDisclaimer = generateCurrency(sourceCurrency, suarmiUSDCExchage,
+          alcanciaUSDCExchange, alcanciaUSDtoUSDCRate);
     } catch (err) {
       // print(err);
       _error = err.toString();
@@ -184,29 +191,24 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     getExchange();
     getCeloAPY();
     getUsdcAPY();
+
     final remoteConfigData = ref.read(remoteConfigDataStateProvider);
     remoteConfigCountry = remoteConfigData.countryConfig.entries.firstWhere(
       (e) => e.key == user!.country && e.value.enabled == true,
-      orElse: () => MapEntry(
-          '',
-          CountryConfig(
-              icon: '',
-              enabled: false,
-              currencies: {},
-              cryptoCurrencies: {},
-              banksWithdraw: null)),
+      orElse: () => remoteConfigData.countryConfig.entries.first,
     );
     sourceCurrencyCodes = remoteConfigCountry.value.currencies.entries
         .where((element) => element.value.enabled == true)
         .map((e) => {"name": e.key, "icon": e.value.icon})
         .toList();
+
+    sourceCurrency = sourceCurrencyCodes.first['name'];
     if (sourceCurrencyCodes.length > 1) {
       final sourceCurrencyIndex = sourceCurrencyCodes
           .indexWhere((element) => element['name'] == sourceCurrency);
       final code = sourceCurrencyCodes.removeAt(sourceCurrencyIndex);
       sourceCurrencyCodes.insert(0, code);
     }
-    sourceCurrency = sourceCurrencyCodes.first['name'];
     getCurrencyRate();
   }
 
@@ -242,6 +244,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     Color cardColor = Theme.of(context).brightness == Brightness.dark
         ? alcanciaCardDark
         : alcanciaFieldLight;
+
+    String exchangeDisclaimerText = ref.watch(exchangeDisclaimerProvider);
 
     return GestureDetector(
       onTap: () {
@@ -319,6 +323,15 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                     onChanged: (newValue) {
                                       setState(() {
                                         sourceCurrency = newValue;
+                                        ref
+                                                .read(exchangeDisclaimerProvider
+                                                    .notifier)
+                                                .state =
+                                            generateCurrency(
+                                                sourceCurrency,
+                                                suarmiUSDCExchage,
+                                                alcanciaUSDCExchange,
+                                                alcanciaUSDtoUSDCRate);
                                         getCurrencyRate();
                                         sourceAmountController.text =
                                             calculateSourceAmount(
@@ -427,11 +440,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                             Padding(
                               padding: const EdgeInsets.only(top: 16.0),
                               child: Text(
-                                generateCurrency(
-                                    sourceCurrency,
-                                    suarmiUSDCExchage,
-                                    alcanciaUSDCExchange,
-                                    alcanciaUSDtoUSDCRate),
+                                exchangeDisclaimerText,
                                 style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.normal,
