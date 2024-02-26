@@ -108,8 +108,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
           .value
           .enabled;
 
-      var mxnExchangeRate = "";
-      var mxnCeloRate = "";
+      var mxnExchangeRate = "1.0";
+      var mxnCeloRate = "1.0";
       if (isMxEnabled) {
         mxnExchangeRate = await swapController.getSuarmiExchange("USDC");
         mxnCeloRate = await swapController.getSuarmiExchange("cUSD");
@@ -642,14 +642,11 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                                         e.key ==
                                                             user!.country &&
                                                         e.value.enabled == true,
-                                                    orElse: () => MapEntry(
-                                                        '',
-                                                        CountryConfig(
-                                                            icon: '',
-                                                            enabled: false,
-                                                            currencies: {},
-                                                            banksWithdraw: null,
-                                                            cryptoCurrencies: {})),
+                                                    orElse: () =>
+                                                        remoteConfigData
+                                                            .countryConfig
+                                                            .entries
+                                                            .first,
                                                   )
                                                   .value;
                                           if (sourceCurrenciesObjt
@@ -724,15 +721,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
   void getCurrencyRate() {
     alcanciaUSDtoUSDCRate = remoteConfigCountry.value.cryptoCurrencies.entries
         .firstWhere((e) => e.value.enabled == true && e.key == targetCurrency,
-            orElse: () => MapEntry(
-                '',
-                CryptoCurrency(
-                  depositRate: 0.0,
-                  enabled: true,
-                  icon: "null",
-                  maxAmount: 0,
-                  minAmount: 0,
-                )))
+            orElse: () =>
+                remoteConfigCountry.value.cryptoCurrencies.entries.first)
         .value
         .depositRate;
   }
