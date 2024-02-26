@@ -142,13 +142,23 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
       _clabeTextController.text = user!.lastUsedBankAccount!;
     }
 
-    country = getCountryFromCode(user!.country);
-    countryCode = user.country;
-
     countries = remoteConfigDataSet.countryConfig.entries
         .where((element) => element.value.enabled == true)
         .map((e) => {"name": getCountryFromCode(e.key), "icon": e.value.icon})
         .toList();
+    //Put the User's Country as first on the Countries list
+    int currentUserCountryIndex = countries.indexWhere(
+        (element) => element['name'] == getCountryFromCode(user!.country));
+    if (currentUserCountryIndex != -1) {
+      countries.insert(0, countries.removeAt(currentUserCountryIndex));
+    }
+    country = getCountryFromCode(remoteConfigDataSet.countryConfig.entries
+        .firstWhere(
+          (e) => e.value.enabled == true && e.key == user!.country,
+          orElse: () => remoteConfigDataSet.countryConfig.entries.first,
+        )
+        .key);
+    countryCode = user!.country;
 
     sourceCurrenciesObjt = remoteConfigDataSet.countryConfig.entries
         .firstWhere(
