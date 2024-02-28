@@ -242,36 +242,39 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                                       .fillColor,
                                   borderRadius: BorderRadius.circular(7),
                                 ),
-                              onChanged: (value) {
-                                setState(() {
-                                  sourceCurrency = value;
-                                  _enableButton =
-                                      _formKey.currentState!.validate();
-                                });
-                              },
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: TextFormField(
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                  controller: _transferAmountController,
-                                  keyboardType:
-                                      const TextInputType.numberWithOptions(
-                                          decimal: true),
-                                  inputFormatters: [
-                                    DecimalTextInputFormatter(decimalRange: 2)
-                                  ],
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return appLoc.errorRequiredField;
-                                    } else if (balance < double.parse(value)) {
-                                      return appLoc.errorInsufficientBalance;
-                                    } else if (double.parse(value) <= 0.1) {
-                                      return appLoc.errorMinimumTransferAmount;
-                                    }
-                                    return null;
-                                  },
+                                onChanged: (value) {
+                                  setState(() {
+                                    sourceCurrency = value;
+                                    _enableButton =
+                                        _formKey.currentState!.validate();
+                                  });
+                                },
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: TextFormField(
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                    controller: _transferAmountController,
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                            decimal: true),
+                                    inputFormatters: [
+                                      DecimalTextInputFormatter(decimalRange: 2)
+                                    ],
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return appLoc.errorRequiredField;
+                                      } else if (balance <
+                                          double.parse(value)) {
+                                        return appLoc.errorInsufficientBalance;
+                                      } else if (double.parse(value) <= 0.1) {
+                                        return appLoc
+                                            .errorMinimumTransferAmount;
+                                      }
+                                      return null;
+                                    },
                                   ),
                                 ),
                               ),
@@ -282,11 +285,28 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                     ),
                     Text(appLoc
                         .labelAvailableBalance(balance.toStringAsFixed(6))),
-                    Container(
-                      height: MediaQuery.of(context).size.height * 0.4,
-                    ),
+                    if (_error.isNotEmpty) ...[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 18.0),
+                        child: Text(
+                          _error,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    ],
+                    if (_transferError.isNotEmpty) ...[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 18.0),
+                        child: Text(
+                          _transferError,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    ],
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 30),
+                      padding: EdgeInsets.only(
+                          bottom: 30,
+                          top: MediaQuery.of(context).size.height * 0.35),
                       child: Center(
                         child: Column(
                           children: [
@@ -348,7 +368,19 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                                             },
                                           );
                                         } catch (e) {
-                                          _error = e.toString();
+                                          String message = e.toString();
+                                          if (message.contains("himself")) {
+                                            _error =
+                                                appLoc.errorTransferToHimself;
+                                          } else if (message.contains(
+                                                  "non-nullable field User.id") ||
+                                              message
+                                                  .contains("was not found")) {
+                                            _error = appLoc
+                                                .errorUserNotFoundTransfer;
+                                          } else {
+                                            _error = message;
+                                          }
                                         }
                                         setState(() {
                                           _loading = false;
@@ -360,24 +392,6 @@ class _TransferScreenState extends ConsumerState<TransferScreen> {
                                 height: 64,
                               ),
                             ],
-                            if (_error.isNotEmpty) ...[
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  _error,
-                                  style: const TextStyle(color: Colors.red),
-                                ),
-                              ),
-                            ],
-                            if (_transferError.isNotEmpty) ...[
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  _transferError,
-                                  style: const TextStyle(color: Colors.red),
-                                ),
-                              ),
-                            ]
                           ],
                         ),
                       ),
