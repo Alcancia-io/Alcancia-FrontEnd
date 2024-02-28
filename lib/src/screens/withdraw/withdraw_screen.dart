@@ -137,6 +137,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
     super.initState();
 
     final user = ref.read(userProvider);
+
     remoteConfigDataSet = ref.read(remoteConfigDataStateProvider);
     if (user?.lastUsedBankAccount != null) {
       _clabeTextController.text = user!.lastUsedBankAccount!;
@@ -337,11 +338,10 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         "orderInput": {
           "from_amount": _amountTextController.text,
           "type": "WITHDRAW",
-          "from_currency":
-              getSourceCurrency(country) == 'USDC' ? 'USDC' : 'mcUSD',
-          "network": getSourceCurrency(country) == "USDC" ? "MATIC" : "CELO",
+          "from_currency": 'USDC',
+          "network": "MATIC",
           "to_amount": targetAmount.toString(),
-          "to_currency": "MXN",
+          "to_currency": sourceMXNCurrency,
           "bank_account": _clabeTextController.text,
         }
       };
@@ -353,7 +353,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
           "from_currency": 'USDC',
           "network": "ALCANCIA",
           "to_amount": targetAmount.toString(),
-          "to_currency": "DOP",
+          "to_currency": sourceDOPCurrency,
           "bank_account": _accountTextController.text,
           "bank_name": selectedBank,
         }
@@ -442,7 +442,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         LabeledTextFormField(
           controller: _amountTextController,
           labelText: appLoc.labelWithdrawAmount,
-          inputType: TextInputType.numberWithOptions(decimal: true),
+          inputType: const TextInputType.numberWithOptions(decimal: true),
           inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
           validator: (value) {
             if (value == null || value.isEmpty) {
