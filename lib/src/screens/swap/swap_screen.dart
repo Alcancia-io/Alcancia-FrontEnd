@@ -29,6 +29,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+String exchangeDisclaimer = "";
+
+final exchangeDisclaimerProvider =
+    StateProvider<String>((ref) => exchangeDisclaimer);
+
 class SwapScreen extends ConsumerStatefulWidget {
   const SwapScreen({Key? key}) : super(key: key);
 
@@ -77,7 +82,9 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
 
   // alcancia exchange
   var alcanciaUSDCExchange = 1.0;
+  var alcanciaUSDtoUSDCRate = 1.0;
 
+  late MapEntry<String, CountryConfig> remoteConfigCountry;
   // state
   bool _isLoading = false;
   bool _loadingCheckout = false;
@@ -101,8 +108,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
           .value
           .enabled;
 
-      var mxnExchangeRate = "";
-      var mxnCeloRate = "";
+      var mxnExchangeRate = "1.0";
+      var mxnCeloRate = "1.0";
       if (isMxEnabled) {
         mxnExchangeRate = await swapController.getSuarmiExchange("USDC");
         mxnCeloRate = await swapController.getSuarmiExchange("cUSD");
@@ -114,6 +121,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
         suarmiCeloExchange = 1.0 / double.parse(mxnCeloRate);
         alcanciaUSDCExchange = dopExchangeRate;
       });
+      exchangeDisclaimer = generateCurrency(sourceCurrency, suarmiUSDCExchage,
+          alcanciaUSDCExchange, alcanciaUSDtoUSDCRate);
     } catch (err) {
       // print(err);
       _error = err.toString();
@@ -152,7 +161,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     if (sourceCurrency == "DOP") {
       targetAmount = double.parse(sourceAmount) / alcanciaUSDCExchange;
     } else if (sourceCurrency == "USD") {
-      targetAmount = double.parse(sourceAmount) * 0.98;
+      targetAmount = double.parse(sourceAmount) * alcanciaUSDtoUSDCRate;
     } else {
       targetAmount = double.parse(sourceAmount) /
           (targetCurrency == "USDC" ? suarmiUSDCExchage : suarmiCeloExchange);
@@ -166,7 +175,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     if (sourceCurrency == "DOP") {
       sourceAmount = double.parse(targetAmount) * alcanciaUSDCExchange;
     } else if (sourceCurrency == "USD") {
-      sourceAmount = double.parse(targetAmount) / 0.98;
+      sourceAmount = double.parse(targetAmount) +
+          double.parse(targetAmount) * (1 - alcanciaUSDtoUSDCRate);
     } else {
       sourceAmount = double.parse(targetAmount) *
           (targetCurrency == "USDC" ? suarmiUSDCExchage : suarmiCeloExchange);
@@ -177,44 +187,29 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
   @override
   void initState() {
     super.initState();
+    final user = ref.read(userProvider);
     getExchange();
     getCeloAPY();
     getUsdcAPY();
-    final user = ref.read(userProvider);
+
     final remoteConfigData = ref.read(remoteConfigDataStateProvider);
-    if (user?.country == "MX" && false) {
-      // TEMPORARY DISABLE MXN
-      sourceCurrency = "MXN";
-    } else if (user?.country == "DO" && false) {
-      // TEMPORARY DISABLE MXN
-      sourceCurrency = "DOP";
-    } else {
-      sourceCurrency = sourceCurrencyCodes.first['name'];
-    }
-    sourceCurrencyCodes = remoteConfigData.countryConfig.entries
-        .firstWhere(
-          (e) => e.key == user!.country && e.value.enabled == true,
-          orElse: () => MapEntry(
-              '',
-              CountryConfig(
-                  icon: '',
-                  enabled: false,
-                  currencies: {},
-                  cryptoCurrencies: {},
-                  banksWithdraw: null)),
-        )
-        .value
-        .currencies
-        .entries
+    remoteConfigCountry = remoteConfigData.countryConfig.entries.firstWhere(
+      (e) => e.key == user!.country && e.value.enabled == true,
+      orElse: () => remoteConfigData.countryConfig.entries.first,
+    );
+    sourceCurrencyCodes = remoteConfigCountry.value.currencies.entries
         .where((element) => element.value.enabled == true)
-        .map((e) => {"name": e.key, "icon": getIconByCurrencyFlag(e.key)})
+        .map((e) => {"name": e.key, "icon": e.value.icon})
         .toList();
+
+    sourceCurrency = sourceCurrencyCodes.first['name'];
     if (sourceCurrencyCodes.length > 1) {
       final sourceCurrencyIndex = sourceCurrencyCodes
           .indexWhere((element) => element['name'] == sourceCurrency);
       final code = sourceCurrencyCodes.removeAt(sourceCurrencyIndex);
       sourceCurrencyCodes.insert(0, code);
     }
+    getCurrencyRate();
   }
 
   @override
@@ -249,6 +244,8 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     Color cardColor = Theme.of(context).brightness == Brightness.dark
         ? alcanciaCardDark
         : alcanciaFieldLight;
+
+    String exchangeDisclaimerText = ref.watch(exchangeDisclaimerProvider);
 
     return GestureDetector(
       onTap: () {
@@ -326,6 +323,21 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                     onChanged: (newValue) {
                                       setState(() {
                                         sourceCurrency = newValue;
+                                        ref
+                                                .read(exchangeDisclaimerProvider
+                                                    .notifier)
+                                                .state =
+                                            generateCurrency(
+                                                sourceCurrency,
+                                                suarmiUSDCExchage,
+                                                alcanciaUSDCExchange,
+                                                alcanciaUSDtoUSDCRate);
+                                        getCurrencyRate();
+                                        sourceAmountController.text =
+                                            calculateSourceAmount(
+                                                targetAmountController.text,
+                                                targetCurrency,
+                                                sourceCurrency);
                                         // when this components intis, we will exchange rate from suarmi and cryptopay
                                       });
                                     },
@@ -387,6 +399,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                       : targetDOPCurrencies,
                                   onChanged: (newTargetCurrency) {
                                     setState(() {
+                                      getCurrencyRate();
                                       targetCurrency = newTargetCurrency;
                                     });
                                   },
@@ -427,8 +440,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                             Padding(
                               padding: const EdgeInsets.only(top: 16.0),
                               child: Text(
-                                generateCurrency(sourceCurrency,
-                                    suarmiUSDCExchage, alcanciaUSDCExchange),
+                                exchangeDisclaimerText,
                                 style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.normal,
@@ -586,7 +598,7 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                                 ? (double.parse(
                                                         sourceAmountController
                                                             .text) *
-                                                    0.98) //TODO: CHANGE TO REMOTE CONFIG VALUE
+                                                    alcanciaUSDtoUSDCRate) //TODO: CHANGE TO REMOTE CONFIG VALUE
                                                 : (double.parse(
                                                         sourceAmountController
                                                             .text) /
@@ -630,14 +642,11 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
                                                         e.key ==
                                                             user!.country &&
                                                         e.value.enabled == true,
-                                                    orElse: () => MapEntry(
-                                                        '',
-                                                        CountryConfig(
-                                                            icon: '',
-                                                            enabled: false,
-                                                            currencies: {},
-                                                            banksWithdraw: null,
-                                                            cryptoCurrencies: {})),
+                                                    orElse: () =>
+                                                        remoteConfigData
+                                                            .countryConfig
+                                                            .entries
+                                                            .first,
                                                   )
                                                   .value;
                                           if (sourceCurrenciesObjt
@@ -709,6 +718,15 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
     );
   }
 
+  void getCurrencyRate() {
+    alcanciaUSDtoUSDCRate = remoteConfigCountry.value.cryptoCurrencies.entries
+        .firstWhere((e) => e.value.enabled == true && e.key == targetCurrency,
+            orElse: () =>
+                remoteConfigCountry.value.cryptoCurrencies.entries.first)
+        .value
+        .depositRate;
+  }
+
   String validateAmount(
       String sourceAmount, String sourceCurrency, AppLocalizations appLoc) {
     if (sourceCurrency == 'MXN') {
@@ -743,11 +761,11 @@ class _SwapScreenState extends ConsumerState<SwapScreen> {
 }
 
 String generateCurrency(String sourceCurrency, double suarmiUSDCExchage,
-    double alcanciaUSDCExchange) {
+    double alcanciaUSDCExchange, double alcanciaUSDtoUSDCRate) {
   if (sourceCurrency == "MXN") {
     return "*1 USDC = ${suarmiUSDCExchage.formatQuantity(2)} $sourceCurrency";
   } else if (sourceCurrency == "USD") {
-    return "*1 USD = ${(0.98).formatQuantity(2)} USDC";
+    return "*1 USD = ${alcanciaUSDtoUSDCRate.formatQuantity(2)} USDC";
   } else {
     return "*1 USDC = ${alcanciaUSDCExchange.formatQuantity(2)} $sourceCurrency";
   }

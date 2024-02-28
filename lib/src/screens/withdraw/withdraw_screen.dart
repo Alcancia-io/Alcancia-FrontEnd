@@ -103,8 +103,8 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
           .firstWhere((e) => e.key == "MX")
           .value
           .enabled;
-      var mxnExchangeRate = "";
-      var mxnCeloRate = "";
+      var mxnExchangeRate = "0.0";
+      var mxnCeloRate = "0.0";
       if (isMxEnabled) {
         mxnExchangeRate =
             await controller.getSuarmiExchange(sourceCurrency: "USDC");
@@ -137,44 +137,38 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
     super.initState();
 
     final user = ref.read(userProvider);
+
     remoteConfigDataSet = ref.read(remoteConfigDataStateProvider);
     if (user?.lastUsedBankAccount != null) {
       _clabeTextController.text = user!.lastUsedBankAccount!;
-    }
-
-    if (user?.country == "MX") {
-      country = "México";
-    } else if (user?.country == "DO") {
-      country = "República Dominicana";
-      countryCode = user!.country;
-    } else {
-      country = countries.first['name'];
     }
 
     countries = remoteConfigDataSet.countryConfig.entries
         .where((element) => element.value.enabled == true)
         .map((e) => {"name": getCountryFromCode(e.key), "icon": e.value.icon})
         .toList();
-    final countryIndex =
-        countries.indexWhere((element) => element['name'] == country);
-    final code = countries.removeAt(countryIndex);
-    countries.insert(0, code);
+    //Put the User's Country as first on the Countries list
+    int currentUserCountryIndex = countries.indexWhere(
+        (element) => element['name'] == getCountryFromCode(user!.country));
+    if (currentUserCountryIndex != -1) {
+      countries.insert(0, countries.removeAt(currentUserCountryIndex));
+    }
+    country = getCountryFromCode(remoteConfigDataSet.countryConfig.entries
+        .firstWhere(
+          (e) => e.value.enabled == true && e.key == user!.country,
+          orElse: () => remoteConfigDataSet.countryConfig.entries.first,
+        )
+        .key);
+    countryCode = user!.country;
 
     sourceCurrenciesObjt = remoteConfigDataSet.countryConfig.entries
         .firstWhere(
           (e) => e.key == countryCode && e.value.enabled == true,
-          orElse: () => MapEntry(
-              '',
-              CountryConfig(
-                  icon: '',
-                  enabled: false,
-                  currencies: {},
-                  cryptoCurrencies: {},
-                  banksWithdraw: null)),
+          orElse: () => remoteConfigDataSet.countryConfig.entries.first,
         )
         .value;
 
-    sourceCurrencies = sourceCurrenciesObjt.cryptoCurrencies.entries
+    sourceCurrencies = sourceCurrenciesObjt.currencies.entries
         .where((element) => element.value.enabled == true)
         .map((e) => {"name": e.key, "icon": e.value.icon})
         .toList();
@@ -344,11 +338,10 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         "orderInput": {
           "from_amount": _amountTextController.text,
           "type": "WITHDRAW",
-          "from_currency":
-              getSourceCurrency(country) == 'USDC' ? 'USDC' : 'mcUSD',
-          "network": getSourceCurrency(country) == "USDC" ? "MATIC" : "CELO",
+          "from_currency": 'USDC',
+          "network": "MATIC",
           "to_amount": targetAmount.toString(),
-          "to_currency": "MXN",
+          "to_currency": sourceMXNCurrency,
           "bank_account": _clabeTextController.text,
         }
       };
@@ -360,7 +353,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
           "from_currency": 'USDC',
           "network": "ALCANCIA",
           "to_amount": targetAmount.toString(),
-          "to_currency": "DOP",
+          "to_currency": sourceDOPCurrency,
           "bank_account": _accountTextController.text,
           "bank_name": selectedBank,
         }
@@ -448,8 +441,8 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         ),
         LabeledTextFormField(
           controller: _amountTextController,
-          labelText: appLoc.labelWithdrawAmount,
-          inputType: TextInputType.numberWithOptions(decimal: true),
+          labelText: "${appLoc.labelWithdrawAmount} USDC",
+          inputType: const TextInputType.numberWithOptions(decimal: true),
           inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -472,7 +465,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         ),
         LabeledTextFormField(
           controller: _targetTextController,
-          labelText: appLoc.labelAmountMXN,
+          labelText: "${appLoc.labelAmount} $sourceMXNCurrency",
           inputType: TextInputType.number,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           enabled: false,
@@ -562,7 +555,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         ),
         LabeledTextFormField(
           controller: _amountTextController,
-          labelText: appLoc.labelWithdrawAmount,
+          labelText: "${appLoc.labelWithdrawAmount} USDC",
           inputType: TextInputType.number,
           inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
           validator: (value) {
@@ -586,7 +579,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         ),
         LabeledTextFormField(
           controller: _targetTextController,
-          labelText: appLoc.labelAmountDOP,
+          labelText: "${appLoc.labelAmount} $sourceDOPCurrency",
           inputType: TextInputType.number,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           enabled: false,

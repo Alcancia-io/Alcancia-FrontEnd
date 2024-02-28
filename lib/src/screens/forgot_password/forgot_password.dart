@@ -41,6 +41,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
 
   String? _email;
   String _phoneNumEnding = "";
+  String _deliveryMedium = "";
   String _newPassword = '';
   String _verificationCode = '';
   bool _isButtonEnabled = false;
@@ -88,10 +89,14 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
             textColor: Colors.white,
             fontSize: 16.0);
       } else {
-        String lastNumbers = (response.data?["initiateForgotPasswordRequest"]
+        /*String lastNumbers = (response.data?["initiateForgotPasswordRequest"]
             ["deliveryMedium"] as String);
         _phoneNumEnding =
-            (lastNumbers).substring(lastNumbers.length - 4, lastNumbers.length);
+            (lastNumbers).substring(lastNumbers.length - 4, lastNumbers.length);*/ //Code to show las 4 digits
+        _phoneNumEnding = (response.data?["initiateForgotPasswordRequest"]
+            ["destination"] as String);
+        _deliveryMedium = (response.data?["initiateForgotPasswordRequest"]
+            ["deliveryMedium"] as String);
       }
     } catch (e) {
       _state.error = e.toString();

@@ -293,7 +293,7 @@
 	"labelBank": "Banco",
 	"labelAccountNumber": "Número de cuenta",
 	"labelCedula": "Número de cédula",
-	"labelAmountDOP": "Monto en DOP",
+	"labelAmount": "Monto en",
 	"errorCedulaLength": "El número de cédula debe tener 11 dígitos",
 	"errorEmailRequired": "El correo electrónico es requerido",
 	"alertErrorForgotPasswordCode": "Hubo un error al enviar el código de verificación, por favor verifique su correo electrónico e intente nuevamente",
@@ -368,5 +368,7 @@
 	"labelBiometricAuthentication": "Autenticación biométrica",
 	"labelBiometricAuthenticationDescription": "Utiliza tu huella digital o reconocimiento facial para iniciar sesión en tu cuenta",
 	"labelMaintenance": "Estamos realizando mantenimiento en nuestros servidores. Por favor intente más tarde.",
-	"recipientName": "Nombre del destinatario"
+	"recipientName": "Nombre del destinatario",
+	"errorTransferToHimself": "Un usuario no puede buscarse a sí mismo mediante un número de teléfono.",
+	"errorUserNotFoundTransfer": "Usuario no encontrado por número de teléfono."
 }
