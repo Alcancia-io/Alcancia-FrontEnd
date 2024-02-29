@@ -2,6 +2,7 @@ import 'package:alcancia/src/shared/graphql/mutations/complete_mfa_sign_in_mutat
 import 'package:alcancia/src/shared/graphql/mutations/delete_account_mutation.dart';
 import 'package:alcancia/src/shared/graphql/mutations/login_mutation.dart';
 import 'package:alcancia/src/shared/graphql/mutations/complete_forgot_password_mutation.dart';
+import 'package:alcancia/src/shared/graphql/mutations/refresh_token_mutation.dart';
 import 'package:alcancia/src/shared/graphql/mutations/signin_mutation.dart';
 import 'package:alcancia/src/shared/graphql/queries/index.dart';
 import 'package:alcancia/src/shared/graphql/queries/logout_query.dart';
@@ -141,6 +142,20 @@ class AuthService {
             "newPassword": queryVariables.newPassword,
           }
         },
+      ),
+    );
+  }
+
+  Future<QueryResult> refreshToken(String refreshToken) async {
+    var clientResponse = await client;
+    return await clientResponse.mutate(
+      MutationOptions(
+        document: gql(refreshTokenMutation),
+        variables: {
+          "input": {
+            "token": refreshToken,
+          }
+        }
       ),
     );
   }
