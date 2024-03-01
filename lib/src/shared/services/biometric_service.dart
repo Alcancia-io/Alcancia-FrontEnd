@@ -3,11 +3,13 @@ import 'package:alcancia/src/shared/services/storage_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:local_auth/local_auth.dart';
 
-class _BiometricService extends StateNotifier<bool> {
+class BiometricService extends StateNotifier<bool> {
+  static final instance = BiometricService._();
+
   final localAuth = LocalAuthentication();
   final storageService = StorageService();
 
-  _BiometricService() : super(false);
+  BiometricService._() : super(false);
 
   Future<bool> deviceSupportsBiometrics() async {
     bool canCheckBiometrics = await localAuth.canCheckBiometrics;
@@ -43,7 +45,7 @@ class _BiometricService extends StateNotifier<bool> {
     }
   }
 
-  Future<bool> authenticate() async {
+  Future<bool> authenticate({String reason = 'Authenticate to access the app'}) async {
     try {
       bool canCheckBiometrics = await localAuth.canCheckBiometrics;
 
@@ -53,7 +55,7 @@ class _BiometricService extends StateNotifier<bool> {
 
         if (availableBiometrics.isNotEmpty) {
           bool isAuthenticated = await localAuth.authenticate(
-            localizedReason: 'Authenticate to access the app',
+            localizedReason: reason,
             options: const AuthenticationOptions(
                 useErrorDialogs: true, stickyAuth: true, biometricOnly: false),
           );
@@ -75,11 +77,15 @@ class _BiometricService extends StateNotifier<bool> {
     }
   }
 
+  Future<void> unauthenticate() async {
+    state = false;
+  }
+
 }
 
 final biometricServiceProvider =
-    StateNotifierProvider<_BiometricService, bool>((ref) {
-  return _BiometricService();
+    StateNotifierProvider<BiometricService, bool>((ref) {
+  return BiometricService.instance;
 });
 final biometricLockProvider = StateProvider<bool>((ref) {
   return false;

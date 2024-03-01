@@ -441,7 +441,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         ),
         LabeledTextFormField(
           controller: _amountTextController,
-          labelText: appLoc.labelWithdrawAmount,
+          labelText: "${appLoc.labelWithdrawAmount} USDC",
           inputType: const TextInputType.numberWithOptions(decimal: true),
           inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
           validator: (value) {
@@ -555,7 +555,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
         ),
         LabeledTextFormField(
           controller: _amountTextController,
-          labelText: appLoc.labelWithdrawAmount,
+          labelText: "${appLoc.labelWithdrawAmount} USDC",
           inputType: TextInputType.number,
           inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
           validator: (value) {

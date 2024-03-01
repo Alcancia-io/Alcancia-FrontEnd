@@ -34,7 +34,9 @@ import 'package:alcancia/src/shared/models/alcancia_models.dart';
 import 'package:alcancia/src/shared/models/checkout_model.dart';
 import 'package:alcancia/src/shared/models/login_data_model.dart';
 import 'package:alcancia/src/shared/models/otp_data_model.dart';
+import 'package:alcancia/src/shared/models/storage_item.dart';
 import 'package:alcancia/src/shared/models/success_screen_model.dart';
+import 'package:alcancia/src/shared/services/auth_service.dart';
 import 'package:alcancia/src/shared/services/biometric_service.dart';
 import 'package:alcancia/src/shared/services/services.dart';
 import 'package:alcancia/src/shared/services/storage_service.dart';
@@ -50,7 +52,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../screens/chart/line_chart_screen.dart';
 
-Future<bool> isUserAuthenticated() async {
+Future<bool> isUserAuthenticated(Future<bool> Function() bioCheck) async {
   StorageService service = StorageService();
   UserService userService = UserService();
   try {
@@ -59,9 +61,16 @@ Future<bool> isUserAuthenticated() async {
       final graphQLErrors = result.exception?.graphqlErrors;
       final linkException = result.exception?.linkException?.originalException;
       if (graphQLErrors != null && graphQLErrors.isNotEmpty) {
-        return false;
+        if (graphQLErrors[0].message == "TOKEN_EXPIRED_ERROR") {
+          if (await bioCheck()) {
+            await refreshToken();
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
       } else if (linkException != null && linkException.toString().contains("CERTIFICATE_VERIFY_FAILED")) {
-
         return Future.error("CERTIFICATE_VERIFY_FAILED");
       }
     }
@@ -72,6 +81,27 @@ Future<bool> isUserAuthenticated() async {
     rethrow;
   }
   // print(result.hasException);
+}
+
+Future<void> refreshToken() async {
+  StorageService storageService = StorageService();
+  AuthService authService = AuthService();
+  try {
+    final token = await storageService.readSecureData("refreshToken");
+    if (token == null) {
+      return Future.error("No refresh token found");
+    }
+    var result = await authService.refreshToken(token);
+    if (result.hasException) {
+      return Future.error(result.exception?.graphqlErrors[0].message ?? "Exception refreshing token");
+    }
+    final newToken = result.data?['refreshToken']['token'] as String;
+    final newTokenItem = StorageItem("token", newToken);
+    await storageService.writeSecureData(newTokenItem);
+  } catch (e) {
+    await FirebaseCrashlytics.instance.recordError(e, StackTrace.current);
+    rethrow;
+  }
 }
 
 Future<String> getCurrentlySupportedAppVersion() async {
@@ -105,6 +135,15 @@ Future<bool> _finishedOnboarding() async {
   final preferences = await SharedPreferences.getInstance();
   final finished = preferences.getBool("finishedOnboarding");
   return finished == true;
+}
+
+Future<bool> checkBiometrics(ProviderRef ref, BiometricService biometricService) async {
+  final biometricState = ref.read(biometricServiceProvider);
+  if (await biometricService.isAppEnrolled() && !biometricState) {
+    ref.read(biometricLockProvider.notifier).state = true;
+    return false;
+  }
+  return true;
 }
 
 final routerProvider = Provider<GoRouter>(
@@ -284,7 +323,9 @@ final routerProvider = Provider<GoRouter>(
           final isPhoneRegistration = state.matchedLocation == "/phone-registration";
           final isStartup = state.matchedLocation == "/";
           final creatingAccount = state.matchedLocation == "/registration";
-          final loggedIn = await isUserAuthenticated();
+          final loggedIn = await isUserAuthenticated(() async {
+            return await biometricService.authenticate(reason: "Authenticate to continue your session");
+          });
           final isForgotPassword = state.matchedLocation == "/forgot-password";
           final finishedOnboarding = await _finishedOnboarding();
           final isOnboarding = state.matchedLocation == "/onboarding";
@@ -310,10 +351,7 @@ final routerProvider = Provider<GoRouter>(
               !isOnboarding &&
               !isAccountVerification) return "/";
           if (loggedIn && (loggingIn || creatingAccount || isStartup)) {
-            final biometricState = ref.read(biometricServiceProvider);
-            if (await biometricService.isAppEnrolled() && !biometricState) {
-              ref.read(biometricLockProvider.notifier).state = true;
-            }
+            await checkBiometrics(ref, biometricService);
             return "/homescreen/0";
           }
         } catch (e) {
